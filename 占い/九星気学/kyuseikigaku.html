@@ -152,7 +152,8 @@ nav.scrolled{box-shadow:0 2px 28px rgba(0,0,0,.55)}
 #stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
 .hero,.panel-body{position:relative;z-index:1}
 @media(max-width:900px){.form-grid{grid-template-columns:1fr}}
-@media(max-width:640px){nav{padding:14px 18px}.hero,.panel-body{padding-left:18px;padding-right:18px}.mode-nav{padding:0 18px}.form-card{padding:24px 18px}.kg-card{padding:24px 18px}.syn-people{grid-template-columns:1fr}.syn-score-num{font-size:56px}}
+@media(max-width:900px){.syn-people{grid-template-columns:1fr}}
+@media(max-width:640px){nav{padding:14px 18px}.hero,.panel-body{padding-left:18px;padding-right:18px}.mode-nav{padding:0 18px}.form-card{padding:24px 18px}.kg-card{padding:24px 18px}.syn-score-num{font-size:56px}}
 </style>
 </head>
 <body>
@@ -170,8 +171,8 @@ nav.scrolled{box-shadow:0 2px 28px rgba(0,0,0,.55)}
   </div>
 </div>
 <div class="mode-nav">
-  <button class="mode-tab active" onclick="switchMode('natal',this)">九星気学・個人鑑定</button>
-  <button class="mode-tab" onclick="switchMode('synastry',this)">九星気学・相性鑑定</button>
+  <button class="mode-tab active" onclick="switchMode('natal',this)">個人鑑定</button>
+  <button class="mode-tab" onclick="switchMode('synastry',this)">相性鑑定</button>
 </div>
 
 <div id="panel-natal" class="mode-panel active">

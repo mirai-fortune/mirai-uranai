@@ -66,6 +66,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:fl
 .calc-btn:hover{opacity:.85;}
 .section-person{border:1px solid var(--border);padding:32px;margin-bottom:20px;}
 .section-person-title{font-family:'Cormorant Garamond',serif;font-size:15px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:24px;}
+.ai-people{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
 
 /* ── RESULT AREAS ── */
 .result-area{display:none;}
@@ -171,8 +172,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:fl
 .caution{padding:20px 28px;border:1px solid var(--border);font-size:11px;color:var(--muted2);line-height:2;letter-spacing:.04em;margin-top:48px;}
 
 /* ── RESPONSIVE ── */
-@media(max-width:900px){.form-grid{grid-template-columns:1fr;}.analysis-grid{grid-template-columns:1fr;}.num-overview{grid-template-columns:repeat(2,1fr);}.ndc-grid2{grid-template-columns:1fr;}}
-@media(max-width:640px){nav{padding:14px 18px;}.hero,.panel-body{padding-left:18px;padding-right:18px;}.mode-nav{padding:0 18px;}.form-card{padding:24px 18px;}.ndc{padding:28px 18px;}.analysis-card{padding:24px 18px;}}
+@media(max-width:900px){.form-grid{grid-template-columns:1fr;}.analysis-grid{grid-template-columns:1fr;}.num-overview{grid-template-columns:repeat(2,1fr);}.ndc-grid2{grid-template-columns:1fr;}.ai-people{grid-template-columns:1fr;}}
+@media(max-width:640px){nav{padding:14px 18px;}.hero,.panel-body{padding-left:18px;padding-right:18px;}.mode-nav{padding:0 18px;}.form-card{padding:24px 18px;}.ndc{padding:28px 18px;}.analysis-card{padding:24px 18px;}.section-person{padding:20px 16px;}}
 
 /* ── CANVAS & STACKING ── */
 #stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
@@ -208,8 +209,8 @@ nav.scrolled{box-shadow:0 2px 28px rgba(0,0,0,.55);}
 </div>
 
 <div class="mode-nav">
-  <button class="mode-tab active" onclick="switchMode('numerology-ind',this)">数秘術・個人鑑定</button>
-  <button class="mode-tab" onclick="switchMode('numerology-ai',this)">数秘術・相性鑑定</button>
+  <button class="mode-tab active" onclick="switchMode('numerology-ind',this)">個人鑑定</button>
+  <button class="mode-tab" onclick="switchMode('numerology-ai',this)">相性鑑定</button>
 </div>
 
 <!-- ═══════════════════════════════════════
@@ -264,7 +265,7 @@ nav.scrolled{box-shadow:0 2px 28px rgba(0,0,0,.55);}
 <div class="form-card wide">
   <h2 class="form-title">カバラ数秘術 相性鑑定</h2>
   <p class="form-sub">お二人のライフパスナンバー（生命数）とソウルナンバー（魂数）の相性を読み解きます。名前はローマ字（大文字）でご入力ください。名前を省略した場合はライフパスナンバーのみ比較します。</p>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+  <div class="ai-people">
     <div class="section-person">
       <p class="section-person-title">Person A</p>
       <div class="form-row">
