@@ -290,6 +290,41 @@ nav a:hover { color: var(--cream); }
   transform: translate(3px, -3px);
 }
 
+/* --- COMING SOON (提携ブランド準備中) --- */
+.partner-img-wrapper { position: relative; }
+.partner-card.coming-soon { cursor: default; }
+.partner-card.coming-soon:hover {
+  transform: none;
+  border-color: var(--glass-border);
+}
+.partner-card.coming-soon:hover .partner-card-img { transform: none; }
+.partner-card.coming-soon .partner-card-img {
+  opacity: 0.6;
+  filter: grayscale(20%);
+  transition: none;
+}
+.partner-card.coming-soon .partner-img-wrapper::after {
+  content: 'COMING SOON';
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(3, 6, 17, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(196, 168, 106, 0.5);
+  color: var(--gold);
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-family: var(--font-serif);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  z-index: 3;
+}
+.partner-card.coming-soon .partner-link-indicator {
+  color: rgba(196, 168, 106, 0.35);
+  transform: none !important;
+}
+
 /* --- MARCHE ARCHIVES --- */
 .marche-section { padding: 80px 0; }
 .marche-grid {
@@ -591,7 +626,7 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
     </div>
     <div class="partners-grid">
       
-      <a href="URL_1" target="_blank" class="glass-card partner-card reveal">
+      <div class="glass-card partner-card coming-soon reveal">
         <div class="partner-img-wrapper">
           <img src="images/partner_miradrop.png" alt="mira drop" class="partner-card-img">
         </div>
@@ -599,11 +634,11 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
           <span class="tag">Selected Partner / Resin Accessories</span>
           <h3>mira drop</h3>
           <p>星の輝きのような唯一無二のアクセサリー。細部までこだわり抜かれた美しい世界観が、身につける人の個性をそっと引き立てます。</p>
-          <div class="partner-link-indicator">Official Shop ↗</div>
+          <div class="partner-link-indicator">準備中</div>
         </div>
-      </a>
+      </div>
 
-      <a href="URL_2" target="_blank" class="glass-card partner-card reveal" style="transition-delay: 0.1s;">
+      <div class="glass-card partner-card coming-soon reveal" style="transition-delay: 0.1s;">
         <div class="partner-img-wrapper">
           <img src="images/partner_blessme.png" alt="bless me" class="partner-card-img">
         </div>
@@ -611,23 +646,23 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
           <span class="tag">Selected Partner / Power Stone</span>
           <h3>bless me</h3>
           <p>パワーストーンは私を幸せにする私へのギフト。上質な天然石だけを使用し、日常に心地よい調和をもたらすお守りのようなブレスレットを展開しています。</p>
-          <div class="partner-link-indicator">Official Shop ↗</div>
+          <div class="partner-link-indicator">準備中</div>
         </div>
-      </a>
+      </div>
 
-      <a href="URL_3" target="_blank" class="glass-card partner-card reveal" style="transition-delay: 0.2s;">
-        <div class="partner-img-wrapper">
-          <img src="images/partner_otsune.png" alt="おつねストーン" class="partner-card-img">
+      <div class=”glass-card partner-card coming-soon reveal” style=”transition-delay: 0.2s;”>
+        <div class=”partner-img-wrapper”>
+          <img src=”images/partner_otsune.png” alt=”おつねストーン” class=”partner-card-img”>
         </div>
-        <div class="partner-body">
-          <span class="tag">Selected Partner / School & Stone</span>
+        <div class=”partner-body”>
+          <span class=”tag”>Selected Partner / School & Stone</span>
           <h3>おつねストーン</h3>
-          <p>未来が“読める”と、幸運が芽吹きだす。ハイクオリティな天然石の販売とともに、ロジカルかつ丁寧に未来をひも解く占い教室を主宰しています。</p>
-          <div class="partner-link-indicator">Official Site ↗</div>
+          <p>未来が”読める”と、幸運が芽吹きだす。ハイクオリティな天然石の販売とともに、ロジカルかつ丁寧に未来をひも解く占い教室を主宰しています。</p>
+          <div class=”partner-link-indicator”>準備中</div>
         </div>
-      </a>
+      </div>
 
-      <a href="URL_4" target="_blank" class="glass-card partner-card reveal" style="transition-delay: 0.3s;">
+      <div class="glass-card partner-card coming-soon reveal" style="transition-delay: 0.3s;">
         <div class="partner-img-wrapper">
           <img src="images/partner_asumi.png" alt="オリジナル手相鑑定書" class="partner-card-img">
         </div>
@@ -635,11 +670,11 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
           <span class="tag">Selected Partner / Palm Reading</span>
           <h3>オリジナル手相鑑定書</h3>
           <p>逢純（あすみ）先生監修。手のひらに刻まれた線から、あなたの才能と歩む道筋を丁寧に読み解く、世界に一つだけのオリジナル鑑定書をお届けします。</p>
-          <div class="partner-link-indicator">Official Shop ↗</div>
+          <div class="partner-link-indicator">準備中</div>
         </div>
-      </a>
+      </div>
 
-      <a href="URL_5" target="_blank" class="glass-card partner-card reveal" style="transition-delay: 0.4s;">
+      <div class="glass-card partner-card coming-soon reveal" style="transition-delay: 0.4s;">
         <div class="partner-img-wrapper">
           <img src="images/partner_sia.png" alt="オンラインヨーガクラス" class="partner-card-img">
         </div>
@@ -647,9 +682,9 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
           <span class="tag">Selected Partner / Online Yoga</span>
           <h3>オンラインヨーガクラス</h3>
           <p>Sia先生監修。呼吸とともに心と身体を整える、自宅で叶うヨーガ体験。日々の緊張をほどき、本来の自分へと還る穏やかな時間をご案内します。</p>
-          <div class="partner-link-indicator">Official Site ↗</div>
+          <div class="partner-link-indicator">準備中</div>
         </div>
-      </a>
+      </div>
 
     </div>
   </section>
