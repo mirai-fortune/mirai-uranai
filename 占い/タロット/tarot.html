@@ -229,11 +229,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:fl
 
 /* Responsive */
 @media(max-width:700px){
-  .trt-celtic{gap:10px;}
-  .trt-cross-section{grid-template-columns:repeat(3,17vw);gap:2vw;}
-  .trt-scene{width:17vw;height:29vw;}
-  .trt-staff-section{gap:2vw;}
-  .trt-ni-name{font-size:8px;}
+  .trt-celtic{flex-direction:column;gap:10px;align-items:center;}
+  .trt-cross-section{grid-template-columns:repeat(3,15vw);gap:2vw;}
+  .trt-scene{width:15vw;height:26vw;}
+  .trt-staff-section{flex-direction:row;gap:2vw;justify-content:center;}
+  .trt-ni-name{font-size:7px;}
+  .trt-cloth{padding:20px 14px;}
+  .trt-cloth::before{inset:8px;}
 }
 @media(max-width:640px){
   nav{padding:14px 18px;}

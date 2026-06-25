@@ -762,7 +762,7 @@ function buildSanmeiSection(yp, mp, dp, days, daySi, y, m, d){
   ];
 
   const gridHTML = cells.map(c=>{
-    if(c.isEmpty) return `<div class="sm-cell empty-cell"><img src="C:/Users/mairo/OneDrive/デスクトップ/AI作業場/占い/算命学/images/sanmeigaku_zintaizu.png" alt="人体図"></div>`;
+    if(c.isEmpty) return `<div class="sm-cell empty-cell"><img src="images/sanmeigaku_zintaizu.png" alt="人体図"></div>`;
     const cls = ['sm-cell', c.isCenter?'center-cell':'', c.isJuni?'juni-cell':''].filter(Boolean).join(' ');
     return `<div class="${cls}">
       <div class="sm-cell-role">${c.role}</div>
@@ -1210,7 +1210,7 @@ function calcCompat(){
   ];
 
   let gridHTML = cells.map(c => {
-    if(c.isEmpty) return `<div class="sm-cell empty-cell"><img src="C:/Users/mairo/OneDrive/デスクトップ/AI作業場/占い/算命学/images/sanmeigaku_zintaizu.png" alt="人体図"></div>`;
+    if(c.isEmpty) return `<div class="sm-cell empty-cell"><img src="images/sanmeigaku_zintaizu.png" alt="人体図"></div>`;
     const cls = ['sm-cell', c.isCenter?'center-cell':'', c.isJuni?'juni-cell':''].filter(Boolean).join(' ');
     return `<div class="${cls}">
       <div class="sm-cell-role">${c.role}</div>
