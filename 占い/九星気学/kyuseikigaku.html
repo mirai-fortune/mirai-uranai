@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>九星気学（個人鑑定・相性鑑定）｜MIRAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0d0b08;--bg2:#131009;--bg3:#1a1710;--bg4:#1f1c12;--cream:#f5f2eb;--muted:rgba(245,242,235,.55);--muted2:rgba(245,242,235,.28);--gold:#c4a86a;--gold2:#e8d4a0;--gold-dim:rgba(196,168,106,.18);--border:rgba(196,168,106,.14);--border2:rgba(255,255,255,.07);--wood:#6db87a;--fire:#c97878;--earth:#c9b464;--metal:#a8b4c4;--water:#6888c4;--wood-bg:rgba(109,184,122,.1);--fire-bg:rgba(201,120,120,.1);--earth-bg:rgba(201,180,100,.1);--metal-bg:rgba(168,180,196,.1);--water-bg:rgba(104,136,196,.1)}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font-family:'Noto Sans JP',sans-serif;font-weight:300;line-height:1.8;-webkit-font-smoothing:antialiased}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:flex;justify-content:space-between;align-items:center;background:rgba(13,11,8,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:20px;letter-spacing:.18em;color:var(--cream);text-decoration:none}
+.nav-logo span{color:var(--gold);margin-left:8px;font-size:11px;letter-spacing:.22em}
+.nav-back{font-size:11px;letter-spacing:.16em;color:var(--muted);text-decoration:none;text-transform:uppercase;display:flex;align-items:center;gap:8px;transition:color .2s}
+.nav-back:hover{color:var(--gold)}
+nav.scrolled{box-shadow:0 2px 28px rgba(0,0,0,.55)}
+.hero{min-height:48vh;display:flex;flex-direction:column;justify-content:flex-end;padding:110px 40px 56px;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+.hero-orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none}
+.orb1{width:520px;height:520px;background:rgba(196,168,106,.06);top:-140px;right:-60px;animation:orbFloat 14s ease-in-out infinite}
+.orb2{width:380px;height:380px;background:rgba(104,136,196,.05);bottom:-80px;left:5%;animation:orbFloat 18s ease-in-out infinite reverse}
+.orb3{width:280px;height:280px;background:rgba(109,184,122,.04);top:18%;left:48%;animation:orbFloat 22s ease-in-out infinite}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(24px,-18px) scale(1.06)}}
+.hero-inner{max-width:820px;position:relative;animation:heroFadeIn .9s cubic-bezier(.25,1,.5,1) both}
+.hero-tag{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:.32em;color:var(--gold);text-transform:uppercase;margin-bottom:24px;display:flex;align-items:center;gap:14px}
+.hero-tag::before{content:'';display:block;width:28px;height:1px;background:var(--gold)}
+.hero-title{font-family:'Noto Serif JP',serif;font-size:clamp(26px,5vw,50px);font-weight:300;line-height:1.55;letter-spacing:.06em;margin-bottom:20px}
+.hero-desc{font-size:13px;color:var(--muted);line-height:2.2;max-width:600px}
+@keyframes heroFadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.mode-nav{position:sticky;top:53px;z-index:100;background:rgba(13,11,8,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;padding:0 40px;overflow-x:auto}
+.mode-tab{padding:16px 28px;font-size:12px;letter-spacing:.15em;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;font-family:'Noto Sans JP',sans-serif;font-weight:300;text-transform:uppercase;white-space:nowrap}
+.mode-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.mode-panel{display:none}
+.mode-panel.active{display:block}
+.panel-body{padding:64px 40px;max-width:1080px;margin:0 auto}
+.form-card{background:var(--bg3);border:1px solid var(--border);padding:44px;max-width:700px;margin-bottom:56px;position:relative;overflow:hidden}
+.form-card.wide{max-width:100%}
+.form-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(500px circle at var(--fc-x,50%) var(--fc-y,50%),rgba(196,168,106,.08),transparent 40%);opacity:0;transition:opacity .5s;z-index:0;pointer-events:none}
+.form-card:hover::before{opacity:1}
+.form-card>*{position:relative;z-index:1}
+.form-title{font-family:'Noto Serif JP',serif;font-size:19px;font-weight:300;letter-spacing:.08em;color:var(--cream);margin-bottom:6px}
+.form-sub{font-size:12px;color:var(--muted);letter-spacing:.06em;margin-bottom:32px;line-height:1.9}
+.form-row{margin-bottom:24px}
+.form-row label{display:block;font-size:10px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:9px}
+.form-row input[type=text],.form-row select{width:100%;padding:13px 16px;background:rgba(255,255,255,.04);border:1px solid var(--border2);color:var(--cream);font-family:'Noto Sans JP',sans-serif;font-size:13px;outline:none;transition:border-color .2s;appearance:none;-webkit-appearance:none}
+.form-row input:focus,.form-row select:focus{border-color:var(--gold)}
+.form-row select option{background:#1a1710;color:var(--cream)}
+.form-row input::placeholder{color:var(--muted2)}
+.form-hint{font-size:11px;color:var(--muted2);margin-top:7px;line-height:1.7}
+.form-date-selectors{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.form-divider{border:none;border-top:1px solid var(--border);margin:28px 0}
+.calc-btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--gold),#8a6430);color:var(--bg);border:none;cursor:pointer;font-size:12px;letter-spacing:.22em;text-transform:uppercase;font-family:'Noto Sans JP',sans-serif;font-weight:400;transition:opacity .2s}
+.calc-btn:hover{opacity:.85}
+.gender-toggle{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border2);overflow:hidden}
+.gender-toggle input{display:none}
+.gender-toggle label{margin:0;padding:13px;text-align:center;font-size:12px;letter-spacing:.14em;color:var(--muted);cursor:pointer;transition:all .2s;background:rgba(255,255,255,.02)}
+.gender-toggle input:checked+label{background:var(--gold-dim);color:var(--gold2)}
+.result-area{display:none}
+.result-area.show{display:block;animation:fadeUp .65s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.result-header{padding-bottom:36px;margin-bottom:48px;border-bottom:1px solid var(--border)}
+.result-tag{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;margin-bottom:14px}
+.result-name{font-family:'Noto Serif JP',serif;font-size:clamp(18px,3vw,28px);font-weight:300;letter-spacing:.08em;margin-bottom:8px}
+.result-meta{font-size:12px;color:var(--muted);letter-spacing:.08em}
+.sec-div{margin:64px 0 40px;display:flex;align-items:center;gap:20px}
+.sec-div::before,.sec-div::after{content:'';flex:1;height:1px;background:var(--border)}
+.sec-div span{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;white-space:nowrap}
+.core-stars{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;background:var(--border);margin-bottom:48px}
+.core-star{background:var(--bg3);padding:24px 16px;text-align:center}
+.core-star-lbl{font-size:9px;letter-spacing:.2em;color:var(--muted2);text-transform:uppercase;font-family:'Cormorant Garamond',serif;margin-bottom:10px}
+.core-star-name{font-family:'Noto Serif JP',serif;font-size:16px;font-weight:300;color:var(--cream);letter-spacing:.04em;line-height:1.4}
+.core-star-elem{display:inline-block;font-size:9px;letter-spacing:.1em;padding:2px 9px;font-family:'Cormorant Garamond',serif;margin-top:9px}
+@media(max-width:760px){.core-stars{grid-template-columns:repeat(2,1fr)}.core-star:last-child{grid-column:1/-1}}
+.boards-wrap{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:40px}
+.board-label{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.25em;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
+.board-sub{font-size:11px;color:var(--muted2);letter-spacing:.05em;margin-bottom:18px;line-height:1.7}
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;background:var(--border);border:1px solid rgba(196,168,106,.22);padding:3px;position:relative;border-radius:4px;background-image:radial-gradient(ellipse 80% 80% at 50% 50%,rgba(20,16,48,.6) 0%,rgba(8,6,20,.85) 100%)}
+.cell{background:var(--bg3);aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6px 4px;position:relative;transition:background .25s}
+.cell:hover{background:var(--bg4)}
+.cell-dir{font-size:8px;letter-spacing:.12em;color:var(--muted2);font-family:'Cormorant Garamond',serif;text-transform:uppercase;margin-bottom:4px}
+.cell-num{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--gold2);line-height:1}
+.cell-name{font-size:9px;color:var(--cream);letter-spacing:.02em;margin-top:5px;line-height:1.3}
+.cell.center{background:rgba(196,168,106,.12);outline:1px solid rgba(196,168,106,.4);outline-offset:-1px}
+.cell.center .cell-num{color:var(--gold);font-size:26px}
+.cell.center .cell-name{color:var(--gold2)}
+.cell.mark-honmei{box-shadow:inset 0 0 0 2px rgba(196,168,106,.55)}
+.cell.mark-honmei::after{content:'本命';position:absolute;top:4px;right:5px;font-size:7px;color:var(--gold);letter-spacing:.06em}
+.cell.elem-wood .cell-num{color:var(--wood)}
+.cell.elem-fire .cell-num{color:var(--fire)}
+.cell.elem-earth .cell-num{color:var(--earth)}
+.cell.elem-metal .cell-num{color:var(--metal)}
+.cell.elem-water .cell-num{color:var(--water)}
+.board-legend{font-size:11px;color:var(--muted2);line-height:1.9;margin-top:14px;letter-spacing:.03em;padding:12px 16px;border:1px solid var(--border);background:rgba(255,255,255,.015)}
+.board-legend b{color:var(--gold2);font-weight:400}
+@media(max-width:760px){.boards-wrap{grid-template-columns:1fr}}
+.kg-readings{display:flex;flex-direction:column;gap:30px;margin-bottom:48px}
+.kg-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:40px;box-shadow:0 4px 30px rgba(0,0,0,.38);position:relative;overflow:hidden}
+.kg-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(196,168,106,.55),transparent)}
+.kg-card-head{display:flex;align-items:flex-start;gap:18px;margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid var(--border)}
+.kg-card-badge{min-width:54px;height:54px;border:1px solid rgba(196,168,106,.35);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--gold2);flex-shrink:0;background:rgba(196,168,106,.04)}
+.kg-card-meta{flex:1}
+.kg-card-type{font-size:11px;letter-spacing:.14em;color:var(--gold);margin-bottom:6px;font-family:'Noto Serif JP',serif}
+.kg-card-name{font-family:'Noto Serif JP',serif;font-size:19px;font-weight:300;color:var(--cream);letter-spacing:.06em}
+.kg-card-sub{font-size:11px;color:var(--muted2);letter-spacing:.04em;margin-top:4px}
+.kg-card-elem{display:inline-block;font-size:9px;letter-spacing:.1em;padding:2px 10px;font-family:'Cormorant Garamond',serif;margin-left:8px;vertical-align:middle}
+.kg-card-text{font-size:13px;color:var(--muted);line-height:2.3;letter-spacing:.04em}
+.kg-card-text strong{color:var(--cream);font-weight:400}
+.kg-kw{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.kg-kw-item{font-size:11px;letter-spacing:.08em;color:var(--gold2);border:1px solid rgba(196,168,106,.28);padding:4px 13px}
+.kg-note{font-size:12px;color:var(--muted);line-height:2.1;margin-top:18px;padding:14px 18px;background:rgba(255,255,255,.02);border-left:2px solid var(--border);letter-spacing:.03em}
+.kg-note b{color:var(--gold2);font-weight:400}
+.elem-wood{background:var(--wood-bg);color:var(--wood)}
+.elem-fire{background:var(--fire-bg);color:var(--fire)}
+.elem-earth{background:var(--earth-bg);color:var(--earth)}
+.elem-metal{background:var(--metal-bg);color:var(--metal)}
+.elem-water{background:var(--water-bg);color:var(--water)}
+.syn-people{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:4px}
+.syn-person{border:1px solid var(--border);border-radius:6px;padding:22px 20px;background:rgba(255,255,255,.015)}
+.syn-person-label{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;margin-bottom:22px}
+.syn-score-box{text-align:center;border:1px solid var(--border);border-radius:8px;background:var(--bg3);padding:42px 32px;margin-bottom:42px;box-shadow:0 4px 28px rgba(0,0,0,.32);position:relative;overflow:hidden}
+.syn-score-box::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(196,168,106,.55),transparent)}
+.syn-score-num{font-family:'Cormorant Garamond',serif;font-size:72px;color:var(--gold);line-height:1}
+.syn-score-num span{font-size:22px;color:var(--muted);margin-left:4px}
+.syn-bar-track{width:320px;max-width:100%;height:4px;background:rgba(255,255,255,.06);border-radius:2px;margin:22px auto 10px}
+.syn-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width 1.2s ease;width:0}
+.syn-score-stars{font-size:24px;color:var(--gold2);letter-spacing:.22em;margin:10px 0}
+.syn-score-label{font-family:'Noto Serif JP',serif;font-size:18px;color:var(--cream);letter-spacing:.06em}
+.syn-pair-head{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;margin:18px 0 6px}
+.syn-pair-name{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:.18em;color:var(--gold);text-align:center}
+.syn-pair-x{font-size:13px;color:var(--muted2)}
+.syn-grid{display:flex;flex-direction:column;gap:2px;background:var(--border);margin-bottom:8px}
+.syn-rel-row{background:var(--bg3);padding:18px 24px;display:grid;grid-template-columns:1fr auto 1fr 110px;gap:14px;align-items:center}
+.syn-rel-star{font-family:'Noto Serif JP',serif;font-size:14px;color:var(--cream);letter-spacing:.04em}
+.syn-rel-star small{display:block;font-size:9px;color:var(--muted2);letter-spacing:.16em;font-family:'Cormorant Garamond',serif;text-transform:uppercase;margin-bottom:3px}
+.syn-rel-conn{font-size:11px;color:var(--muted2);text-align:center}
+.syn-rel-badge{text-align:center;font-size:11px;letter-spacing:.1em;padding:5px 0;font-family:'Noto Serif JP',serif;border-radius:3px}
+.rel-sho{background:rgba(109,184,122,.14);color:var(--wood)}
+.rel-hiwa{background:rgba(196,168,106,.14);color:var(--gold2)}
+.rel-koku{background:rgba(201,120,120,.14);color:var(--fire)}
+@media(max-width:640px){.syn-rel-row{grid-template-columns:1fr 1fr;gap:8px 14px}.syn-rel-conn{display:none}.syn-rel-badge{grid-column:1/-1}}
+.syn-read-item{border:1px solid var(--border);border-radius:8px;background:var(--bg3);padding:30px 28px;margin-top:18px;box-shadow:0 4px 24px rgba(0,0,0,.28);position:relative;overflow:hidden}
+.syn-read-item::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(196,168,106,.45),transparent)}
+.syn-read-head{font-family:'Noto Serif JP',serif;font-size:15px;color:var(--cream);letter-spacing:.05em;margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.syn-read-head::before{content:'';width:24px;height:1px;background:var(--gold)}
+.syn-read-text{font-size:13px;color:var(--muted);line-height:2.3;letter-spacing:.04em}
+.syn-read-text strong{color:var(--gold2);font-weight:400}
+.caution{padding:20px 28px;border:1px solid var(--border);font-size:11px;color:var(--muted2);line-height:2;letter-spacing:.04em;margin-top:48px}
+#stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.hero,.panel-body{position:relative;z-index:1}
+@media(max-width:900px){.form-grid{grid-template-columns:1fr}}
+@media(max-width:640px){nav{padding:14px 18px}.hero,.panel-body{padding-left:18px;padding-right:18px}.mode-nav{padding:0 18px}.form-card{padding:24px 18px}.kg-card{padding:24px 18px}.syn-people{grid-template-columns:1fr}.syn-score-num{font-size:56px}}
+</style>
+</head>
+<body>
+<canvas id="stars-canvas"></canvas>
+<nav>
+  <a class="nav-logo" href="../../uranai.html">MIRAI <span>占術鑑定</span></a>
+  <a class="nav-back" href="../../uranai.html">← トップへ戻る</a>
+</nav>
+<div class="hero">
+  <div class="hero-orb orb1"></div><div class="hero-orb orb2"></div><div class="hero-orb orb3"></div>
+  <div class="hero-inner">
+    <p class="hero-tag">Nine Star Ki Astrology</p>
+    <h1 class="hero-title">生まれ持つ気の星から、<br>あなたの本質と運命を読み解く。</h1>
+    <p class="hero-desc">古来より受け継がれる九星気学。生年月日が示す本命星・月命星・日命星、そして傾斜・同会の盤を読み解き、あなたの本質と他者との縁を映し出す本格鑑定ツールです。一白水星から九紫火星まで、伝統の法則に忠実に算出します。</p>
+  </div>
+</div>
+<div class="mode-nav">
+  <button class="mode-tab active" onclick="switchMode('natal',this)">九星気学・個人鑑定</button>
+  <button class="mode-tab" onclick="switchMode('synastry',this)">九星気学・相性鑑定</button>
+</div>
+
+<div id="panel-natal" class="mode-panel active">
+<div class="panel-body">
+  <div class="form-card">
+    <h2 class="form-title">九星気学 個人鑑定</h2>
+    <p class="form-sub">生年月日を入力してください。立春・各月の節入りを境界として、本命星・月命星・日命星を厳密に算出します。</p>
+    <div class="form-row"><label>お名前（任意）</label><input type="text" id="nt-name" placeholder="例：山田 みらい"></div>
+    <div class="form-grid">
+      <div class="form-row"><label>生年月日（年／月／日）</label>
+        <div class="form-date-selectors"><select id="nt-birth-year"></select><select id="nt-birth-month"></select><select id="nt-birth-day"></select></div>
+        <p class="form-hint">立春前（2月初旬まで）生まれは前年の星で判定します</p></div>
+      <div class="form-row"><label>性別（任意）</label>
+        <div class="gender-toggle"><input type="radio" name="nt-gender" id="nt-g-f" value="female" checked><label for="nt-g-f">女性</label><input type="radio" name="nt-gender" id="nt-g-m" value="male"><label for="nt-g-m">男性</label></div></div>
+    </div>
+    <hr class="form-divider">
+    <button class="calc-btn" onclick="calcNatal()">九星を鑑定する</button>
+  </div>
+  <div class="result-area" id="natal-result">
+    <div class="result-header"><p class="result-tag">Nine Star Ki — 個人鑑定</p><p class="result-name" id="nt-r-name"></p><p class="result-meta" id="nt-r-meta"></p></div>
+    <div class="core-stars" id="nt-core"></div>
+    <div class="sec-div"><span>九星盤 — 年盤・月盤</span></div>
+    <p style="font-size:12px;color:var(--muted);line-height:2;letter-spacing:.04em;margin-bottom:26px;">伝統の後天定位（南を上・北を下）に従い、中央（中宮）に星を置いた盤です。年盤の中宮は<b style="color:var(--gold2);font-weight:400;">本命星</b>、月盤の中宮は<b style="color:var(--gold2);font-weight:400;">月命星</b>。月盤上で本命星が回座する方位が<b style="color:var(--gold2);font-weight:400;">傾斜宮</b>です。</p>
+    <div class="boards-wrap" id="nt-boards"></div>
+    <div class="sec-div"><span>鑑定テキスト</span></div>
+    <div class="kg-readings" id="nt-readings"></div>
+    <div class="caution">※ 本ツールは九星気学の伝統的な算出法（立春・節入りを境界とした本命星・月命星、陽遁陰遁による日命星、月命星中宮盤による傾斜、年盤同会）に基づきローカル計算しています。節入り・二至は太陽黄経からの近似値で、節の入り時刻付近のご出生は前後の星にまたがる場合があります。最終的な判断はご自身の意思を大切になさってください。</div>
+  </div>
+</div>
+</div>
+
+<div id="panel-synastry" class="mode-panel">
+<div class="panel-body">
+  <div class="form-card wide">
+    <h2 class="form-title">九星気学 相性鑑定</h2>
+    <p class="form-sub">お二人の生年月日を入力してください。本命星・月命星の五行（相生・比和・相剋）から相性を多次元的に点数化します。</p>
+    <div class="syn-people">
+      <div class="syn-person"><div class="syn-person-label">PERSON A</div>
+        <div class="form-row"><label>お名前（任意）</label><input type="text" id="syn-a-name" placeholder="例：みらい"></div>
+        <div class="form-row"><label>生年月日</label><div class="form-date-selectors"><select id="syn-a-birth-year"></select><select id="syn-a-birth-month"></select><select id="syn-a-birth-day"></select></div></div>
+        <div class="form-row"><label>性別（任意）</label><div class="gender-toggle"><input type="radio" name="syn-a-gender" id="syn-a-g-f" value="female" checked><label for="syn-a-g-f">女性</label><input type="radio" name="syn-a-gender" id="syn-a-g-m" value="male"><label for="syn-a-g-m">男性</label></div></div></div>
+      <div class="syn-person"><div class="syn-person-label">PERSON B</div>
+        <div class="form-row"><label>お名前（任意）</label><input type="text" id="syn-b-name" placeholder="例：はるき"></div>
+        <div class="form-row"><label>生年月日</label><div class="form-date-selectors"><select id="syn-b-birth-year"></select><select id="syn-b-birth-month"></select><select id="syn-b-birth-day"></select></div></div>
+        <div class="form-row"><label>性別（任意）</label><div class="gender-toggle"><input type="radio" name="syn-b-gender" id="syn-b-g-f" value="female"><label for="syn-b-g-f">女性</label><input type="radio" name="syn-b-gender" id="syn-b-g-m" value="male" checked><label for="syn-b-g-m">男性</label></div></div></div>
+    </div>
+    <hr class="form-divider">
+    <button class="calc-btn" onclick="calcSynastry()">相性を鑑定する</button>
+  </div>
+  <div class="result-area" id="synastry-result">
+    <div class="result-header"><p class="result-tag">Compatibility — 相性鑑定</p><p class="result-name" id="syn-r-name"></p><p class="result-meta" id="syn-r-meta"></p></div>
+    <div id="syn-score"></div>
+    <div class="sec-div"><span>五行の関係性</span></div>
+    <p style="font-size:12px;color:var(--muted);line-height:2;letter-spacing:.04em;margin-bottom:24px;">本命星同士・月命星同士、そして本命星×月命星のクロスを五行で照合します。<b style="color:var(--wood);font-weight:400;">相生</b>＝育み合う／<b style="color:var(--gold2);font-weight:400;">比和</b>＝似た気で響き合う／<b style="color:var(--fire);font-weight:400;">相剋</b>＝刺激し鍛え合う、で読み解きます。</p>
+    <div class="syn-grid" id="syn-grid"></div>
+    <div class="sec-div"><span>相性鑑定</span></div>
+    <div id="syn-reading"></div>
+    <div class="caution">※ 相性スコアは五行（相生・比和・相剋）の関係を本命星・月命星・そのクロスで重みづけし点数化した目安です。相剋は「相性が悪い」ではなく、互いを鍛え成長させる刺激的な関係を表します。点数だけにとらわれずご活用ください。</div>
+  </div>
+</div>
+</div>
+
+<div style="max-width:720px;margin:0 auto 60px;padding:28px 32px;border:1px solid var(--border);background:rgba(196,168,106,.04);text-align:center;font-size:0.88rem;line-height:1.9;color:var(--muted);letter-spacing:.05em;">九星気学は、生まれた瞬間に宿る「気」の巡りを九つの星に映し、<br>本質・運勢・縁・吉方位までを読み解く東洋の叡智です。<br>MIRAIの個別セッションでは、吉方位取りや年運・月運の詳細も鑑定できます。</div>
+<footer style="padding:40px;text-align:center;border-top:1px solid var(--border);font-size:11px;letter-spacing:.14em;color:var(--muted2);"><a href="../../uranai.html" style="color:var(--gold);text-decoration:none;">MIRAI</a> ｜ 九星気学 鑑定ツール ／ © MIRAI All Rights Reserved.</footer>
+
+<script>
+'use strict';
+function mod(n,m){return((n%m)+m)%m}
+function mod360(x){return((x%360)+360)%360}
+function dateToJD(y,m,d,hour){if(m<=2){y-=1;m+=12}var A=Math.floor(y/100),B=2-A+Math.floor(A/4);return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+B-1524.5+(hour||0)/24}
+function jdToDate(jd){var z=Math.floor(jd+0.5),f=(jd+0.5)-z,A=z;if(z>=2299161){var al=Math.floor((z-1867216.25)/36524.25);A=z+1+al-Math.floor(al/4)}var B=A+1524,C=Math.floor((B-122.1)/365.25),D=Math.floor(365.25*C),E=Math.floor((B-D)/30.6001),day=B-D-Math.floor(30.6001*E)+f,month=(E<14)?E-1:E-13,year=(month>2)?C-4716:C-4715;return{y:year,m:month,d:Math.floor(day)}}
+function solarLongitude(jd){var n=jd-2451545.0,L=mod360(280.460+0.9856474*n),g=mod360(357.528+0.9856003*n)*Math.PI/180;return mod360(L+1.915*Math.sin(g)+0.020*Math.sin(2*g))}
+function solarTermJD(year,targetLon,mg,dg){var jd=dateToJD(year,mg,dg,0)-9/24;for(var i=0;i<8;i++){var diff=solarLongitude(jd)-targetLon;diff=((diff+180)%360+360)%360-180;jd-=diff/0.9856474}return jd}
+function risshunDayJST(year){return jdToDate(solarTermJD(year,315,2,4)+9/24)}
+function solsticeDateJST(year,which){var lon=which==='winter'?270:90,mg=which==='winter'?12:6,dg=which==='winter'?22:21;return jdToDate(solarTermJD(year,lon,mg,dg)+9/24)}
+function honmeiFromYear(year){var k=mod(year-2017,9),v=mod(1-k,9);return v===0?9:v}
+var GANZHI_ANCHOR=Math.round(dateToJD(2024,1,1,12));
+function ganzhiIndex(y,m,d){return mod(Math.round(dateToJD(y,m,d,12))-GANZHI_ANCHOR,60)}
+function nearestKoushi(year,mg){var sd=(mg===12)?solsticeDateJST(year,'winter'):solsticeDateJST(year,'summer'),g=ganzhiIndex(sd.y,sd.m,sd.d),offset=(g<=30)?-g:(60-g);return Math.round(dateToJD(sd.y,sd.m,sd.d,12))+offset}
+function nichimeiStar(y,m,d){var dJD=Math.round(dateToJD(y,m,d,12)),cands=[];for(var yy=y-1;yy<=y+1;yy++){cands.push({jd:nearestKoushi(yy,12),type:'you'});cands.push({jd:nearestKoushi(yy,6),type:'in'})}var sw=null;for(var i=0;i<cands.length;i++){var c=cands[i];if(c.jd<=dJD&&(!sw||c.jd>sw.jd))sw=c}var n=dJD-sw.jd;return sw.type==='you'?mod(n,9)+1:mod(8-n,9)+1}
+function getsumeiStar(honmei,monthIdx){var s;if(honmei===1||honmei===4||honmei===7)s=8;else if(honmei===3||honmei===6||honmei===9)s=5;else s=2;return mod(s-1-monthIdx,9)+1}
+function setsuMonthIdx(y,m,d){var lam=solarLongitude(dateToJD(y,m,d,12)-9/24);return Math.floor(mod360(lam-315)/30)}
+var BASE_LOSHU={N:1,SW:2,E:3,SE:4,C:5,NW:6,W:7,NE:8,S:9};
+function chartWithCenter(center){var out={};for(var dir in BASE_LOSHU)out[dir]=mod(BASE_LOSHU[dir]-1+(center-5),9)+1;return out}
+function findDirOfStar(chart,star){for(var dir in chart)if(chart[dir]===star)return dir;return null}
+var KYU_NAME={N:'坎宮',NE:'艮宮',E:'震宮',SE:'巽宮',S:'離宮',SW:'坤宮',W:'兌宮',NW:'乾宮',C:'中宮'};
+function keishaKyu(h,g){if(h===g)return{dir:'C',name:'中宮傾斜',special:true};var dir=findDirOfStar(chartWithCenter(g),h);return{dir:dir,name:KYU_NAME[dir]+'傾斜',special:false}}
+function doukaiKyu(h,vy){var yc=honmeiFromYear(vy);if(h===yc)return{dir:'C',name:'中宮同会',doukaiStar:5,special:true};var dir=findDirOfStar(chartWithCenter(yc),h);return{dir:dir,name:KYU_NAME[dir]+'同会',doukaiStar:BASE_LOSHU[dir],special:false}}
+function computeKyusei(y,m,d,vy){var rd=risshunDayJST(y),ky=y;if(m===1)ky=y-1;else if(m===2&&d<rd.d)ky=y-1;var honmei=honmeiFromYear(ky),mi=setsuMonthIdx(y,m,d),getsumei=getsumeiStar(honmei,mi),nichimei=nichimeiStar(y,m,d);return{honmei:honmei,getsumei:getsumei,nichimei:nichimei,keisha:keishaKyu(honmei,getsumei),doukai:doukaiKyu(honmei,vy),kigakuYear:ky,monthIdx:mi,risshun:rd}}
+
+var STAR={1:{name:'一白水星',yomi:'いっぱくすいせい',elem:'water',elemJP:'水'},2:{name:'二黒土星',yomi:'じこくどせい',elem:'earth',elemJP:'土'},3:{name:'三碧木星',yomi:'さんぺきもくせい',elem:'wood',elemJP:'木'},4:{name:'四緑木星',yomi:'しろくもくせい',elem:'wood',elemJP:'木'},5:{name:'五黄土星',yomi:'ごおうどせい',elem:'earth',elemJP:'土'},6:{name:'六白金星',yomi:'ろっぱくきんせい',elem:'metal',elemJP:'金'},7:{name:'七赤金星',yomi:'しちせききんせい',elem:'metal',elemJP:'金'},8:{name:'八白土星',yomi:'はっぱくどせい',elem:'earth',elemJP:'土'},9:{name:'九紫火星',yomi:'きゅうしかせい',elem:'fire',elemJP:'火'}};
+var ELEM_JP={wood:'木',fire:'火',earth:'土',metal:'金',water:'水'};
+var HONMEI_TEXT={
+ 1:{t:'水のように柔らかく、どんな器にも形を変えて馴染む順応力の持ち主。<strong>内面には深い思索と強い意志</strong>を秘め、表面は穏やかでも芯は折れません。人との交わりを大切にし、相手の気持ちを汲む共感力に優れます。一方で苦労を抱え込みやすい面も。流れに身を任せつつ進む方向を見失わないことが開運の鍵です。',kw:['順応','思考力','共感','忍耐','交際'],job:'適職：水商売・飲食・流通・営業・作家・医療・心理。'},
+ 2:{t:'大地のように広く受け止め、人を育てる母性と勤勉さの星。<strong>派手さより着実さ</strong>を旨とし、コツコツ積み上げた努力が必ず実を結びます。縁の下の力持ちとして組織や家庭を支え、深い信頼を集めます。慎重ゆえ決断に時間がかかる面も。焦らず自分のペースを守ることが大きな安定をもたらします。',kw:['育成','勤勉','受容','堅実','補佐'],job:'適職：農業・不動産・事務・介護・サポート職・教育。'},
+ 3:{t:'春の雷のように、若々しいエネルギーで物事を一気に動かす行動派。<strong>発想とスピード</strong>に長け、新しいことへ真っ先に飛び込む勇気があります。明るく音や言葉で周囲を活気づける一方、熱しやすく冷めやすく短気が玉に瑕。最初の情熱を最後までやり遂げる粘りで、才能が一段と開花します。',kw:['行動力','発展','情報','若さ','表現'],job:'適職：IT・音楽・放送・営業・スポーツ・電気・広告。'},
+ 4:{t:'風のように軽やかに行き渡り、人と人を結ぶ縁の星。<strong>信用と調和</strong>を何より大切にし、社交の場で自然と人望を集めます。物事を丁寧に整え、長期的な信頼関係を築くのが得意。優しさゆえ優柔不断になり抱え込むことも。自分の意思をはっきり示すことで、縁がさらに良い形で巡ります。',kw:['信用','調和','縁','社交','整理'],job:'適職：貿易・運送・旅行・広報・仲介・接客・通信。'},
+ 5:{t:'九星の中心に座す帝王の星。<strong>強烈な個性と統率力</strong>を備え、良くも悪くも周囲を巻き込む求心力があります。破壊と再生を司り、ゼロから物事を立て直す底力は随一。我が強く頑固になりやすい面もありますが、その芯の強さこそ大成の源。人の意見に耳を傾けるほど器が磨かれます。',kw:['中心','統率','再生','強さ','個性'],job:'適職：経営者・リーダー・金融・リサイクル・葬祭。'},
+ 6:{t:'天を象徴する完璧主義と正義感の星。<strong>高い理想と責任感</strong>を持ち、何事も筋を通さねば気が済みません。リーダーとして人を率い、信頼に応える実行力があります。プライドが高く弱みを見せるのが苦手な一面も。完璧を求めすぎず時に肩の力を抜くことで、より大きな器量が育ちます。',kw:['完璧','正義','統率','責任','理想'],job:'適職：公務員・経営・スポーツ・宝飾・自動車・投資。'},
+ 7:{t:'実りの沢を象徴する、喜びと社交の星。<strong>愛嬌と話術</strong>に恵まれ、人を楽しませ場を華やかにする天性の魅力があります。金銭感覚に長け、人とお金が自然と集まります。楽しさを優先しすぎ散財や移り気に走る面も。一つを深める落ち着きを持てば、魅力と実利が両立します。',kw:['社交','喜悦','金運','話術','愛嬌'],job:'適職：飲食・金融・芸能・接客・歯科・講師・弁護士。'},
+ 8:{t:'高くそびえる山を象徴する、変化と継承の星。<strong>粘り強さと蓄財</strong>の才に恵まれ、一度決めたら動じない安定感があります。変わり目を司り、改革や相続・継承の場面で力を発揮します。頑固で内にこもりやすい面もありますが、その芯の強さが信頼の礎。心を開いて交わるほど力が世に活きます。',kw:['変化','継承','蓄財','粘り','改革'],job:'適職：不動産・相続・ホテル・倉庫・教育・革新事業。'},
+ 9:{t:'燃える火を象徴する、知性と美の星。<strong>頭の回転の速さと審美眼</strong>に優れ、名誉や注目を集める華やかさがあります。直感が鋭く第一印象で本質を見抜く力も。感情の起伏が激しく熱しやすく離れやすい面も。冷静さと継続を意識することで、輝きが実りある名声へと結びつきます。',kw:['知性','美','名誉','直感','華やか'],job:'適職：芸術・美容・学者・法律・医療・広告・鑑定。'}};
+var SHAKAI_TEXT={
+ 1:'水のように人と人をつなぎ、組織の潤滑油となる使命。相手の本音を汲み、見えないところで全体を支える調整役・縁結び役として真価を発揮します。',
+ 2:'大地のように人を育て支える使命。縁の下の力持ちとして補佐・育成・奉仕に徹し、コツコツと社会の土台を築き上げる役割を担います。',
+ 3:'新しい流れを起こし、情報や活気を世に発信する使命。先駆者・発信者として停滞を破り、周囲を奮い立たせて時代を前へ進めます。',
+ 4:'信用と縁を広げ、人や物を結びつける使命。社交・仲介・調整の才で信頼のネットワークを築き、対立を和へ導く役割を持ちます。',
+ 5:'中心に立ち、人を統べ物事を再生させる使命。リーダーとして組織を率い、崩れたものをゼロから立て直す要としての役割を担います。',
+ 6:'高い理想を掲げ、組織や社会を正しく導く使命。統率者・責任者として筋を通し、人々の信頼に応える役割を全うします。',
+ 7:'人を楽しませ、潤いと喜びを社会にもたらす使命。場を和ませ、交流や経済を活性化させるムードメーカーとして輝きます。',
+ 8:'変化と継承の橋渡しをする使命。改革者・継承者として古いものを新しくつなぎ、転換期にこそ道を切り拓く役割を持ちます。',
+ 9:'知性と美で人を照らし、真価を見極め広める使命。表現者・専門家として価値あるものに光を当て、世に示す役割を担います。'};
+var DAILY_TEXT={
+ 1:'静かに自分と向き合う時間を確保し、感情を溜め込まず流すこと。柔軟さを保ちつつ本当の望みを見失わないことが、あなたらしく生きる鍵です。',
+ 2:'焦らず自分のペースを守り、日々の積み重ねを信じること。人に尽くす一方で自分自身を労わるバランスを忘れなければ、揺るがぬ安定が育ちます。',
+ 3:'思い立ったら動く瞬発力を活かしつつ、始めたことを最後までやり切る習慣を。声に出し表現することで、運は大きく開いていきます。',
+ 4:'ご縁と評判を大切に、丁寧な対応を積み重ねること。優柔不断を自覚し、ここぞの場面では自分の意思をはっきり示すと運気が安定します。',
+ 5:'我を通しすぎず、人の声に耳を傾けること。中心に立つ覚悟を持ち、その強いエネルギーを良い方向へ注ぐことで大きく花開きます。',
+ 6:'完璧を求めすぎず、時に肩の力を抜くこと。高い理想を掲げつつ人の弱さも受け入れる度量を育てると、より大きな信頼が集まります。',
+ 7:'楽しみを大切にしつつ、散財と移り気には注意を。一つの物事を深める落ち着きを持てば、魅力が確かな実りへと変わります。',
+ 8:'変化を恐れず受け入れ、粘り強く取り組むこと。心を開いて人と交わることで、内に蓄えた力が世の中でしっかり活きてきます。',
+ 9:'感情に振り回されず、冷静さと継続を意識すること。美しいものや学びに触れ続けることで、輝きが実りある名声へと結びつきます。'};
+var MARRY_TEXT={
+ 1:'尽くし尽くされる情の深い結婚を求めます。水のような優しさが家庭を和ませますが、合わせすぎて我慢を溜めないことが円満の秘訣です。',
+ 2:'家庭的で献身的、安定した結婚を築きます。尽くす喜びが大きい分、自分を後回しにしすぎないこと。誠実さが何よりの魅力です。',
+ 3:'恋愛も結婚もスピード感を持って進めます。勢いで決めやすいので、熱が落ち着いても続く土台づくりと丁寧なやり取りを心がけて。',
+ 4:'人柄で好かれ、ご縁に恵まれます。穏やかで調和的な家庭を築きますが、優柔不断で良縁を逃さぬよう決断する勇気を持ちましょう。',
+ 5:'強い縁で深く結ばれますが個性のぶつかり合いも。主導権を握りつつ相手を立てることで、唯一無二のパートナーシップになります。',
+ 6:'誠実で一途、筋を通した結婚を望みます。理想が高い分、相手に完璧を求めすぎないこと。歩み寄りが長く続く秘訣です。',
+ 7:'華やかで愛され上手。明るく楽しい家庭を築きます。浪費や移り気に気をつければ、笑いの絶えない円満な関係を保てます。',
+ 8:'一度決めたら長く添い遂げる粘り強さがあります。変化の時期に縁が動きやすいので、焦らずじっくり見極めることが幸せにつながります。',
+ 9:'情熱的に惹かれ合いますが熱しやすく冷めやすい面も。直感の縁を大切にしつつ継続を意識することで、関係が末永く実ります。'};
+var KYU_TEXT={
+ N:{name:'坎宮',pos:'北・水',keisha:'内に秘めた情熱と探究心を持つ性格。苦労や試練を糧に深まるタイプで、一見穏やかでも水面下で強い思いを温めています。一人で深く掘り下げる時間が本当の力を引き出します。',doukai:'内省と土台づくりの巡り。目立つ成果より水面下で実力を蓄え、人間関係を深める時期。苦労を学びに変えることが次の飛躍につながります。'},
+ SW:{name:'坤宮',pos:'南西・土',keisha:'人を支え育てる母性と、地道に積み上げる堅実さを備えた性格。縁の下で力を発揮し、続けることで信頼を得ます。誠実さがあなたの真価です。',doukai:'育成と受容、地固めの巡り。サポート役や後進の指導で評価が高まります。勤勉に努め身近な縁を育てることが社会的な実りを呼びます。'},
+ E:{name:'震宮',pos:'東・木',keisha:'行動力と発信力にあふれた性格。きっかけさえあれば一気に動き出す瞬発力があり、新しいことを始める場面で本領を発揮します。表現することが運を開きます。',doukai:'発展と始動の巡り。新規の挑戦や情報発信が追い風に。若々しい行動力で先陣を切ることで、注目とチャンスを引き寄せます。'},
+ SE:{name:'巽宮',pos:'南東・木',keisha:'人との縁を結び、信用を育てる性格。整え調える才に恵まれ、社交の場で自然と評価されます。丁寧な対応の積み重ねが強みです。',doukai:'縁と信用が広がる巡り。人脈・恋愛・商談など「ご縁」がテーマ。誠実な対応と良い評判が成功と新しい出会いを運びます。'},
+ S:{name:'離宮',pos:'南・火',keisha:'鋭い知性と美的感覚、人を惹きつける華を備えた性格。直感で本質を見抜き、注目される場面で輝きます。表現や知識を磨くことで魅力が花開きます。',doukai:'名誉と発信、注目の巡り。実力や成果が世に認められやすい時期。知性・美・表現を活かし前に出ることで評価と人気が高まります。'},
+ W:{name:'兌宮',pos:'西・金',keisha:'人を楽しませる愛嬌と、喜びを生む社交性を持つ性格。会話やお金にまつわる場面でセンスを発揮します。楽しむ心が魅力を引き出します。',doukai:'喜びと金運、社交の巡り。人付き合いや楽しみごとから良縁・利益が生まれます。明るく場を和ませることで人もお金も集まります。'},
+ NW:{name:'乾宮',pos:'北西・金',keisha:'人を統率する責任感と、高い理想を実現する力を備えた性格。リーダーや目上の立場で本領を発揮し、筋を通す姿勢が信頼を生みます。',doukai:'統率と責任、地位向上の巡り。リーダー役や目上からの引き立てがテーマ。誇りを持ち筋を通すことで立場と信頼が高まります。'},
+ NE:{name:'艮宮',pos:'北東・土',keisha:'変化を乗り越える粘りと、改革・継承の力を持つ性格。転機でこそ底力を発揮し、蓄えたものが大きく実ります。変わり目を恐れない姿勢が才能を開花させます。',doukai:'変化と転換、改革の巡り。住まい・仕事・立場の変わり目がテーマ。粘り強く変化を味方につけることで次の足場が固まります。'}};
+var GEN={wood:'fire',fire:'earth',earth:'metal',metal:'water',water:'wood'};
+var MOTHER_ELEM={water:'metal',wood:'water',fire:'wood',earth:'fire',metal:'earth'};
+var CTRL_ELEM={water:'earth',wood:'metal',fire:'water',earth:'wood',metal:'fire'};
+var ELEM_STARS={water:[1],wood:[3,4],fire:[9],earth:[2,5,8],metal:[6,7]};
+var ELEM_GUIDE={metal:'金性の人は、迷うあなたに決断力と現実的な指針を与え、的確に導いてくれます。',water:'水性の人は、あなたの成長を柔らかく支え、知恵と心の潤いを与えてくれます。',wood:'木性の人は、行動のきっかけと成長の糧を与え、情熱を燃やし続けさせてくれます。',fire:'火性の人は、情熱と明るさをもたらし、前へ進む活力を与えてくれます。',earth:'土性の人は、安定と確かな土台を与え、安心して力を発揮させてくれます。'};
+var ELEM_STRESS={earth:'土性の重い圧力や、頑固な相手・動かせない状況に縛られると消耗しやすくなります。',metal:'金性の鋭い批判や、規則・締めつけの強い環境に置かれるとストレスを感じます。',water:'水性の冷たさや、感情を否定され水を差される場面で気力を削がれがちです。',wood:'木性のせかすような勢いや、急かされ振り回される状況で疲れやすくなります。',fire:'火性の激しさや、感情的にぶつけられる・場が乱れる状況で消耗しやすくなります。'};
+var ELEM_RELIEF={water:'一人で静かに過ごす時間や、水辺・入浴で気持ちをリセットすると整います。',wood:'体を動かし、新しい場所や情報に触れること。朝の光や緑が回復を促します。',fire:'美しいものや知的な刺激に触れ、感情を表現して発散すると元気が戻ります。',earth:'自然や土に触れ、ゆっくり休んでルーティンを守ることで安定を取り戻せます。',metal:'整理整頓や断捨離、運動や目標設定、上質なものに触れると気が締まり整います。'};
+var ELEM_VENT={water:'人と語らい考えを言葉にする',wood:'成果を形にして発表する',fire:'誰かに分け与え教える',earth:'つくり出したものを世に出す',metal:'人を楽しませ場を和ませる'};
+function starsToNames(arr){return arr.map(function(s){return STAR[s].name}).join('・')}
+function relation(a,b){if(a===b)return'hiwa';if(GEN[a]===b||GEN[b]===a)return'sho';return'koku'}
+var REL_INFO={sho:{jp:'相生',cls:'rel-sho',u:1},hiwa:{jp:'比和',cls:'rel-hiwa',u:0.6},koku:{jp:'相剋',cls:'rel-koku',u:-0.7}};
+var GRID_ORDER=['SE','S','SW','E','C','W','NE','N','NW'];
+var DIR_LABEL={N:'N 北',S:'S 南',E:'E 東',W:'W 西',NE:'NE 北東',SE:'SE 南東',SW:'SW 南西',NW:'NW 北西',C:'中宮'};
+function elemClassOf(star){return'elem-'+STAR[star].elem}
+function renderBoard(center,opts){opts=opts||{};var chart=chartWithCenter(center),html='<div class="board">';for(var i=0;i<GRID_ORDER.length;i++){var dir=GRID_ORDER[i],star=chart[dir],isC=dir==='C',cls=['cell',elemClassOf(star)];if(isC)cls.push('center');if(opts.markHonmei&&!isC&&star===opts.markHonmei)cls.push('mark-honmei');html+='<div class="'+cls.join(' ')+'"><span class="cell-dir">'+DIR_LABEL[dir]+'</span><span class="cell-num">'+star+'</span><span class="cell-name">'+STAR[star].name.slice(0,2)+'</span></div>'}return html+'</div>'}
+
+function calcNatal(){
+  var y=+document.getElementById('nt-birth-year').value,m=+document.getElementById('nt-birth-month').value,d=+document.getElementById('nt-birth-day').value;
+  if(!y||!m||!d){alert('生年月日をすべて選択してください');return}
+  var name=document.getElementById('nt-name').value.trim(),gender=document.querySelector('input[name="nt-gender"]:checked').value,vy=new Date().getFullYear(),r=computeKyusei(y,m,d,vy);
+  document.getElementById('nt-r-name').textContent=(name?name+' さん':'あなた')+'　—　本命 '+STAR[r.honmei].name;
+  document.getElementById('nt-r-meta').textContent=y+'年'+m+'月'+d+'日生 ／ '+(gender==='female'?'女性':'男性')+' ／ 気学上の年：'+r.kigakuYear+'年（立春 '+r.risshun.m+'/'+r.risshun.d+' 基準）';
+  var core=[['Honmei',r.honmei,'本命星'],['Getsumei',r.getsumei,'月命星'],['Nichimei',r.nichimei,'日命星']],ch='';
+  core.forEach(function(it){var s=it[1];ch+='<div class="core-star"><div class="core-star-lbl">'+it[0]+'</div><div class="core-star-name">'+STAR[s].name+'</div><span class="core-star-elem '+elemClassOf(s)+'">'+STAR[s].elemJP+'性</span></div>'});
+  ch+='<div class="core-star"><div class="core-star-lbl">Keisha</div><div class="core-star-name">'+r.keisha.name+'</div><span class="core-star-elem '+(r.keisha.special?'elem-earth':elemClassOf(BASE_LOSHU[r.keisha.dir]||5))+'">与えられた性格</span></div>';
+  ch+='<div class="core-star"><div class="core-star-lbl">Doukai '+vy+'</div><div class="core-star-name">'+r.doukai.name+'</div><span class="core-star-elem '+elemClassOf(r.doukai.doukaiStar)+'">本年の運勢</span></div>';
+  document.getElementById('nt-core').innerHTML=ch;
+  var lm=r.keisha.special?'本命星と月命星が同じため<b>中宮傾斜</b>（特殊傾斜）。本命の性質が二重に強まります。':'枠で示した<b>本命星 '+STAR[r.honmei].name+'</b>が回座する方位が<b>'+r.keisha.name+'</b>。あなたの性格・本質を表します。';
+  document.getElementById('nt-boards').innerHTML='<div class="board-block"><div class="board-label">年盤 — Year Board</div><div class="board-sub">中宮＝本命星 '+STAR[r.honmei].name+'（'+r.kigakuYear+'年の気）</div>'+renderBoard(r.honmei,{})+'<div class="board-legend">生まれ年の気の配置。中央に座す<b>'+STAR[r.honmei].name+'</b>が人生を通じた基本の性質を司ります。</div></div><div class="board-block"><div class="board-label">月盤 — Month Board</div><div class="board-sub">中宮＝月命星 '+STAR[r.getsumei].name+'（生まれ月の気）</div>'+renderBoard(r.getsumei,{markHonmei:r.honmei})+'<div class="board-legend">'+lm+'</div></div>';
+  var cards=[],myE=STAR[r.honmei].elem,mE=MOTHER_ELEM[myE],cE=CTRL_ELEM[myE],chE=GEN[myE];
+  cards.push(card('① 本命星 ｜ 生まれ持った運命の流れ',r.honmei,HONMEI_TEXT[r.honmei].t,HONMEI_TEXT[r.honmei].kw,'本命盤（年盤）の中央に座すあなたの星。'+HONMEI_TEXT[r.honmei].job+'この気質が人生全体を貫く運命の基調となります。'));
+  var kt,ke;
+  if(r.keisha.special){kt='本命星と月命星がともに<strong>'+STAR[r.honmei].name+'</strong>で重なる<strong>中宮傾斜</strong>。本命星の性質がそのまま性格の核として色濃く表れ、表の顔と内なる自分の方向性が一致した、ブレの少ない一貫した個性の持ち主です。多様な価値観に触れることがさらなる成長を促します。';ke=STAR[r.honmei].elem;}
+  else{var k=KYU_TEXT[r.keisha.dir];kt='月命星 '+STAR[r.getsumei].name+' を中宮に置いた月盤で、本命星 '+STAR[r.honmei].name+' が<strong>'+k.name+'（'+k.pos+'）</strong>に回座する<strong>'+r.keisha.name+'</strong>。ここに「与えられた性格・本質」が表れます。'+k.keisha;ke=BASE_LOSHU[r.keisha.dir]?STAR[BASE_LOSHU[r.keisha.dir]].elem:'earth';}
+  var un;
+  if(r.doukai.special){un='<b>本年（'+vy+'）の運勢：</b>本命星が年盤の中央に重なる<b>中宮同会</b>の年。注目が集まり物事が動きやすい反面、消耗しやすい時期です。新たな大勝負より足元を固め体調を整えるのが吉。';}
+  else{var dk=KYU_TEXT[r.doukai.dir];un='<b>本年（'+vy+'）の運勢：</b>本命星が年盤で<b>'+dk.name+'</b>に回座する<b>'+r.doukai.name+'</b>。'+dk.doukai;}
+  cards.push(cardKyu('② 傾斜宮 ｜ あなたに与えられた性格・本質',r.keisha.name,kt,ke,un));
+  cards.push(card('③ 月命星 ｜ あなたの社会的使命',r.getsumei,SHAKAI_TEXT[r.getsumei],null,'<b>幸せのかたち：</b>この社会的使命を全うするとき、あなたは最も満たされ社会の中で本来の輝きを放ちます。月命星は、世の中でどう役立ち何に喜びを見いだすかを示します。'));
+  cards.push(cardGen('④ あなたを導いてくれる人物','人生を良い方向へ導く縁','導',mE,'五行で、あなたの<strong>'+ELEM_JP[myE]+'性</strong>を育み生み出すのは<strong>'+ELEM_JP[mE]+'性</strong>の気。すなわち<strong>'+starsToNames(ELEM_STARS[mE])+'</strong>を本命星に持つ人々が、あなたを支え人生を良い方向へ導いてくれる縁です。'+ELEM_GUIDE[mE]+'迷ったとき、こうした星を持つ年長者や信頼できる相手に相談すると道がひらけます。'));
+  cards.push(cardGen('⑤ 感じやすいストレスと解消方法','心の負担と整え方','圧',cE,'あなたの<strong>'+ELEM_JP[myE]+'性</strong>に圧となりやすいのは、これを剋する<strong>'+ELEM_JP[cE]+'性</strong>の気（'+starsToNames(ELEM_STARS[cE])+'）。'+ELEM_STRESS[cE]+'<br><br><strong>解消法：</strong>'+ELEM_RELIEF[myE]+'また'+ELEM_JP[chE]+'性的に気を外へ「洩らす」——'+ELEM_VENT[myE]+'——ことも、溜まった気を健やかに循環させます。'));
+  var ms=ELEM_STARS[mE].concat(ELEM_STARS[chE]);
+  cards.push(cardGen('⑥ あなたに与えられている結婚縁','パートナーとのご縁','縁',chE,MARRY_TEXT[r.honmei]+'<br><br>五行でみると相生（育み合う関係）になりやすいのは、'+ELEM_JP[mE]+'性・'+ELEM_JP[chE]+'性の星——<strong>'+starsToNames(ms)+'</strong>。これらを本命星に持つ相手とは自然に支え合える良縁になりやすいでしょう。詳しくは「相性鑑定」へ。'));
+  cards.push(cardGen('⑦ あなたらしく生きるために','日々の過ごし方','日',myE,DAILY_TEXT[r.honmei]));
+  document.getElementById('nt-readings').innerHTML=cards.join('');
+  var a=document.getElementById('natal-result');a.classList.add('show');setTimeout(function(){a.scrollIntoView({behavior:'smooth',block:'start'})},60);
+}
+function card(type,star,text,kw,note){var h='<div class="kg-card"><div class="kg-card-head"><div class="kg-card-badge">'+star+'</div><div class="kg-card-meta"><div class="kg-card-type">'+type+'</div><div class="kg-card-name">'+STAR[star].name+'<span class="kg-card-elem '+elemClassOf(star)+'">'+STAR[star].elemJP+'</span></div><div class="kg-card-sub">'+STAR[star].yomi+'</div></div></div><div class="kg-card-text">'+text+'</div>';if(kw)h+='<div class="kg-kw">'+kw.map(function(x){return'<span class="kg-kw-item">'+x+'</span>'}).join('')+'</div>';if(note)h+='<div class="kg-note">'+note+'</div>';return h+'</div>'}
+function cardGen(type,sub,badge,elem,text,note){var h='<div class="kg-card"><div class="kg-card-head"><div class="kg-card-badge">'+badge+'</div><div class="kg-card-meta"><div class="kg-card-type">'+type+'</div><div class="kg-card-name">'+sub+'<span class="kg-card-elem elem-'+elem+'">'+ELEM_JP[elem]+'</span></div></div></div><div class="kg-card-text">'+text+'</div>';if(note)h+='<div class="kg-note">'+note+'</div>';return h+'</div>'}
+function cardKyu(type,kyuName,text,elem,note){var h='<div class="kg-card"><div class="kg-card-head"><div class="kg-card-badge">'+kyuName.slice(0,1)+'</div><div class="kg-card-meta"><div class="kg-card-type">'+type+'</div><div class="kg-card-name">'+kyuName+'<span class="kg-card-elem elem-'+elem+'">性格・本質</span></div></div></div><div class="kg-card-text">'+text+'</div>';if(note)h+='<div class="kg-note">'+note+'</div>';return h+'</div>'}
+
+function getPerson(who){var y=+document.getElementById('syn-'+who+'-birth-year').value,m=+document.getElementById('syn-'+who+'-birth-month').value,d=+document.getElementById('syn-'+who+'-birth-day').value;if(!y||!m||!d)return null;var name=document.getElementById('syn-'+who+'-name').value.trim();return{y:y,m:m,d:d,name:name||('お相手'+(who==='a'?'A':'B')),r:computeKyusei(y,m,d,new Date().getFullYear())}}
+function repeat(ch,n){var s='';for(var i=0;i<n;i++)s+=ch;return s}
+function whoGen(ea,eb){if(GEN[ea]===eb)return'a';if(GEN[eb]===ea)return'b';return null}
+function whoKoku(ea,eb){var K={wood:'earth',earth:'water',water:'fire',fire:'metal',metal:'wood'};if(K[ea]===eb)return'a';if(K[eb]===ea)return'b';return null}
+function calcSynastry(){
+  var A=getPerson('a'),B=getPerson('b');
+  if(!A||!B){alert('お二人の生年月日をすべて選択してください');return}
+  var hR=relation(STAR[A.r.honmei].elem,STAR[B.r.honmei].elem),gR=relation(STAR[A.r.getsumei].elem,STAR[B.r.getsumei].elem),x1=relation(STAR[A.r.honmei].elem,STAR[B.r.getsumei].elem),x2=relation(STAR[B.r.honmei].elem,STAR[A.r.getsumei].elem);
+  var score=Math.round(Math.max(8,Math.min(98,50+30*REL_INFO[hR].u+15*REL_INFO[gR].u+8*REL_INFO[x1].u+8*REL_INFO[x2].u))),sn=Math.max(1,Math.min(5,Math.round(score/20)));
+  document.getElementById('syn-r-name').textContent=A.name+' さん × '+B.name+' さん';
+  document.getElementById('syn-r-meta').textContent=STAR[A.r.honmei].name+' と '+STAR[B.r.honmei].name+' の縁';
+  var vd,ds;
+  if(score>=85){vd='天恵の相性';ds='自然に育み合い、共にいるほど運気が高まる稀有なご縁です。';}
+  else if(score>=70){vd='相生の良縁';ds='互いの不足を補い合い、安定して発展していける相性です。';}
+  else if(score>=55){vd='響き合う仲';ds='似た気質や補い合う部分があり、歩み寄りでより良くなる関係です。';}
+  else if(score>=40){vd='刺激し合う仲';ds='違いゆえの摩擦もありますが、互いを鍛え成長させる関係です。';}
+  else{vd='鍛え合う縁';ds='価値観の違いは大きいものの、乗り越えれば唯一無二の絆になります。';}
+  document.getElementById('syn-score').innerHTML='<div class="syn-score-box"><div class="syn-pair-head"><div class="syn-pair-name">'+STAR[A.r.honmei].name+'</div><div class="syn-pair-x">✕</div><div class="syn-pair-name">'+STAR[B.r.honmei].name+'</div></div><div class="syn-score-num">'+score+'<span>/100</span></div><div class="syn-bar-track"><div class="syn-bar-fill" id="syn-bar"></div></div><div class="syn-score-stars">'+repeat('★',sn)+repeat('☆',5-sn)+'</div><div class="syn-score-label">'+vd+'</div><div class="caution" style="border:none;margin-top:14px;color:var(--muted);">'+ds+'</div></div>';
+  setTimeout(function(){var b=document.getElementById('syn-bar');if(b)b.style.width=score+'%'},120);
+  var rows=[['本命星 × 本命星',A.r.honmei,B.r.honmei,hR,'人生の基盤・基本相性'],['月命星 × 月命星',A.r.getsumei,B.r.getsumei,gR,'内面・素の自分どうし'],[A.name+'本命 × '+B.name+'月命',A.r.honmei,B.r.getsumei,x1,'表の顔と内面のクロス'],[B.name+'本命 × '+A.name+'月命',B.r.honmei,A.r.getsumei,x2,'表の顔と内面のクロス']];
+  document.getElementById('syn-grid').innerHTML=rows.map(function(row){var p=row[0].split(' × ');return'<div class="syn-rel-row"><div class="syn-rel-star"><small>'+p[0]+'</small>'+STAR[row[1]].name+'<span class="kg-card-elem '+elemClassOf(row[1])+'" style="margin-left:6px;">'+STAR[row[1]].elemJP+'</span></div><div class="syn-rel-conn">—<br>'+row[4]+'</div><div class="syn-rel-star"><small>'+p[1]+'</small>'+STAR[row[2]].name+'<span class="kg-card-elem '+elemClassOf(row[2])+'" style="margin-left:6px;">'+STAR[row[2]].elemJP+'</span></div><div class="syn-rel-badge '+REL_INFO[row[3]].cls+'">'+REL_INFO[row[3]].jp+'</div></div>'}).join('');
+  document.getElementById('syn-reading').innerHTML=[synReadHonmei(A,B,hR),synReadGetsumei(A,B,gR),synReadCross(A,B,x1,x2),synReadAdvice(A,B,score)].join('');
+  var a=document.getElementById('synastry-result');a.classList.add('show');setTimeout(function(){a.scrollIntoView({behavior:'smooth',block:'start'})},60);
+}
+function synReadHonmei(A,B,rel){var ea=STAR[A.r.honmei].elem,eb=STAR[B.r.honmei].elem,t;
+  if(rel==='sho'){var g=whoGen(ea,eb),gi=g==='a'?A:B,ta=g==='a'?B:A;t='本命星どうしは<strong>相生</strong>の関係。'+gi.name+'さん（'+STAR[gi.r.honmei].elemJP+'）の気が'+ta.name+'さん（'+STAR[ta.r.honmei].elemJP+'）を自然に育み後押しします。'+ta.name+'さんは安心して力を発揮でき、'+gi.name+'さんは尽くす喜びを得ます。感謝を言葉にし合うとより長続きします。';}
+  else if(rel==='hiwa'){t='本命星どうしは同じ<strong>'+STAR[A.r.honmei].elemJP+'</strong>性の<strong>比和</strong>。似た価値観とテンポを持ち、言葉にせず通じ合える心地よさがあります。一方で同じ弱点を抱えたり譲り合いで停滞することも。時に異なる刺激を取り入れる意識が関係を新鮮に保ちます。';}
+  else{var kk=whoKoku(ea,eb),at=kk==='a'?A:B,df=kk==='a'?B:A;t='本命星どうしは<strong>相剋</strong>の関係。'+at.name+'さん（'+STAR[at.r.honmei].elemJP+'）の気が'+df.name+'さん（'+STAR[df.r.honmei].elemJP+'）に強く働きかけます。「合わない」のではなく互いを<strong>鍛え成長させる刺激的な縁</strong>。'+at.name+'さんは押しすぎ、'+df.name+'さんは受け身になりすぎに注意し、違いを尊重し合えれば深い絆に育ちます。';}
+  return readBox('本命星の相性 — 人生の土台',t)}
+function synReadGetsumei(A,B,rel){var t;if(rel==='sho')t='月命星は<strong>相生</strong>。素の自分・内面どうしが補い合い、二人きりのリラックスした時間ほど心地よさが増します。長く一緒にいても疲れにくい関係です。';else if(rel==='hiwa')t='月命星は<strong>比和</strong>。内面のリズムやくつろぎ方が似ており「居心地のよさ」を共有できます。慣れて当たり前にならないよう小さな気遣いを忘れないことが大切です。';else t='月命星は<strong>相剋</strong>。プライベートでの感覚や甘え方に違いが出やすい組み合わせ。素を見せ合う場面でズレを感じたら、相手のペースを否定せず「違って当然」と受け止めることが鍵です。';return readBox('月命星の相性 — 内面・素顔',t)}
+function synReadCross(A,B,x1,x2){var mp={sho:'相生（育み合う）',hiwa:'比和（響き合う）',koku:'相剋（鍛え合う）'},t='表に出る本命星と内なる月命星のクロスでは、'+A.name+'さんの表の顔（'+STAR[A.r.honmei].name+'）と'+B.name+'さんの素顔（'+STAR[B.r.getsumei].name+'）は<strong>'+mp[x1]+'</strong>。一方、'+B.name+'さんの表の顔（'+STAR[B.r.honmei].name+'）と'+A.name+'さんの素顔（'+STAR[A.r.getsumei].name+'）は<strong>'+mp[x2]+'</strong>。';if(x1==='sho'&&x2==='sho')t+='双方向で育み合う理想的なクロス。互いの外向きの姿と素の部分がよく噛み合い、自然体で深い信頼を築けます。';else if(x1==='koku'&&x2==='koku')t+='双方向に刺激し合うクロス。距離感を誤ると衝突しますが、尊重し合えれば互いを大きく成長させます。';else t+='片方向に補い、片方向に刺激するバランスのとれたクロス。支える場面と鍛えられる場面が入れ替わり、関係に奥行きが生まれます。';return readBox('クロス相性 — 表と裏の組み合わせ',t)}
+function synReadAdvice(A,B,score){var t;if(score>=70)t='総じて<strong>育み合う良縁</strong>。自然な信頼を土台に共通の目標を持つとさらに運気が高まります。順調なときこそ感謝を伝え合い、相手の頑張りを見逃さないことが縁を長く輝かせる秘訣です。';else if(score>=50)t='<strong>歩み寄りで深まる関係</strong>。似た部分と違う部分が程よく混ざります。違いを「自分にない魅力」と捉え直し、相手の気のリズム（'+STAR[A.r.honmei].elemJP+'性と'+STAR[B.r.honmei].elemJP+'性）を尊重することが関係を深めます。';else t='<strong>鍛え合う縁</strong>。刺激の多い組み合わせですが、相剋の縁は本気でぶつかれる相手だからこそ。相手を変えようとせず「違いを面白がる」姿勢を持てば、摩擦は成長へ変わり唯一無二の絆になります。意見が割れたら勝ち負けでなく着地点を探しましょう。';return readBox('総合鑑定とアドバイス',t)}
+function readBox(head,text){return'<div class="syn-read-item"><div class="syn-read-head">'+head+'</div><div class="syn-read-text">'+text+'</div></div>'}
+
+function switchMode(id,btn){var ps=document.querySelectorAll('.mode-panel');for(var i=0;i<ps.length;i++)ps[i].classList.remove('active');var bs=document.querySelectorAll('.mode-tab');for(var j=0;j<bs.length;j++)bs[j].classList.remove('active');document.getElementById('panel-'+id).classList.add('active');btn.classList.add('active')}
+function populateSelectors(prefix){var yS=document.getElementById(prefix+'-year'),mS=document.getElementById(prefix+'-month'),dS=document.getElementById(prefix+'-day');if(!yS||!mS||!dS)return;yS.innerHTML='<option value="">-- 年 --</option>';mS.innerHTML='<option value="">-- 月 --</option>';dS.innerHTML='<option value="">-- 日 --</option>';for(var y=1920;y<=2030;y++){var o=document.createElement('option');o.value=y;o.textContent=y+'年';yS.appendChild(o)}for(var m=1;m<=12;m++){var o2=document.createElement('option');o2.value=m;o2.textContent=m+'月';mS.appendChild(o2)}function up(){var sy=+yS.value,sm=+mS.value,cd=+dS.value;dS.innerHTML='<option value="">-- 日 --</option>';if(!sy||!sm)return;var dd=new Date(sy,sm,0).getDate();for(var d=1;d<=dd;d++){var o=document.createElement('option');o.value=d;o.textContent=d+'日';if(d===cd)o.selected=true;dS.appendChild(o)}}yS.addEventListener('change',up);mS.addEventListener('change',up);yS.value=1990;mS.value=1;up();dS.value=1;}
+window.addEventListener('DOMContentLoaded',function(){populateSelectors('nt-birth');populateSelectors('syn-a-birth');populateSelectors('syn-b-birth')});
+</script>
+<script>
+(function(){var c=document.getElementById('stars-canvas');if(!c||!c.getContext)return;var ctx=c.getContext('2d'),S=[];function rs(){c.width=window.innerWidth;c.height=window.innerHeight;S=[];var n=Math.floor(c.width*c.height/7500);for(var i=0;i<n;i++)S.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.1+0.2,a:Math.random()*0.35+0.06,sp:Math.random()*0.0018+0.0006,ph:Math.random()*Math.PI*2})}function dr(t){ctx.clearRect(0,0,c.width,c.height);for(var i=0;i<S.length;i++){var s=S[i];ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.2832);ctx.fillStyle='rgba(220,210,245,'+(s.a*(0.55+0.45*Math.sin(t*s.sp+s.ph)))+')';ctx.fill()}requestAnimationFrame(dr)}rs();window.addEventListener('resize',rs);requestAnimationFrame(dr)})();
+window.addEventListener('scroll',function(){var n=document.querySelector('nav');if(window.scrollY>50)n.classList.add('scrolled');else n.classList.remove('scrolled')});
+document.querySelectorAll('.form-card').forEach(function(cd){cd.addEventListener('mousemove',function(e){var r=cd.getBoundingClientRect();cd.style.setProperty('--fc-x',(e.clientX-r.left)+'px');cd.style.setProperty('--fc-y',(e.clientY-r.top)+'px')})});
+</script>
+</body>
+</html>

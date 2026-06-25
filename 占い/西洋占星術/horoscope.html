@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>西洋占星術（ホロスコープ）個人鑑定｜MIRAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0d0b08; --bg2:#131009; --bg3:#1a1710; --bg4:#1f1c12;
+  --cream:#f5f2eb; --muted:rgba(245,242,235,.55); --muted2:rgba(245,242,235,.28);
+  --gold:#c4a86a; --gold2:#e8d4a0; --gold-dim:rgba(196,168,106,.18);
+  --border:rgba(196,168,106,.14); --border2:rgba(255,255,255,.07);
+  --wood:#6db87a; --fire:#c97878; --earth:#c9b464; --metal:#a8b4c4; --water:#6888c4;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--cream);font-family:'Noto Sans JP',sans-serif;font-weight:300;line-height:1.8;-webkit-font-smoothing:antialiased;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:flex;justify-content:space-between;align-items:center;background:rgba(13,11,8,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:20px;letter-spacing:.18em;color:var(--cream);text-decoration:none;}
+.nav-logo span{color:var(--gold);margin-left:8px;font-size:11px;letter-spacing:.22em;}
+.nav-back{font-size:11px;letter-spacing:.16em;color:var(--muted);text-decoration:none;text-transform:uppercase;display:flex;align-items:center;gap:8px;transition:color .2s;}
+.nav-back:hover{color:var(--gold);}
+nav.scrolled{box-shadow:0 2px 28px rgba(0,0,0,.55);}
+
+/* ── HERO ── */
+.hero{min-height:48vh;display:flex;flex-direction:column;justify-content:flex-end;padding:110px 40px 56px;position:relative;overflow:hidden;border-bottom:1px solid var(--border);}
+.hero-orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;}
+.orb1{width:520px;height:520px;background:rgba(80,60,180,.07);top:-140px;right:-60px;}
+.orb2{width:380px;height:380px;background:rgba(100,80,200,.05);bottom:-80px;left:5%;}
+.orb3{width:280px;height:280px;background:rgba(196,168,106,.04);top:20%;left:50%;}
+.hero-inner{max-width:820px;position:relative;}
+.hero-tag{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:.32em;color:var(--gold);text-transform:uppercase;margin-bottom:24px;display:flex;align-items:center;gap:14px;}
+.hero-tag::before{content:'';display:block;width:28px;height:1px;background:var(--gold);}
+.hero-title{font-family:'Noto Serif JP',serif;font-size:clamp(26px,5vw,50px);font-weight:300;line-height:1.55;letter-spacing:.06em;margin-bottom:20px;}
+.hero-desc{font-size:13px;color:var(--muted);line-height:2.2;max-width:600px;}
+
+/* ── MODE TABS ── */
+.mode-nav{position:sticky;top:53px;z-index:100;background:rgba(13,11,8,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;padding:0 40px;overflow-x:auto;}
+.mode-tab{padding:16px 28px;font-size:12px;letter-spacing:.15em;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;font-family:'Noto Sans JP',sans-serif;font-weight:300;text-transform:uppercase;white-space:nowrap;}
+.mode-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.mode-panel{display:none;}
+.mode-panel.active{display:block;}
+.panel-body{padding:64px 40px;max-width:1080px;margin:0 auto;}
+
+/* ── FORMS ── */
+.form-card{background:var(--bg3);border:1px solid var(--border);padding:44px;max-width:700px;margin-bottom:56px;position:relative;overflow:hidden;}
+.form-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(500px circle at var(--fc-x,50%) var(--fc-y,50%),rgba(196,168,106,.08),transparent 40%);opacity:0;transition:opacity .5s;z-index:0;pointer-events:none;}
+.form-card:hover::before{opacity:1;}
+.form-card>*{position:relative;z-index:1;}
+.form-title{font-family:'Noto Serif JP',serif;font-size:19px;font-weight:300;letter-spacing:.08em;color:var(--cream);margin-bottom:6px;}
+.form-sub{font-size:12px;color:var(--muted);letter-spacing:.06em;margin-bottom:32px;line-height:1.9;}
+.form-row{margin-bottom:24px;}
+.form-row label{display:block;font-size:10px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:9px;}
+.form-row input[type="time"],.form-row input[type="text"],.form-row select{
+  width:100%;padding:13px 16px;background:rgba(255,255,255,.04);border:1px solid var(--border2);
+  color:var(--cream);font-family:'Noto Sans JP',sans-serif;font-size:13px;
+  outline:none;transition:border-color .2s;appearance:none;-webkit-appearance:none;}
+.form-row input:focus,.form-row select:focus{border-color:var(--gold);}
+.form-row select option{background:#1a1710;color:var(--cream);}
+.form-row input::placeholder{color:var(--muted2);}
+.form-hint{font-size:11px;color:var(--muted2);margin-top:7px;line-height:1.7;}
+.form-date-selectors{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.form-divider{border:none;border-top:1px solid var(--border);margin:28px 0;}
+.calc-btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--gold),#8a6430);color:var(--bg);border:none;cursor:pointer;font-size:12px;letter-spacing:.22em;text-transform:uppercase;font-family:'Noto Sans JP',sans-serif;font-weight:400;transition:opacity .2s;}
+.calc-btn:hover{opacity:.85;}
+
+/* ── RESULT AREAS ── */
+.result-area{display:none;}
+.result-area.show{display:block;animation:fadeUp .65s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+
+/* ── RESULT HEADER ── */
+.result-header{padding-bottom:36px;margin-bottom:48px;border-bottom:1px solid var(--border);}
+.result-tag{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;margin-bottom:14px;}
+.result-name{font-family:'Noto Serif JP',serif;font-size:clamp(18px,3vw,28px);font-weight:300;letter-spacing:.08em;margin-bottom:8px;}
+.result-meta{font-size:12px;color:var(--muted);letter-spacing:.08em;}
+
+/* ── SECTION DIVIDER ── */
+.sec-div{margin:64px 0;display:flex;align-items:center;gap:20px;}
+.sec-div::before,.sec-div::after{content:'';flex:1;height:1px;background:var(--border);}
+.sec-div span{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;white-space:nowrap;}
+
+/* ── CAUTION ── */
+.caution{padding:20px 28px;border:1px solid var(--border);font-size:11px;color:var(--muted2);line-height:2;letter-spacing:.04em;margin-top:48px;}
+
+/* ── CANVAS ── */
+#stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+.hero,.panel-body{position:relative;z-index:1;}
+.hero-inner{animation:heroFadeIn .9s cubic-bezier(.25,1,.5,1) both;}
+@keyframes heroFadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+
+/* ── HOROSCOPE CHART ── */
+.horo-chart-wrap{margin-bottom:56px;}
+.horo-chart-label{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.25em;color:var(--gold);text-transform:uppercase;margin-bottom:24px;}
+.horo-chart-inner{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:radial-gradient(ellipse 80% 80% at 50% 50%, rgba(20,16,48,.9) 0%, rgba(8,6,20,.98) 70%, rgba(2,1,8,1) 100%);
+  border:1px solid rgba(196,168,106,.22);
+  border-radius:4px;
+  padding:36px;
+  position:relative;
+  overflow:hidden;
+}
+.horo-chart-inner::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 40% at 30% 20%,rgba(80,50,180,.06),transparent 60%),
+              radial-gradient(ellipse 40% 50% at 70% 80%,rgba(50,30,160,.05),transparent 60%);
+  pointer-events:none;
+}
+.horo-chart-inner svg{display:block;max-width:560px;width:100%;height:auto;}
+
+/* ── HOROSCOPE READINGS ── */
+.horo-readings{display:flex;flex-direction:column;gap:30px;margin-bottom:48px;}
+.horo-reading-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:44px 40px;box-shadow:0 4px 30px rgba(0,0,0,.38);position:relative;overflow:hidden;}.horo-reading-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(196,168,106,.55),transparent);}
+.horo-reading-card.wide{grid-column:1/-1;}
+.horo-rc-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.horo-rc-planet{min-width:46px;text-align:center;padding-top:2px;}
+.horo-rc-planet-sym{font-size:26px;line-height:1;display:block;}
+.horo-rc-planet-jp{font-size:8px;letter-spacing:.14em;color:var(--muted2);display:block;margin-top:4px;font-family:'Cormorant Garamond',serif;text-transform:uppercase;}
+.horo-rc-meta{flex:1;}
+.horo-rc-label{font-size:9px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:5px;font-family:'Cormorant Garamond',serif;}
+.horo-rc-sign{font-family:'Noto Serif JP',serif;font-size:17px;font-weight:300;color:var(--cream);letter-spacing:.06em;margin-bottom:2px;}
+.horo-rc-sign-sub{display:flex;align-items:center;gap:8px;margin-top:5px;}
+.horo-rc-sign-en{font-size:10px;color:var(--muted2);letter-spacing:.14em;font-family:'Cormorant Garamond',serif;font-style:italic;}
+.horo-rc-elem{font-size:9px;letter-spacing:.1em;padding:2px 10px;font-family:'Cormorant Garamond',serif;display:inline-block;}
+.horo-elem-fire{background:rgba(220,100,80,.12);color:#d87878;}
+.horo-elem-earth{background:rgba(100,160,80,.12);color:#8cb868;}
+.horo-elem-air{background:rgba(80,160,220,.12);color:#70b8e0;}
+.horo-elem-water{background:rgba(100,80,200,.12);color:#8878c8;}
+.horo-rc-text{font-size:13px;color:var(--muted);line-height:2.3;letter-spacing:.04em;}
+.horo-rc-loading{display:flex;align-items:center;gap:10px;color:var(--muted2);font-size:11px;letter-spacing:.12em;padding:12px 0;}
+.horo-rc-loading::before{content:'';flex-shrink:0;display:inline-block;width:14px;height:14px;border:1px solid rgba(196,168,106,.25);border-top-color:var(--gold);border-radius:50%;animation:horo-spin .8s linear infinite;}
+@keyframes horo-spin{to{transform:rotate(360deg);}}
+
+/* ── HOROSCOPE LEGEND ── */
+.horo-legend{display:flex;flex-wrap:wrap;gap:12px 24px;margin-bottom:28px;padding:16px 20px;border:1px solid var(--border);background:rgba(255,255,255,.02);}
+.horo-legend-item{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);letter-spacing:.08em;}
+.horo-legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* ── ASPECT TABLE ── */
+.horo-aspects-wrap{margin-bottom:48px;}
+.horo-aspects-label{font-family:'Cormorant Garamond',serif;font-size:10px;letter-spacing:.26em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;}
+.horo-aspects{display:flex;flex-direction:column;gap:2px;background:var(--border);}
+.horo-aspect-row{background:var(--bg3);padding:14px 20px;display:grid;grid-template-columns:auto auto auto 1fr;gap:12px;align-items:center;}
+.horo-aspect-sym{font-size:18px;min-width:28px;text-align:center;}
+.horo-aspect-planets{font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--gold);letter-spacing:.06em;min-width:120px;}
+.horo-aspect-name{font-size:10px;letter-spacing:.14em;color:var(--muted2);font-family:'Cormorant Garamond',serif;min-width:80px;}
+.horo-aspect-desc{font-size:12px;color:var(--muted);line-height:1.8;letter-spacing:.04em;}
+
+/* ── PLANET POSITION TABLE ── */
+.horo-positions-wrap{margin-bottom:48px;}
+.horo-positions-label{font-family:'Cormorant Garamond',serif;font-size:10px;letter-spacing:.26em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;}
+.horo-positions{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:2px;background:var(--border);}
+.horo-pos-cell{background:var(--bg3);padding:16px 18px;display:flex;align-items:center;gap:12px;}
+.horo-pos-sym{font-size:20px;min-width:24px;text-align:center;}
+.horo-pos-info{}
+.horo-pos-planet{font-size:10px;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;font-family:'Cormorant Garamond',serif;margin-bottom:2px;}
+.horo-pos-sign{font-family:'Noto Serif JP',serif;font-size:14px;font-weight:300;color:var(--cream);display:flex;align-items:center;gap:6px;}
+.horo-pos-glyph{font-size:14px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){.form-grid{grid-template-columns:1fr;}.horo-readings{grid-template-columns:1fr;}}
+@media(max-width:640px){
+  nav{padding:14px 18px;}
+  .hero,.panel-body{padding-left:18px;padding-right:18px;}
+  .mode-nav{padding:0 18px;}
+  .form-card{padding:24px 18px;}
+  .horo-reading-card{padding:20px 16px;}
+  .horo-reading-card.wide{grid-column:1;}
+  .horo-chart-inner{padding:16px;}
+  .horo-positions{grid-template-columns:1fr 1fr;}
+  .horo-aspect-row{grid-template-columns:auto 1fr;gap:8px;}
+  .horo-aspect-name,.horo-aspect-sym{display:none;}
+}
+
+/* ── PLANET POSITIONS TABLE ── */
+.horo-postable-wrap{overflow-x:auto;margin-bottom:6px;border:1px solid var(--border);}
+.horo-postable{width:100%;border-collapse:collapse;font-size:12px;min-width:520px;}
+.horo-postable th{background:rgba(196,168,106,.10);color:var(--gold);font-weight:400;letter-spacing:.06em;font-size:10px;padding:11px 12px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;}
+.horo-postable td{padding:9px 12px;border-bottom:1px solid var(--border2);color:var(--muted);vertical-align:middle;white-space:nowrap;}
+.horo-postable tbody tr:last-child td{border-bottom:none;}
+.horo-postable td.glyphcell{background:rgba(196,168,106,.035);}
+.horo-postable tr:hover td{background:rgba(255,255,255,.025);}
+.horo-postable tr:hover td.glyphcell{background:rgba(196,168,106,.06);}
+.horo-pt-body{display:flex;align-items:center;gap:9px;}
+.horo-pt-g{min-width:18px;text-align:center;font-size:16px;line-height:1;}
+.horo-pt-name{color:var(--cream);font-size:12px;letter-spacing:.03em;}
+.horo-pt-deg{color:var(--cream);font-variant-numeric:tabular-nums;letter-spacing:.02em;}
+.horo-pt-retro{color:#e09090;font-size:10px;margin-left:4px;}
+.horo-pt-sub{color:var(--muted2);font-size:10px;margin-left:1px;}
+
+/* ── READING CARD (focus: sun/moon) ── */
+.horo-rc-top{text-align:center;margin-bottom:26px;}.horo-rc-eyebrow{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:.26em;color:var(--gold);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:14px;}.horo-rc-eyebrow::before,.horo-rc-eyebrow::after{content:"";width:34px;height:1px;background:linear-gradient(90deg,transparent,rgba(196,168,106,.7));}.horo-rc-eyebrow::after{background:linear-gradient(90deg,rgba(196,168,106,.7),transparent);}.horo-rc-sub{font-family:'Noto Serif JP',serif;font-size:clamp(15px,2.1vw,19px);font-weight:300;color:var(--cream);letter-spacing:.07em;line-height:1.85;}
+.horo-rc-headline{text-align:center;font-family:'Noto Serif JP',serif;font-size:15px;font-weight:300;color:var(--cream);letter-spacing:.06em;margin-bottom:18px;line-height:1.8;}
+.horo-rc-headline .horo-rc-signname{color:var(--gold);font-size:18px;margin-left:4px;}
+.horo-rc-headline-sm{text-align:center;font-family:'Noto Serif JP',serif;font-size:16px;font-weight:300;color:var(--gold);letter-spacing:.08em;margin-bottom:20px;}
+.horo-kw{border:1px solid var(--border);background:rgba(196,168,106,.04);padding:16px 18px;margin:20px 0;text-align:center;}
+.horo-kw-label{font-size:11px;color:var(--gold);letter-spacing:.12em;padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid var(--border);}
+.horo-kw-list{font-size:13px;color:var(--cream);line-height:2.2;letter-spacing:.06em;}
+
+/* ── LUNAR HOUSE PROGRESSION ── */
+.horo-lunar-head{text-align:center;font-family:'Noto Serif JP',serif;font-size:clamp(14px,1.9vw,17px);font-weight:300;color:var(--cream);letter-spacing:.07em;line-height:1.8;margin-bottom:22px;}
+.horo-lunar td{white-space:normal;}
+.horo-lunar .horo-lunar-theme{color:var(--muted);line-height:1.7;min-width:200px;}
+.horo-lunar .is-current td{background:rgba(196,168,106,.13);}
+.horo-lunar .is-current td.glyphcell{background:rgba(196,168,106,.2);}
+.horo-lunar .is-current .horo-pt-name{color:var(--gold);}
+
+/* ── LUNAR reading box ── */
+.horo-lunar-reading{border:1px solid var(--border);border-radius:8px;background:var(--bg3);padding:34px 32px;margin-top:26px;box-shadow:0 4px 30px rgba(0,0,0,.30);position:relative;overflow:hidden;}
+.horo-lunar-reading::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(196,168,106,.55),transparent);}
+.horo-lunar-reading .horo-rc-eyebrow{justify-content:center;margin-bottom:16px;}
+.horo-lunar-reading-text{font-size:14px;color:var(--muted);line-height:2.3;letter-spacing:.04em;text-align:justify;}
+
+/* ── TRANSIT × NATAL ── */
+.horo-tgrid{min-width:560px;text-align:center;}
+.horo-tgrid th,.horo-tgrid td{padding:7px 5px;text-align:center;border:1px solid var(--border2);white-space:nowrap;}
+.horo-tgrid thead th{background:rgba(196,168,106,.10);font-size:15px;}
+.horo-tgrid .corner{font-size:11px;color:var(--muted);}
+.horo-tgrid .tg-row{background:rgba(196,168,106,.06);font-size:15px;}
+.horo-tgrid .tg-cell{font-size:14px;color:var(--cream);}
+.horo-tgrid .tg-tight{background:rgba(196,168,106,.22);}
+.tg-out{color:var(--gold);} .tg-in{color:var(--metal);}
+.horo-transit-read-item{border:1px solid var(--border);border-radius:8px;background:var(--bg3);padding:30px 28px;margin-top:20px;box-shadow:0 4px 26px rgba(0,0,0,.30);position:relative;overflow:hidden;}
+.horo-transit-read-item::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(196,168,106,.55),transparent);}
+.horo-transit-head{text-align:center;font-family:'Noto Serif JP',serif;font-size:15px;color:var(--cream);letter-spacing:.05em;margin-bottom:16px;}
+
+/* ── SYNASTRY ── */
+.syn-people{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:4px;}
+.syn-person{border:1px solid var(--border);border-radius:6px;padding:22px 20px;background:rgba(255,255,255,.015);}
+.syn-person-label{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;margin-bottom:22px;}
+.syn-score-box{text-align:center;border:1px solid var(--border);border-radius:8px;background:var(--bg3);padding:32px;margin-bottom:42px;box-shadow:0 4px 28px rgba(0,0,0,.32);position:relative;overflow:hidden;}
+.syn-score-box::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(196,168,106,.55),transparent);}
+.syn-score-num{font-family:'Cormorant Garamond',serif;font-size:56px;color:var(--gold);line-height:1;}
+.syn-score-num span{font-size:20px;color:var(--muted);margin-left:4px;}
+.syn-score-stars{font-size:24px;color:var(--gold2);letter-spacing:.2em;margin:14px 0 8px;}
+.syn-score-label{font-family:'Noto Serif JP',serif;font-size:15px;color:var(--cream);letter-spacing:.06em;}
+.syn-read-item{border:1px solid var(--border);border-radius:8px;background:var(--bg3);padding:28px 26px;margin-top:18px;box-shadow:0 4px 24px rgba(0,0,0,.28);}
+.syn-read-head{text-align:center;font-family:'Noto Serif JP',serif;font-size:14px;color:var(--cream);letter-spacing:.04em;margin-bottom:14px;}
+@media(max-width:640px){.syn-people{grid-template-columns:1fr;}}
+</style>
+</head>
+
+<body>
+<canvas id="stars-canvas"></canvas>
+
+<nav>
+  <a class="nav-logo" href="../../uranai.html">MIRAI <span>占術鑑定</span></a>
+  <a class="nav-back" href="../../uranai.html">← トップへ戻る</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-orb orb1"></div>
+  <div class="hero-orb orb2"></div>
+  <div class="hero-orb orb3"></div>
+  <div class="hero-inner">
+    <p class="hero-tag">Western Astrology</p>
+    <h1 class="hero-title">星の配置から読む、<br>あなたの魂の設計図。</h1>
+    <p class="hero-desc">生まれた瞬間の天体配置（ホロスコープ）を元に、太陽・月・アセンダントをはじめとする10天体の象意を読み解く、本格的な西洋占星術個人鑑定ツールです。</p>
+  </div>
+</div>
+
+<div class="mode-nav">
+  <button class="mode-tab active" onclick="switchMode('horoscope-ind',this)">ホロスコープ・個人鑑定</button>
+  <button class="mode-tab" onclick="switchMode('synastry',this)">ホロスコープ・相性鑑定</button>
+</div>
+
+<!-- ═══════════════════════════════════════
+  ホロスコープ 個人鑑定
+═══════════════════════════════════════ -->
+<div id="panel-horoscope-ind" class="mode-panel active">
+<div class="panel-body">
+
+<div class="form-card">
+  <h2 class="form-title">ホロスコープ 個人鑑定</h2>
+  <p class="form-sub">生年月日・生まれた時刻・出生地を入力してください。時刻が不明の場合は空白のままでも鑑定できます（アセンダントは太陽から算出した近似値になります）。</p>
+
+  <div class="form-row">
+    <label>お名前（任意）</label>
+    <input type="text" id="hor-name" placeholder="例：山田 みらい">
+  </div>
+
+  <div class="form-grid">
+    <div class="form-row">
+      <label>生年月日（年／月／日）</label>
+      <div class="form-date-selectors">
+        <select id="hor-birth-year"></select>
+        <select id="hor-birth-month"></select>
+        <select id="hor-birth-day"></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <label>生まれ時間（任意）</label>
+      <input type="time" id="hor-time">
+      <p class="form-hint">不明の場合は空白で可（ASCは概算値になります）</p>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label>出生地（任意）</label>
+    <select id="hor-place"></select>
+    <p class="form-hint">タイムゾーン・経度補正に使用します</p>
+  </div>
+
+  <hr class="form-divider">
+  <button class="calc-btn" onclick="calcHoroscope()">ホロスコープを鑑定する</button>
+</div>
+
+<!-- ── RESULT AREA ── -->
+<div class="result-area" id="horoscope-result">
+
+  <div class="result-header">
+    <p class="result-tag">Your Horoscope — 個人鑑定</p>
+    <p class="result-name" id="hor-r-name"></p>
+    <p class="result-meta" id="hor-r-meta"></p>
+  </div>
+
+  <!-- ── CHART ── -->
+  <div class="horo-chart-wrap">
+    <p class="horo-chart-label">Natal Chart — 出生ホロスコープ</p>
+    <div class="horo-chart-inner" id="horoscope-chart-container">
+      <div class="horo-rc-loading" style="padding:80px 0;">チャートを描画しています...</div>
+    </div>
+  </div>
+
+  <!-- ── PLANET POSITIONS ── -->
+  <div class="horo-positions-wrap">
+    <p class="horo-positions-label">Planet Positions — 天体配置</p>
+    <div id="hor-positions"></div>
+  </div>
+
+  <!-- ── ASPECTS ── -->
+  <div class="horo-aspects-wrap">
+    <p class="horo-aspects-label">Key Aspects — 主要なアスペクト</p>
+    <div class="horo-aspects" id="hor-aspects"></div>
+  </div>
+
+  <div class="sec-div"><span>鑑定テキスト</span></div>
+
+  <!-- ── 11 READING CARDS ── -->
+  <div class="horo-readings" id="horo-readings-grid"></div>
+
+  <div class="sec-div"><span>進行の月のハウス</span></div>
+  <div id="hor-lunar-section">
+    <p class="horo-lunar-head">進行の月が照らす、いま大切にしたい人生のテーマ</p>
+    <div id="hor-lunar"></div>
+  </div>
+
+  <div class="sec-div"><span>トランジット × ネイタル</span></div>
+  <div id="hor-transit-section">
+    <p class="horo-lunar-head">今の星の動きと、生まれ持つ星 ― トランジット×ネイタル（本日時点）</p>
+    <div class="horo-chart-wrap"><div class="horo-chart-inner" id="hor-biwheel"></div></div>
+    <p class="horo-positions-label" style="margin:28px 0 12px;">Transit × Natal Grid ― 外（横）＝トランジット ／ 内（縦）＝ネイタル</p>
+    <div id="hor-transit-grid"></div>
+    <div id="hor-transit-reading"></div>
+  </div>
+
+  <div class="caution">※ 本ツールは西洋占星術の手法をもとにした鑑定ツールです。天体計算は簡易モックを使用しており、精密な暦計算は行っていません。正確な鑑定は個別セッションにてご提供しています。鑑定テキストの生成にはAI（Java APIサーバー）を使用しています。</div>
+</div>
+
+</div>
+</div>
+
+<div id="panel-synastry" class="mode-panel">
+<div class="panel-body">
+  <div class="form-card">
+    <h2 class="form-title">ホロスコープ 相性鑑定</h2>
+    <p class="form-sub">お二人の生年月日・時間・出生地を入力してください。時刻が不明な場合は12:00として計算します。</p>
+    <div class="syn-people">
+      <div class="syn-person">
+        <div class="syn-person-label">PERSON A</div>
+        <div class="form-row"><label>お名前（任意）</label><input type="text" id="syn-a-name" placeholder="例：みらい"></div>
+        <div class="form-row"><label>生年月日（年／月／日）</label><div class="form-date-selectors"><select id="syn-a-birth-year"></select><select id="syn-a-birth-month"></select><select id="syn-a-birth-day"></select></div></div>
+        <div class="form-row"><label>生まれ時間（任意）</label><input type="time" id="syn-a-time"></div>
+        <div class="form-row"><label>出生地</label><select id="syn-a-place"></select></div>
+      </div>
+      <div class="syn-person">
+        <div class="syn-person-label">PERSON B</div>
+        <div class="form-row"><label>お名前（任意）</label><input type="text" id="syn-b-name" placeholder="例：はるき"></div>
+        <div class="form-row"><label>生年月日（年／月／日）</label><div class="form-date-selectors"><select id="syn-b-birth-year"></select><select id="syn-b-birth-month"></select><select id="syn-b-birth-day"></select></div></div>
+        <div class="form-row"><label>生まれ時間（任意）</label><input type="time" id="syn-b-time"></div>
+        <div class="form-row"><label>出生地</label><select id="syn-b-place"></select></div>
+      </div>
+    </div>
+    <hr class="form-divider">
+    <button class="calc-btn" onclick="calcSynastry()">相性を鑑定する</button>
+  </div>
+
+  <div class="result-area" id="synastry-result">
+    <div class="result-header">
+      <p class="result-tag">Synastry — 相性鑑定</p>
+      <p class="result-name" id="syn-r-name"></p>
+    </div>
+    <div id="syn-score"></div>
+    <div class="horo-chart-wrap">
+      <p class="horo-chart-label">Synastry Bi-Wheel ― 内＝Aさん ／ 外＝Bさん</p>
+      <div class="horo-chart-inner" id="syn-biwheel"></div>
+    </div>
+    <p class="horo-positions-label" style="margin:8px 0 12px;">Synastry Grid ― 縦（内）＝Aさん ／ 横（外）＝Bさん</p>
+    <div id="syn-grid"></div>
+    <div class="sec-div"><span>相性鑑定</span></div>
+    <div id="syn-reading"></div>
+    <div class="caution">※ 相性スコアはアスペクトの調和・緊張を独自の重みづけで点数化した目安です。占星術的な相性は多面的で、点数だけで測れるものではありません。</div>
+  </div>
+</div>
+</div>
+
+<div style="max-width:720px;margin:0 auto 60px;padding:28px 32px;border:1px solid var(--border);background:rgba(196,168,106,.04);text-align:center;font-size:0.88rem;line-height:1.9;color:var(--muted);letter-spacing:.05em;">
+  ホロスコープ鑑定は、あなたが生まれた瞬間の天球を地図として描き出し、<br>
+  太陽・月・惑星のエネルギーがどのようにあなたの人生に働いているかを読み解きます。<br>
+  MIRAIの個別セッションでは、より精密なトランジット・プログレッションも鑑定できます。
+</div>
+
+<footer style="padding:40px;text-align:center;border-top:1px solid var(--border);font-size:11px;letter-spacing:.14em;color:var(--muted2);">
+  <a href="../../uranai.html" style="color:var(--gold);text-decoration:none;">MIRAI</a> ｜ ホロスコープ鑑定ツール ／ © MIRAI All Rights Reserved.
+</footer>
+
+<script>
+'use strict';
+/* ══════════════════════════════════════
+   ZODIAC & PLANET DATA
+══════════════════════════════════════ */
+const ZODIAC = [
+  {key:'aries',       jp:'牡羊座', en:'Aries',       glyph:'♈', elem:'fire',  col:'#d87878', ruler:'火星',   quality:'活動宮', idx:0},
+  {key:'taurus',      jp:'牡牛座', en:'Taurus',      glyph:'♉', elem:'earth', col:'#90b868', ruler:'金星',   quality:'不動宮', idx:1},
+  {key:'gemini',      jp:'双子座', en:'Gemini',      glyph:'♊', elem:'air',   col:'#70b8e0', ruler:'水星',   quality:'柔軟宮', idx:2},
+  {key:'cancer',      jp:'蟹座',   en:'Cancer',      glyph:'♋', elem:'water', col:'#8878c8', ruler:'月',     quality:'活動宮', idx:3},
+  {key:'leo',         jp:'獅子座', en:'Leo',         glyph:'♌', elem:'fire',  col:'#d8a858', ruler:'太陽',   quality:'不動宮', idx:4},
+  {key:'virgo',       jp:'乙女座', en:'Virgo',       glyph:'♍', elem:'earth', col:'#98c880', ruler:'水星',   quality:'柔軟宮', idx:5},
+  {key:'libra',       jp:'天秤座', en:'Libra',       glyph:'♎', elem:'air',   col:'#b888d8', ruler:'金星',   quality:'活動宮', idx:6},
+  {key:'scorpio',     jp:'蠍座',   en:'Scorpio',     glyph:'♏', elem:'water', col:'#a84050', ruler:'冥王星', quality:'不動宮', idx:7},
+  {key:'sagittarius', jp:'射手座', en:'Sagittarius', glyph:'♐', elem:'fire',  col:'#d89050', ruler:'木星',   quality:'柔軟宮', idx:8},
+  {key:'capricorn',   jp:'山羊座', en:'Capricorn',   glyph:'♑', elem:'earth', col:'#808090', ruler:'土星',   quality:'活動宮', idx:9},
+  {key:'aquarius',    jp:'水瓶座', en:'Aquarius',    glyph:'♒', elem:'air',   col:'#68b8e0', ruler:'天王星', quality:'不動宮', idx:10},
+  {key:'pisces',      jp:'魚座',   en:'Pisces',      glyph:'♓', elem:'water', col:'#9878c8', ruler:'海王星', quality:'柔軟宮', idx:11},
+];
+
+const PLANETS = [
+  {key:'sun',     jp:'太陽',   sym:'☉', col:'#e8d070', order:0},
+  {key:'moon',    jp:'月',     sym:'☽', col:'#c0c0d8', order:1},
+  {key:'mercury', jp:'水星',   sym:'☿', col:'#88b0d0', order:2},
+  {key:'venus',   jp:'金星',   sym:'♀', col:'#d098b8', order:3},
+  {key:'mars',    jp:'火星',   sym:'♂', col:'#d07070', order:4},
+  {key:'jupiter', jp:'木星',   sym:'♃', col:'#c8a868', order:5},
+  {key:'saturn',  jp:'土星',   sym:'♄', col:'#9898b0', order:6},
+  {key:'uranus',  jp:'天王星', sym:'♅', col:'#70b8c0', order:7},
+  {key:'neptune', jp:'海王星', sym:'♆', col:'#7878c8', order:8},
+  {key:'pluto',   jp:'冥王星', sym:'♇', col:'#987888', order:9},
+];
+// 星座・惑星記号を「絵文字」ではなく線画（テキスト表示 VS15）で描画させる
+ZODIAC.forEach(z => { z.glyph += '\uFE0E'; });
+PLANETS.forEach(p => { p.sym += '\uFE0E'; });
+
+const ASPECTS_DATA = [
+  {sym:'☌', name:'コンジャンクション', pair:['sun','saturn'],   col:'rgba(196,168,106,0.75)', desc:'同一の力が融合し、強力なエネルギーの集中点となります。テーマが人生において重要な意味を持ちます。'},
+  {sym:'☍', name:'オポジション',       pair:['sun','moon'],     col:'rgba(220,130,60,0.75)',  desc:'対極のエネルギーが引き合い、緊張と補完の関係にあります。統合することで大きな成長が生まれます。'},
+  {sym:'△', name:'トライン',           pair:['venus','mars'],   col:'rgba(80,160,220,0.75)',  desc:'調和的な流れが生まれ、自然な才能と恵みをもたらします。特別な努力なくエネルギーが循環します。'},
+  {sym:'□', name:'スクエア',           pair:['saturn','mars'],  col:'rgba(200,80,80,0.75)',   desc:'摩擦と挑戦がありますが、乗り越えることで大きな力を獲得します。成長の最大の動機となります。'},
+  {sym:'⚹', name:'セクスタイル',       pair:['moon','jupiter'], col:'rgba(80,200,150,0.75)',  desc:'協調的なエネルギーが機会と縁を引き寄せます。積極的に活用することで才能が開花します。'},
+];
+
+/* ══════════════════════════════════════
+   天体計算（簡易ローカル計算）
+   バックエンドJava APIが利用できない場合でも鑑定文を必ず表示できるよう、
+   各天体の黄道経度を平均運動から概算する。
+   ※ 精密な暦計算ではない（簡易モック）。APIがあればその値で上書きする。
+══════════════════════════════════════ */
+// バックエンドAPIのエンドポイント（存在すればローカル計算を上書きする）
+const HOROSCOPE_API = 'https://horoscope-api-px5s.onrender.com/api/horoscope/results';
+
+function mod360(x){ return ((x % 360) + 360) % 360; }
+
+// J2000.0 における平均黄経 L0[°] と1日あたりの平均運動 n[°/日]
+const ORBITAL = {
+  sun:     [280.4665,  0.98564736],
+  moon:    [218.3165, 13.17639648],
+  mercury: [252.2509,  4.09233880],
+  venus:   [181.9798,  1.60213000],
+  mars:    [355.4330,  0.52403300],
+  jupiter: [ 34.3515,  0.08308530],
+  saturn:  [ 50.0774,  0.03345970],
+  uranus:  [314.0550,  0.01173100],
+  neptune: [304.3487,  0.00598200],
+  pluto:   [238.9569,  0.00396400],
+};
+
+function dateToJD(y, m, d, hour) {
+  if (m <= 2) { y -= 1; m += 12; }
+  const A = Math.floor(y / 100);
+  const B = 2 - A + Math.floor(A / 4);
+  return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1))
+       + d + B - 1524.5 + (hour || 0) / 24;
+}
+
+function lonToSignKey(lon) {
+  return ZODIAC[Math.floor(mod360(lon) / 30) % 12].key;
+}
+
+// 生年月日(+任意の時刻)から各天体の星座キーと黄道経度を概算
+function computeAstroData(y, m, d, timeStr) {
+  let hour = 12;            // 時刻不明時は正午で計算
+  let hasTime = false;
+  if (timeStr && /^\d{1,2}:\d{2}/.test(timeStr)) {
+    const parts = timeStr.split(':').map(Number);
+    hour = parts[0] + parts[1] / 60;
+    hasTime = true;
+  }
+  const t = dateToJD(y, m, d, hour) - 2451545.0; // J2000.0 からの経過日数
+
+  const degrees = {}, signs = {};
+  Object.keys(ORBITAL).forEach(function(key) {
+    const L0 = ORBITAL[key][0], n = ORBITAL[key][1];
+    const lon = mod360(L0 + n * t);
+    degrees[key + '_degree'] = lon;
+    signs[key] = lonToSignKey(lon);
+  });
+
+  // アセンダント概算: 日の出(≈6時)で太陽星座と一致し、約2時間で1星座進む
+  const sunLon = degrees.sun_degree;
+  const ascLon = hasTime ? mod360(sunLon + (hour - 6) * 15) : sunLon;
+  degrees.asc_degree = ascLon;
+  signs.asc = lonToSignKey(ascLon);
+
+  return Object.assign({ degrees: degrees }, signs);
+}
+
+// APIが返した有効な値だけをローカル計算へ上書きマージ
+function mergeAstroData(local, api) {
+  if (!api || typeof api !== 'object') return local;
+  const out = Object.assign({}, local);
+  out.degrees = Object.assign({}, local.degrees);
+  ['sun','moon','asc','mercury','venus','mars','jupiter','saturn','uranus','neptune','pluto'].forEach(function(k) {
+    if (typeof api[k] === 'string' && ZODIAC.some(function(z){ return z.key === api[k]; })) out[k] = api[k];
+  });
+  if (api.degrees && typeof api.degrees === 'object') {
+    Object.keys(api.degrees).forEach(function(dk) {
+      if (typeof api.degrees[dk] === 'number') out.degrees[dk] = api.degrees[dk];
+    });
+  }
+  return out;
+}
+
+/* ══════════════════════════════════════
+   SVG HOROSCOPE CHART
+══════════════════════════════════════ */
+function drawHoroscopeChart(data, aspects) {
+  const SIZE = 560, CX = 280, CY = 280;
+  const R_OUT = 252, R_SIGN = 212, R_PL = 180, R_TICK = 152, R_HOU = 150, R_IN = 70;
+  const PI = Math.PI;
+  const degs = (data && data.degrees) || {};
+
+  // ── ハウス情報の有無で「ハウスチャート」/「サインの輪」を切替 ──
+  const hasHouses = typeof degs.asc_degree === 'number'
+    && Array.from({length:12}, (_,i)=>degs['house_'+(i+1)+'_degree']).every(v=>typeof v==='number');
+  // 時刻不明のときは「ソーラーサイン・チャート」：太陽星座を第1ハウス(ASC)に置く
+  const sunIdx = ZODIAC.findIndex(z => z.key === (data && data.sun));
+  const rot = hasHouses ? degs.asc_degree : (sunIdx >= 0 ? sunIdx * 30 : 0);
+
+  // 黄経 λ → 画面座標（ASCを左に置き、黄経の増加方向を反時計回りに）
+  function pt(r, lon){
+    const t = (180 + (lon - rot)) * PI / 180;
+    return [ +(CX + r*Math.cos(t)).toFixed(2), +(CY - r*Math.sin(t)).toFixed(2) ];
+  }
+  function wedge(ro, ri, l1, span){
+    const steps = Math.max(2, Math.ceil(span/3)); let d='';
+    for (let i=0;i<=steps;i++){ const [x,y]=pt(ro, l1+span*i/steps); d += (i?'L':'M')+x+','+y; }
+    for (let i=steps;i>=0;i--){ const [x,y]=pt(ri, l1+span*i/steps); d += 'L'+x+','+y; }
+    return d+'Z';
+  }
+  const norm = a => ((a % 360) + 360) % 360;
+
+  const elemBg = {fire:'rgba(210,90,70,',earth:'rgba(90,150,70,',air:'rgba(70,150,210,',water:'rgba(90,70,200,'};
+  const elemGlow = {fire:'rgba(220,130,90,0.85)',earth:'rgba(130,185,100,0.85)',air:'rgba(100,185,230,0.85)',water:'rgba(120,100,220,0.85)'};
+
+  let s = `<svg viewBox="0 0 ${SIZE} ${SIZE}" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto;">`;
+  s += `<defs>
+  <radialGradient id="hcBg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#1e1840"/><stop offset="35%" stop-color="#120e30"/><stop offset="65%" stop-color="#090618"/><stop offset="100%" stop-color="#020108"/></radialGradient>
+  <radialGradient id="hcInner" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="rgba(196,168,106,0.10)"/><stop offset="100%" stop-color="rgba(0,0,0,0)"/></radialGradient>
+  <filter id="hcGlowSm" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur in="SourceGraphic" stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="hcSoft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur in="SourceGraphic" stdDeviation="9"/></filter>
+  </defs>`;
+
+  // 背景・星雲・星
+  s += `<circle cx="${CX}" cy="${CY}" r="${CX}" fill="url(#hcBg)"/>`;
+  s += `<ellipse cx="168" cy="158" rx="95" ry="72" fill="rgba(80,40,200,0.07)" filter="url(#hcSoft)"/>`;
+  s += `<ellipse cx="402" cy="404" rx="100" ry="80" fill="rgba(40,60,200,0.06)" filter="url(#hcSoft)"/>`;
+  let seed = 20240209;
+  const rnd = () => { seed = (seed*1103515245+12345) & 0x7fffffff; return seed/0x7fffffff; };
+  for (let i=0;i<70;i++){
+    const x=(rnd()*SIZE).toFixed(1), y=(rnd()*SIZE).toFixed(1), r=(rnd()*1.1+0.2).toFixed(2), op=(rnd()*0.3+0.12).toFixed(2);
+    s += `<circle cx="${x}" cy="${y}" r="${r}" fill="rgba(220,215,245,${op})"/>`;
+  }
+
+  // 黄道12サインのリング
+  ZODIAC.forEach((sign,i)=>{
+    const a = i%2===0 ? '0.07' : '0.04';
+    s += `<path d="${wedge(R_OUT,R_SIGN,i*30,30)}" fill="${elemBg[sign.elem]}${a})" stroke="rgba(196,168,106,0.10)" stroke-width="0.5"/>`;
+  });
+  s += `<circle cx="${CX}" cy="${CY}" r="${R_OUT}" fill="none" stroke="rgba(196,168,106,0.55)" stroke-width="1.2"/>`;
+  s += `<circle cx="${CX}" cy="${CY}" r="${R_SIGN}" fill="none" stroke="rgba(196,168,106,0.42)" stroke-width="0.8"/>`;
+  ZODIAC.forEach((sign,i)=>{
+    const [x1,y1]=pt(R_SIGN,i*30),[x2,y2]=pt(R_OUT,i*30);
+    s += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="rgba(196,168,106,0.45)" stroke-width="0.85"/>`;
+    const [gx,gy]=pt((R_SIGN+R_OUT)/2+1,i*30+15);
+    s += `<text x="${gx}" y="${gy}" text-anchor="middle" dominant-baseline="middle" font-size="18" fill="${elemGlow[sign.elem]}" font-family="serif" filter="url(#hcGlowSm)">${sign.glyph}</text>`;
+  });
+
+  // ハウスリング＋カスプ（時刻あり=プラシダス／時刻不明=等分のソーラーサイン）
+  s += `<circle cx="${CX}" cy="${CY}" r="${R_HOU}" fill="none" stroke="rgba(196,168,106,0.20)" stroke-width="0.8"/>`;
+  const cuspLon = hasHouses ? (i => degs['house_'+i+'_degree']) : (i => rot + (i-1)*30);
+  for (let i=1;i<=12;i++){
+    const isAxis = (i===1||i===4||i===7||i===10);
+    const [x1,y1]=pt(R_IN, cuspLon(i)),[x2,y2]=pt(R_OUT, cuspLon(i));
+    s += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="rgba(196,168,106,${isAxis?0.28:0.16})" stroke-width="${isAxis?0.85:0.55}"${isAxis?'':' stroke-dasharray="2,3"'}/>`;
+    const span = norm(cuspLon(i%12+1) - cuspLon(i));
+    const [hx,hy]=pt(R_HOU-16, cuspLon(i)+span/2);
+    s += `<text x="${hx}" y="${hy}" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="rgba(245,242,235,0.50)" font-family="serif">${i}</text>`;
+  }
+  [[cuspLon(1),'ASC'],[cuspLon(7),'DES'],[cuspLon(10),'MC'],[cuspLon(4),'IC']].forEach(([lon,txt])=>{
+    const [ox,oy]=pt(R_OUT+13, lon);
+    s += `<text x="${ox}" y="${oy}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="rgba(196,168,106,0.92)" font-family="'Cormorant Garamond',serif" letter-spacing="0.06em" filter="url(#hcGlowSm)">${txt}</text>`;
+  });
+  if (false) {
+    for (let i=0;i<12;i++){ const [x1,y1]=pt(R_IN,i*30),[x2,y2]=pt(R_HOU,i*30); s += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="rgba(196,168,106,0.10)" stroke-width="0.5"/>`; }
+  }
+  s += `<circle cx="${CX}" cy="${CY}" r="${R_IN}" fill="url(#hcInner)" stroke="rgba(196,168,106,0.30)" stroke-width="1"/>`;
+
+  // アスペクト線はチャート中央には描かない（下の「主要なアスペクト」表に集約）
+
+  // ── 天体（10惑星＋ノード）。逆行は ℞ ──
+  const bodies = [];
+  PLANETS.forEach(p=>{
+    const lon = degs[p.key+'_degree'];
+    if (typeof lon!=='number') return;
+    const sp = degs[p.key+'_speed'];
+    bodies.push({glyph:p.sym, col:p.col, lon:norm(lon), retro: typeof sp==='number' && sp<0});
+  });
+  if (typeof degs.node_degree==='number'){
+    bodies.push({glyph:'☊\uFE0E', col:'#c9b88a', lon:norm(degs.node_degree), retro:false});
+    bodies.push({glyph:'☋\uFE0E', col:'#9a8f78', lon:norm(degs.node_degree+180), retro:false});
+  }
+
+  // 重なりは「半径をずらして」回避し、実際の角度は保つ（他サイトのように散らす）
+  // ── 小惑星・キロン・リリス・Vertex・PoF（データがある時のみ）──
+  const VS15 = String.fromCharCode(0xFE0E);
+  const EXTRA = [
+    {g:'⚸', col:'#a890b8', lon:degs.lilith_degree},
+    {g:'⚳', col:'#9fc6a0', lon:degs.ceres_degree,  sp:degs.ceres_speed},
+    {g:'⚴', col:'#9ab6d6', lon:degs.pallas_degree, sp:degs.pallas_speed},
+    {g:'⚵', col:'#c6a6d6', lon:degs.juno_degree,   sp:degs.juno_speed},
+    {g:'⚶', col:'#d6b48a', lon:degs.vesta_degree,  sp:degs.vesta_speed},
+    {g:'⚷', col:'#b0a0c8', lon:degs.chiron_degree, sp:degs.chiron_speed},
+    {g:'Vt', col:'#b8a0a0', lon:degs.vertex_degree, text:true},
+  ];
+  EXTRA.forEach(e=>{
+    if (typeof e.lon!=='number') return;
+    bodies.push({glyph: e.text ? e.g : (e.g+VS15), col:e.col, lon:norm(e.lon),
+                 retro: typeof e.sp==='number' && e.sp<0, text:!!e.text});
+  });
+  if (typeof degs.sun_degree==='number' && typeof degs.moon_degree==='number'){
+    bodies.push({glyph:'⊗'+VS15, col:'#c9b070', lon:norm(rot + degs.moon_degree - degs.sun_degree), retro:false});
+  }
+  const angDiff = (a,b)=>{ let d=Math.abs(a-b)%360; return d>180?360-d:d; };
+  bodies.sort((a,b)=>a.lon-b.lon);
+  const placed = [];
+  bodies.forEach(b=>{
+    let lvl=0;
+    while (placed.some(p=>p.lvl===lvl && angDiff(p.lon,b.lon)<11)) lvl++;
+    placed.push({lon:b.lon, lvl});
+    b.r = Math.max(R_HOU+6, 192 - lvl*18); // クラスタは内側へ段階的にずらす
+  });
+  bodies.forEach(b=>{
+    const [gx,gy]=pt(b.r, b.lon);
+    s += `<circle cx="${gx}" cy="${gy}" r="12" fill="rgba(10,8,20,0.78)" stroke="${b.col}" stroke-width="1"/>`;
+    s += `<text x="${gx}" y="${gy}" text-anchor="middle" dominant-baseline="middle" font-size="${b.text?8.5:13}" fill="${b.col}" font-family="serif"${b.text?' letter-spacing="0.02em"':''} filter="url(#hcGlowSm)">${b.glyph}</text>`;
+    if (b.retro) s += `<text x="${gx+11}" y="${gy-8}" text-anchor="middle" dominant-baseline="middle" font-size="8" fill="#e09090" font-family="serif">℞</text>`;
+  });
+
+  // 中心
+  s += `<circle cx="${CX}" cy="${CY}" r="6" fill="rgba(196,168,106,0.45)" filter="url(#hcGlowSm)"/>`;
+  s += `<circle cx="${CX}" cy="${CY}" r="2.6" fill="rgba(245,242,235,0.95)"/>`;
+
+  s += `</svg>`;
+  return s;
+}
+
+/* ══════════════════════════════════════
+   PLANET POSITIONS RENDER
+══════════════════════════════════════ */
+// 全天体の星座・度数・ハウス・支配ハウスを計算（表とカードのミニ表で共用）
+function computePositions(data) {
+  const degs = data.degrees || {};
+  const norm = a => ((a % 360) + 360) % 360;
+  const hasHouses = typeof degs.asc_degree === 'number'
+    && Array.from({length:12}, (_,i)=>degs['house_'+(i+1)+'_degree']).every(v=>typeof v==='number');
+  let sunIdx = ZODIAC.findIndex(z => z.key === data.sun); if (sunIdx < 0) sunIdx = 0;
+  const ascLon = hasHouses ? degs.asc_degree : sunIdx * 30;
+  const mcLon  = hasHouses ? degs.mc_degree  : norm(ascLon + 270);
+  const cuspLon = i => hasHouses ? degs['house_'+i+'_degree'] : norm(sunIdx*30 + (i-1)*30);
+  function houseOf(lon) {
+    lon = norm(lon);
+    for (let i=1;i<=12;i++) { const a = norm(cuspLon(i)), span = norm(cuspLon(i%12+1) - cuspLon(i)); if (norm(lon - a) < span) return i; }
+    return 1;
+  }
+  const RULER = {aries:'mars',taurus:'venus',gemini:'mercury',cancer:'moon',leo:'sun',virgo:'mercury',libra:'venus',scorpio:'pluto',sagittarius:'jupiter',capricorn:'saturn',aquarius:'uranus',pisces:'neptune'};
+  function rulesHouses(pk) { const out = []; for (let i=1;i<=12;i++) { const sk = ZODIAC[Math.floor(norm(cuspLon(i))/30)].key; if (RULER[sk]===pk) out.push(i); } return out; }
+  let pof = null;
+  if (typeof degs.sun_degree==='number' && typeof degs.moon_degree==='number') { pof = norm(ascLon + degs.moon_degree - degs.sun_degree); }
+  const COL = {sun:'#e8d070',moon:'#c0c0d8',mercury:'#88b0d0',venus:'#d098b8',mars:'#d07070',jupiter:'#c8a868',saturn:'#9898b0',uranus:'#70b8c0',neptune:'#7878c8',pluto:'#987888',asc:'#c4a86a',mc:'#c4a86a',node:'#c9b88a',snode:'#9a8f78',ceres:'#9fc6a0',pallas:'#9ab6d6',juno:'#c6a6d6',vesta:'#d6b48a',chiron:'#b0a0c8',lilith:'#a890b8',vertex:'#b8a0a0',pof:'#c9b070'};
+  const ROWS = [
+    {k:'sun',g:'☉',n:'太陽',lon:degs.sun_degree,sp:degs.sun_speed,rule:'sun'},
+    {k:'moon',g:'☽',n:'月',lon:degs.moon_degree,sp:degs.moon_speed,rule:'moon'},
+    {k:'mercury',g:'☿',n:'水星',lon:degs.mercury_degree,sp:degs.mercury_speed,rule:'mercury'},
+    {k:'venus',g:'♀',n:'金星',lon:degs.venus_degree,sp:degs.venus_speed,rule:'venus'},
+    {k:'mars',g:'♂',n:'火星',lon:degs.mars_degree,sp:degs.mars_speed,rule:'mars'},
+    {k:'jupiter',g:'♃',n:'木星',lon:degs.jupiter_degree,sp:degs.jupiter_speed,rule:'jupiter'},
+    {k:'saturn',g:'♄',n:'土星',lon:degs.saturn_degree,sp:degs.saturn_speed,rule:'saturn'},
+    {k:'uranus',g:'♅',n:'天王星',lon:degs.uranus_degree,sp:degs.uranus_speed,rule:'uranus'},
+    {k:'neptune',g:'♆',n:'海王星',lon:degs.neptune_degree,sp:degs.neptune_speed,rule:'neptune'},
+    {k:'pluto',g:'♇',n:'冥王星',lon:degs.pluto_degree,sp:degs.pluto_speed,rule:'pluto'},
+    {k:'asc',g:'ASC',n:'ASC',lon:ascLon},
+    {k:'mc',g:'MC',n:'MC',lon:mcLon},
+    {k:'node',g:'☊',n:'ヘッド',lon:degs.node_degree},
+    {k:'snode',g:'☋',n:'テイル',lon:(typeof degs.node_degree==='number')?norm(degs.node_degree+180):undefined},
+    {k:'ceres',g:'⚳',n:'セレス',lon:degs.ceres_degree,sp:degs.ceres_speed},
+    {k:'pallas',g:'⚴',n:'パラス',lon:degs.pallas_degree,sp:degs.pallas_speed},
+    {k:'juno',g:'⚵',n:'ジュノ',lon:degs.juno_degree,sp:degs.juno_speed},
+    {k:'vesta',g:'⚶',n:'ベスタ',lon:degs.vesta_degree,sp:degs.vesta_speed},
+    {k:'chiron',g:'⚷',n:'キロン',lon:degs.chiron_degree,sp:degs.chiron_speed},
+    {k:'lilith',g:'⚸',n:'リリス',lon:degs.lilith_degree},
+    {k:'vertex',g:'Vt',n:'Vertex',lon:degs.vertex_degree},
+    {k:'pof',g:'⊗',n:'PoF',lon:pof},
+  ];
+  const map = {};
+  ROWS.forEach(r => {
+    const has = typeof r.lon === 'number';
+    map[r.k] = {
+      glyph:r.g, name:r.n, col:COL[r.k]||'var(--gold)', textGlyph:(r.k==='asc'||r.k==='mc'||r.k==='vertex'),
+      has, sign: has?ZODIAC[Math.floor(norm(r.lon)/30)]:null, deg: has?(norm(r.lon)%30):null,
+      retro:(typeof r.sp==='number'&&r.sp<0), house: has?houseOf(r.lon):null, ruled: r.rule?rulesHouses(r.rule):[]
+    };
+  });
+  return { order: ROWS.map(r=>r.k), map };
+}
+
+// 計算済みデータから5列テーブルHTMLを生成（keys で行を限定可能）
+function posTableHtml(pos, keys) {
+  const VS = String.fromCharCode(0xFE0E);
+  const N = '<span class="horo-pt-sub">—</span>';
+  const rows = keys.map(k => {
+    const r = pos.map[k]; if (!r) return '';
+    const glyph = r.textGlyph
+      ? `<span class="horo-pt-g" style="color:${r.col};font-size:10px;letter-spacing:.03em;">${r.glyph}</span>`
+      : `<span class="horo-pt-g" style="color:${r.col}">${r.glyph}${VS}</span>`;
+    const signCell = r.sign ? `<span class="horo-pt-g" style="color:${r.sign.col};font-size:14px;">${r.sign.glyph}</span><span class="horo-pt-name">${r.sign.jp}</span>` : N;
+    const degCell = r.has ? `<span class="horo-pt-deg">${r.deg.toFixed(2)}</span>${r.retro?'<span class="horo-pt-retro" title="逆行">℞</span>':''}` : N;
+    const inHouse = (r.has && r.house) ? `${r.house}<span class="horo-pt-sub">ハウス</span>` : N;
+    const ruleCell = r.ruled.length ? r.ruled.map(h=>`${h}<span class="horo-pt-sub">ハウス</span>`).join('<br>') : N;
+    return `<tr>
+      <td class="glyphcell"><div class="horo-pt-body">${glyph}<span class="horo-pt-name">${r.name}</span></div></td>
+      <td class="glyphcell"><div class="horo-pt-body">${signCell}</div></td>
+      <td>${degCell}</td><td>${inHouse}</td><td>${ruleCell}</td>
+    </tr>`;
+  }).join('');
+  return `<div class="horo-postable-wrap"><table class="horo-postable">
+    <thead><tr><th>天体</th><th>サイン</th><th>黄経</th><th>存在するハウス</th><th>支配するハウス</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>`;
+}
+
+function renderPositions(data) {
+  const pos = computePositions(data);
+  document.getElementById('hor-positions').innerHTML = posTableHtml(pos, pos.order);
+}
+
+/* ══════════════════════════════════════
+   ASPECTS — 実際の天体配置から算出
+══════════════════════════════════════ */
+const ASPECT_TYPES = [
+  {name:'コンジャンクション', angle:0,   orb:8, sym:'☌', col:'rgba(196,168,106,0.80)', desc:'同じ位置で重なり、二つの力が融合して強い影響力を持ちます。'},
+  {name:'オポジション',       angle:180, orb:7, sym:'☍', col:'rgba(220,130,60,0.80)',  desc:'対極で引き合い、緊張と補完の関係。統合により大きな成長が生まれます。'},
+  {name:'トライン',           angle:120, orb:7, sym:'△', col:'rgba(80,160,220,0.80)',  desc:'調和的に流れ、自然な才能と恵みをもたらします。'},
+  {name:'スクエア',           angle:90,  orb:6, sym:'□', col:'rgba(200,80,80,0.80)',   desc:'摩擦と挑戦。乗り越えることで大きな力を獲得します。'},
+  {name:'セクスタイル',       angle:60,  orb:5, sym:'⚹', col:'rgba(80,200,150,0.80)',  desc:'協調的に機会と縁を引き寄せます。活用することで才能が開花します。'},
+];
+const ASPECT_PLANETS = ['sun','moon','mercury','venus','mars','jupiter','saturn','uranus','neptune','pluto'];
+
+// 各天体の黄道経度から主要アスペクトを算出（オーブの狭い順に最大8件）
+function computeAspects(data) {
+  const degs = (data && data.degrees) ? data.degrees : {};
+  const found = [];
+  for (let i = 0; i < ASPECT_PLANETS.length; i++) {
+    for (let j = i + 1; j < ASPECT_PLANETS.length; j++) {
+      const k1 = ASPECT_PLANETS[i], k2 = ASPECT_PLANETS[j];
+      const a = degs[k1 + '_degree'], b = degs[k2 + '_degree'];
+      if (typeof a !== 'number' || typeof b !== 'number') continue;
+      let sep = Math.abs(a - b) % 360;
+      if (sep > 180) sep = 360 - sep;
+      for (const asp of ASPECT_TYPES) {
+        const orb = Math.abs(sep - asp.angle);
+        if (orb <= asp.orb) { found.push({ p1: k1, p2: k2, asp: asp, orb: orb }); break; }
+      }
+    }
+  }
+  found.sort((x, y) => x.orb - y.orb);
+  return found.slice(0, 8);
+}
+
+function renderAspects(aspects) {
+  const wrap = document.getElementById('hor-aspects');
+  if (!aspects || !aspects.length) {
+    wrap.innerHTML = '<div class="horo-aspect-row"><span class="horo-aspect-desc">主要なアスペクトは検出されませんでした。</span></div>';
+    return;
+  }
+  const jp = k => (PLANETS.find(p => p.key === k)?.jp) || k;
+  wrap.innerHTML = aspects.map(({p1, p2, asp, orb}) => `<div class="horo-aspect-row">
+      <span class="horo-aspect-sym" style="color:${asp.col}">${asp.sym}</span>
+      <span class="horo-aspect-planets" style="color:${asp.col}">${jp(p1)} × ${jp(p2)}</span>
+      <span class="horo-aspect-name">${asp.name}（${orb.toFixed(1)}°）</span>
+      <span class="horo-aspect-desc">${asp.desc}</span>
+    </div>`).join('');
+}
+
+/* ══════════════════════════════════════
+   トランジット × ネイタル
+══════════════════════════════════════ */
+const TRANSIT_PLANETS = ['sun','moon','mercury','venus','mars','jupiter','saturn','uranus','neptune','pluto'];
+const SLOW_PLANETS = ['jupiter','saturn','uranus','neptune','pluto'];
+
+function computeTransitAspects(data){
+  const nat=data.degrees||{}, tr=data.transits||{};
+  const norm=a=>((a%360)+360)%360;
+  const cells={}, list=[];
+  TRANSIT_PLANETS.forEach(T=>{
+    const td=tr[T+'_degree']; if(typeof td!=='number') return;
+    TRANSIT_PLANETS.forEach(N=>{
+      const nd=nat[N+'_degree']; if(typeof nd!=='number') return;
+      let sep=Math.abs(norm(td)-norm(nd))%360; if(sep>180) sep=360-sep;
+      for(const asp of ASPECT_TYPES){
+        const orb=Math.abs(sep-asp.angle);
+        if(orb<=asp.orb){ cells[T+'_'+N]={asp,orb}; list.push({T,N,asp,orb}); break; }
+      }
+    });
+  });
+  return {cells, list};
+}
+
+function drawBiWheel(data){
+  const nat=data.degrees||{}, tr=data.transits||{};
+  const norm=a=>((a%360)+360)%360;
+  const hasHouses=typeof nat.asc_degree==='number'
+    && Array.from({length:12},(_,i)=>nat['house_'+(i+1)+'_degree']).every(v=>typeof v==='number');
+  if(!hasHouses || typeof tr.sun_degree!=='number') return '';
+  const SIZE=560,CX=280,CY=280,PI=Math.PI;
+  const R_OUT=252,R_SIGN=214,R_TR=196,R_HOU=150,R_NAT=124,R_IN=66;
+  const rot=nat.asc_degree;
+  const VS=String.fromCharCode(0xFE0E);
+  function pt(r,lon){const t=(180+(lon-rot))*PI/180;return[+(CX+r*Math.cos(t)).toFixed(2),+(CY-r*Math.sin(t)).toFixed(2)];}
+  function wedge(ro,ri,l1,span){const st=Math.max(2,Math.ceil(span/3));let d='';for(let i=0;i<=st;i++){const[x,y]=pt(ro,l1+span*i/st);d+=(i?'L':'M')+x+','+y;}for(let i=st;i>=0;i--){const[x,y]=pt(ri,l1+span*i/st);d+='L'+x+','+y;}return d+'Z';}
+  const eB={fire:'rgba(210,90,70,',earth:'rgba(90,150,70,',air:'rgba(70,150,210,',water:'rgba(90,70,200,'};
+  const eG={fire:'rgba(220,130,90,.85)',earth:'rgba(130,185,100,.85)',air:'rgba(100,185,230,.85)',water:'rgba(120,100,220,.85)'};
+  let s=`<svg viewBox="0 0 ${SIZE} ${SIZE}" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto;">`;
+  s+=`<defs><radialGradient id="bwBg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#1e1840"/><stop offset="60%" stop-color="#0c0a22"/><stop offset="100%" stop-color="#020108"/></radialGradient>
+  <filter id="bwG" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur in="SourceGraphic" stdDeviation="2.1" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`;
+  s+=`<circle cx="${CX}" cy="${CY}" r="${CX}" fill="url(#bwBg)"/>`;
+  ZODIAC.forEach((sg,i)=>{const a=i%2===0?'0.07':'0.04';s+=`<path d="${wedge(R_OUT,R_SIGN,i*30,30)}" fill="${eB[sg.elem]}${a})" stroke="rgba(196,168,106,.10)" stroke-width="0.5"/>`;});
+  s+=`<circle cx="${CX}" cy="${CY}" r="${R_OUT}" fill="none" stroke="rgba(196,168,106,.5)" stroke-width="1.1"/>`;
+  s+=`<circle cx="${CX}" cy="${CY}" r="${R_SIGN}" fill="none" stroke="rgba(196,168,106,.28)" stroke-width="0.8"/>`;
+  s+=`<circle cx="${CX}" cy="${CY}" r="${R_TR-13}" fill="none" stroke="rgba(196,168,106,.12)" stroke-width="0.5"/>`;
+  s+=`<circle cx="${CX}" cy="${CY}" r="${R_HOU}" fill="none" stroke="rgba(196,168,106,.2)" stroke-width="0.8"/>`;
+  s+=`<circle cx="${CX}" cy="${CY}" r="${R_IN}" fill="none" stroke="rgba(196,168,106,.22)" stroke-width="0.8"/>`;
+  ZODIAC.forEach((sg,i)=>{const[x1,y1]=pt(R_SIGN,i*30),[x2,y2]=pt(R_OUT,i*30);s+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="rgba(196,168,106,.3)" stroke-width="0.6"/>`;const[gx,gy]=pt((R_SIGN+R_OUT)/2+1,i*30+15);s+=`<text x="${gx}" y="${gy}" text-anchor="middle" dominant-baseline="middle" font-size="15" fill="${eG[sg.elem]}" font-family="serif" filter="url(#bwG)">${sg.glyph}</text>`;});
+  const cusp=i=>nat['house_'+i+'_degree'];
+  for(let i=1;i<=12;i++){const ax=(i===1||i===4||i===7||i===10);const[x1,y1]=pt(R_IN,cusp(i)),[x2,y2]=pt(R_HOU,cusp(i));s+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="rgba(196,168,106,${ax?0.3:0.14})" stroke-width="${ax?0.9:0.5}"${ax?'':' stroke-dasharray="2,3"'}/>`;const sp=norm(cusp(i%12+1)-cusp(i));const[hx,hy]=pt(R_HOU-13,cusp(i)+sp/2);s+=`<text x="${hx}" y="${hy}" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="rgba(245,242,235,.32)" font-family="serif">${i}</text>`;}
+  [[cusp(1),'ASC'],[cusp(10),'MC'],[cusp(7),'DES'],[cusp(4),'IC']].forEach(([lon,t])=>{const[ox,oy]=pt(R_OUT+12,lon);s+=`<text x="${ox}" y="${oy}" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="rgba(196,168,106,.9)" font-family="serif" filter="url(#bwG)">${t}</text>`;});
+  computeTransitAspects(data).list.forEach(({T,N,asp})=>{const a=tr[T+'_degree'],b=nat[N+'_degree'];if(typeof a!=='number'||typeof b!=='number')return;const[x1,y1]=pt(R_IN,a),[x2,y2]=pt(R_IN,b);const dash=asp.angle===90?'4,3':(asp.angle===60?'5,3':'');s+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${asp.col}" stroke-width="0.8"${dash?` stroke-dasharray="${dash}"`:''} opacity="0.5"/>`;});
+  function placeBodies(src,baseR,minR,natal){
+    const list=[];
+    TRANSIT_PLANETS.forEach(k=>{const p=PLANETS.find(z=>z.key===k);const lon=src[k+'_degree'];if(typeof lon!=='number'||!p)return;const sp=src[k+'_speed'];list.push({glyph:p.sym,col:p.col,lon:norm(lon),retro:typeof sp==='number'&&sp<0});});
+    list.sort((a,b)=>a.lon-b.lon);
+    const placed=[];const ad=(a,b)=>{let d=Math.abs(a-b)%360;return d>180?360-d:d;};
+    list.forEach(b=>{let lv=0;while(placed.some(p=>p.lv===lv&&ad(p.lon,b.lon)<10))lv++;placed.push({lon:b.lon,lv});b.r=Math.max(minR,baseR-lv*15);});
+    list.forEach(b=>{const[gx,gy]=pt(b.r,b.lon);s+=`<circle cx="${gx}" cy="${gy}" r="11" fill="${natal?'rgba(10,8,20,.82)':'rgba(48,36,64,.95)'}" stroke="${b.col}" stroke-width="${natal?1:1.4}"/>`;s+=`<text x="${gx}" y="${gy}" text-anchor="middle" dominant-baseline="middle" font-size="12" fill="${b.col}" font-family="serif" filter="url(#bwG)">${b.glyph}${VS}</text>`;if(b.retro)s+=`<text x="${gx+10}" y="${gy-7}" text-anchor="middle" dominant-baseline="middle" font-size="7" fill="#e09090" font-family="serif">℞</text>`;});
+  }
+  placeBodies(nat,R_NAT,74,true);
+  placeBodies(tr,R_TR,158,false);
+  s+=`<circle cx="${CX}" cy="${CY}" r="3" fill="rgba(245,242,235,.85)"/>`;
+  s+=`</svg>`;
+  return s;
+}
+
+function renderBiWheel(data){
+  const c=document.getElementById('hor-biwheel');
+  const section=document.getElementById('hor-transit-section');
+  if(!c||!section) return;
+  const svg=drawBiWheel(data);
+  if(!svg){ section.style.display='none'; return; }
+  section.style.display=''; c.innerHTML=svg;
+}
+
+function renderTransitGrid(data){
+  const wrap=document.getElementById('hor-transit-grid'); if(!wrap) return;
+  const tr=data.transits||{};
+  if(typeof tr.sun_degree!=='number'){ wrap.innerHTML=''; return; }
+  const {cells}=computeTransitAspects(data);
+  const jp=k=>PLANETS.find(p=>p.key===k);
+  const VS=String.fromCharCode(0xFE0E);
+  let h='<div class="horo-postable-wrap"><table class="horo-postable horo-tgrid"><thead><tr><th class="corner"><span class="tg-out">外</span>＼<span class="tg-in">内</span></th>';
+  TRANSIT_PLANETS.forEach(T=>{const p=jp(T);h+=`<th><span style="color:${p.col}">${p.sym}${VS}</span></th>`;});
+  h+='</tr></thead><tbody>';
+  TRANSIT_PLANETS.forEach(N=>{const pn=jp(N);h+=`<tr><td class="glyphcell tg-row"><span style="color:${pn.col}">${pn.sym}${VS}</span></td>`;
+    TRANSIT_PLANETS.forEach(T=>{const c=cells[T+'_'+N];
+      if(c){const tight=c.orb<2;h+=`<td class="tg-cell${tight?' tg-tight':''}" title="T:${jp(T).jp} × N:${pn.jp}　${c.asp.name} ${c.orb.toFixed(1)}°"><span style="color:${c.asp.col}">${c.asp.sym}</span></td>`;}
+      else h+='<td class="tg-cell"></td>';});
+    h+='</tr>';});
+  h+='</tbody></table></div>';
+  wrap.innerHTML=h;
+}
+
+const TRANSIT_READINGS = {
+  jupiter:{
+    soft:'拡大と幸運の星・木星が、心地よい角度であなたを後押ししています。視野が広がり、チャンスや人とのご縁が自然に巡ってくる、追い風の時期です。「今、いちばん伸ばしたい自分の可能性は何だろう？」と問いかけてみてください。遠慮して受け取り損ねるのはもったいないとき。差し出された機会には、思いきって「はい」と言ってみましょう。学びや旅、新しい挑戦に踏み出すほど、世界はあなたに優しく開けていきます。ただし楽観が過信に変わらないよう、足元の確認だけは忘れずに。今の追い風を上手に活かせば、この先の人生を支える大きな財産が育っていきます。',
+    hard:'拡大の星・木星が、あなたに強く働きかけ、物事を大きく動かそうとしています。チャンスと同時に、欲張りすぎや見通しの甘さが課題として表れやすいときです。「本当に必要なものと、そうでないものを見分けられている？」と問いかけてみてください。勢いに任せて手を広げすぎると、あとで収拾がつかなくなることも。ここぞという一点に絞って力を注ぐことが、成功の鍵になります。成長のエネルギーは十分にあるので、方向さえ間違えなければ大きく飛躍できるとき。焦らず、地に足をつけたうえで、大胆に動いていきましょう。'
+  },
+  saturn:{
+    soft:'試練と成熟の星・土星が、穏やかな角度からあなたの努力を支えています。派手さはなくても、地道な積み重ねが着実に形になり、信頼や実績として返ってくる時期です。「今、コツコツ続けるべきことは何だろう？」と問いかけてみてください。近道を探すより、目の前の責任を一つずつ果たしていくことが、長い目で見て最も確かな前進になります。焦りは禁物。時間をかけて築いたものほど、簡単には崩れない土台になります。今のあなたの誠実な姿勢は、きっと誰かが見ています。その積み重ねが、やがて確かな自信と居場所をもたらしてくれるでしょう。',
+    hard:'試練と責任の星・土星が、あなたに課題を突きつけ、人生の土台を問い直そうとしています。壁にぶつかったり、孤独や限界を感じたりしやすいときかもしれません。「自分が本当に引き受けるべき責任は何だろう？」と問いかけてみてください。土星は逃げれば追いかけ、向き合えば力を授ける星です。今は無理に拡大を目指すより、不要なものをそぎ落とし、本当に大切なものだけを残す時。苦しさの中で身につけた忍耐と現実的な判断力は、一生もののあなたの財産になります。今を誠実に乗り越えた先に、揺るぎない成熟と自信が待っています。'
+  },
+  uranus:{
+    soft:'変革と自由の星・天王星が、心地よい刺激をあなたに送っています。新しいアイデアや出会い、思いがけないチャンスが、人生に新鮮な風を吹き込む時期です。「本当はもっと自由にやってみたいことは？」と問いかけてみてください。これまでのやり方に小さな工夫や変化を加えると、停滞していたものが一気に動き出すかもしれません。直感がひらめいたら、ためらわず試してみて。型にはまらないあなたらしさが、ここでは大きな魅力と強みになります。新しい技術や仲間、未来的な発想を取り入れるほど、人生の可能性が軽やかに広がっていくでしょう。',
+    hard:'変革の星・天王星が、あなたの常識や安定を揺さぶり、大きな変化をうながしています。予想外の出来事や、急な方向転換が起こりやすいときかもしれません。「自分を縛っている古いルールは何だろう？」と問いかけてみてください。しがみつくほど揺れは大きくなりますが、手放す勇気を持てば、それは自由への扉になります。今は人生を新しく設計し直すチャンスのとき。慣れた枠を壊すのは怖いものですが、その先には、より本来の自分らしい生き方が待っています。変化の波に抵抗せず、しなやかに乗りこなしていきましょう。'
+  },
+  neptune:{
+    soft:'夢と感性の星・海王星が、やわらかくあなたを包み込んでいます。直感や想像力が冴え、芸術や癒やし、目に見えないものへ心が開きやすい時期です。「心が本当に求めている安らぎは何だろう？」と問いかけてみてください。理屈では割り切れない感覚を大切にすると、思いがけないインスピレーションが訪れます。人に優しくでき、許す心も自然とわいてくるとき。音楽や自然、静かな時間が、深いところからあなたを満たしてくれます。ただし境界があいまいになりやすいので、現実的な約束事だけは見失わないように。感性を生かせば、心豊かな日々を過ごせるでしょう。',
+    hard:'幻想と理想の星・海王星が、あなたと現実との境界をあいまいにしています。気持ちがゆらいだり、何を信じればよいか分からなくなったりしやすいときかもしれません。「今、自分は何かに幻想を抱いていないだろうか？」と問いかけてみてください。迷いの中にいるときは、無理に答えを急がなくて大丈夫。流されそうなときほど、地に足をつけ、事実を一つずつ確かめることが心を守ります。一方でこの時期は、理想や夢に触れ、魂が求めるものに気づく貴重なとき。現実と夢のバランスを取りながら、本当に大切にしたいものを静かに見極めていきましょう。'
+  },
+  pluto:{
+    soft:'再生と深化の星・冥王星が、静かで力強い変容をあなたに促しています。表面的なものを超えて、物事の本質に触れたくなる時期です。「自分が心の底から求めているものは何だろう？」と問いかけてみてください。今は何かを根本から立て直したり、深く掘り下げたりするのに大きな力が働くとき。一度手放したものから、より本質的なものが生まれ変わって戻ってきます。集中力と洞察力が高まっているので、本気で取り組みたいテーマがあれば絶好の機会です。深く関わるほど、内に眠る揺るぎない強さが目を覚まし、人生が新たな次元へと動き出すでしょう。',
+    hard:'破壊と再生の星・冥王星が、あなたの人生を根底から揺さぶろうとしています。手放したくないものを手放す痛みや、抗えない大きな流れを感じることがあるかもしれません。「本当はもう、終わらせるべきものは何だろう？」と問いかけてみてください。冥王星は、古い自分が一度終わり、新しい自分へと生まれ変わるための星です。コントロールを手放し、変化に身を委ねるほど、再生の力はあなたの味方になります。今くぐり抜けている試練は、決して無意味ではありません。その先には、何があっても揺らがない、本物の強さと深さを備えたあなたが待っています。'
+  }
+};
+
+function renderTransitReading(data){
+  const box=document.getElementById('hor-transit-reading'); if(!box) return;
+  const tr=data.transits||{};
+  if(typeof tr.sun_degree!=='number'){ box.innerHTML=''; return; }
+  const {list}=computeTransitAspects(data);
+  const jp=k=>PLANETS.find(p=>p.key===k).jp;
+  const slow=list.filter(x=>SLOW_PLANETS.includes(x.T)).sort((a,b)=>a.orb-b.orb).slice(0,2);
+  if(!slow.length){ box.innerHTML='<div class="horo-transit-read-item"><p class="horo-lunar-reading-text">現在、外惑星（木星〜冥王星）からネイタルへの主要なトランジットは見られません。大きな転機というより、穏やかに自分を整え、足場を固めるのに向いた時期です。</p></div>'; return; }
+  box.innerHTML = slow.map(x=>{
+    const cat=(x.asp.angle===120||x.asp.angle===60)?'soft':'hard';
+    const body=(TRANSIT_READINGS[x.T]||{})[cat]||'';
+    const lead=`トランジットの${jp(x.T)}が、あなたのネイタルの${jp(x.N)}に${x.asp.name}（オーブ${x.orb.toFixed(1)}°）を結んでいます。`;
+    return `<div class="horo-transit-read-item">
+      <div class="horo-transit-head"><span class="tg-out">トランジット ${jp(x.T)}</span> × <span class="tg-in">ネイタル ${jp(x.N)}</span> ― ${x.asp.name}</div>
+      <p class="horo-lunar-reading-text">${lead}${body}</p>
+    </div>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════
+   進行の月の運行ハウス
+══════════════════════════════════════ */
+const LUNAR_THEMES = {
+  1:'自我の芽生え ― 新しい人生のサイクルが始まる',
+  2:'才能と価値観を育て、人生の土台を固める',
+  3:'人や情報との関わりが広がり、視野が開ける',
+  4:'心の居場所と、安心できる仲間を見つける',
+  5:'自分らしさと愛情を、のびのびと表現する',
+  6:'自分に合った生活リズムと役割を見つめ直す',
+  7:'他者やパートナーと、対等な関係を築く',
+  8:'深い縁や受け継いだものと、本気で向き合う',
+  9:'未知の世界へ踏み出し、新たな価値観を得る',
+  10:'社会的な役割を引き受け、目標を達成する',
+  11:'仲間とのつながりを広げ、未来を描き直す',
+  12:'内面と向き合い、次の一歩への準備を整える',
+};
+const LUNAR_READINGS = {
+  1:'進行の月が1ハウスに入った今は、あなた自身が新しく生まれ直していく特別な時期です。これまでの役割や肩書き、「こうあるべき」という思い込みを一度脇に置いて、「本当はどう在りたいの？」「誰の期待でもなく、自分は何を望んでいる？」と心に問いかけてみてください。周囲に合わせるより、自分の素直な衝動を優先していい時です。髪型や服装、住む場所など外側を少し変えることが、内側の変化を後押ししてくれます。完璧を目指さず、まずは小さな一歩を踏み出すこと。たとえうまくいかなくても、その経験もまた、新しいあなたをつくる糧になります。今この瞬間にまいた種が、これから約27年の人生のテーマを静かに形づくっていきます。焦らず、あなた自身のリズムで歩み始めましょう。',
+  2:'進行の月が2ハウスを巡る今は、自分にとって本当に大切なものをじっくり見つめ直す時期です。お金や持ち物といった形あるものだけでなく、まだ眠っている才能や、ゆずれない価値観もここに含まれます。「何があれば、心から満たされる？」「自分は何に価値を感じて生きていきたい？」と問いかけてみてください。人と比べるのをやめ、自分自身の基準で豊かさを定義し直すことが大切です。暮らしや収入の基盤を、地に足をつけてコツコツ整えるのにも向いた時期。焦って増やそうとするより、今あるものを丁寧に味わうこと。五感を喜ばせる時間も惜しまないで。ここでていねいに築いた土台が、この先のあなたの自由と安心を、長くしっかりと支えてくれます。',
+  3:'進行の月が3ハウスにある今は、あなたの世界が軽やかに広がっていく時期です。新しい学びや近場への小旅行、何気ない会話やメッセージのやりとりの中に、思いがけないヒントや出会いが隠れています。「最近、心が動いた言葉はありましたか？」「本当はもっと知りたいことが、あるのでは？」と振り返ってみてください。気になることはためらわず調べ、人に話し、言葉にして発信してみること。兄弟姉妹や身近な人との交流も、大切な鍵になります。情報が多く少し慌ただしく感じる時もありますが、好奇心の赴くままに動いて大丈夫。フットワーク軽く動いた分だけ、あなたの視野と可能性は、どんどん広がっていきます。',
+  4:'進行の月が4ハウスを進む今は、心の拠りどころを育てる大切な時期です。住まいや家族、心から安心できる仲間との関係に、自然と意識が向かっていきます。「どんな場所にいると、自分は心からくつろげる？」「無理をして、外で頑張りすぎていない？」と問いかけてみてください。今は外で成果を上げることより、安心して帰れる場所を整えることが優先される時。過去の記憶や家族との関係に向き合うことで、長く抱えてきた感情がほどけ、深い癒やしが訪れることもあります。疲れたら、無理に動かず自分を休ませてあげて。心の根がしっかり張るほど、あなたは外の世界でも、のびのびと力を発揮できるようになります。',
+  5:'進行の月が5ハウスにある今は、あなたらしさを思いきり輝かせていい時期です。趣味や創作、恋愛、遊び心——心が「楽しい！」と感じることに、理屈ぬきで素直に飛び込んでみてください。「最近、時間を忘れて夢中になれたことはありますか？」「誰の評価でもなく、自分が本当にやりたいことは？」と尋ねてみて。うまくできるかどうかより、表現する喜びそのものを味わうことが大切です。好きな人や子どもとの時間も、豊かさを運んでくれます。これまで自分を抑えてきた人ほど、今この時期に大きく解放されていくでしょう。あなたが心から楽しんでいる姿は、それだけで、まわりの人の心まで明るく照らしていきます。',
+  6:'進行の月が6ハウスを巡る今は、日々の暮らしと心身を、ていねいに整え直す時期です。「今の生活リズムは、本当に自分に合っていますか？」「無理をして、自分を後回しにしていませんか？」と問いかけてみてください。働き方や習慣、食事や睡眠を見直し、体と心が喜ぶペースを取り戻すのに最適なとき。完璧を目指す必要はありません。むしろ「これくらいでいい」と肩の力を抜くことが、あなたを軽くしてくれます。目の前の小さな役割をひとつずつ着実にこなし、自分をいたわる習慣を一つ始めてみて。一見地味なこの積み重ねが、やがて訪れる飛躍の時期を支える、揺るぎない土台になります。整えていく過程そのものを、楽しみましょう。',
+  7:'進行の月が7ハウスにある今は、人との関わりを通して自分自身を映し出していく時期です。パートナーや大切な相手との一対一の関係に、自然と意識が向かいます。「あなたは相手に、対等に心を開けていますか？」「一人で、抱え込みすぎていませんか？」と問いかけてみてください。今は人に頼ったり、本音で語り合ったりすることが、大きな鍵になります。新しい出会いや、ご縁が動きやすい時期でもあります。意見の違いやぶつかり合いも、避けずに向き合えば、二人の絆をより深いものにしてくれます。鏡のようにあなたを映す相手の姿を通して、自分でも気づかなかった新しい一面が、きっと見えてくるでしょう。',
+  8:'進行の月が8ハウスを進む今は、ふだんは見えない心の深い部分と向き合う時期です。誰かとの濃密な絆、受け継いだもの、ずっと手放せずにいた感情——「本当は、何を恐れているのだろう？」「見ないふりをしてきたものは、ありませんか？」と、静かに問いかけてみてください。今は無理に明るく振る舞うより、心の奥をじっと見つめることが、深い癒やしへとつながります。一つの区切りや終わりが、新しい再生の入口になることもあるでしょう。信頼できる相手と深く関わることで、あなたは大きく生まれ変わっていきます。怖れずに深みへ潜っていくほど、内側に眠っていた本当の強さが、静かに目を覚まします。',
+  9:'進行の月が9ハウスにある今は、未知の世界へと心が大きく開いていく時期です。旅や学び、哲学、これまで触れてこなかった文化や考え方——「今、本当に知りたいことは何だろう？」「もっと遠くへ行ってみたい、と感じていませんか？」と問いかけてみてください。慣れ親しんだ日常を少し飛び出して、視野を広げる経験が、あなたを大きく成長させます。これまで当たり前だと思っていた常識や価値観が、より大きなものへと更新されていくでしょう。頭で考えすぎず、直感が指し示す方向を信じて、一歩遠くへ踏み出してみて。その先で出会う景色や人や思想が、あなたの人生の意味を、新しく照らし出してくれます。',
+  10:'進行の月が10ハウスを巡る今は、社会の中でのあなたの役割や、目指す場所が問われる時期です。仕事や立場に光が当たり、これまでの努力が形になって実を結びやすいときです。「自分は本当は、何を成し遂げたいのだろう？」「誰かの正解ではなく、心から誇れる目標は？」と、改めて問いかけてみてください。人の評価を気にしすぎず、自分が納得できる頂きへ向かうことが大切です。責任を引き受ける場面が増えるかもしれませんが、それはあなたが周囲から信頼されている証。一歩ずつ着実に積み上げていって。ここで築いた実績と信頼が、この先のあなたの自信と、確かな居場所をつくっていきます。',
+  11:'進行の月が11ハウスにある今は、仲間とのつながりや、未来への展望が大きく広がる時期です。価値観や理想を分かち合える人々との出会いが、思いがけない可能性を運んできます。「これから、どんな未来を描いていきたい？」「古い枠に、自分を縛りつけていませんか？」と問いかけてみてください。今は過去のやり方にとらわれず、自由な発想で計画を立て直すのに向いたとき。一人で頑張り続けるより、仲間と手を取り合うことで、道がぐっと開けていきます。損得を超えて、本音で理想を語り合える人を大切に。あなたの願いは、同じ志を持つ人々と響き合いながら、やがて未来を動かす確かな力になっていきます。',
+  12:'進行の月が12ハウスを進む今は、約27年続いた一つのサイクルを静かに締めくくっていく時期です。これまでの歩みをそっと振り返り、「もう、手放してもいいものは何だろう？」「本当はもう、休みたいのではありませんか？」と問いかけてみてください。今は表立って動くより、休息や内省、心の整理に時間を使うことが大切なとき。疲れを感じたら、無理に頑張らず、立ち止まって大丈夫です。瞑想や芸術、自然の中で過ごすひとりの時間が、深いところからあなたを癒やしてくれます。ここで心を澄ませ、荷物を下ろしておくほど、次に1ハウスから始まる新しいサイクルを、軽やかな心で迎えることができます。',
+};
+
+function renderLunarHouses(data) {
+  const section = document.getElementById('hor-lunar-section');
+  const wrap = document.getElementById('hor-lunar');
+  if (!section || !wrap) return;
+  const rows = data && data.lunarHouses;
+  if (!rows || !rows.length) { section.style.display = 'none'; return; }
+  section.style.display = '';
+  wrap.innerHTML = `<div class="horo-postable-wrap"><table class="horo-postable horo-lunar">
+    <thead><tr><th>ハウス</th><th>年齢</th><th>テーマ</th><th>潜在期間</th></tr></thead>
+    <tbody>${rows.map(r => `<tr class="${r.current ? 'is-current' : ''}">
+      <td class="glyphcell"><span class="horo-pt-name">${r.house}ハウス</span></td>
+      <td>${r.ageStart}歳〜${r.ageEnd}歳</td>
+      <td class="horo-lunar-theme">${LUNAR_THEMES[r.house] || ''}</td>
+      <td>${r.dateStart}〜${r.dateEnd}</td>
+    </tr>`).join('')}</tbody></table></div>`;
+  const cur = rows.find(r => r.current) || rows[0];
+  if (cur && LUNAR_READINGS[cur.house]) {
+    wrap.innerHTML += `<div class="horo-lunar-reading">
+      <div class="horo-rc-eyebrow">☽ Now ― ${cur.house}ハウス期</div>
+      <p class="horo-lunar-reading-text">${LUNAR_READINGS[cur.house]}</p>
+    </div>`;
+  }
+}
+
+/* ══════════════════════════════════════
+   READING CARDS SKELETON
+══════════════════════════════════════ */
+const READING_DEFS = [
+  {key:'sun',     planet:'sun',   focus:true, bodyJp:'太陽', title:'太陽星座',
+    eyebrow:'☉ Sun Sign', sub:'太陽星座が映し出す、生まれながらのあなたという個性'},
+  {key:'moon',    planet:'moon',  focus:true, bodyJp:'月',   title:'月星座',
+    eyebrow:'☽ Moon Sign', sub:'月星座が照らす、内側に秘められたあなたの才能'},
+  {key:'love',    planet:'venus', wide:true, title:'恋愛・対人関係の傾向',
+    eyebrow:'♀ Love & Relationship', sub:'金星星座が物語る、あなたの愛し方と人との結び方'},
+  {key:'overall', planet:'sun',   wide:true, title:'総合運・人生のテーマ',
+    eyebrow:'✦ Life Theme', sub:'太陽と月が織りなす、人生に流れる大きなテーマ'},
+];
+
+// 12星座のキーワード（カードのキーワード欄に使用）
+const SIGN_KEYWORDS = {
+  aries:['開拓者','情熱的','行動派','勇敢','スピード感','リーダー気質'],
+  taurus:['安定志向','五感が豊か','粘り強い','美意識','堅実','マイペース'],
+  gemini:['知的好奇心','社交的','多才','情報通','軽やか','機転が利く'],
+  cancer:['共感力','家庭的','母性的','守る力','感受性','親しみやすい'],
+  leo:['情熱的','遊び心','自信家','カリスマ性','ロマンチスト','寛大'],
+  virgo:['分析的','献身的','几帳面','実務的','誠実','完璧主義'],
+  libra:['調和','社交的','審美眼','公平','優雅','バランス感覚'],
+  scorpio:['情熱','洞察力','一途','神秘的','探究心','再生力'],
+  sagittarius:['自由','楽観的','冒険心','哲学的','大らか','行動力'],
+  capricorn:['努力家','責任感','現実的','野心','忍耐','堅実'],
+  aquarius:['革命家','博愛精神','個性的','型にはまらない','無私無欲','独創的'],
+  pisces:['共感力','芸術的','献身','直感','優しさ','神秘的'],
+};
+const PLANET_SYMS = {sun:'☉',moon:'☽',asc:'AC',mercury:'☿',venus:'♀',mars:'♂',jupiter:'♃',saturn:'♄',uranus:'♅',neptune:'♆',pluto:'♇'};
+const PLANET_COLS = {sun:'#e8d070',moon:'#c0c0d8',asc:'#c4a86a',mercury:'#88b0d0',venus:'#d098b8',mars:'#d07070',jupiter:'#c8a868',saturn:'#9898b0',uranus:'#70b8c0',neptune:'#7878c8',pluto:'#987888'};
+const ELEM_CLASS  = {fire:'horo-elem-fire',earth:'horo-elem-earth',air:'horo-elem-air',water:'horo-elem-water'};
+const ELEM_JP     = {fire:'火（火の星座）',earth:'地（地の星座）',air:'風（風の星座）',water:'水（水の星座）'};
+
+function buildReadingCards(data, apiTexts) {
+  const grid = document.getElementById('horo-readings-grid');
+  const pos = computePositions(data);
+  const validSign = key => ZODIAC.find(z => z.key === key) || null;
+  const nameEl = document.getElementById('hor-r-name');
+  const nm = nameEl ? nameEl.textContent.trim() : '';
+  const who = (nm && nm !== '（名前未入力）') ? nm + 'さん' : 'あなた';
+
+  grid.innerHTML = READING_DEFS.map(def => {
+    const sign = validSign(data[def.planet]);
+    const text = (apiTexts && apiTexts[def.key])
+      ? `<p class="horo-rc-text">${apiTexts[def.key]}</p>`
+      : `<div class="horo-rc-loading">鑑定テキストを生成しています</div>`;
+
+    if (def.focus && sign) {
+      const kw = SIGN_KEYWORDS[sign.key] || [];
+      const half = Math.ceil(kw.length / 2);
+      const kwHtml = kw.length ? `
+        <div class="horo-kw">
+          <div class="horo-kw-label">${sign.jp}のキーワード</div>
+          <div class="horo-kw-list">${kw.slice(0, half).join('・')}<br>${kw.slice(half).join('・')}</div>
+        </div>` : '';
+      return `<div class="horo-reading-card wide" id="horo-card-${def.key}">
+        <div class="horo-rc-top"><div class="horo-rc-eyebrow">${def.eyebrow}</div><div class="horo-rc-sub">${def.sub}</div></div>
+        <div class="horo-rc-headline">${who}の${def.bodyJp}のサインは<span class="horo-rc-signname">『${sign.jp}』</span></div>
+        ${posTableHtml(pos, [def.key])}
+        ${kwHtml}
+        ${text}
+      </div>`;
+    }
+    return `<div class="horo-reading-card wide" id="horo-card-${def.key}">
+      <div class="horo-rc-top"><div class="horo-rc-eyebrow">${def.eyebrow}</div><div class="horo-rc-sub">${def.sub}</div></div>
+      <div class="horo-rc-headline-sm">${def.title}</div>
+      ${text}
+    </div>`;
+  }).join('');
+}
+
+function fillReadingTexts(apiTexts) {
+  READING_DEFS.forEach(def => {
+    const card = document.getElementById('horo-card-' + def.key);
+    if (!card || !apiTexts[def.key]) return;
+    const existing = card.querySelector('.horo-rc-text, .horo-rc-loading');
+    if (existing) {
+      const p = document.createElement('p');
+      p.className = 'horo-rc-text';
+      p.textContent = apiTexts[def.key];
+      existing.replaceWith(p);
+    }
+  });
+}
+
+/* ══════════════════════════════════════
+   MAIN CALC FUNCTION
+   フロー:
+     1. ユーザー入力を取得・検証
+     2. ローディング状態でresult-areaを表示
+     3. Java APIへPOSTリクエスト送信
+     4. APIから返却された degrees・星座キー・鑑定文を各描画関数に渡す
+     5. 通信失敗時はconsole.warnしてフォールバック表示
+══════════════════════════════════════ */
+/* ══════════════════════════════════════
+   相性鑑定（シナストリー）
+══════════════════════════════════════ */
+const SYNASTRY_API = HOROSCOPE_API.replace('/results', '/synastry');
+const SYN_PERSONAL = ['sun','moon','venus','mars','mercury'];
+
+function synastryScore(list){
+  const PERS = new Set(['sun','moon','venus','mars','mercury','asc']);
+  const baseByAngle = {0:4, 180:1.5, 120:5, 90:-1, 60:3};
+  let pts = 58;
+  list.forEach(({T,N,asp,orb})=>{
+    const base = baseByAngle[asp.angle] || 0;
+    const tight = 1 - orb/asp.orb;
+    const mult = (PERS.has(T) && PERS.has(N)) ? 1.7 : 0.6;
+    pts += base * mult * (0.4 + 0.6*tight);
+  });
+  return Math.max(22, Math.min(98, Math.round(pts)));
+}
+
+function renderSynScore(score){
+  const box = document.getElementById('syn-score'); if(!box) return;
+  const stars = Math.max(1, Math.min(5, Math.round(score/20)));
+  const star = '★'.repeat(stars) + '☆'.repeat(5-stars);
+  let label;
+  if(score>=85) label='とても良い相性';
+  else if(score>=70) label='良い相性';
+  else if(score>=55) label='バランスの取れた相性';
+  else if(score>=40) label='刺激し合う相性';
+  else label='違いから学び合う相性';
+  box.innerHTML = `<div class="syn-score-box">
+    <div class="syn-score-num">${score}<span>/100</span></div>
+    <div class="syn-score-stars">${star}</div>
+    <div class="syn-score-label">${label}</div>
+  </div>`;
+}
+
+function renderSynGrid(data){
+  const wrap = document.getElementById('syn-grid'); if(!wrap) return;
+  const {cells} = computeTransitAspects(data);
+  const jp = k => PLANETS.find(p=>p.key===k);
+  const VS = String.fromCharCode(0xFE0E);
+  let h = '<div class="horo-postable-wrap"><table class="horo-postable horo-tgrid"><thead><tr><th class="corner"><span class="tg-in">A</span>＼<span class="tg-out">B</span></th>';
+  TRANSIT_PLANETS.forEach(T=>{const p=jp(T);h+=`<th><span style="color:${p.col}">${p.sym}${VS}</span></th>`;});
+  h += '</tr></thead><tbody>';
+  TRANSIT_PLANETS.forEach(N=>{const pn=jp(N);h+=`<tr><td class="glyphcell tg-row"><span style="color:${pn.col}">${pn.sym}${VS}</span></td>`;
+    TRANSIT_PLANETS.forEach(T=>{const c=cells[T+'_'+N];
+      if(c){const tight=c.orb<2;h+=`<td class="tg-cell${tight?' tg-tight':''}" title="A:${pn.jp} × B:${jp(T).jp}　${c.asp.name} ${c.orb.toFixed(1)}°"><span style="color:${c.asp.col}">${c.asp.sym}</span></td>`;}
+      else h+='<td class="tg-cell"></td>';});
+    h+='</tr>';});
+  h += '</tbody></table></div>';
+  wrap.innerHTML = h;
+}
+
+const SYN_PAIR = {
+  'sun-sun':'二人の太陽が響き合う組み合わせ。人生の方向性や「こうありたい」という核の部分がよく似ていて、一緒にいると自分を肯定されるような安心感があります。土台が近いぶん、付き合うほど深まるタイプ。ただ似た者どうしだからこそ、同じ場面で同じように引っかかりやすいので、相手を「もう一人の自分」ではなく独立した個人として立てる意識が、関係を健やかに保ちます。',
+  'moon-sun':'太陽と月——西洋占星術が最も重んじてきた、相性の王道です。一方の生き方の核を、もう一方の感情と本能が自然に受けとめる関係。理屈を超えて「この人といると落ち着く」「支えたい」という感覚が生まれやすく、結婚相性としても古来重視されてきました。日向と日陰のように役割が分かれるので、互いの違う担当をそのまま認め合えると、驚くほど安定します。',
+  'mercury-sun':'一方の生き方を、もう一方が言葉で巧みに翻訳してくれる関係。会話が弾み、考えが伝わりやすいので「話が早い」と感じられます。知的なやりとりが潤滑油になり、相談相手としても頼り合える組み合わせ。沈黙より対話で深まるタイプなので、思っていることをこまめに口にする習慣が、すれ違いを未然に防いでくれます。',
+  'sun-venus':'好意が、ごく自然に通い合う甘い配置。一方の人柄を、もう一方が「素敵だな」と感じやすく、隣にいるだけで場がやわらぎます。美的な趣味や心地よさの感覚が近く、暮らしの「好き」を共有しやすいのも魅力。優しさが循環する関係なので、当たり前にならないよう、小さな「ありがとう」を言葉にし続けると、温度がずっと保たれます。',
+  'mars-sun':'火花の散る、情熱的な組み合わせ。一方の意志に、もう一方の行動力が点火して、二人でいると物事がぐいぐい前へ進みます。恋愛では惹かれ合う磁力が強く、仕事では推進力のあるタッグに。反面、勢いどうしがぶつかると衝突しやすい面も。競うのではなく「同じ方向へ走る」と決められると、この熱は関係を温め続ける原動力になります。',
+  'moon-moon':'二人の月が共鳴し、感情のリズムが似た組み合わせ。安心する瞬間やほっとするポイントが近いので、言葉にしなくても気持ちが伝わります。家庭的な居心地のよさを育てやすい一方、落ち込む波が同時に来ると引きずられがち。沈んだときの立て直し方を共有しておくと、互いの心の港として長く機能してくれます。',
+  'mercury-moon':'気持ちと言葉の橋渡しがうまくいく組み合わせ。一方の感情の機微を、もう一方が言葉ですくい上げるので「分かってもらえた」という実感を得やすい関係です。何気ないおしゃべりが心のケアになり、悩みも打ち明けやすい。相手が黙り込んだときは、答えを急がず、ただ耳を傾ける時間を大切にすると、信頼がいっそう育ちます。',
+  'moon-venus':'優しさと安心が両立する、穏やかで温かい配置。一方の感情を、もう一方の愛情がふんわり包むので、一緒にいると心がやわらぎます。好みや過ごし方の感覚が近く、ささやかな幸せを分かち合いやすいのも魅力。波風の少ない関係ですが、安定に慣れすぎると刺激を忘れがち。たまに非日常を一緒に味わうと、長くみずみずしさが保たれます。',
+  'mars-moon':'感情と情熱が直接ふれ合う、温度の高い組み合わせ。惹かれる力は強い反面、一方の気持ちにもう一方の勢いが触れると、感情が一気に燃え上がりやすい関係です。仲直りもまた情熱的。鍵は、熱くなった瞬間にひと呼吸おくこと。クールダウンの合図を二人で決めておくと、この熱は衝突ではなく親密さへと向かいます。',
+  'mercury-mercury':'思考回路が似ていて、話していて楽な組み合わせ。テンポや興味の向きが近く、会話が途切れにくいので、友人としてもパートナーとしても飽きがきません。学びや情報を共有して一緒に伸びるタイプ。似ているぶん理屈が先行しがちなので、ときには正しさより気持ちを優先して言葉を交わすと、関係に温もりが加わります。',
+  'mercury-venus':'言葉が愛情になる、会話そのものが心地よい配置。一方の話し方や考え方を、もう一方が「好きだな」と感じやすく、洒落たやりとりや褒め言葉が関係を彩ります。手紙やメッセージなど、言葉の贈り物がよく効くタイプ。共通の趣味や学びを一緒に楽しむと、話の尽きない関係が末長く続きます。',
+  'mars-mercury':'議論にも勢いが出る、頭の回転が刺激し合う組み合わせ。一方の考えに、もう一方の行動力が火をつけ、アイデアがすぐ実行に移る生産的な関係です。共同作業では頼もしいタッグに。会話が白熱すると言葉が鋭くなりがちなので、最後まで聞くひと呼吸を意識すると、対立が前向きな議論へと変わります。',
+  'venus-venus':'美意識や「好き」の感覚がよく似た、心地よい配置。楽しみ方も愛情表現も近いので、デートも暮らしも自然に息が合います。きれいなもの、おいしいものを一緒に味わう時間が絆を育てます。衝突は少なめですが、心地よさに甘えて受け身になりすぎないこと。どちらかが新しい体験を提案し続けると、関係が輝きを保ちます。',
+  'mars-venus':'恋愛相性の代名詞ともいえる、惹かれ合う配置。一方の「好き」という感性に、もう一方の情熱と行動力が応える、ロマンスと化学反応の組み合わせです。互いを魅力的に感じやすく、ときめきが長続きしやすいのが持ち味。情熱が強いぶん駆け引きや嫉妬も顔を出しますが、試すより、まっすぐ好意を伝え合うほうが、この惹かれ合う力は健やかに燃え続けます。',
+  'mars-mars':'二人のエネルギーがぶつかり合う、勢いのある組み合わせ。行動のテンポや、ここぞで燃えるポイントが似ているので、同じ目標に向かえば最強のチーム。挑戦をともにすると一気に距離が縮まります。譲らない者どうしになると火花が散りやすいのも事実。勝ち負けを持ち込まず、相手の頑張りを称え合えると、この闘志は二人を前へ進める力になります。'
+};
+const SYN_ASPECT_LINE = {
+  0:'今回は二つが重なる配置のため、その色合いがとりわけ濃く出ます。距離が近いぶん、自分と相手の境界をそっと意識すると、ずっと楽に付き合えます。',
+  180:'向かい合う配置なので、惹かれ合いと同時に正反対さも際立ちます。違いを欠点ではなく役割分担と捉え直せると、絶妙に補い合う一対になります。',
+  120:'角度はトラインで、その良さが努力なしに自然と流れます。噛み合うのが当たり前になりがちなので、その心地よさへの感謝を忘れないことが長続きの秘訣です。',
+  90:'角度はスクエアで、刺激と摩擦をともないます。ぶつかるのは、どうでもよくない証拠。乗り越えるたびに、二人の絆は確かに鍛えられていきます。',
+  60:'角度はセクスタイルで、きっかけさえあれば伸びていく関係。受け身でいると流れてしまうので、どちらかが一歩を差し出すと、良さがふわりと開きます。'
+};
+
+function renderSynReading(list, nameA, nameB){
+  const box = document.getElementById('syn-reading'); if(!box) return;
+  const jp = k => (PLANETS.find(p=>p.key===k)||{}).jp || k;
+  // 並び順を無視した同一ペア（AB/BA）は1回だけ表示し、空いた枠は次に優先度の高い別ペアで埋める
+  const personal = list.filter(x=>SYN_PERSONAL.includes(x.T)&&SYN_PERSONAL.includes(x.N)).sort((a,b)=>a.orb-b.orb);
+  const seenPair = new Set();
+  const top = [];
+  for (const x of personal) {
+    const pairKey = [x.N, x.T].sort().join('-');
+    if (seenPair.has(pairKey)) continue;   // mars-sun 等、同一ペアの重複を除外
+    seenPair.add(pairKey);
+    top.push(x);
+    if (top.length >= 4) break;
+  }
+  if(!top.length){
+    box.innerHTML = '<div class="syn-read-item"><p class="horo-lunar-reading-text">お二人の主要な天体（太陽・月・金星・火星・水星）の間に、目立ったアスペクトは見当たりませんでした。互いに干渉しすぎず、それぞれの世界を尊重しやすい、風通しのよい関係になりやすい組み合わせです。共通の体験を少しずつ重ねるほど、二人だけの結びつきが静かに育っていきます。</p></div>';
+    return;
+  }
+  box.innerHTML = top.map(x=>{
+    const key=[x.N,x.T].sort().join('-');
+    const body=(SYN_PAIR[key]||'お二人の個性が交わる、味わい深い組み合わせです。') + (SYN_ASPECT_LINE[x.asp.angle]||'');
+    return `<div class="syn-read-item">
+      <div class="syn-read-head"><span class="tg-in">${nameA} ${jp(x.N)}</span> × <span class="tg-out">${nameB} ${jp(x.T)}</span> ― ${x.asp.name}</div>
+      <p class="horo-lunar-reading-text">${body}</p>
+    </div>`;
+  }).join('');
+}
+
+async function calcSynastry(){
+  const gp = who => ({
+    y: document.getElementById('syn-'+who+'-birth-year').value,
+    m: document.getElementById('syn-'+who+'-birth-month').value,
+    d: document.getElementById('syn-'+who+'-birth-day').value,
+    name: document.getElementById('syn-'+who+'-name').value,
+    time: document.getElementById('syn-'+who+'-time').value,
+    place: document.getElementById('syn-'+who+'-place').value
+  });
+  const A = gp('a'), B = gp('b');
+  if(!A.y||!A.m||!A.d||!B.y||!B.m||!B.d){ alert('お二人の生年月日をすべて選択してください。'); return; }
+  const mk = p => ({ name: p.name||null,
+    birthDate: `${p.y}-${String(p.m).padStart(2,'0')}-${String(p.d).padStart(2,'0')}`,
+    birthTime: p.time||'12:00', birthPlace: p.place||null });
+  const payload = { a: mk(A), b: mk(B) };
+  const result = document.getElementById('synastry-result');
+  result.classList.add('show'); result.scrollIntoView({behavior:'smooth', block:'start'});
+  document.getElementById('syn-r-name').textContent = (A.name||'Aさん') + ' × ' + (B.name||'Bさん');
+  document.getElementById('syn-score').innerHTML = '<div class="horo-rc-loading" style="justify-content:center;padding:24px 0;">相性を計算しています...</div>';
+  let data;
+  try{
+    const res = await fetch(SYNASTRY_API, {method:'POST', headers:{'Content-Type':'application/json; charset=utf-8'}, body:JSON.stringify(payload)});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    data = await res.json();
+  }catch(err){
+    document.getElementById('syn-score').innerHTML = '<p class="horo-rc-loading" style="justify-content:center;">サーバーに接続できませんでした（'+err.message+'）。バックエンドが起動しているか確認してください。</p>';
+    return;
+  }
+  const aspData = { degrees: data.a.degrees, transits: data.b.degrees };
+  const {list} = computeTransitAspects(aspData);
+  renderSynScore(synastryScore(list));
+  const bw = drawBiWheel(aspData);
+  document.getElementById('syn-biwheel').innerHTML = bw ||
+    '<div class="horo-rc-loading" style="padding:48px 0;justify-content:center;">二重円の表示には、1人目（A）の出生時刻と出生地が必要です。グリッドと鑑定文は時刻なしでもご覧いただけます。</div>';
+  renderSynGrid(aspData);
+  renderSynReading(list, A.name||'Aさん', B.name||'Bさん');
+}
+
+async function calcHoroscope() {
+  const yearVal  = document.getElementById('hor-birth-year').value;
+  const monthVal = document.getElementById('hor-birth-month').value;
+  const dayVal   = document.getElementById('hor-birth-day').value;
+  if (!yearVal || !monthVal || !dayVal) {
+    alert('生年月日をすべて選択してください。');
+    return;
+  }
+  const name  = document.getElementById('hor-name').value || '（名前未入力）';
+  const time  = document.getElementById('hor-time').value;
+  const place = document.getElementById('hor-place').value;
+  const y = parseInt(yearVal), m = parseInt(monthVal), d = parseInt(dayVal);
+
+  /* ① ヘッダー表示 */
+  document.getElementById('hor-r-name').textContent = name;
+  document.getElementById('hor-r-meta').textContent =
+    `${y}年${m}月${d}日生まれ${time ? ' ／ ' + time : ''}${place ? ' ／ ' + place : ''}`;
+
+  /* ② チャートコンテナにローディング状態を表示 */
+  const container = document.getElementById('horoscope-chart-container');
+  container.innerHTML = '<div class="horo-rc-loading" style="padding:80px 0;">天体データを計算しています...</div>';
+
+  /* ③ result-area を表示（フェードイン）してスクロール */
+  const resultArea = document.getElementById('horoscope-result');
+  resultArea.classList.add('show');
+  resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  /* ④ ローカルで天体データを概算（APIが無くても鑑定文を必ず表示できる） */
+  const payload = {
+    name,
+    birthDate:  `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`,
+    birthTime:  time  || null,
+    birthPlace: place || null,
+  };
+  const localData = computeAstroData(y, m, d, time);
+
+  /* ⑤ Java APIがあれば取得してローカル計算を上書き（無ければローカルのみ使用） */
+  let data = localData;
+  let apiTexts = {};
+  try {
+    const res = await fetch(HOROSCOPE_API, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body:    JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const apiData = await res.json();
+    data = mergeAstroData(localData, apiData);
+    data.lunarHouses = apiData.lunarHouses;
+    data.transits = apiData.transits;
+    /* APIキー名は sun_reading / sun_text のどちらも許容 */
+    apiTexts = {
+      sun:     apiData.sun_reading     || apiData.sun_text,
+      moon:    apiData.moon_reading    || apiData.moon_text,
+      asc:     apiData.asc_reading     || apiData.asc_text,
+      mercury: apiData.mercury_reading || apiData.mercury_text,
+      venus:   apiData.venus_reading   || apiData.venus_text,
+      mars:    apiData.mars_reading    || apiData.mars_text,
+      jupiter: apiData.jupiter_reading || apiData.jupiter_text,
+      saturn:  apiData.saturn_reading  || apiData.saturn_text,
+      uranus:  apiData.uranus_reading  || apiData.uranus_text,
+      love:    apiData.love_reading    || apiData.love,
+      overall: apiData.overall_reading || apiData.overall,
+    };
+  } catch (err) {
+    console.warn('API未接続のためローカル計算で鑑定します:', err.message);
+  }
+
+  /* ⑥ アスペクトを算出し、チャート・天体配置・アスペクト表を描画 */
+  const aspects = computeAspects(data);
+  container.innerHTML = drawHoroscopeChart(data, aspects);
+  renderPositions(data);
+  renderAspects(aspects);
+
+  /* ⑦ 鑑定文: APIの文章を優先し、無い項目はローカルのフォールバック文で必ず補完 */
+  const fallback = getFallbackTexts(data);
+  const texts = {};
+  ['sun','moon','asc','mercury','venus','mars','jupiter','saturn','uranus','love','overall'].forEach(function(k) {
+    texts[k] = (apiTexts && apiTexts[k]) ? apiTexts[k] : fallback[k];
+  });
+  buildReadingCards(data, texts);
+  renderLunarHouses(data);
+  renderBiWheel(data);
+  renderTransitGrid(data);
+  renderTransitReading(data);
+}
+
+/* ══════════════════════════════════════
+   FALLBACK TEXTS (API unavailable)
+══════════════════════════════════════ */
+function getFallbackTexts(data) {
+  const MAP = {
+    sun: {
+      aries:       `太陽が牡羊座にあるあなたは、新しい夜明けをいつも最初に感じ取る、魂の開拓者です。勇気と情熱を羅針盤に、誰も踏み込んだことのない星の道を切り開いていく強さがあります。その無垢な熱量は、夜空に最初に輝く一番星のように、周囲の心に希望の光を灯します。あなたのテーマは「魂の始まり」と「情熱の純粋さ」にあります。`,
+      taurus:      `太陽が牡牛座にあるあなたは、大地の深みと星の恵みを同時に体現する、豊かさの守護者です。五感で世界の美しさを味わい、ゆるぎない信念で価値あるものを丁寧に育てる才能があります。あなたの存在は、静かな大地のように人々に安らぎを与え、着実な輝きで未来を照らします。テーマは「豊かさの創造」と「美への献身」です。`,
+      gemini:      `太陽が双子座にあるあなたは、星と星を結ぶ光の橋のように、無限の知識と人とをつなぐ才能を持っています。軽やかな好奇心と柔軟な思考で、あらゆる世界に溶け込みながらも、常に新鮮な視点を持ち続けます。言葉という魔法を操り、世界に知の輝きをもたらすことがあなたの使命です。テーマは「知の結びつき」と「永遠の好奇心」にあります。`,
+      cancer:      `太陽が蟹座にあるあなたは、月明かりが海を照らすように、深い愛情と直感で周囲の人々を包む、魂の守護者です。感情の豊かさと繊細な感受性は、人の心の奥底に触れる力を持ち、記憶と絆を大切にする温もりが人々を引き寄せます。あなたのテーマは「愛の深さ」と「魂のつながり」にあります。`,
+      leo:         `太陽が獅子座にあるあなたは、真昼の太陽のように世界を照らす、誇り高き魂の王者です。創造性と表現への情熱、惜しみない愛の与え方で、周囲の人々の心に輝きを灯します。舞台に立つことを恐れず、自分らしさを全力で表現するとき、あなたの魂は最も美しく輝きます。テーマは「自己表現」と「愛の輝き」です。`,
+      virgo:       `太陽が乙女座にあるあなたは、宇宙の精緻な秩序を体現する、完璧さの追求者です。細部への鋭い洞察力と純粋な奉仕の精神で、世界をより美しく、より機能的に整えていく使命を持っています。星の光が闇を照らすように、あなたの知性と誠実さは人々の道を清らかに照らします。テーマは「完成への献身」と「純粋な奉仕」にあります。`,
+      libra:       `太陽が天秤座にあるあなたは、宇宙のハーモニーを体現する、美と調和の使者です。公正な視点と洗練された審美眼で、人々の間に橋を架け、世界に美しいバランスをもたらします。関係性の中に星座のような美しいパターンを見出す才能があり、あなたの存在自体が調和の象徴です。テーマは「美しい均衡」と「関係の芸術」にあります。`,
+      scorpio:     `太陽が蠍座にあるあなたは、宇宙の深淵に潜む真実を見抜く、変容の魔法使いです。表面を超えた深みに潜り込み、隠された本質を明らかにする洞察力と、幾度もの変容を経てより輝きを増す不死鳥の魂を持っています。深い水の底で光る星のように、あなたの本質は計り知れない力を秘めています。テーマは「変容の魔法」と「魂の再生」にあります。`,
+      sagittarius: `太陽が射手座にあるあなたは、無限の宇宙に向けて矢を放つ、自由と真理の探求者です。哲学的な思考と冒険への情熱で、人生という旅の意味を探し続け、その過程で出会うすべての経験を智慧に変えていきます。地平線の彼方にある星を目指し続けるあなたの魂は、永遠に若く、希望に満ちています。テーマは「自由の探求」と「真理への矢」にあります。`,
+      capricorn:   `太陽が山羊座にあるあなたは、最も高い山の頂から星を眺める、忍耐と達成の体現者です。長期的なビジョンと揺るぎない意志で、困難という名の山を着実に登り、誰よりも高い場所から世界を見渡す力があります。積み上げた年月が星座となって輝くとき、あなたの真価が世界に示されます。テーマは「崇高な達成」と「時間の智慧」にあります。`,
+      aquarius:    `太陽が水瓶座にあるあなたは、時代の流れを星のように見渡す、革新と人道主義の先駆者です。固定した慣習に縛られず、より良い未来のビジョンを描き、集合的な変革をもたらす使命を持っています。宇宙の広大さのように、あなたの思想は時代を超え、多くの魂に自由の光をもたらします。テーマは「革新の星」と「人類への贈り物」にあります。`,
+      pisces:      `太陽が魚座にあるあなたは、宇宙のすべての存在と溶け合う、無限の愛と直感の体現者です。境界を超えた感受性で人々の痛みや喜びを感じ取り、芸術や癒しという形で魂の深みから世界に贈り物をします。夜の海に散らばる無数の星の光のように、あなたの存在は人々の心に静かな奇跡をもたらします。テーマは「宇宙との合一」と「魂の慈悲」にあります。`,
+    },
+    moon: {
+      aries:       `月が牡羊座にあるあなたの感情世界は、夜空を切り裂く流星のように、瞬発的で鮮烈な情熱に満ちています。感情が動くとき、それは迷わず行動へと変換され、あなたの魂を前へ前へと推し進めます。その直感的な勇気と感情の純粋さが、あなたの最大の魅力です。`,
+      taurus:      `月が牡牛座にあるあなたの感情世界は、満月が野原を照らすように、豊かで穏やかな安定感に満ちています。美しいもの、心地よいものに触れるとき、あなたの魂は最も深く満たされます。五感の喜びと感情の安定がつながるとき、あなたは本来の輝きを発揮します。`,
+      gemini:      `月が双子座にあるあなたの感情世界は、夜風に揺れる星座のように、軽やかで多彩な変化を楽しんでいます。感情を言葉に変える才能があり、表現することで心のバランスを保ちます。知的なつながりと会話がある場所に、あなたの感情の安らぎがあります。`,
+      cancer:      `月が蟹座にあるあなたの感情世界は、月明かりが海を照らすように、深く豊かで直感的です。この配置は月が最も本来の力を発揮する場所であり、愛情の深さと感受性の繊細さが際立ちます。守り、育て、つなぎ止める力があなたの感情の核にあります。`,
+      leo:         `月が獅子座にあるあなたの感情世界は、太陽のように明るく大きく、愛と承認への渇望を内側に抱えています。心の中には舞台に立つ役者のような表現欲と誇り高さがあり、惜しみなく与えようとする寛大さが最大の魅力です。`,
+      virgo:       `月が乙女座にあるあなたの感情世界は、精緻に磨かれた水晶のように、感情を丁寧に分析し整えることで安心を見出します。奉仕することへの喜びと、細部への気配りが愛情表現の形であり、静かな誠実さが人々の信頼を集めます。`,
+      libra:       `月が天秤座にあるあなたの感情世界は、調和のとれた星座のように、美しいバランスを求めています。対立よりも協調を、混乱よりも優雅さを求める気質があり、人との関係性の中でこそ感情が豊かに花開きます。美と平和がある場所に、あなたの魂の安らぎがあります。`,
+      scorpio:     `月が蠍座にあるあなたの感情世界は、深海に沈む宝石のように、計り知れない深さと強度を持っています。感情は激しく、変容を通じて魂を磨き続けます。愛するとき、信じるとき、それは魂の全てを注ぐほどの深さがあります。`,
+      sagittarius: `月が射手座にあるあなたの感情世界は、夜空を自由に駆ける彗星のように、広大で解放的です。自由と冒険への渇望が感情の根底にあり、新しい地平を目指すとき、心が最も生き生きとします。哲学と旅があなたの魂を満たします。`,
+      capricorn:   `月が山羊座にあるあなたの感情世界は、高山に咲く星の花のように、厳しさの中に秘めた豊かさを持っています。感情を内に秘め、責任と達成の中に喜びを見出します。時間をかけて信頼を築く深い絆が、あなたの魂の安定をもたらします。`,
+      aquarius:    `月が水瓶座にあるあなたの感情世界は、銀河のように広大で、個の感情よりも人類全体への思いやりで動いています。友情と理想への情熱が感情の核であり、変革と革新の中に喜びを感じます。感情を客観的に見つめる知性が、あなたの独特の魅力です。`,
+      pisces:      `月が魚座にあるあなたの感情世界は、夜の霧に浮かぶ月のように、幻想的で無限の深みを持っています。他者の感情に自然と同調し、愛と慈悲の海に溶け込むような感受性があります。芸術とスピリチュアルな探求があなたの魂の養分です。`,
+    },
+    asc: {
+      aries:       `アセンダントが牡羊座にあるあなたは、颯爽とした活力と直線的な情熱が第一印象を形成します。行動的で率直、新しいことへの挑戦を躊躇わない勇敢さが外見に滲み出ており、人々に活力と希望を与える存在感があります。`,
+      taurus:      `アセンダントが牡牛座にあるあなたは、大地のような安定感と洗練された美的センスが第一印象を形成します。落ち着きと信頼感に満ちた存在感があり、ゆったりとした品格が人々を安心させます。`,
+      gemini:      `アセンダントが双子座にあるあなたは、軽やかで知的、コミュニケーション力に溢れた第一印象を世界に与えます。二面性と好奇心旺盛な性質が外見に滲み出ており、多様な話題を横断しながら人々と素早く打ち解ける才能があります。`,
+      cancer:      `アセンダントが蟹座にあるあなたは、温かく包み込むような慈愛と、月のような柔らかな雰囲気が第一印象を形成します。人の感情に敏感で、初対面の人にも安心感と親密感を与える独特の温もりがあります。`,
+      leo:         `アセンダントが獅子座にあるあなたは、太陽のような輝きと堂々とした貫禄が第一印象を形成します。自信と品格に満ちた存在感で自然と人の視線を集め、どんな場所でも中心的な輝きを放ちます。`,
+      virgo:       `アセンダントが乙女座にあるあなたは、知的で洗練された清潔感と、細やかな気配りが第一印象を形成します。謙虚でありながらも鋭い知性と実直さが際立ち、信頼される存在感を自然と醸し出します。`,
+      libra:       `アセンダントが天秤座にあるあなたは、優雅で洗練された美しさと、バランスのとれた穏やかさが第一印象を形成します。芸術的なセンスと社交的な魅力で場を和ませ、誰とでも美しい関係を築ける才能があります。`,
+      scorpio:     `アセンダントが蠍座にあるあなたは、神秘的な深みと圧倒的な存在感が第一印象を形成します。多くを語らずとも語りかける眼差しと、表面の奥に秘めた強烈な磁力が、人々をあなたへと引き寄せます。`,
+      sagittarius: `アセンダントが射手座にあるあなたは、自由で開放的なエネルギーと、楽観的な笑顔が第一印象を形成します。冒険と哲学への情熱が外見に溢れ、出会う人々に希望と広がりの感覚をもたらします。`,
+      capricorn:   `アセンダントが山羊座にあるあなたは、落ち着いた品格と実力に裏打ちされた信頼感が第一印象を形成します。真剣さと責任感が滲み出る存在感があり、時間をかけて築かれる深い信頼と尊敬を自然と集めます。`,
+      aquarius:    `アセンダントが水瓶座にあるあなたは、独自の個性と未来的なオーラが第一印象を形成します。型にはまらない独創性と、人道的な温かさが共存した存在感があり、他にない唯一無二の輝きを放ちます。`,
+      pisces:      `アセンダントが魚座にあるあなたは、夢幻的な柔らかさと深い共感力が第一印象を形成します。霧の中に浮かぶ月のような神秘的な雰囲気と、すべてを包み込む慈悲の温もりが人々を魅了します。`,
+    },
+    mercury: {
+      aries:       `水星が牡羊座にあるあなたの思考は、稲妻のように素早く、直感的です。結論を瞬時に見抜く鋭さと、ためらわずに意見を表明する率直さが、あなたの知性の輝きです。先駆的なアイデアとスピーディな判断力が才能の核にあります。`,
+      taurus:      `水星が牡牛座にあるあなたの思考は、大地のようにゆっくりと、しかし確実に深まります。じっくりと考え、五感で確かめた上で揺るぎない結論を導く粘り強さがあります。実用的で価値あるアイデアを形にする才能があります。`,
+      gemini:      `水星が双子座にあるあなたの思考は、星が瞬くように多彩で変化に富んでいます。この配置は水星が最も力を発揮する場所であり、言語と情報を操る天才的な能力と、複数のアイデアを同時に処理する知性があります。`,
+      cancer:      `水星が蟹座にあるあなたの思考は、月の満ち欠けのように直感と感情で深まります。論理だけでなく感情の知性を兼ね備え、人の気持ちを読み取りながら考える共感的な知性が特質です。記憶力と洞察力が際立っています。`,
+      leo:         `水星が獅子座にあるあなたの思考は、舞台を照らすスポットライトのように、表現力豊かで創造的です。アイデアを劇的かつ印象的に伝える才能があり、人々の心を動かすコミュニケーションが自然に生まれます。`,
+      virgo:       `水星が乙女座にあるあなたの思考は、精密な時計のように、正確で分析的です。この配置は水星が最も力を発揮する場所であり、細部への注意力と論理的整合性への追求が際立ちます。問題を解決し、システムを改善する卓越した知性があります。`,
+      libra:       `水星が天秤座にあるあなたの思考は、公正な天秤のように、あらゆる側面を比較し調和を求めます。異なる視点を美しくまとめる外交的な知性と、論理と美学を融合させた表現力が魅力です。`,
+      scorpio:     `水星が蠍座にあるあなたの思考は、深海のように、表面の奥の真実を見抜きます。他者が見落とす深層のパターンを察知する洞察力と、心理的な理解の深さが知性の核にあります。秘密と謎を解く才能があります。`,
+      sagittarius: `水星が射手座にあるあなたの思考は、弓矢のように遠くを目指し、大きなビジョンを描きます。哲学的な問いへの情熱と、知識の地平を広げ続ける探求心が知性の特質です。真理を求める大局的な思考が輝きます。`,
+      capricorn:   `水星が山羊座にあるあなたの思考は、実用的・構造的・長期的です。感情より事実を、勢いより計画を重視する現実主義的な知性を持ちます。根拠のある議論と着実な積み上げを得意とし、大きな目標に向けて論理的にステップを踏む能力に優れています。`,
+      aquarius:    `水星が水瓶座にあるあなたの思考は、電流のように革新的で、時代を超えたビジョンを描きます。既存の枠を壊し、独創的な解決策を生み出す天才的な創造力と、人類の未来を見据えた思考が特質です。`,
+      pisces:      `水星が魚座にあるあなたの思考は、霧の中を流れる光のように、直感的で詩的です。論理を超えた感性的な理解と、夢と現実を橋渡しするような創造的な思考が特質です。芸術と霊性の言語で世界を表現します。`,
+    },
+    venus: {
+      aries:       `金星が牡羊座にあるあなたの愛は、最初の春の花のように、情熱的で純粋です。好きになったら迷わず向かう直感的な愛情表現と、愛する人のために勇気を持って行動する真っ直ぐさがあなたの魅力です。`,
+      taurus:      `金星が牡牛座にあるあなたの愛は、大地のように深く安定しています。この配置は金星が最も力を発揮する場所であり、五感を通じた深い愛情表現と、長期的な絆を大切に育てる誠実さが際立ちます。`,
+      gemini:      `金星が双子座にあるあなたの愛は、会話と知的なつながりで輝きます。ウィットに富んだ言葉と好奇心旺盛な関心が愛情表現の形であり、精神的な刺激を共有できる関係に最もときめきます。`,
+      cancer:      `金星が蟹座にあるあなたの愛は、月が満ちるように深く、温かく、保護的です。心の奥まで相手を受け入れ、家庭と家族への深い愛情と献身が美の核にあります。`,
+      leo:         `金星が獅子座にあるあなたの愛は、太陽のように堂々として輝かしいです。愛する人を特別な存在として讃え、ドラマチックで心躍るような愛の表現で魅了します。惜しみなく与える寛大さが魅力です。`,
+      virgo:       `金星が乙女座にあるあなたの愛は、細やかな気配りと実用的な奉仕の中に宿ります。相手のために心を込めて尽くすことが愛情表現であり、謙虚で誠実なその姿勢が深い信頼を生みます。`,
+      libra:       `金星が天秤座にあるあなたの愛は、優雅なハーモニーの中に咲きます。この配置は金星が最も力を発揮する場所であり、美しい関係を築く芸術的なセンスと、パートナーシップへの深い献身が際立ちます。`,
+      scorpio:     `金星が蠍座にあるあなたの愛は、深海の宝石のように、一度愛したら永遠の深さを持ちます。魂の奥底まで触れ合うような親密さを求め、変容を通じて愛を深めていく力強さが魅力です。`,
+      sagittarius: `金星が射手座にあるあなたの愛は、自由な旅の伴侶として輝きます。哲学と冒険を共有できる関係を理想とし、共に成長し、世界を広げ合えるパートナーシップに最も輝きます。`,
+      capricorn:   `金星が山羊座にあるあなたの愛は、時を経て深まる宝石のようです。軽い関係より、時間と信頼を積み重ねた本物の絆を大切にします。誠実さと責任感が愛情表現の核にあります。`,
+      aquarius:    `金星が水瓶座にあるあなたの愛は、友情から深まるような、自由で革新的な形をとります。精神的なつながりと互いの独立性を尊重する関係を理想とし、ユニークな絆の作り方が魅力です。`,
+      pisces:      `金星が魚座にあるあなたの愛は、境界を超えた無条件の深さを持ちます。ロマンティックで詩的、相手の痛みに共鳴する繊細な感受性があり、愛する人のために自己を捧げることも厭いません。芸術や音楽、スピリチュアルな美しさへの感性も卓越しています。`,
+    },
+    mars: {
+      aries:       `火星が牡羊座にあるあなたの行動力は、この上なく純粋で力強いです。この配置は火星が最も力を発揮する場所であり、直感的な行動への意欲と、先陣を切る勇気が際立ちます。情熱の火は迷わず燃え上がり、新しい道を切り拓きます。`,
+      taurus:      `火星が牡牛座にあるあなたの行動力は、大地のように持続的で粘り強いです。目標に向かって確実に歩み続ける忍耐力と、一度動き始めたら止まらない力強さが特質です。五感と現実を大切にした実践的な行動が成果を生みます。`,
+      gemini:      `火星が双子座にあるあなたの行動力は、言葉と情報を通じて発揮されます。複数のことを同時に進める才能と、コミュニケーションによって状況を動かす機智が特質です。知識と人脈を活かした行動が輝きます。`,
+      cancer:      `火星が蟹座にあるあなたの行動力は、愛する人と大切なものを守るとき、最大限に発揮されます。感情的な動機から生まれる粘り強い保護の力と、直感で状況を察知しながら動く適応力が特質です。`,
+      leo:         `火星が獅子座にあるあなたの行動力は、舞台に立つ王者のように、堂々とした情熱と創造力を通じて発揮されます。リーダーシップと表現への意欲が強く、誰かのために立ち上がる勇気と寛大な力が魅力です。`,
+      virgo:       `火星が乙女座にあるあなたの行動力は、精密で洗練された形で発揮されます。細部への注意と完璧さへの追求が行動の原動力であり、実際的で効率的な問題解決能力が輝きます。`,
+      libra:       `火星が天秤座にあるあなたの行動力は、調和と公正さを追求するとき最も輝きます。対話と協力を通じて状況を動かす外交的な行動力と、美しいバランスを実現するための粘り強さが特質です。`,
+      scorpio:     `火星が蠍座にあるあなたの行動力は、深く静かに、しかし強烈なエネルギーで動きます。表面に出さない強い意志と集中力で目標を追い、一度決めたことは簡単には諦めません。変容と再生を繰り返す不死鳥のようなたくましさと、直感的な戦略眼が武器です。`,
+      sagittarius: `火星が射手座にあるあなたの行動力は、弓を引き絞った矢のように、目標に向かって一直線に飛びます。大きな目標と自由への情熱が行動の原動力であり、旅と冒険を通じてエネルギーを最大限に発揮します。`,
+      capricorn:   `火星が山羊座にあるあなたの行動力は、長期的な目標に向けた粘り強い意志と戦略的な計画で発揮されます。この配置は火星が高揚する場所であり、時間と努力を惜しまない実行力と、規律ある行動が頂点への道を切り拓きます。`,
+      aquarius:    `火星が水瓶座にあるあなたの行動力は、革新的なアイデアと集合的な変革のために発揮されます。既存の枠を超えた行動と、未来への理想を現実化するために動く独創的なエネルギーが特質です。`,
+      pisces:      `火星が魚座にあるあなたの行動力は、海の波のように、感性と直感に導かれて動きます。目に見えない流れを読む霊的な洞察力と、慈悲と芸術への情熱が行動の原動力です。`,
+    },
+    jupiter: {
+      aries:       `木星が牡羊座にあるあなたへの恵みは、勇気と先駆けの報いとして訪れます。最初の一歩を踏み出す大胆さと、新しい挑戦への情熱が幸運を呼び込み、先陣を切ることで豊かさが広がります。`,
+      taurus:      `木星が牡牛座にあるあなたへの恵みは、着実な豊かさと現実的な幸運の形でやってきます。美しいものへの審美眼と、五感を通じた充実感を通じて成長と幸福が広がります。コツコツ積み上げることで、大きな財と安定を手にする吉運があります。`,
+      gemini:      `木星が双子座にあるあなたへの恵みは、知識とコミュニケーションを通じて広がります。多くの人と知識を共有することで幸運が広がり、言葉と情報があなたの豊かさの道を開きます。`,
+      cancer:      `木星が蟹座にあるあなたへの恵みは、家族・家庭・感情的な豊かさとして訪れます。愛するものを守り育てる行為が幸運を呼び、深い人間関係の中に成長の種があります。`,
+      leo:         `木星が獅子座にあるあなたへの恵みは、創造と自己表現を通じて輝きます。舞台に立つ勇気と、心からの喜びで行動するときに最大の恩恵が訪れ、あなたの輝きが多くの幸運を引き寄せます。`,
+      virgo:       `木星が乙女座にあるあなたへの恵みは、奉仕と改善を通じてやってきます。健康や仕事への誠実な取り組みと、細部への注意が積み重なることで、着実に豊かさが広がります。`,
+      libra:       `木星が天秤座にあるあなたへの恵みは、美しい関係と協力を通じてやってきます。パートナーシップと公正さを大切にすることで幸運が広がり、人との出会いがあなたの豊かさの扉を開きます。`,
+      scorpio:     `木星が蠍座にあるあなたへの恵みは、変容と深い洞察を通じてやってきます。表面を超えた深みへの探求と、変化を恐れない勇気が豊かさをもたらし、失われたものから新たな宝が生まれます。`,
+      sagittarius: `木星が射手座にあるあなたへの恵みは、この配置で最大限に輝きます。旅・学び・精神的な成長を通じて豊かさが溢れ出し、広い世界と深い哲学があなたの幸運の源です。`,
+      capricorn:   `木星が山羊座にあるあなたへの恵みは、時間と努力の果実として訪れます。責任を果たし、目標に向けて着実に積み上げることで、確固たる成功と社会的な認知が幸運の形として現れます。`,
+      aquarius:    `木星が水瓶座にあるあなたへの恵みは、革新と人道主義を通じてやってきます。未来のビジョンを共有する仲間とのつながりと、社会変革への貢献が幸運の源となり、豊かさが広がります。`,
+      pisces:      `木星が魚座にあるあなたへの恵みは、精神的な豊かさと慈悲の実践を通じてやってきます。この配置は木星が高揚する場所でもあり、芸術・霊性・奉仕の中に最大の成長と幸福が宿っています。`,
+    },
+    saturn: {
+      aries:       `土星が牡羊座にあるあなたへの課題は、衝動と責任の統合です。行動する前に深呼吸して計画する習慣を育てるとき、情熱と規律が融合し、真の先駆者としての力が開花します。`,
+      taurus:      `土星が牡牛座にあるあなたへの課題は、物質的な安定への過度なこだわりを超えることです。変化を受け入れながら真の豊かさを定義し直すとき、持続的な繁栄という美しい果実が実ります。`,
+      gemini:      `土星が双子座にあるあなたへの課題は、情報の散乱を統合する集中力を養うことです。深さと広さの両立を学ぶとき、時代を変える知性の力が開花します。`,
+      cancer:      `土星が蟹座にあるあなたへの課題は、感情的な保護と境界線の確立です。自分自身を適切に守りながら他者を愛する方法を学ぶとき、深い人間的な成熟と魂の豊かさが生まれます。`,
+      leo:         `土星が獅子座にあるあなたへの課題は、承認への依存を手放し、内なる自己表現の力を信頼することです。自分自身の輝きを認め受け入れるとき、本物のリーダーシップが解放されます。`,
+      virgo:       `土星が乙女座にあるあなたへの課題は、完璧主義の重さを軽くすることです。「十分に良い」という優雅さを学ぶとき、真の卓越さと奉仕の力が最も美しく輝きます。`,
+      libra:       `土星が天秤座にあるあなたへの課題は、真の意味での公正さと責任ある関係性を構築することです。長期的な視点でパートナーシップを育てるとき、美しい調和という最高の果実が実ります。`,
+      scorpio:     `土星が蠍座にあるあなたへの課題は、コントロールへの欲求を手放し、変容を信頼することです。深みへの勇気と喪失からの再生を学ぶとき、魂の不死鳥としての力が完全に解放されます。`,
+      sagittarius: `土星が射手座にあるあなたへの課題は、自由と責任のバランスを見出すことです。哲学的な信念を実際の生活に根付かせるとき、真の智慧と人生の豊かさが開花します。`,
+      capricorn:   `土星が山羊座にある配置は、社会的な成功と内なる意味の両立を問いかけます。この配置は土星が最も力を発揮する場所であり、着実な実践と魂の充足を同時に追求する旅が、真の偉業をもたらします。`,
+      aquarius:    `土星が水瓶座にある配置は、社会の規範に疑問を持ちながらも、新しい秩序を自らの手で作り出す課題を持っています。個人の自由と集合的な責任のバランスを学ぶことで、時代を変える大きな使命が開花します。革新と規律の融合があなたの人生テーマです。`,
+      pisces:      `土星が魚座にあるあなたへの課題は、夢と現実の橋渡しをすることです。無限の感受性に境界線を設け、霊的な理想を地に足のついた形で実現するとき、最も深い魂の使命が輝きます。`,
+    },
+    uranus: {
+      aries:       `天王星が牡羊座にあるあなたの世代は、個人の革命と自己解放の波を生きています。既存の自己定義を打ち破り、まったく新しい人間性の可能性を切り開くこの世代の特質が、世界に新たな始まりをもたらしています。`,
+      taurus:      `天王星が牡牛座にあるあなたの世代は、価値観と経済システムの根本的な変革を担っています。物質的なものの定義を書き換え、持続可能な豊かさの新しいモデルを生み出すことがこの世代の使命です。`,
+      gemini:      `天王星が双子座にあるあなたの世代は、情報と言語・コミュニケーションの革命を生きています。多様な知識を素早く統合する能力と、固定観念を壊す思考のフレキシビリティがこの世代の特質です。`,
+      cancer:      `天王星が蟹座にあるあなたの世代は、家族・家庭・国家の概念を革新しています。伝統的な保護と育みの形を超え、より自由で多様な絆のあり方を模索することがこの世代の特質です。`,
+      leo:         `天王星が獅子座にあるあなたの世代は、創造性と自己表現の革命を生きています。既存の芸術・エンターテインメント・個性の定義を書き換え、より本物の輝きを世界に示すことがこの世代の使命です。`,
+      virgo:       `天王星が乙女座にあるあなたの世代は、健康・労働・サービスの概念を革新しています。効率と奉仕の新しいモデルを生み出し、日常の中に革命的な変化をもたらすことがこの世代の特質です。`,
+      libra:       `天王星が天秤座にあるあなたの世代は、関係性・正義・芸術の革命を生きています。パートナーシップの新しい形と、より公正で美しい社会の秩序を構築することがこの世代の使命です。`,
+      scorpio:     `天王星が蠍座にあるあなたの世代は、変容・権力・タブーの概念を革新しています。隠された真実を明らかにし、魂の深みから世界を変容させる力がこの世代に宿っています。`,
+      sagittarius: `天王星が射手座にあるあなたの世代は、哲学・宗教・高等教育の革命を生きています。既存の真理の枠を超え、より広く自由な宇宙的真実の探求がこの世代の特質です。`,
+      capricorn:   `天王星が山羊座にあるあなたの世代は、権威・社会構造・組織システムの革命を担っています。伝統的な権力の形を刷新し、より公正で機能的な社会構造を生み出すことがこの世代の使命です。`,
+      aquarius:    `天王星が水瓶座にあるあなたの世代は、この配置で最も力を発揮します。テクノロジー・民主主義・人類の未来についての革新的なビジョンが、社会全体を変えていく力をこの世代は持っています。`,
+      pisces:      `天王星が魚座にあるあなたの世代は、スピリチュアリティ・芸術・集合的な夢の革命を生きています。物質を超えた意識の変容と、人類の霊的な目覚めをもたらすことがこの世代の特質です。`,
+    },
+    love: {
+      aries:       `金星が牡羊座にあるあなたの恋愛は、情熱的な出会いと純粋な直感が羅針盤です。一目惚れやスピーディな展開を好み、愛する相手のために勇気を持って行動する真っ直ぐさがあなたの最大の魅力です。相手への情熱が続く限り、そのエネルギーは果てしなく輝き続けます。`,
+      taurus:      `金星が牡牛座にあるあなたの恋愛は、時間をかけて育む深い信頼と、五感の喜びを共有する豊かさに輝きます。急かさず、焦らず、じっくりと心を開いていく過程に最大の美しさがあります。いったん心を決めたなら、その愛情は岩のように揺るぎなく、相手を永遠に温め続けます。`,
+      gemini:      `金星が双子座にあるあなたの恋愛は、言葉と知性のきらめきで満ちています。会話の中で心が近づき、共通の好奇心と笑いが絆を育てます。精神的に刺激し合える相手との関係が、あなたの心に最も深い輝きをもたらします。`,
+      cancer:      `金星が蟹座にあるあなたの恋愛は、深い感情的なつながりと相互の保護に輝きます。相手を家族のように大切に包み込み、愛の巣を共に作り上げることに最大の喜びがあります。あなたの愛は月のように満ち溢れ、愛する人を静かに照らし続けます。`,
+      leo:         `金星が獅子座にあるあなたの恋愛は、ドラマチックで情熱的、心が震えるような感動に輝きます。愛する人を最高の存在として讃え、特別な時間と思い出を創り続けることがあなたの愛の形です。受け取った愛は星のように美しく輝き、周囲をも照らします。`,
+      virgo:       `金星が乙女座にあるあなたの恋愛は、細やかな気配りと誠実な奉仕の中に輝きます。相手のために尽くし、日々の小さな行動で愛情を示すことが、あなたの愛の言語です。その献身と誠実さは、時を重ねるごとに深い信頼という宝石になっていきます。`,
+      libra:       `金星が天秤座にあるあなたの恋愛は、優雅なハーモニーと美しいパートナーシップに輝きます。対等で調和のとれた関係を理想とし、相手を尊重しながら共に美しい世界を作ることがあなたの愛の形です。`,
+      scorpio:     `金星が蠍座にあるあなたの恋愛は、魂と魂が溶け合うような深い一体感に輝きます。表面的な関係では満足できず、相手の最も深い部分と触れ合うことを求めます。一度愛したら永遠に愛するような、変容を通じてより深まる強烈な絆があなたの恋愛の真髄です。`,
+      sagittarius: `金星が射手座にあるあなたの恋愛は、共に冒険し成長する旅の伴侶との出会いに輝きます。自由と探求心を共有できる関係を理想とし、互いの世界を広げ合い、共に真理を探す知的な旅路があなたの恋愛の形です。`,
+      capricorn:   `金星が山羊座にあるあなたの恋愛は、時間をかけて磨かれる古典的な宝石のように輝きます。軽い感情的な熱狂よりも、時間と信頼を積み重ねた本物の絆を大切にします。誠実で責任ある愛情表現が、永続する美しい関係を育てます。`,
+      aquarius:    `金星が水瓶座にあるあなたの恋愛は、まず深い友情と精神的なつながりから始まります。お互いの個性と自由を尊重し合い、共に未来のビジョンを描けるような知的な伴侶との関係に最も輝きます。`,
+      pisces:      `金星が魚座にあるあなたの恋愛は、夢と現実の境界が溶け合うような、魂の合一に輝きます。相手の痛みも喜びも自分のものとして感じる深い共感と、無条件の愛で相手を包む能力があなたの愛の最大の輝きです。`,
+    },
+    overall: {
+      aries:       `太陽が牡羊座にある魂は、宇宙の新しい始まりを体現する開拓者です。勇気と情熱と純粋な行動力が三位一体となって、人生に独自の足跡を刻んでいきます。あなたの人生テーマは「先陣を切る勇気」にあります。困難を恐れず最初の一歩を踏み出すとき、あなたの魂は最もいきいきと輝き、周囲に希望の光をもたらします。星が授けたあなたの使命は、世界に新しい可能性の扉を開き続けることです。`,
+      taurus:      `太陽が牡牛座にある魂は、宇宙の豊かさを体現する創造者です。美と安定と粘り強さが三位一体となって、人生に価値ある豊かさを積み上げていきます。あなたの人生テーマは「豊かさの実現」にあります。美しいものを愛し、五感で世界を味わいながら、価値あるものを丁寧に育てるとき、あなたの魂は最も輝きます。星が授けたあなたの使命は、世界に本物の豊かさと美をもたらすことです。`,
+      gemini:      `太陽が双子座にある魂は、宇宙の知性を体現する伝道者です。好奇心と言語と適応力が三位一体となって、人生に無限の可能性を開いていきます。あなたの人生テーマは「知の橋渡し」にあります。多様な世界と人々をつなぎ、情報と洞察を光の速さで伝えるとき、あなたの魂は最もいきいきと輝きます。星が授けたあなたの使命は、世界に知の光をもたらすことです。`,
+      cancer:      `太陽が蟹座にある魂は、宇宙の愛情を体現する守護者です。感受性と直感と保護の力が三位一体となって、人生に深い絆と安らぎをもたらします。あなたの人生テーマは「愛の守護」にあります。愛する人たちを包み込み、心のふるさとを作り出すとき、あなたの魂は最も輝きます。星が授けたあなたの使命は、世界に愛と安らぎの場所をもたらすことです。`,
+      leo:         `太陽が獅子座にある魂は、宇宙の輝きを体現する表現者です。創造性と情熱と寛大さが三位一体となって、人生に燦然たる輝きをもたらします。あなたの人生テーマは「魂の輝き」にあります。自分らしさを恐れず全力で表現し、愛する人々に惜しみなく光を注ぐとき、あなたの魂は最も美しく輝きます。星が授けたあなたの使命は、世界に喜びと輝きをもたらすことです。`,
+      virgo:       `太陽が乙女座にある魂は、宇宙の叡智を体現する奉仕者です。分析力と誠実さと改善への情熱が三位一体となって、人生に意味ある完成をもたらします。あなたの人生テーマは「完成への奉仕」にあります。世界をより良く、より美しく整えることに喜びを見出すとき、あなたの魂は最も輝きます。星が授けたあなたの使命は、世界に叡智と清らかさをもたらすことです。`,
+      libra:       `太陽が天秤座にある魂は、宇宙の調和を体現する外交官です。美意識と公正さと関係性への献身が三位一体となって、人生に優雅なバランスをもたらします。あなたの人生テーマは「美しい調和の創造」にあります。人々の間に橋を架け、世界に美と平和をもたらすとき、あなたの魂は最も輝きます。星が授けたあなたの使命は、世界に調和という芸術をもたらすことです。`,
+      scorpio:     `太陽が蠍座にある魂は、宇宙の変容を体現する錬金術師です。洞察力と意志と再生の力が三位一体となって、人生に深い変容をもたらします。あなたの人生テーマは「魂の錬金術」にあります。表面を超えた深みに潜り、真実を見つけ出し、幾度もの変容を経て純粋な輝きへと高まるとき、あなたの魂は最も美しく輝きます。星が授けたあなたの使命は、世界に深い変容の力をもたらすことです。`,
+      sagittarius: `太陽が射手座にある魂は、宇宙の真理を体現する旅人です。自由と哲学と楽観主義が三位一体となって、人生に無限の地平を開きます。あなたの人生テーマは「真理への旅」にあります。常に遠くを見据え、知識と経験の地平を広げ続けるとき、あなたの魂は最もいきいきと輝きます。星が授けたあなたの使命は、世界に希望と智慧の光をもたらすことです。`,
+      capricorn:   `太陽が山羊座にある魂は、宇宙の意志を体現する建設者です。忍耐と責任と達成への渇望が三位一体となって、人生に崇高な成果をもたらします。あなたの人生テーマは「時間をかけた偉業」にあります。着実に山を登り続け、誰よりも高い視点から世界を照らすとき、あなたの魂は最も輝きます。星が授けたあなたの使命は、世界に確固たる礎をもたらすことです。`,
+      aquarius:    `太陽が水瓶座にある魂は、宇宙の革新を体現する先駆者です。独創性と人道主義と未来へのビジョンが三位一体となって、人生に革命的な変化をもたらします。あなたの人生テーマは「未来を照らす革新」にあります。型にはまらない独自の道を行き、仲間と共に新しい世界の可能性を切り開くとき、あなたの魂は最も輝きます。星が授けたあなたの使命は、世界に自由と革新の光をもたらすことです。`,
+      pisces:      `太陽が魚座にある魂は、宇宙の慈悲を体現する詩人です。感受性と直感と無条件の愛が三位一体となって、人生に深い精神的な豊かさをもたらします。あなたの人生テーマは「宇宙との合一」にあります。境界を超えた愛と感性で世界を体験し、芸術や癒しという形で魂の深みから贈り物をするとき、あなたの魂は最も輝きます。星が授けたあなたの使命は、世界に愛と癒しの光をもたらすことです。`,
+    },
+  };
+  const FALLBACK = "現在、鑑定テキストを準備しております。しばらくお待ちください。";
+  return {
+    sun:     MAP.sun[data.sun]         || FALLBACK,
+    moon:    MAP.moon[data.moon]       || FALLBACK,
+    asc:     MAP.asc[data.asc]         || FALLBACK,
+    mercury: MAP.mercury[data.mercury] || FALLBACK,
+    venus:   MAP.venus[data.venus]     || FALLBACK,
+    mars:    MAP.mars[data.mars]       || FALLBACK,
+    jupiter: MAP.jupiter[data.jupiter] || FALLBACK,
+    saturn:  MAP.saturn[data.saturn]   || FALLBACK,
+    uranus:  MAP.uranus[data.uranus]   || FALLBACK,
+    love:    MAP.love[data.venus]      || FALLBACK,
+    overall: MAP.overall[data.sun]     || FALLBACK,
+  };
+}
+
+/* ══════════════════════════════════════
+   UI HELPERS
+══════════════════════════════════════ */
+function switchMode(id, btn) {
+  document.querySelectorAll('.mode-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.mode-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function populateSelectors(prefix) {
+  const ySel = document.getElementById(prefix + '-year');
+  const mSel = document.getElementById(prefix + '-month');
+  const dSel = document.getElementById(prefix + '-day');
+  if (!ySel || !mSel || !dSel) return;
+  ySel.innerHTML = '<option value="">-- 年 --</option>';
+  mSel.innerHTML = '<option value="">-- 月 --</option>';
+  dSel.innerHTML = '<option value="">-- 日 --</option>';
+  for (let y = 1920; y <= 2030; y++) {
+    const o = document.createElement('option');
+    o.value = y; o.textContent = y + '年'; ySel.appendChild(o);
+  }
+  for (let m = 1; m <= 12; m++) {
+    const o = document.createElement('option');
+    o.value = m; o.textContent = m + '月'; mSel.appendChild(o);
+  }
+  function updateDays() {
+    const selY = parseInt(ySel.value), selM = parseInt(mSel.value), currD = parseInt(dSel.value);
+    dSel.innerHTML = '<option value="">-- 日 --</option>';
+    if (!selY || !selM) return;
+    const days = new Date(selY, selM, 0).getDate();
+    for (let d = 1; d <= days; d++) {
+      const o = document.createElement('option');
+      o.value = d; o.textContent = d + '日';
+      if (d === currD) o.selected = true;
+      dSel.appendChild(o);
+    }
+  }
+  ySel.addEventListener('change', updateDays);
+  mSel.addEventListener('change', updateDays);
+  ySel.value = 1990; mSel.value = 1; updateDays(); dSel.value = 1;
+}
+
+const PREFECTURES = [
+  '北海道','青森県','岩手県','宮城県','秋田県','山形県','福島県',
+  '茨城県','栃木県','群馬県','埼玉県','千葉県','東京都','神奈川県',
+  '新潟県','富山県','石川県','福井県','山梨県','長野県',
+  '岐阜県','静岡県','愛知県','三重県',
+  '滋賀県','京都府','大阪府','兵庫県','奈良県','和歌山県',
+  '鳥取県','島根県','岡山県','広島県','山口県',
+  '徳島県','香川県','愛媛県','高知県',
+  '福岡県','佐賀県','長崎県','熊本県','大分県','宮崎県','鹿児島県','沖縄県'
+];
+function populatePrefectures() {
+  ['hor-place','syn-a-place','syn-b-place'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    sel.innerHTML = '<option value="">不明</option>'
+      + PREFECTURES.map(p => `<option value="${p}">${p}</option>`).join('');
+  });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  populateSelectors('hor-birth');
+  populateSelectors('syn-a-birth');
+  populateSelectors('syn-b-birth');
+  populatePrefectures();
+});
+</script>
+
+<script>
+/* ── 星空パーティクル ── */
+(function(){
+  const c = document.getElementById('stars-canvas');
+  if (!c || !c.getContext) return;
+  const ctx = c.getContext('2d');
+  let S = [];
+  function resize() {
+    c.width = window.innerWidth; c.height = window.innerHeight; S = [];
+    const n = Math.floor(c.width * c.height / 7500);
+    for (let i = 0; i < n; i++) S.push({
+      x: Math.random() * c.width, y: Math.random() * c.height,
+      r: Math.random() * 1.1 + 0.2, a: Math.random() * 0.35 + 0.06,
+      sp: Math.random() * 0.0018 + 0.0006, ph: Math.random() * Math.PI * 2
+    });
+  }
+  function draw(t) {
+    ctx.clearRect(0, 0, c.width, c.height);
+    for (const s of S) {
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, 6.2832);
+      ctx.fillStyle = `rgba(220,210,245,${s.a * (0.55 + 0.45 * Math.sin(t * s.sp + s.ph))})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  requestAnimationFrame(draw);
+})();
+
+/* ── ナビゲーションスクロール ── */
+window.addEventListener('scroll', function() {
+  const n = document.querySelector('nav');
+  if (window.scrollY > 50) n.classList.add('scrolled'); else n.classList.remove('scrolled');
+});
+
+/* ── フォームカードスポットライト ── */
+document.querySelectorAll('.form-card').forEach(function(card) {
+  card.addEventListener('mousemove', function(e) {
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--fc-x', (e.clientX - r.left) + 'px');
+    card.style.setProperty('--fc-y', (e.clientY - r.top) + 'px');
+  });
+});
+</script>
+</body>
+</html>

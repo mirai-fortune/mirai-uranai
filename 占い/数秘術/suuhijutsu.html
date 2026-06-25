@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>カバラ数秘術の無料占い｜現役占い師監修・MIRAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0d0b08; --bg2:#131009; --bg3:#1a1710; --bg4:#1f1c12;
+  --cream:#f5f2eb; --muted:rgba(245,242,235,.55); --muted2:rgba(245,242,235,.28);
+  --gold:#c4a86a; --gold2:#e8d4a0; --gold-dim:rgba(196,168,106,.18);
+  --border:rgba(196,168,106,.14); --border2:rgba(255,255,255,.07);
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--cream);font-family:'Noto Sans JP',sans-serif;font-weight:300;line-height:1.8;-webkit-font-smoothing:antialiased;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:flex;justify-content:space-between;align-items:center;background:rgba(13,11,8,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:20px;letter-spacing:.18em;color:var(--cream);text-decoration:none;}
+.nav-logo span{color:var(--gold);margin-left:8px;font-size:11px;letter-spacing:.22em;}
+.nav-back{font-size:11px;letter-spacing:.16em;color:var(--muted);text-decoration:none;text-transform:uppercase;display:flex;align-items:center;gap:8px;transition:color .2s;}
+.nav-back:hover{color:var(--gold);}
+
+/* ── HERO ── */
+.hero{min-height:42vh;display:flex;flex-direction:column;justify-content:flex-end;padding:110px 40px 56px;position:relative;overflow:hidden;border-bottom:1px solid var(--border);}
+.hero-orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;}
+.orb1{width:480px;height:480px;background:rgba(196,168,106,.06);top:-120px;right:-80px;}
+.orb2{width:380px;height:380px;background:rgba(104,100,180,.05);bottom:-80px;left:5%;}
+.hero-inner{max-width:820px;position:relative;}
+.hero-tag{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:.32em;color:var(--gold);text-transform:uppercase;margin-bottom:24px;display:flex;align-items:center;gap:14px;}
+.hero-tag::before{content:'';display:block;width:28px;height:1px;background:var(--gold);}
+.hero-title{font-family:'Noto Serif JP',serif;font-size:clamp(26px,5vw,50px);font-weight:300;line-height:1.55;letter-spacing:.06em;margin-bottom:20px;}
+.hero-desc{font-size:13px;color:var(--muted);line-height:2.2;max-width:600px;}
+
+/* ── MODE TABS ── */
+.mode-nav{position:sticky;top:53px;z-index:100;background:rgba(13,11,8,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;padding:0 40px;overflow-x:auto;}
+.mode-tab{padding:16px 28px;font-size:12px;letter-spacing:.15em;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;font-family:'Noto Sans JP',sans-serif;font-weight:300;text-transform:uppercase;white-space:nowrap;}
+.mode-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.mode-panel{display:none;}
+.mode-panel.active{display:block;}
+.panel-body{padding:64px 40px;max-width:1080px;margin:0 auto;}
+
+/* ── FORMS ── */
+.form-card{background:var(--bg3);border:1px solid var(--border);padding:44px;max-width:660px;margin-bottom:56px;}
+.form-card.wide{max-width:100%;}
+.form-title{font-family:'Noto Serif JP',serif;font-size:19px;font-weight:300;letter-spacing:.08em;color:var(--cream);margin-bottom:6px;}
+.form-sub{font-size:12px;color:var(--muted);letter-spacing:.06em;margin-bottom:32px;line-height:1.9;}
+.form-row{margin-bottom:24px;}
+.form-row label{display:block;font-size:10px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:9px;}
+.form-row input[type="date"],.form-row input[type="text"],.form-row select{
+  width:100%;padding:13px 16px;background:rgba(255,255,255,.04);border:1px solid var(--border2);
+  color:var(--cream);font-family:'Noto Sans JP',sans-serif;font-size:13px;
+  outline:none;transition:border-color .2s;appearance:none;-webkit-appearance:none;}
+.form-row input:focus,.form-row select:focus{border-color:var(--gold);}
+.form-row select option{background:#1a1710;color:var(--cream);}
+.form-row input::placeholder{color:var(--muted2);}
+.form-date-selectors{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.form-hint{font-size:11px;color:var(--muted2);margin-top:7px;line-height:1.7;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.form-divider{border:none;border-top:1px solid var(--border);margin:28px 0;}
+.calc-btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--gold),#8a6430);color:var(--bg);border:none;cursor:pointer;font-size:12px;letter-spacing:.22em;text-transform:uppercase;font-family:'Noto Sans JP',sans-serif;font-weight:400;transition:opacity .2s;}
+.calc-btn:hover{opacity:.85;}
+.section-person{border:1px solid var(--border);padding:32px;margin-bottom:20px;}
+.section-person-title{font-family:'Cormorant Garamond',serif;font-size:15px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:24px;}
+
+/* ── RESULT AREAS ── */
+.result-area{display:none;}
+.result-area.show{display:block;animation:fadeUp .65s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+
+/* ── RESULT HEADER ── */
+.result-header{padding-bottom:36px;margin-bottom:48px;border-bottom:1px solid var(--border);}
+.result-tag{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;margin-bottom:14px;}
+.result-name{font-family:'Noto Serif JP',serif;font-size:clamp(18px,3vw,28px);font-weight:300;letter-spacing:.08em;margin-bottom:8px;}
+.result-meta{font-size:12px;color:var(--muted);letter-spacing:.08em;}
+
+/* ── SECTION DIVIDER ── */
+.sec-div{margin:64px 0;display:flex;align-items:center;gap:20px;}
+.sec-div::before,.sec-div::after{content:'';flex:1;height:1px;background:var(--border);}
+.sec-div span{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;white-space:nowrap;}
+
+/* ── ANALYSIS GRID ── */
+.analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border);margin-bottom:48px;}
+.analysis-card{background:var(--bg3);padding:36px 32px;}
+.analysis-label{font-size:10px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
+.analysis-title{font-family:'Noto Serif JP',serif;font-size:18px;font-weight:400;letter-spacing:.06em;color:var(--cream);margin-bottom:14px;}
+.analysis-text{font-size:13px;color:var(--muted);line-height:2.2;letter-spacing:.04em;}
+.analysis-text strong{color:var(--cream);font-weight:400;}
+
+/* ── COMPATIBILITY ── */
+.compat-score-section{background:var(--bg3);border:1px solid var(--border);padding:48px;margin-bottom:48px;text-align:center;}
+.compat-score-num{font-family:'Cormorant Garamond',serif;font-size:80px;font-weight:300;color:var(--gold);line-height:1;margin-bottom:8px;}
+.compat-score-label{font-size:11px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;font-family:'Cormorant Garamond',serif;}
+.compat-bar-track{width:320px;max-width:100%;height:4px;background:rgba(255,255,255,.06);border-radius:2px;margin:20px auto;}
+.compat-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width 1.2s ease;}
+.compat-verdict{font-family:'Noto Serif JP',serif;font-size:22px;font-weight:300;color:var(--cream);margin-top:20px;letter-spacing:.08em;}
+.compat-desc{font-size:13px;color:var(--muted);line-height:2.3;max-width:600px;margin:16px auto 0;}
+
+/* ── NUMEROLOGY ── */
+.num-overview{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);margin-bottom:48px;}
+.num-chip{background:var(--bg3);padding:24px 20px;text-align:center;cursor:pointer;border-bottom:2px solid transparent;transition:background .25s,border-color .2s;}
+.num-chip:hover,.num-chip.focused{background:var(--bg2);border-bottom-color:var(--gold);}
+.num-chip-n{font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:300;color:var(--gold);line-height:1;margin-bottom:6px;}
+.num-chip-label{font-size:9px;letter-spacing:.18em;color:var(--muted2);text-transform:uppercase;}
+.num-chip-name{font-size:12px;color:var(--cream);margin-top:4px;letter-spacing:.06em;}
+.num-chip-desc{font-size:10.5px;color:var(--muted);margin-top:8px;letter-spacing:.04em;line-height:1.7;}
+.num-details{display:flex;flex-direction:column;gap:2px;background:var(--border);}
+
+/* ── NUM AI COMPARE ── */
+.nai-num-compare{background:var(--bg3);border:1px solid var(--border);margin-bottom:48px;}
+.nai-num-header{display:grid;grid-template-columns:1fr 120px 1fr;padding:24px 36px 0;text-align:center;}
+.nai-name-a,.nai-name-b{font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:.2em;color:var(--gold);}
+.nai-num-row{display:grid;grid-template-columns:1fr 120px 1fr;align-items:center;padding:28px 36px;border-top:1px solid var(--border);}
+.nai-num-cell{text-align:center;}
+.nai-num-n{font-family:'Cormorant Garamond',serif;font-size:54px;font-weight:300;color:var(--gold);line-height:1;}
+.nai-num-title{font-size:12px;color:var(--cream);margin-top:6px;letter-spacing:.06em;}
+.nai-num-center{text-align:center;padding:0 12px;}
+.nai-num-label{font-size:10px;letter-spacing:.12em;color:var(--muted2);line-height:1.8;}
+@media(max-width:640px){.nai-num-row,.nai-num-header{grid-template-columns:1fr 80px 1fr;padding:20px 16px;}.nai-num-n{font-size:40px;}.nai-num-label{font-size:9px;}}
+
+/* ── NUM BASIS ── */
+.n-basis{display:flex;flex-direction:column;gap:2px;background:var(--border);margin-bottom:48px;}
+.n-basis-card{background:var(--bg3);padding:28px 36px;}
+.n-basis-hd{display:flex;align-items:center;gap:24px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.n-basis-big{font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:300;color:var(--gold);line-height:1;min-width:52px;text-align:center;}
+.n-basis-lbl{font-family:'Cormorant Garamond',serif;font-size:10px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:4px;}
+.n-basis-mth{font-size:12px;color:var(--muted);letter-spacing:.04em;}
+.n-basis-row{display:grid;grid-template-columns:130px 1fr;gap:12px;margin-bottom:12px;align-items:baseline;}
+.n-basis-k{font-size:10px;letter-spacing:.1em;color:var(--muted2);text-transform:uppercase;padding-top:3px;}
+.n-basis-v{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--muted);letter-spacing:.04em;line-height:1.8;}
+.n-basis-v strong{color:var(--gold2);}
+.n-basis-chips{display:flex;flex-wrap:wrap;gap:8px 10px;}
+.n-basis-chip{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:.04em;}
+.n-basis-chip.hi{color:var(--gold2);}
+.n-basis-chip.lo{color:rgba(196,168,106,.22);font-size:13px;}
+.n-basis-chip.nm{color:var(--muted);}
+@media(max-width:640px){.n-basis-card{padding:20px 16px;}.n-basis-row{grid-template-columns:90px 1fr;font-size:13px;}}
+
+/* ── NDC (Number Detail Card) ── */
+.ndc{background:var(--bg3);padding:44px;}
+.ndc.collapsed .ndc-body{display:none;}
+.ndc-header{display:flex;align-items:flex-start;gap:28px;cursor:pointer;}
+.ndc-number{font-family:'Cormorant Garamond',serif;font-size:60px;font-weight:300;color:var(--gold);line-height:1;min-width:60px;text-align:center;}
+.ndc-htext{flex:1;}
+.ndc-type{font-size:9px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:8px;}
+.ndc-title{font-family:'Noto Serif JP',serif;font-size:20px;font-weight:400;letter-spacing:.06em;color:var(--cream);margin-bottom:6px;}
+.ndc-sub{font-size:12px;color:var(--muted);letter-spacing:.06em;}
+.ndc-toggle{margin-left:auto;font-size:16px;color:var(--muted);transition:transform .3s;}
+.ndc:not(.collapsed) .ndc-toggle{transform:rotate(180deg);}
+.ndc-body{margin-top:36px;padding-top:36px;border-top:1px solid var(--border);}
+.ndc-sec{margin-bottom:28px;}
+.ndc-sec-title{font-family:'Cormorant Garamond',serif;font-size:10px;letter-spacing:.25em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
+.ndc-sec p{font-size:13px;color:var(--muted);line-height:2.3;letter-spacing:.04em;}
+.ndc-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.ndc-tag{padding:4px 14px;border:1px solid var(--border);font-size:10px;letter-spacing:.14em;color:var(--gold);font-family:'Cormorant Garamond',serif;}
+.ndc-grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:10px;}
+.ndc-grid-item{background:var(--bg2);padding:18px 20px;}
+.ndc-grid-label{font-size:9px;letter-spacing:.18em;color:var(--muted2);text-transform:uppercase;margin-bottom:6px;}
+.ndc-grid-value{font-size:12px;color:var(--cream);line-height:1.9;}
+.master-badge{display:inline-block;padding:3px 12px;border:1px solid var(--gold);font-size:9px;letter-spacing:.16em;color:var(--gold);font-family:'Cormorant Garamond',serif;margin-top:8px;}
+.ndc-advice{font-style:italic;color:var(--gold2);line-height:2.4;font-family:'Noto Serif JP',serif;font-weight:300;font-size:14px;}
+
+/* ── EXPLAIN INTRO ── */
+.explain-intro{font-size:13px;color:var(--muted);line-height:2.2;letter-spacing:.04em;margin-bottom:36px;padding:24px 28px;border:1px solid var(--border);}
+
+/* ── CAUTION ── */
+.caution{padding:20px 28px;border:1px solid var(--border);font-size:11px;color:var(--muted2);line-height:2;letter-spacing:.04em;margin-top:48px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){.form-grid{grid-template-columns:1fr;}.analysis-grid{grid-template-columns:1fr;}.num-overview{grid-template-columns:repeat(2,1fr);}.ndc-grid2{grid-template-columns:1fr;}}
+@media(max-width:640px){nav{padding:14px 18px;}.hero,.panel-body{padding-left:18px;padding-right:18px;}.mode-nav{padding:0 18px;}.form-card{padding:24px 18px;}.ndc{padding:28px 18px;}.analysis-card{padding:24px 18px;}}
+
+/* ── CANVAS & STACKING ── */
+#stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+.hero,.panel-body{position:relative;z-index:1;}
+/* ── HERO FADE-IN ── */
+.hero-inner{animation:heroFadeIn .9s cubic-bezier(.25,1,.5,1) both;}
+@keyframes heroFadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+/* ── FORM CARD SPOTLIGHT ── */
+.form-card{position:relative;overflow:hidden;}
+.form-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(500px circle at var(--fc-x,50%) var(--fc-y,50%),rgba(196,168,106,.08),transparent 40%);opacity:0;transition:opacity .5s;z-index:0;pointer-events:none;}
+.form-card:hover::before{opacity:1;}
+.form-card>*{position:relative;z-index:1;}
+/* ── NAV SCROLL SHADOW ── */
+nav.scrolled{box-shadow:0 2px 28px rgba(0,0,0,.55);}
+</style>
+</head>
+<body>
+<canvas id="stars-canvas"></canvas>
+
+<nav>
+  <a class="nav-logo" href="../../uranai.html">MIRAI <span>占術鑑定</span></a>
+  <a class="nav-back" href="../../uranai.html">← トップへ戻る</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-orb orb1"></div>
+  <div class="hero-orb orb2"></div>
+  <div class="hero-inner">
+    <p class="hero-tag">Kabbalah Numerology</p>
+    <h1 class="hero-title">数字が語る、あなたの<br>本質と魂の使命。</h1>
+    <p class="hero-desc">カバラ数秘術（ピタゴラス表）を用いた6つのコアナンバー算出。個人鑑定と相性鑑定に対応しています。</p>
+  </div>
+</div>
+
+<div class="mode-nav">
+  <button class="mode-tab active" onclick="switchMode('numerology-ind',this)">数秘術・個人鑑定</button>
+  <button class="mode-tab" onclick="switchMode('numerology-ai',this)">数秘術・相性鑑定</button>
+</div>
+
+<!-- ═══════════════════════════════════════
+  カバラ数秘術 個人鑑定
+═══════════════════════════════════════ -->
+<div id="panel-numerology-ind" class="mode-panel active">
+<div class="panel-body">
+
+<div class="form-card">
+  <h2 class="form-title">カバラ数秘術 鑑定フォーム（個人）</h2>
+  <p class="form-sub">6つのコアナンバーを算出します。名前はローマ字（ヘボン式・大文字）でご入力ください。名前を入力しない場合はライフパス・バースデーのみ算出されます。</p>
+  <div class="form-row">
+    <label>生年月日（年／月／日）</label>
+    <div class="form-date-selectors">
+      <select id="n-birth-year"></select>
+      <select id="n-birth-month"></select>
+      <select id="n-birth-day"></select>
+    </div>
+  </div>
+  <div class="form-grid">
+    <div class="form-row"><label>名（ローマ字）</label><input type="text" id="n-first" placeholder="MIRAI（大文字）" maxlength="30"></div>
+    <div class="form-row"><label>姓（ローマ字）</label><input type="text" id="n-last" placeholder="TANAKA（大文字）" maxlength="30"></div>
+  </div>
+  <p class="form-hint" style="margin-top:-16px;margin-bottom:20px;">例：田中みらい → MIRAI TANAKA　／　Yは子音として計算</p>
+  <hr class="form-divider">
+  <button class="calc-btn" onclick="calcKabbalah()">6つの数字を算出する</button>
+</div>
+
+<div class="result-area" id="n-result">
+  <div class="result-header">
+    <p class="result-tag">Kabbalah Numerology</p>
+    <p class="result-name" id="n-r-name"></p>
+    <p class="result-meta" id="n-r-meta"></p>
+  </div>
+  <div class="num-overview" id="n-overview"></div>
+  <div class="sec-div"><span>Core Numbers — 詳細解説</span></div>
+  <div class="num-details" id="n-details"></div>
+  <div class="sec-div"><span>算出根拠</span></div>
+  <div id="n-basis"></div>
+  <div class="caution">※ カバラ数秘術はピタゴラス表を用いた統計的な自己理解ツールです。占断・予言を目的とするものではありません。</div>
+</div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+  カバラ数秘術 相性鑑定
+═══════════════════════════════════════ -->
+<div id="panel-numerology-ai" class="mode-panel">
+<div class="panel-body">
+
+<div class="form-card wide">
+  <h2 class="form-title">カバラ数秘術 相性鑑定</h2>
+  <p class="form-sub">お二人のライフパスナンバー（生命数）とソウルナンバー（魂数）の相性を読み解きます。名前はローマ字（大文字）でご入力ください。名前を省略した場合はライフパスナンバーのみ比較します。</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+    <div class="section-person">
+      <p class="section-person-title">Person A</p>
+      <div class="form-row">
+        <label>生年月日（年／月／日）</label>
+        <div class="form-date-selectors">
+          <select id="nai-a-birth-year"></select>
+          <select id="nai-a-birth-month"></select>
+          <select id="nai-a-birth-day"></select>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-row"><label>名（ローマ字）</label><input type="text" id="nai-a-first" placeholder="MIRAI" maxlength="30"></div>
+        <div class="form-row"><label>姓（ローマ字）</label><input type="text" id="nai-a-last" placeholder="TANAKA" maxlength="30"></div>
+      </div>
+    </div>
+    <div class="section-person">
+      <p class="section-person-title">Person B</p>
+      <div class="form-row">
+        <label>生年月日（年／月／日）</label>
+        <div class="form-date-selectors">
+          <select id="nai-b-birth-year"></select>
+          <select id="nai-b-birth-month"></select>
+          <select id="nai-b-birth-day"></select>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-row"><label>名（ローマ字）</label><input type="text" id="nai-b-first" placeholder="HARUKI" maxlength="30"></div>
+        <div class="form-row"><label>姓（ローマ字）</label><input type="text" id="nai-b-last" placeholder="YAMADA" maxlength="30"></div>
+      </div>
+    </div>
+  </div>
+  <hr class="form-divider">
+  <button class="calc-btn" onclick="calcNumAI()">相性を鑑定する</button>
+</div>
+
+<div class="result-area" id="nai-result">
+  <div class="result-header">
+    <p class="result-tag">Numerology Compatibility</p>
+    <p class="result-name" id="nai-r-name"></p>
+    <p class="result-meta" id="nai-r-meta"></p>
+  </div>
+  <div class="sec-div"><span>Core Numbers — 比較</span></div>
+  <div id="nai-numbers"></div>
+  <div class="sec-div"><span>相性スコア</span></div>
+  <div class="explain-intro" style="margin-bottom:32px;">
+    <p style="font-family:'Noto Serif JP',serif;font-size:13px;color:var(--cream);letter-spacing:.06em;margin-bottom:18px;">なぜこの2つの数字で相性を測るのか</p>
+    <p style="font-size:13px;color:var(--muted);line-height:2.3;letter-spacing:.04em;margin-bottom:16px;"><strong style="color:var(--gold2);">ライフパスナンバー（生命数）</strong>は、生まれ持った本質的な価値観や人生の進み方を表します。生き方の波長や根本的な噛み合いを測る、相性の最大のベースとなる数字です。</p>
+    <p style="font-size:13px;color:var(--muted);line-height:2.3;letter-spacing:.04em;"><strong style="color:var(--gold2);">ソウルナンバー（魂数）</strong>は、魂が本当に求めている欲求——つまり「本音」を表します。恋愛や結婚生活など、プライベートで一緒にいるときの理由のない安心感、あるいは深い不快感のなさを測るために不可欠な数字です。</p>
+  </div>
+  <div class="compat-score-section" id="nai-score"></div>
+  <div class="sec-div"><span>詳細分析</span></div>
+  <div class="analysis-grid" id="nai-analysis"></div>
+  <div class="caution">※ 数秘術の相性はエネルギーの傾向を示すものです。どんな数字の組み合わせでも、お互いへの理解と対話が関係の質を決めます。</div>
+</div>
+
+</div>
+</div>
+
+<div style="max-width:720px;margin:0 auto 60px;padding:28px 32px;border:1px solid var(--border);border-radius:8px;background:var(--gold-dim);text-align:center;font-size:0.88rem;line-height:1.9;color:var(--muted);letter-spacing:0.05em;">
+  当サイトの占術ロジックは、現役占い師監修のもと本格的な仕様で構築しています。<br>
+  毎日のセルフチェックはもちろん、プロの占い師様の鑑定補助ツールとしても<br>
+  ご自由にお役立てください。
+</div>
+
+<footer style="padding:40px;text-align:center;border-top:1px solid var(--border);font-size:11px;letter-spacing:.14em;color:var(--muted2);">
+  <a href="../../uranai.html" style="color:var(--gold);text-decoration:none;">MIRAI</a> ｜ 占術鑑定ツール ／ © MIRAI All Rights Reserved.
+</footer>
+
+<script>
+'use strict';
+
+/* ══════════════════════════════════════
+   KABBALAH NUMEROLOGY
+══════════════════════════════════════ */
+const LETTER_VAL={A:1,B:2,C:3,D:4,E:5,F:6,G:7,H:8,I:9,J:1,K:2,L:3,M:4,N:5,O:6,P:7,Q:8,R:9,S:1,T:2,U:3,V:4,W:5,X:6,Y:7,Z:8};
+const VOWELS=new Set(['A','E','I','O','U']);
+function reduceNum(n,keep){
+  const m=[11,22,33];
+  while(n>9){if(keep&&m.includes(n))break;n=String(n).split('').reduce((a,b)=>a+ +b,0);}
+  return n;
+}
+const NUM_DATA={
+  1:{title:'先駆者',en:'The Pioneer',keyword:'独立・創造・先頭',isMaster:false,
+    desc:['「1」は万物の始まりを象徴する、太陽の意志を宿した数です。あなたには、誰も歩いたことのない道をいち早く直感し、自ら先頭に立って切り拓いていく力が宿っています。未知の世界を恐れず、むしろそこに本能的な輝きを見出すのがあなたという人間の核心です。','「協調性がない」と言われたことはありませんか。常にトップでなければ気が済まない完璧主義が、知らずのうちに孤立を招くことがあります。助けを求めることへの抵抗感や、結果が出るまで人を信じきれないパターンも、この数が繰り返し出会う課題です。'],
+    strengths:['開拓者のリーダーシップ','誰も思いつかない独創的発想','折れない意志力','先頭に立つ胆力','圧倒的な行動力'],
+    challenges:['孤立しやすい頑固さ','協調よりも支配に傾く','完璧主義による自縄自縛','助けを求められない','休むことへの罪悪感'],
+    advice:'あなたの道は「一人で走りきる」ことではなく、「最初に走り出す人間」であることです。先頭に立ちながら後ろを振り返る余裕が生まれたとき、本物のリーダーが完成します。',
+    compatible:[3,5,9],careerLabel:'「開拓者」「リーダー」',career:'起業・経営／営業職／プロジェクトリーダー／コンサルタント／新規事業開発',careerFeature:'独立心が強く、ゼロから何かを生み出す力に優れています。'},
+  2:{title:'仲介者',en:'The Mediator',keyword:'調和・共感・協力',isMaster:false,
+    desc:['「2」は月の繊細なエネルギーを宿す、調和の数です。相手が言葉にする前に感情を察知する深い共感力と、場の空気を瞬時に読む観察眼があなたの最大の才能です。あなたが静かにそこにいるだけで、周囲の人々に本物の安堵と調和が生まれています。','「断れない自分」に気づいたことはありませんか。相手を傷つけたくない一心で本音を飲み込むクセが、やがて言いようのない疲弊感になることも。感受性の豊かさゆえに、他者の感情を無意識に引き受けすぎてしまうのがこの数の最大の課題です。'],
+    strengths:['言語化を超えた共感力','絶妙な空気の読み方','誰とでも話せる外交センス','揺るぎない誠実さ','対立を和らげる調停力'],
+    challenges:['優柔不断になりやすい','断れずに自己犠牲','傷つきやすく引きずる','境界線を引けない','他者の感情を一人で抱え込む'],
+    advice:'「ノー」という言葉はあなたの優しさを壊しません。自分の感情にも「それも大切だよ」と声をかける練習を。自分を守れるあなたが、より長く、より深く人を支えることができます。',
+    compatible:[4,6,8],careerLabel:'「調整役」「サポーター」',career:'秘書／人事・総務／カウンセラー／接客業／仲介・コーディネーター',careerFeature:'協調性が高く、人と人をつなぐ能力があります。'},
+  3:{title:'表現者',en:'The Expressor',keyword:'創造・喜び・表現',isMaster:false,
+    desc:['「3」は木星のエネルギーを宿す、喜びと創造の数です。言葉、色彩、音楽、ユーモア——あらゆる表現手段を通じて、世界を豊かに彩る天性の才能があります。あなたがいるだけで場の空気が明るく軽くなることを、周囲の人はずっと前から知っています。','多才であるがゆえに、エネルギーが四方に分散しやすいのがこの数の課題です。「いつか本気を出そう」と棚上げにしたアイデアの山が積み上がっていませんか。批判への過敏さが創造性にブレーキをかけ、完成させることへの恐れが才能の発揮を遅らせることも。'],
+    strengths:['世界を彩る豊かな想像力','言葉と場を操るコミュニケーション力','どんな状況でも楽しみを見つける楽観性','天性のユーモアセンス','人の心を開かせる感情表現'],
+    challenges:['エネルギーの分散と途中放棄','感情の浮き沈みが激しい','批判に傷つきやすい','多才ゆえの散漫さ','完成させることへの苦手意識'],
+    advice:'あなたの「未完成の表現」にも、すでに価値があります。完璧になるまで待たずに世に出すこと——その行動が世界を動かします。幅より深さを磨いたとき、あなたの言葉は時代を超えます。',
+    compatible:[1,5,9],careerLabel:'「表現者」「クリエイター」',career:'ライター／デザイナー／広報・PR／エンターテイナー／SNS発信者',careerFeature:'言葉や芸術による自己表現が得意です。'},
+  4:{title:'建築家',en:'The Builder',keyword:'秩序・誠実・構築',isMaster:false,
+    desc:['「4」は大地のエネルギーを体現する、信頼と誠実の数です。コツコツと積み上げることに喜びを感じ、確かな土台の上にしか立たないあなたの存在は、周囲に揺るぎない安心感をもたらします。約束したことは必ず果たす——それがあなたという人間の揺るがない核心です。','「もっと効率よくできるはずなのに」という内なる批評家の声に苦しんでいませんか。変化を受け入れることへの抵抗感と、完璧でないものを許せない厳しさが、自分自身や周囲との摩擦を生むことがあります。'],
+    strengths:['どんな困難も諦めない堅実な実行力','有言実行の責任感','システムを設計する組織力','長期間ぶれない持続力','積み重ねで信頼を勝ち取る力'],
+    challenges:['変化への強い抵抗感','頑固で融通が利かない','完璧主義による停滞','感情を言葉にするのが苦手','新しいアイデアを受け入れにくい'],
+    advice:'完璧な計画より、70点の行動のほうが世界を動かします。あなたの「丁寧さ」はそのままに、「変化」を脅威ではなく、より良い建築への新しい素材として受け入れてみてください。',
+    compatible:[2,6,8],careerLabel:'「職人」「実務家」',career:'公務員／経理／エンジニア／建築・不動産／製造業',careerFeature:'堅実で、仕組みづくりや継続力に優れています。'},
+  5:{title:'自由人',en:'The Free Spirit',keyword:'変化・冒険・解放',isMaster:false,
+    desc:['「5」は水星のエネルギーを宿す、変化と多様性の数です。好奇心のままに世界を駆け巡り、あらゆる経験から本質を学び取る力があります。どんな環境にも素早く馴染む適応力と、場を一瞬で盛り上げる天性の引力で、あなたは気づけば人々の中心に立っています。','自由を愛するがゆえに、「定着すること」への恐れを抱きやすいのがこの数の課題です。一つのことが軌道に乗る頃には次の刺激を求めて動き出す衝動は、深い満足感を遠ざけることも。'],
+    strengths:['どんな環境にも対応できる適応力','枯れることのない好奇心','人を自然と惹きつける魅力','未知の世界への冒険心','多様な経験を知恵に変える感受性'],
+    challenges:['飽きやすく長続きしない','衝動的な判断をしやすい','コミットメントへの恐れ','刺激を求めて逃げてしまう','表面的な関係で終わりやすい'],
+    advice:'自由とは「逃げること」ではなく「選ぶこと」です。意志を持って「ここに残る」と決めたとき、あなたの冒険は初めて深みを持ちます。根を張った自由人こそが、最も遠くへ行けます。',
+    compatible:[1,3,7],careerLabel:'「冒険家」「自由人」',career:'旅行業／マーケティング／営業職／イベント企画／メディア関係',careerFeature:'変化を好み、行動力と適応力があります。'},
+  6:{title:'守護者',en:'The Nurturer',keyword:'愛・奉仕・美',isMaster:false,
+    desc:['「6」は金星のエネルギーを宿す、愛と美の数です。あなたの心には、誰かが困っているのを見過ごすことのできない深い愛情と奉仕の本能が宿っています。家族、友人、コミュニティ——あなたが守ろうとする輪は、気づけばいつも広がり続けています。','「責任を引き受けすぎて消耗する」という経験はありませんか。周囲の問題を自分のこととして背負い込み、「もっとできるはず」と自分を追い込むのがこの数の課題です。'],
+    strengths:['見返りを求めない深い愛情','どんな責任も引き受ける覚悟','洗練された美意識','コミュニティを温める献身','人の悩みを解決する実践力'],
+    challenges:['過干渉・過保護になりやすい','自己犠牲が当たり前になっている','断ることへの強い罪悪感','完璧な愛を求めすぎる','心配性で先回りしすぎる'],
+    advice:'大切な人の人生を信頼することも、愛の一形態です。まずあなた自身の心を満たしてください。満ちた器からしか、本当の意味で他者に注ぐことはできないのです。',
+    compatible:[2,4,9],careerLabel:'「育成者」「奉仕者」',career:'教師／看護師／福祉職／保育士／美容関係',careerFeature:'人を育てたり支えたりすることに喜びを感じます。'},
+  7:{title:'探求者',en:'The Seeker',keyword:'知性・内省・真実',isMaster:false,
+    desc:['「7」は海王星のエネルギーを宿す、知性と神秘の数です。表層に見えないものを見抜く洞察力と、直感と論理を高次元で統合する稀有な知性があなたの核心です。哲学、科学、スピリチュアリティ——いずれかの世界で「真実」を追い求める使命が、あなたには生まれながらに与えられています。','「完全に理解してから動く」という思考パターンに縛られてはいませんか。完璧な答えを求めるあまり行動が遅れ、孤独を好むがゆえに深い人間関係を後回しにしがちです。'],
+    strengths:['見えないものを見抜く洞察力','深い内省と自己理解','真実への一切妥協しない誠実さ','直感と論理を統合する知性','精神的・哲学的な深さ'],
+    challenges:['孤立を招く閉鎖的な傾向','冷淡に見られやすい','完璧主義で行動が遅くなる','人を信じるまでに時間がかかる','自分の世界に閉じこもりやすい'],
+    advice:'すべてを理解してから踏み出す必要はありません。「わからないまま飛び込む」という経験の中にこそ、最も深い知恵が宿っています。あなたの孤独は弱さではなく、内側を磨くための聖域です。',
+    compatible:[3,5,9],careerLabel:'「研究者」「探究者」',career:'研究職／ITエンジニア／学者／占い師／分析コンサルタント',careerFeature:'専門性を深め、真理を追究する力があります。'},
+  8:{title:'達成者',en:'The Achiever',keyword:'力・繁栄・実現',isMaster:false,
+    desc:['「8」は土星のエネルギーを宿す、力と豊かさの数です。横向きにすると∞（無限）を描くこの数は、物質的・精神的豊かさの循環を司っています。大きなビジョンを現実に落とし込む圧倒的な実行力と、周囲を動かすカリスマ性——それがあなたに与えられた生まれながらの才能です。','「成果」と「自分の価値」を切り離せているでしょうか。達成への執着が強くなりすぎると、休むことへの罪悪感や、支配的な言動で周囲を遠ざけてしまうことも。'],
+    strengths:['ビジョンを現実にする実行力','天性のビジネスセンス','集団を動かすカリスマ的リーダーシップ','困難な目標を達成しきる力','大局から戦略を描く視点'],
+    challenges:['コントロールへの執着','成功と自己価値の混同','感情よりも成果を優先する','仕事に全てを捧げるワーカホリック','ゼロか百かの極端な思考'],
+    advice:'あなたが蓄えた力は、独占するために与えられたのではありません。循環させることで力は何倍にも増幅します。「自分が豊かになることで周囲も豊かにする」——この哲学に立ったとき、あなたは本物の達成者になります。',
+    compatible:[2,4,6],careerLabel:'「実業家」「成功者」',career:'経営者／投資家／金融業／不動産業／管理職',careerFeature:'お金や組織を動かす力に恵まれています。'},
+  9:{title:'人道主義者',en:'The Humanitarian',keyword:'完成・愛・解放',isMaster:false,
+    desc:['「9」は1〜8すべての数の本質を内包する、完成の数です。個人を超えた視点から世界を見渡し、人類全体への深い愛情と奉仕に魂の喜びを感じます。高い芸術性と感受性は、時代を超えて人の心に触れる作品や仕事を生み出す源となっています。','あまりにも広く深い愛情が、傷つきやすさとセットになっているのがこの数の課題です。「また裏切られた」という深い失望感や、理想と現実のギャップへの苦悩はこの数が最も繰り返しやすいテーマ。'],
+    strengths:['言葉を超えた深い共感力','時代を超える芸術的才能','見返りを求めない寛大さ','本質を掴む強い直感力','精神的な成熟と大きな器'],
+    challenges:['高すぎる理想による深い失望','傷つきやすく引きずりやすい','手放すことへの強い抵抗','自分と他者の境界線が曖昧','愛情の燃え尽き症候群'],
+    advice:'完璧な世界を作る必要はありません。今この瞬間、目の前の一人に愛を届けること——それだけで十分です。あなたの愛は、見えないところまで確かに届いています。',
+    compatible:[1,3,6],careerLabel:'「博愛主義者」「理想家」',career:'NPO活動／医療関係／芸術家／国際支援／心理カウンセラー',careerFeature:'社会貢献や人類愛をテーマに活躍します。'},
+  11:{title:'光の伝道者',en:'The Illuminator',keyword:'直感・啓示・高次の感受性',isMaster:true,
+    desc:['マスターナンバー「11」は、二つの「1」が重なった強烈な光のエネルギーです。言語を超えた次元で真実を感知する高次の直感と、意識せずとも人々にインスピレーションを与え続ける「灯台」としての役割が、あなたには生まれながらに与えられています。','その繊細な感受性はギフトであると同時に、最大の試練でもあります。他者の感情や場のエネルギーを無意識に吸収しすぎて消耗したり、強烈なビジョンと現実の間で引き裂かれるような感覚に陥ったりすることは珍しくありません。'],
+    strengths:['言語を超えた高次の直感','環境のエネルギーを感知する感受性','存在だけでインスピレーションを与える','世界の理想を描く純粋な理想主義','詩・芸術・言葉に宿る特別な才能'],
+    challenges:['感受性が高すぎてエネルギーを消耗','強烈な理想と現実のギャップ','優柔不断で決断を先送りにする','根拠のない自己評価の低さ','他者の感情に飲み込まれやすい'],
+    advice:'感じすぎることは弱さではなく、あなたに与えられた特殊なアンテナです。繊細さをそのままに、境界線を丁寧に引く技術を学ぶとき、あなたのギフトは世界を照らす本物の光になります。',
+    compatible:[2,6,9],careerLabel:'「インスピレーションの伝達者」',career:'占い師／スピリチュアルカウンセラー／作家／アーティスト／講演家',careerFeature:'直感力と感受性が非常に高く、人々に希望や気づきを与えます。'},
+  22:{title:'夢の設計者',en:'The Master Builder',keyword:'ビジョン・実現・構築',isMaster:true,
+    desc:['マスターナンバー「22」は数秘術の中で最も実践的な力を持つ数です。「4」の堅実な実行力と「11」の高次の直感が融合し、壮大なビジョンを現実に落とし込む稀有な能力があります。個人の域を超えた、社会や時代そのものを動かすスケールの夢を実現する潜在力があなたには宿っています。','その大きさゆえに「プレッシャーとどう共存するか」がこの数の最大のテーマです。課されたような使命感や、期待に応えられないかもしれないという恐怖が燃え尽きを招くことがあります。'],
+    strengths:['時代を変える壮大なビジョン','直感と実行力を統合した卓越したリーダーシップ','社会システムを設計する組織力','困難を超えるたびに大きくなる意志力','現実を変えるスケールの発想'],
+    challenges:['重すぎる使命感とプレッシャー','完璧主義による燃え尽き','理解されない孤独感','エゴとビジョンの混同','「それは無理だ」という声への過剰な反応'],
+    advice:'あなたのビジョンは遠い未来にではなく、「今日の一歩」の中にあります。壮大さを誇りにしながら、目の前の小さな実践を積み重ねること——それが夢の設計者の真の姿です。',
+    compatible:[4,8,11],careerLabel:'「理想を現実化する建築家」',career:'大企業経営者／プロデューサー／政治家／教育事業／大規模プロジェクト管理',careerFeature:'壮大なビジョンを現実社会に落とし込む能力があります。'},
+  33:{title:'愛の体現者',en:'The Master Teacher',keyword:'無条件の愛・癒し・教え',isMaster:true,
+    desc:['マスターナンバー「33」は、数秘術における最も純粋な愛のエネルギーです。「6」の愛と奉仕の精神が宇宙的スケールへと昇華した、世界の教師・癒し手としての使命があなたには与えられています。その愛は個人や家族を超えて人類全体に向けられた、普遍的なものです。','「33」として生きることは、並外れた美しさと同時に、深い孤独と試練を伴います。完璧な愛を求めるあまり、自分自身への愛が後回しになりがちです。'],
+    strengths:['条件を問わない無条件の愛','存在自体が癒しとなる力','深い精神的洞察と哲学的視点','道徳的な誠実さと清廉さ','コミュニティ全体を育む包容力'],
+    challenges:['自己愛が後回しになる自己犠牲','深い愛情からくる感情的な消耗','完璧な愛・完璧な関係を求めすぎる','現実的な自己管理が難しい','稀すぎるがゆえの孤独と誤解'],
+    advice:'世界を救う前に、自分自身を愛してください。あなたの前にいる一人を深く愛することから始めて——その愛の波紋は、あなたには見えない場所まで必ず届いています。',
+    compatible:[6,9,11],careerLabel:'「無償の愛の伝道師」',career:'ヒーラー／セラピスト／教育者／宗教家・精神指導者／福祉活動家',careerFeature:'愛と奉仕のエネルギーが強く、多くの人を癒やし導きます。'}
+};
+
+function calcKabbalah(){
+  const yVal=document.getElementById('n-birth-year').value;
+  const mVal=document.getElementById('n-birth-month').value;
+  const dVal=document.getElementById('n-birth-day').value;
+  if(!yVal||!mVal||!dVal){alert('生年月日をすべて選択してください。');return;}
+  const y=parseInt(yVal),m=parseInt(mVal),d=parseInt(dVal);
+  const first=document.getElementById('n-first').value.toUpperCase().replace(/[^A-Z]/g,'');
+  const last=document.getElementById('n-last').value.toUpperCase().replace(/[^A-Z]/g,'');
+  const fullName=first+last;
+  const lpStr=`${String(y).padStart(4,'0')}${String(m).padStart(2,'0')}${String(d).padStart(2,'0')}`;
+  const lp=reduceNum([...lpStr].reduce((a,b)=>a+ +b,0),true);
+  const bday=reduceNum(d,true);
+  const expr=fullName.length?reduceNum([...fullName].reduce((a,c)=>a+(LETTER_VAL[c]||0),0),true):null;
+  const soul=fullName.length?reduceNum([...fullName].filter(c=>VOWELS.has(c)).reduce((a,c)=>a+(LETTER_VAL[c]||0),0),true):null;
+  const pers=fullName.length?reduceNum([...fullName].filter(c=>!VOWELS.has(c)&&LETTER_VAL[c]).reduce((a,c)=>a+(LETTER_VAL[c]||0),0),true):null;
+  const mat=(expr!==null)?reduceNum(lp+expr,true):null;
+  const cards=[
+    {label:'Life Path',ja:'ライフパスナンバー（生命数）',n:lp,desc:'人生の目的・本質的な使命を示す、最も重要な数字'},
+    {label:'Birthday',ja:'バースデーナンバー（誕生数）',n:bday,desc:'生まれた日が示す、生まれ持った特別な才能と資質'},
+    ...(expr!==null?[{label:'Expression',ja:'表現ナンバー（運命数）',n:expr,desc:'名前に刻まれた潜在的な才能と、人生で表現すべき方向性'}]:[]),
+    ...(soul!==null?[{label:'Soul Urge',ja:'ソウルナンバー（魂数）',n:soul,desc:'魂の深部が求める欲求・真の動機・内なる渇望'}]:[]),
+    ...(pers!==null?[{label:'Personality',ja:'パーソナリティナンバー（外面数）',n:pers,desc:'他者に与える第一印象と、外の世界に見せている自分'}]:[]),
+    ...(mat!==null?[{label:'Maturity',ja:'マチュリティナンバー（成熟数）',n:mat,desc:'中年以降に目覚め、人生の後半に開花していくテーマ'}]:[]),
+  ];
+  document.getElementById('n-r-name').textContent=(first||last)?`${first} ${last}`.trim():'（名前未入力）';
+  document.getElementById('n-r-meta').textContent=`${y}年${m}月${d}日生まれ`;
+  document.getElementById('n-overview').innerHTML=cards.map((c,i)=>`<div class="num-chip" onclick="focusNdc(${i})"><div class="num-chip-n">${c.n}</div><div class="num-chip-label">${c.label}</div><div class="num-chip-name">${c.ja}</div><div class="num-chip-desc">${c.desc}</div></div>`).join('');
+  document.getElementById('n-details').innerHTML=cards.map((c,i)=>{
+    const data=NUM_DATA[c.n]||NUM_DATA[reduceNum(c.n,false)];
+    if(!data)return'';
+    return`<div class="ndc${i>0?' collapsed':''}" id="ndc-${i}">
+      <div class="ndc-header" onclick="toggleNdc(${i})">
+        <div class="ndc-number">${c.n}</div>
+        <div class="ndc-htext">
+          <p class="ndc-type">${c.label} ｜ ${c.ja}</p>
+          <h3 class="ndc-title">${data.title} — ${data.en}</h3>
+          <p class="ndc-sub">${c.desc}</p>
+          ${data.isMaster?'<span class="master-badge">Master Number</span>':''}
+        </div>
+        <div class="ndc-toggle">▾</div>
+      </div>
+      <div class="ndc-body">
+        <div class="ndc-sec"><p class="ndc-sec-title">キーワード</p><div class="ndc-tags">${data.keyword.split('・').map(k=>`<span class="ndc-tag">${k}</span>`).join('')}</div></div>
+        <div class="ndc-sec"><p class="ndc-sec-title">本質と解説</p>${data.desc.map(p=>`<p>${p}</p>`).join('<br>')}</div>
+        <div class="ndc-grid2">
+          <div class="ndc-grid-item"><p class="ndc-grid-label">強み</p><p class="ndc-grid-value">${data.strengths.join(' ／ ')}</p></div>
+          <div class="ndc-grid-item"><p class="ndc-grid-label">課題</p><p class="ndc-grid-value">${data.challenges.join(' ／ ')}</p></div>
+          <div class="ndc-grid-item"><p class="ndc-grid-label">相性の良い数字</p><p class="ndc-grid-value">${data.compatible.join('・')}</p></div>
+          <div class="ndc-grid-item"><p class="ndc-grid-label">向いている分野</p><p class="ndc-grid-value">${(data.careerLabel?'<span style="display:block;color:var(--gold2);font-size:11px;letter-spacing:.12em;margin-bottom:5px;">'+data.careerLabel+'</span>':'')+data.career+(data.careerFeature?'<br><span style="font-size:11px;color:var(--muted2);font-style:italic;margin-top:7px;line-height:1.7;">'+data.careerFeature+'</span>':'')}</p></div>
+        </div>
+        <div class="ndc-sec" style="margin-top:20px;"><p class="ndc-sec-title">アドバイス</p><p class="ndc-advice">${data.advice}</p></div>
+      </div>
+    </div>`;
+  }).join('');
+  // ── 算出根拠セクション ──
+  const stps=(raw,keep)=>{const s=[];let c=raw;while(c>9){if(keep&&[11,22,33].includes(c))break;const n=[...String(c)].reduce((a,b)=>a+ +b,0);s.push(`${[...String(c)].join(' + ')} = <strong>${n}</strong>`);c=n;}return s;};
+  const lpY2=String(y).padStart(4,'0'),lpM2=String(m).padStart(2,'0'),lpD2=String(d).padStart(2,'0');
+  const lpRaw=[...lpStr].reduce((a,b)=>a+ +b,0);
+  const lpSt=stps(lpRaw,true);
+  let bHtml=`<div class="n-basis-card">
+    <div class="n-basis-hd"><div class="n-basis-big">${lp}</div><div><p class="n-basis-lbl">Life Path — ライフパスナンバー（生命数）</p><p class="n-basis-mth">生年月日の全桁を合計し、1桁またはマスターナンバーに還元</p></div></div>
+    <div class="n-basis-row"><span class="n-basis-k">生年月日</span><span class="n-basis-v">${y}年${m}月${d}日</span></div>
+    <div class="n-basis-row"><span class="n-basis-k">各桁の合計</span><span class="n-basis-v">${[...lpY2].join('+')} + ${[...lpM2].join('+')} + ${[...lpD2].join('+')} = <strong>${lpRaw}</strong></span></div>
+    ${lpSt.map(s=>`<div class="n-basis-row"><span class="n-basis-k">還元</span><span class="n-basis-v">${s}</span></div>`).join('')}
+  </div>`;
+  const bdSt=stps(d,true);
+  bHtml+=`<div class="n-basis-card">
+    <div class="n-basis-hd"><div class="n-basis-big">${bday}</div><div><p class="n-basis-lbl">Birthday — バースデーナンバー（誕生数）</p><p class="n-basis-mth">生まれた「日」を1桁またはマスターナンバーに還元</p></div></div>
+    <div class="n-basis-row"><span class="n-basis-k">生まれた日</span><span class="n-basis-v">${d}日</span></div>
+    ${bdSt.length?bdSt.map(s=>`<div class="n-basis-row"><span class="n-basis-k">還元</span><span class="n-basis-v">${s}</span></div>`).join(''):
+    `<div class="n-basis-row"><span class="n-basis-k">結果</span><span class="n-basis-v"><strong>${bday}</strong>（還元不要）</span></div>`}
+  </div>`;
+  if(fullName.length){
+    const exRaw=[...fullName].reduce((a,c)=>a+(LETTER_VAL[c]||0),0);
+    const exSt=stps(exRaw,true);
+    const exChips=[...fullName].map(c=>`<span class="n-basis-chip nm">${c}(${LETTER_VAL[c]||0})</span>`).join('');
+    const exForm=[...fullName].map(c=>LETTER_VAL[c]||0).join('+');
+    bHtml+=`<div class="n-basis-card">
+      <div class="n-basis-hd"><div class="n-basis-big">${expr}</div><div><p class="n-basis-lbl">Expression — 表現ナンバー（運命数）</p><p class="n-basis-mth">フルネーム全文字をピタゴラス表で数値化し合計・還元</p></div></div>
+      <div class="n-basis-row"><span class="n-basis-k">フルネーム</span><span class="n-basis-v">${first} ${last}</span></div>
+      <div class="n-basis-row"><span class="n-basis-k">各文字の値</span><span class="n-basis-v"><span class="n-basis-chips">${exChips}</span></span></div>
+      <div class="n-basis-row"><span class="n-basis-k">合計</span><span class="n-basis-v">${exForm} = <strong>${exRaw}</strong></span></div>
+      ${exSt.map(s=>`<div class="n-basis-row"><span class="n-basis-k">還元</span><span class="n-basis-v">${s}</span></div>`).join('')}
+      ${!exSt.length?`<div class="n-basis-row"><span class="n-basis-k">結果</span><span class="n-basis-v"><strong>${expr}</strong>（還元不要）</span></div>`:''}
+    </div>`;
+    const soRaw=[...fullName].filter(c=>VOWELS.has(c)).reduce((a,c)=>a+(LETTER_VAL[c]||0),0);
+    const soSt=stps(soRaw,true);
+    const soChips=[...fullName].map(c=>VOWELS.has(c)?`<span class="n-basis-chip hi">${c}(${LETTER_VAL[c]||0})</span>`:`<span class="n-basis-chip lo">${c}</span>`).join('');
+    const soForm=[...fullName].filter(c=>VOWELS.has(c)).map(c=>LETTER_VAL[c]||0).join('+');
+    bHtml+=`<div class="n-basis-card">
+      <div class="n-basis-hd"><div class="n-basis-big">${soul}</div><div><p class="n-basis-lbl">Soul Urge — ソウルナンバー（魂数）</p><p class="n-basis-mth">フルネームの母音（A・E・I・O・U）のみを数値化し合計・還元</p></div></div>
+      <div class="n-basis-row"><span class="n-basis-k">母音を抽出</span><span class="n-basis-v"><span class="n-basis-chips">${soChips}</span></span></div>
+      <div class="n-basis-row"><span class="n-basis-k">合計</span><span class="n-basis-v">${soForm||'0'} = <strong>${soRaw}</strong></span></div>
+      ${soSt.map(s=>`<div class="n-basis-row"><span class="n-basis-k">還元</span><span class="n-basis-v">${s}</span></div>`).join('')}
+      ${!soSt.length?`<div class="n-basis-row"><span class="n-basis-k">結果</span><span class="n-basis-v"><strong>${soul}</strong>（還元不要）</span></div>`:''}
+    </div>`;
+    const peRaw=[...fullName].filter(c=>!VOWELS.has(c)&&LETTER_VAL[c]).reduce((a,c)=>a+(LETTER_VAL[c]||0),0);
+    const peSt=stps(peRaw,true);
+    const peChips=[...fullName].map(c=>(!VOWELS.has(c)&&LETTER_VAL[c])?`<span class="n-basis-chip hi">${c}(${LETTER_VAL[c]||0})</span>`:`<span class="n-basis-chip lo">${c}</span>`).join('');
+    const peForm=[...fullName].filter(c=>!VOWELS.has(c)&&LETTER_VAL[c]).map(c=>LETTER_VAL[c]||0).join('+');
+    bHtml+=`<div class="n-basis-card">
+      <div class="n-basis-hd"><div class="n-basis-big">${pers}</div><div><p class="n-basis-lbl">Personality — パーソナリティナンバー（外面数）</p><p class="n-basis-mth">フルネームの子音のみを数値化し合計・還元</p></div></div>
+      <div class="n-basis-row"><span class="n-basis-k">子音を抽出</span><span class="n-basis-v"><span class="n-basis-chips">${peChips}</span></span></div>
+      <div class="n-basis-row"><span class="n-basis-k">合計</span><span class="n-basis-v">${peForm||'0'} = <strong>${peRaw}</strong></span></div>
+      ${peSt.map(s=>`<div class="n-basis-row"><span class="n-basis-k">還元</span><span class="n-basis-v">${s}</span></div>`).join('')}
+      ${!peSt.length?`<div class="n-basis-row"><span class="n-basis-k">結果</span><span class="n-basis-v"><strong>${pers}</strong>（還元不要）</span></div>`:''}
+    </div>`;
+    if(mat!==null){
+      const maRaw=lp+expr;const maSt=stps(maRaw,true);
+      bHtml+=`<div class="n-basis-card">
+        <div class="n-basis-hd"><div class="n-basis-big">${mat}</div><div><p class="n-basis-lbl">Maturity — マチュリティナンバー（成熟数）</p><p class="n-basis-mth">ライフパスナンバー ＋ 表現ナンバーを合計・還元</p></div></div>
+        <div class="n-basis-row"><span class="n-basis-k">計算</span><span class="n-basis-v">ライフパス(${lp}) ＋ 表現数(${expr}) = <strong>${maRaw}</strong></span></div>
+        ${maSt.map(s=>`<div class="n-basis-row"><span class="n-basis-k">還元</span><span class="n-basis-v">${s}</span></div>`).join('')}
+        ${!maSt.length?`<div class="n-basis-row"><span class="n-basis-k">結果</span><span class="n-basis-v"><strong>${mat}</strong>（還元不要）</span></div>`:''}
+      </div>`;
+    }
+  }
+  document.getElementById('n-basis').innerHTML=`<div class="n-basis">${bHtml}</div>`;
+  const ra=document.getElementById('n-result');ra.classList.add('show');ra.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function toggleNdc(i){document.getElementById('ndc-'+i).classList.toggle('collapsed');}
+function focusNdc(i){const el=document.getElementById('ndc-'+i);if(el){el.classList.remove('collapsed');setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),50);}}
+
+function calcNumAI(){
+  const aYV=document.getElementById('nai-a-birth-year').value;
+  const aMV=document.getElementById('nai-a-birth-month').value;
+  const aDV=document.getElementById('nai-a-birth-day').value;
+  const bYV=document.getElementById('nai-b-birth-year').value;
+  const bMV=document.getElementById('nai-b-birth-month').value;
+  const bDV=document.getElementById('nai-b-birth-day').value;
+  if(!aYV||!aMV||!aDV||!bYV||!bMV||!bDV){alert('お二人の生年月日をすべて選択してください。');return;}
+  const aName='Person A';
+  const bName='Person B';
+  const aY=parseInt(aYV),aM=parseInt(aMV),aD=parseInt(aDV);
+  const bY=parseInt(bYV),bM=parseInt(bMV),bD=parseInt(bDV);
+  const aLP=reduceNum([...`${String(aY).padStart(4,'0')}${String(aM).padStart(2,'0')}${String(aD).padStart(2,'0')}`].reduce((s,c)=>s+ +c,0),true);
+  const bLP=reduceNum([...`${String(bY).padStart(4,'0')}${String(bM).padStart(2,'0')}${String(bD).padStart(2,'0')}`].reduce((s,c)=>s+ +c,0),true);
+  const aFirst=document.getElementById('nai-a-first').value.toUpperCase().replace(/[^A-Z]/g,'');
+  const aLast=document.getElementById('nai-a-last').value.toUpperCase().replace(/[^A-Z]/g,'');
+  const bFirst=document.getElementById('nai-b-first').value.toUpperCase().replace(/[^A-Z]/g,'');
+  const bLast=document.getElementById('nai-b-last').value.toUpperCase().replace(/[^A-Z]/g,'');
+  const aFull=aFirst+aLast, bFull=bFirst+bLast;
+  const aSoul=aFull.length?reduceNum([...aFull].filter(c=>VOWELS.has(c)).reduce((s,c)=>s+(LETTER_VAL[c]||0),0),true):null;
+  const bSoul=bFull.length?reduceNum([...bFull].filter(c=>VOWELS.has(c)).reduce((s,c)=>s+(LETTER_VAL[c]||0),0),true):null;
+  const getD=n=>NUM_DATA[n]||NUM_DATA[reduceNum(n,false)];
+  const pairScore=(n1,n2)=>{
+    const d1=getD(n1),d2=getD(n2);
+    if(!d1||!d2)return 60;
+    const r1=[11,22,33].includes(n1)?n1:((n1-1)%9+1);
+    const r2=[11,22,33].includes(n2)?n2:((n2-1)%9+1);
+    const fwd=d1.compatible.includes(r2)?1:0;
+    const bwd=d2.compatible.includes(r1)?1:0;
+    const same=n1===n2?1:0;
+    return Math.min(100,45+fwd*27+bwd*23+same*10);
+  };
+  const lpScore=pairScore(aLP,bLP);
+  const soulScore=(aSoul&&bSoul)?pairScore(aSoul,bSoul):null;
+  const total=soulScore!==null?Math.round(lpScore*.6+soulScore*.4):lpScore;
+  const vd=total>=90?{v:'魂の鏡',d:'深い次元で共鳴し合う、魂レベルの相性。言葉なくとも伝わるものがあり、互いの本質を直感的に理解できる関係です。'}:
+    total>=80?{v:'黄金の絆',d:'互いの個性が噛み合い、共にいることでより輝く関係。それぞれの強みが自然に相乗効果を生み出します。'}:
+    total>=70?{v:'調和の関係',d:'自然な引き合いと安定感のある相性。お互いを尊重しながら、心地よい関係を長く育てられます。'}:
+    total>=60?{v:'補い合う関係',d:'違いが成長の源になる相性。相手の異なる視点が、自分では気づかない扉を開いてくれます。'}:
+    {v:'成長の関係',d:'エネルギーの方向性が異なるからこそ、意識的な対話が関係をより豊かにします。違いを楽しむ視点が鍵です。'};
+  document.getElementById('nai-r-name').textContent=`${aName} × ${bName}`;
+  document.getElementById('nai-r-meta').textContent=`${aY}年${aM}月${aD}日生 ／ ${bY}年${bM}月${bD}日生`;
+  const numRow=(label,an,bn)=>{
+    const ad=getD(an),bd=getD(bn);
+    return`<div class="nai-num-row">
+      <div class="nai-num-cell"><div class="nai-num-n">${an}</div><div class="nai-num-title">${ad?ad.title:''}</div></div>
+      <div class="nai-num-center"><div class="nai-num-label">${label}</div></div>
+      <div class="nai-num-cell"><div class="nai-num-n">${bn}</div><div class="nai-num-title">${bd?bd.title:''}</div></div>
+    </div>`;
+  };
+  let numHtml=`<div class="nai-num-header"><span class="nai-name-a">${aName}</span><span></span><span class="nai-name-b">${bName}</span></div>`;
+  numHtml+=numRow('ライフパスナンバー',aLP,bLP);
+  if(aSoul&&bSoul)numHtml+=numRow('ソウルナンバー',aSoul,bSoul);
+  document.getElementById('nai-numbers').innerHTML=`<div class="nai-num-compare">${numHtml}</div>`;
+  document.getElementById('nai-score').innerHTML=`
+    <div class="compat-score-num">${total}</div>
+    <div class="compat-score-label">Compatibility Score</div>
+    <div class="compat-bar-track"><div class="compat-bar-fill" style="width:${total}%;"></div></div>
+    <div class="compat-verdict">${vd.v}</div>
+    <div class="compat-desc">${vd.d}</div>`;
+  const scoreBadge=s=>s>=80?' — 相性◎':s>=65?' — 相性○':' — 相性△';
+  const aLPD=getD(aLP),bLPD=getD(bLP);
+  const lpMsg=lpScore>=80?`${aName}の「${aLPD?.keyword||''}」と${bName}の「${bLPD?.keyword||''}」は自然に響き合います。互いの方向性が噛み合い、共にいることで前進しやすい関係です。`:
+    lpScore>=65?`${aName}の「${aLPD?.keyword||''}」と${bName}の「${bLPD?.keyword||''}」は異なるエネルギーを持ちます。その違いが新しい視野をもたらし、互いの成長を促します。`:
+    `${aName}は「${aLPD?.keyword||''}」、${bName}は「${bLPD?.keyword||''}」を軸としています。方向性の違いを意識的にすり合わせることが、関係の深みを生みます。`;
+  let anHtml=`<div class="analysis-card"><p class="analysis-label">ライフパスナンバーの相性</p><h3 class="analysis-title">${aLP} × ${bLP}${scoreBadge(lpScore)}</h3><p class="analysis-text">${lpMsg}</p></div>`;
+  if(aSoul&&bSoul&&soulScore!==null){
+    const aSD=getD(aSoul),bSD=getD(bSoul);
+    const soulMsg=soulScore>=80?`${aName}の魂の渇望「${aSD?.keyword||''}」と${bName}の「${bSD?.keyword||''}」が深いレベルで共鳴。言葉なくとも内面を理解し合える関係性です。`:
+      soulScore>=65?`${aName}の内面「${aSD?.keyword||''}」と${bName}の「${bSD?.keyword||''}」は異なる表情を持ちます。深い対話を重ねることで、相手の内面を豊かに理解できます。`:
+      `二人の魂が求めるものの方向が異なります。「なぜそう感じるの？」という好奇心で問いかけることが、この関係を深める鍵です。`;
+    anHtml+=`<div class="analysis-card"><p class="analysis-label">ソウルナンバーの相性</p><h3 class="analysis-title">${aSoul} × ${bSoul}${scoreBadge(soulScore)}</h3><p class="analysis-text">${soulMsg}</p></div>`;
+  }
+  anHtml+=`<div class="analysis-card"><p class="analysis-label">この関係のアドバイス</p><h3 class="analysis-title">共に育む視点</h3><p class="analysis-text">数字の相性はエネルギーの傾向であり、関係の優劣を決めるものではありません。どんな組み合わせでも、<strong>相手の数字が持つ世界観への敬意</strong>と<strong>自分らしさの誠実な表現</strong>が関係の質を高めます。</p></div>`;
+  let summaryTitle,summaryText;
+  if(soulScore!==null){
+    if(lpScore>=80&&soulScore>=80){summaryTitle='人生も魂も共鳴する関係';summaryText='生き方の方向性（ライフパス）と魂の本音（ソウル）、どちらの層でも深く噛み合っています。価値観を語り合うほど「わかってもらえる」と感じやすく、日常の些細な場面でも自然に心地よさが生まれる関係です。';}
+    else if(lpScore>=80&&soulScore<65){summaryTitle='目指す方向は一致、内面は対話が鍵';summaryText='人生の歩み方（ライフパス）の波長はよく合っています。一方で魂の奥底が求めるものには違いがあるため、「なんとなく居心地がもう一歩」と感じることも。内面をオープンに語り合う習慣が、この関係をさらに深めます。';}
+    else if(lpScore<65&&soulScore>=80){summaryTitle='魂では繋がる、目標はすり合わせが必要';summaryText='一緒にいるときの安心感や居心地の良さ（ソウル）は抜群です。ただ、人生の目標や価値観の置き場所（ライフパス）には違いがあるため、将来の方向性や大きな決断の場面では意識的なすり合わせが大切になります。';}
+    else if(total>=70){summaryTitle='違いが個性になる関係';summaryText='ライフパスもソウルも、二人のエネルギーはそれぞれ独自の色を持っています。「なぜそう感じるのか」を互いに好奇心を持って問いかけ続けることで、違いが摩擦ではなく豊かさに変わっていきます。';}
+    else{summaryTitle='意識的な関わりで育つ関係';summaryText='生き方の方向も魂の欲求も、二人のベクトルは異なります。だからこそ、相手の世界をゼロから理解しようとする誠実な姿勢が、この関係を唯一無二のものにします。数字の違いは、成長の幅の大きさでもあります。';}
+  } else {
+    if(lpScore>=80){summaryTitle='人生の波長が合う関係';summaryText='ライフパスナンバーが示す「人生の歩み方」は自然に噛み合っています。同じ方向を向きながら、それぞれのペースで進める安定感のある関係です。';}
+    else if(lpScore>=65){summaryTitle='補い合える関係';summaryText='ライフパスナンバーが示す方向性には程よい違いがあります。相手の歩み方から学べるものが多く、刺激と安定が共存する関係です。';}
+    else{summaryTitle='対話で深まる関係';summaryText='ライフパスナンバーが示す人生の進み方には大きな違いがあります。違いを前提として、お互いの価値観を丁寧に伝え合うことが、この関係の深みと強さになります。';}
+  }
+  anHtml+=`<div class="analysis-card"><p class="analysis-label">二人の相性まとめ</p><h3 class="analysis-title">${summaryTitle}</h3><p class="analysis-text">${summaryText}</p></div>`;
+  document.getElementById('nai-analysis').innerHTML=anHtml;
+  const ra=document.getElementById('nai-result');ra.classList.add('show');ra.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ══════════════════════════════════════
+   UI HELPERS
+══════════════════════════════════════ */
+function switchMode(id,btn){
+  document.querySelectorAll('.mode-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.mode-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function populateSelectors(prefix){
+  const ySel=document.getElementById(prefix+'-year');
+  const mSel=document.getElementById(prefix+'-month');
+  const dSel=document.getElementById(prefix+'-day');
+  if(!ySel||!mSel||!dSel)return;
+  ySel.innerHTML='<option value="" selected>--</option>';
+  mSel.innerHTML='<option value="" selected>--</option>';
+  dSel.innerHTML='<option value="" selected>--</option>';
+  for(let y=1920;y<=2030;y++){const o=document.createElement('option');o.value=y;o.textContent=y+'年';ySel.appendChild(o);}
+  for(let m=1;m<=12;m++){const o=document.createElement('option');o.value=m;o.textContent=m+'月';mSel.appendChild(o);}
+  function updateDays(){
+    const selY=parseInt(ySel.value),selM=parseInt(mSel.value),currD=parseInt(dSel.value);
+    dSel.innerHTML='<option value="">--</option>';
+    if(!selY||!selM)return;
+    const daysInMonth=new Date(selY,selM,0).getDate();
+    for(let d=1;d<=daysInMonth;d++){const o=document.createElement('option');o.value=d;o.textContent=d+'日';if(d===currD||(d===daysInMonth&&currD>daysInMonth))o.selected=true;dSel.appendChild(o);}
+  }
+  ySel.addEventListener('change',updateDays);
+  mSel.addEventListener('change',updateDays);
+  ySel.value=1990; mSel.value=1; updateDays(); dSel.value=1;
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  populateSelectors('n-birth');
+  populateSelectors('nai-a-birth');
+  populateSelectors('nai-b-birth');
+});
+</script>
+
+<script>
+/* ── 星空パーティクル ── */
+(function(){
+  var c=document.getElementById('stars-canvas');
+  if(!c||!c.getContext)return;
+  var ctx=c.getContext('2d'),S=[];
+  function resize(){
+    c.width=window.innerWidth;c.height=window.innerHeight;S=[];
+    var n=Math.floor(c.width*c.height/7500);
+    for(var i=0;i<n;i++)S.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.1+.2,a:Math.random()*.4+.08,sp:Math.random()*.0018+.0006,ph:Math.random()*Math.PI*2});
+  }
+  function draw(t){
+    ctx.clearRect(0,0,c.width,c.height);
+    for(var i=0;i<S.length;i++){var s=S[i];ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.2832);ctx.fillStyle='rgba(245,242,235,'+(s.a*(.55+.45*Math.sin(t*s.sp+s.ph)))+')';ctx.fill();}
+    requestAnimationFrame(draw);
+  }
+  resize();window.addEventListener('resize',resize);requestAnimationFrame(draw);
+})();
+/* ── ナビゲーションスクロール ── */
+window.addEventListener('scroll',function(){
+  var n=document.querySelector('nav');
+  if(window.scrollY>50)n.classList.add('scrolled');else n.classList.remove('scrolled');
+});
+/* ── フォームカードスポットライト ── */
+document.querySelectorAll('.form-card').forEach(function(card){
+  card.addEventListener('mousemove',function(e){
+    var r=card.getBoundingClientRect();
+    card.style.setProperty('--fc-x',(e.clientX-r.left)+'px');
+    card.style.setProperty('--fc-y',(e.clientY-r.top)+'px');
+  });
+});
+</script>
+</body>
+</html>

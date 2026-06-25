@@ -1,0 +1,28 @@
+# 動画・出力ファイル
+占い/タロット/output/
+占い/タロット/*.webm
+
+# Pythonスクリプト・一時ファイル
+占い/タロット/*.py
+占い/タロット/python/
+占い/タロット/video_tasks.csv
+
+# テスト用JSファイル
+占い/九星気学/_chk.js
+占い/九星気学/_runtest.js
+占い/九星気学/_v.js
+占い/九星気学/kyusei_logic_test.js
+
+# タロット3枚引きの開発版（未使用）
+占い/タロット/tarot_3cards.html
+占い/タロット/tarot_3cards_api.html
+
+# システムファイル
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# AI作業場の他のプロジェクトファイル
+*.py
+__pycache__/
+*.ipynb
