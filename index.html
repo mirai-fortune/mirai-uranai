@@ -325,36 +325,156 @@ nav a:hover { color: var(--cream); }
   transform: none !important;
 }
 
-/* --- MARCHE ARCHIVES --- */
-.marche-section { padding: 80px 0; }
-.marche-grid {
+/* --- EVENT GALLERY (Bento Grid) --- */
+.marche-section { padding: 80px 0 120px; }
+.img-wrapper { position: relative; overflow: hidden; background-color: #050814; }
+.section-subtitle { color: var(--muted); font-size: 0.8rem; letter-spacing: 0.14em; margin-top: 14px; }
+
+.event-bento {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: 220px;
+  gap: 12px;
 }
-.marche-img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-bottom: 1px solid var(--glass-border); transition: transform 0.6s ease; }
-.glass-card:hover .marche-img { transform: scale(1.05); } 
-.img-wrapper { position: relative; overflow: hidden; background-color: #050814; } 
-.vol-badge {
+
+.event-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  background-color: #050814;
+  border: 1px solid var(--glass-border);
+}
+
+.event-item:nth-child(1)  { grid-column: 1 / 9;  grid-row: 1 / 3; }
+.event-item:nth-child(2)  { grid-column: 9 / 13; grid-row: 1 / 2; }
+.event-item:nth-child(3)  { grid-column: 9 / 13; grid-row: 2 / 3; }
+.event-item:nth-child(4)  { grid-column: 1 / 5;  grid-row: 3 / 4; }
+.event-item:nth-child(5)  { grid-column: 5 / 9;  grid-row: 3 / 4; }
+.event-item:nth-child(6)  { grid-column: 9 / 13; grid-row: 3 / 4; }
+.event-item:nth-child(7)  { grid-column: 1 / 5;  grid-row: 4 / 5; }
+.event-item:nth-child(8)  { grid-column: 5 / 13; grid-row: 4 / 5; }
+.event-item:nth-child(9)  { grid-column: 1 / 7;  grid-row: 5 / 6; }
+.event-item:nth-child(10) { grid-column: 7 / 13; grid-row: 5 / 6; }
+
+.event-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.85) contrast(1.06) saturate(1.05);
+  transition: filter 0.7s ease, transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.event-item:hover .event-img {
+  filter: brightness(1.02) contrast(1.1) saturate(1.18);
+  transform: scale(1.06);
+}
+
+.event-item::after {
+  content: '';
   position: absolute;
-  top: 12px; left: 12px;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 0%, transparent 40%, rgba(3, 6, 17, 0.78) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.event-vol {
+  position: absolute;
+  top: 14px; left: 14px;
+  z-index: 3;
   background: rgba(5, 4, 3, 0.65);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--glass-border);
+  border: 1px solid rgba(196, 168, 106, 0.45);
   color: var(--gold);
   padding: 4px 12px;
   border-radius: 4px;
   font-family: var(--font-serif);
-  font-size: 0.8rem;
-  letter-spacing: 0.05em;
-  z-index: 2;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
 }
-.marche-body { padding: 28px; display: flex; flex-direction: column; flex-grow: 1; }
-.marche-date { font-size: 0.75rem; color: var(--gold); display: block; margin-bottom: 8px; letter-spacing: 0.05em; }
-.marche-body h4 { font-size: 1.1rem; font-weight: 500; margin-bottom: 12px; }
-.marche-body p { font-size: 0.85rem; color: var(--muted); line-height: 1.7; }
+
+.event-item:nth-child(1) .event-vol {
+  background: linear-gradient(135deg, rgba(196, 168, 106, 0.25) 0%, rgba(5, 4, 3, 0.7) 100%);
+  border-color: var(--gold);
+  box-shadow: 0 0 12px rgba(196, 168, 106, 0.2);
+}
+
+.event-latest-badge {
+  position: absolute;
+  top: 14px; right: 14px;
+  z-index: 3;
+  background: rgba(3, 6, 17, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-family: var(--font-serif);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+}
+
+.event-caption {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 20px 20px 22px;
+  z-index: 2;
+  transform: translateY(8px);
+  opacity: 0;
+  transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.45s ease;
+}
+
+.event-item:hover .event-caption { transform: translateY(0); opacity: 1; }
+
+.event-caption-season {
+  font-size: 0.7rem;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.event-caption-title {
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  color: var(--cream);
+  line-height: 1.5;
+}
+
+.event-item:nth-child(1) .event-caption { padding: 28px; }
+.event-item:nth-child(1) .event-caption-season { font-size: 0.8rem; }
+.event-item:nth-child(1) .event-caption-title { font-size: 1.1rem; }
+
+@media (max-width: 900px) {
+  .event-bento { grid-template-columns: repeat(6, 1fr); grid-auto-rows: 200px; }
+  .event-item:nth-child(1)  { grid-column: 1 / 5;  grid-row: 1 / 3; }
+  .event-item:nth-child(2)  { grid-column: 5 / 7;  grid-row: 1 / 2; }
+  .event-item:nth-child(3)  { grid-column: 5 / 7;  grid-row: 2 / 3; }
+  .event-item:nth-child(4)  { grid-column: 1 / 4;  grid-row: 3 / 4; }
+  .event-item:nth-child(5)  { grid-column: 4 / 7;  grid-row: 3 / 4; }
+  .event-item:nth-child(6)  { grid-column: 1 / 4;  grid-row: 4 / 5; }
+  .event-item:nth-child(7)  { grid-column: 4 / 7;  grid-row: 4 / 5; }
+  .event-item:nth-child(8)  { grid-column: 1 / 7;  grid-row: 5 / 6; }
+  .event-item:nth-child(9)  { grid-column: 1 / 4;  grid-row: 6 / 7; }
+  .event-item:nth-child(10) { grid-column: 4 / 7;  grid-row: 6 / 7; }
+}
+
+@media (max-width: 600px) {
+  .event-bento { grid-template-columns: 1fr 1fr; grid-auto-rows: 160px; gap: 8px; }
+  .event-item:nth-child(1)  { grid-column: 1 / 3; grid-row: 1 / 3; }
+  .event-item:nth-child(2)  { grid-column: 1 / 2; grid-row: 3 / 4; }
+  .event-item:nth-child(3)  { grid-column: 2 / 3; grid-row: 3 / 4; }
+  .event-item:nth-child(4)  { grid-column: 1 / 2; grid-row: 4 / 5; }
+  .event-item:nth-child(5)  { grid-column: 2 / 3; grid-row: 4 / 5; }
+  .event-item:nth-child(6)  { grid-column: 1 / 3; grid-row: 5 / 6; }
+  .event-item:nth-child(7)  { grid-column: 1 / 2; grid-row: 6 / 7; }
+  .event-item:nth-child(8)  { grid-column: 2 / 3; grid-row: 6 / 7; }
+  .event-item:nth-child(9)  { grid-column: 1 / 2; grid-row: 7 / 8; }
+  .event-item:nth-child(10) { grid-column: 2 / 3; grid-row: 7 / 8; }
+}
 
 /* --- FAQ SECTION --- */
 .faq-section { padding: 80px 0; }
@@ -693,9 +813,10 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
     <div class="container">
       <div class="section-title reveal">
         <h2>対面鑑定・実績</h2>
+        <p class="section-subtitle">Vol.1 — 10 &nbsp;|&nbsp; 2022 – 2025</p>
       </div>
-      <div class="marche-grid" id="marche-container">
-        </div>
+      <div class="event-bento" id="marche-container">
+      </div>
     </div>
   </section>
 
@@ -818,17 +939,16 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
 
   const marcheContainer = document.getElementById('marche-container');
   marcheData.forEach((data, index) => {
-    const delay = (index % 3) * 0.1; 
+    const delay = (index * 0.05).toFixed(2);
+    const isLatest = data.id === 10;
     const html = `
-      <div class="marche-item glass-card reveal" style="transition-delay: ${delay}s">
-        <div class="img-wrapper">
-          <span class="vol-badge">Vol.${data.id}</span>
-          <img src="images/event_${data.id}.png" alt="${data.title}" class="marche-img" loading="lazy">
-        </div>
-        <div class="marche-body">
-          <span class="marche-date">${data.season}</span>
-          <h4>${data.title}</h4>
-          <p>${data.desc}</p>
+      <div class="event-item reveal" style="transition-delay: ${delay}s">
+        <img src="images/event_${data.id}.png" alt="${data.title}" class="event-img" loading="lazy">
+        <span class="event-vol">Vol.${data.id}</span>
+        ${isLatest ? '<span class="event-latest-badge">LATEST</span>' : ''}
+        <div class="event-caption">
+          <span class="event-caption-season">${data.season}</span>
+          <span class="event-caption-title">${data.title}</span>
         </div>
       </div>
     `;
