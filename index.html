@@ -245,61 +245,6 @@ nav a:hover { color: var(--cream); }
   border-radius: 0 0 10px 0;
 }
 
-.about-chips {
-  display: flex;
-  gap: 8px;
-  margin-top: 20px;
-  flex-wrap: wrap;
-}
-
-.about-chip {
-  background: rgba(20, 18, 15, 0.55);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(196, 168, 106, 0.22);
-  border-radius: 8px;
-  padding: 10px 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-  min-width: 80px;
-}
-
-.about-chip-num {
-  font-family: var(--font-serif);
-  font-size: 1.35rem;
-  color: var(--gold);
-  line-height: 1.1;
-}
-
-.about-chip-label {
-  font-size: 0.67rem;
-  color: var(--muted);
-  letter-spacing: 0.06em;
-  margin-top: 4px;
-  text-align: center;
-}
-
-.about-chip--text {
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-  flex: 2;
-  min-width: 100%;
-}
-
-.about-chip--text .about-chip-dot {
-  width: 5px; height: 5px;
-  background: var(--gold);
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.about-chip--text .about-chip-label {
-  margin-top: 0;
-  font-size: 0.75rem;
-}
 
 /* Text Column */
 .about-text-col { padding-top: 8px; }
@@ -624,7 +569,6 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
   .about-photo-frame { max-width: 300px; margin: 0 auto; }
   .about-text-col { text-align: center; }
   .about-rule { margin: 0 auto 28px; }
-  .about-chips { justify-content: center; }
   .partners-grid { grid-template-columns: 1fr; }
   header { padding: 16px 0; }
 }
@@ -828,20 +772,6 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
           <img src="images/profile.png" alt="MIRAI 主宰" class="about-photo">
           <div class="about-corner about-corner--tl"></div>
           <div class="about-corner about-corner--br"></div>
-        </div>
-        <div class="about-chips">
-          <div class="about-chip">
-            <span class="about-chip-num">10</span>
-            <span class="about-chip-label">イベント出展</span>
-          </div>
-          <div class="about-chip">
-            <span class="about-chip-num">6</span>
-            <span class="about-chip-label">占術コンテンツ</span>
-          </div>
-          <div class="about-chip about-chip--text">
-            <span class="about-chip-dot"></span>
-            <span class="about-chip-label">全国対応 / WEB相談</span>
-          </div>
         </div>
       </div>
 
