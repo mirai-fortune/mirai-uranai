@@ -368,38 +368,83 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
 .hamburger {
   display: none;
   background: none;
-  border: 1px solid rgba(196,168,106,.35);
-  border-radius: 4px;
-  color: var(--cream);
-  font-size: 1.2rem;
-  line-height: 1;
-  padding: 6px 10px;
+  border: none;
   cursor: pointer;
+  padding: 0;
+  width: 44px;
+  height: 44px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  border-radius: 8px;
+  position: relative;
+  z-index: 200;
+  transition: background-color 0.25s ease;
 }
-.nav-close {
-  display: none;
-  position: absolute;
-  top: 24px; right: 24px;
-  background: none; border: none;
-  color: var(--cream); font-size: 2rem;
-  cursor: pointer; line-height: 1;
+.hamburger:hover,
+.hamburger:focus-visible {
+  background-color: rgba(196, 168, 106, 0.12);
+  outline: none;
 }
-@media(max-width:768px) {
-  .hamburger { display: block; }
+.hamburger-line {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background-color: var(--cream);
+  border-radius: 2px;
+  transform-origin: center;
+  transition: transform 0.38s cubic-bezier(0.23, 1, 0.32, 1),
+              opacity 0.22s ease;
+}
+.hamburger.open .hamburger-line:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+.hamburger.open .hamburger-line:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.open .hamburger-line:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+@media(max-width: 768px) {
+  .hamburger { display: flex; }
   nav {
-    display: none;
     position: fixed;
     inset: 0;
-    background: rgba(3,6,17,0.97);
+    background: rgba(3, 6, 17, 0.97);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 32px;
     z-index: 150;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
   }
-  nav.open { display: flex; }
-  nav a { margin-left: 0; font-size: 1rem; letter-spacing: 0.12em; }
-  .nav-close { display: block; }
+  nav.open {
+    opacity: 1;
+    visibility: visible;
+  }
+  nav a {
+    margin-left: 0;
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: color 0.3s ease,
+                opacity 0.4s ease,
+                transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  nav.open a { opacity: 1; transform: translateY(0); }
+  nav.open a:nth-of-type(1) { transition-delay: 0.06s; }
+  nav.open a:nth-of-type(2) { transition-delay: 0.12s; }
+  nav.open a:nth-of-type(3) { transition-delay: 0.18s; }
+  nav.open a:nth-of-type(4) { transition-delay: 0.24s; }
+  nav.open a:nth-of-type(5) { transition-delay: 0.30s; }
+  nav.open a:nth-of-type(6) { transition-delay: 0.36s; }
+  nav.open a:nth-of-type(7) { transition-delay: 0.42s; }
 }
 </style>
 </head>
@@ -413,7 +458,6 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
       <a href="index.html" class="logo">MIRAI<span>.</span></a>
     </div>
     <nav id="nav-menu">
-      <button class="nav-close" id="nav-close" aria-label="閉じる">&times;</button>
       <a href="#services">占術</a>
       <a href="#about">ご挨拶</a>
       <a href="#partners">提携ブランド</a>
@@ -422,7 +466,14 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
       <a href="#sns">SNS</a>
       <a href="https://forms.gle/kBvtDKEN1xj4Y3Xy8" target="_blank" rel="noopener noreferrer">お問い合わせ</a>
     </nav>
-    <button class="hamburger" id="menu-toggle" aria-label="メニューを開く">&#9776;</button>
+    <button class="hamburger" id="menu-toggle"
+            aria-label="メニューを開く"
+            aria-expanded="false"
+            aria-controls="nav-menu">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
   </div>
 </header>
 
@@ -946,11 +997,33 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
 
   // ハンバーガーメニュー
   const menuToggle = document.getElementById('menu-toggle');
-  const navClose = document.getElementById('nav-close');
   const navMenu = document.getElementById('nav-menu');
-  menuToggle.addEventListener('click', () => navMenu.classList.add('open'));
-  navClose.addEventListener('click', () => navMenu.classList.remove('open'));
-  navMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navMenu.classList.remove('open')));
+
+  function openMenu() {
+    navMenu.classList.add('open');
+    menuToggle.classList.add('open');
+    menuToggle.setAttribute('aria-expanded', 'true');
+    menuToggle.setAttribute('aria-label', 'メニューを閉じる');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    navMenu.classList.remove('open');
+    menuToggle.classList.remove('open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.setAttribute('aria-label', 'メニューを開く');
+    document.body.style.overflow = '';
+  }
+
+  menuToggle.addEventListener('click', () => {
+    menuToggle.classList.contains('open') ? closeMenu() : openMenu();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menuToggle.classList.contains('open')) closeMenu();
+  });
+
+  navMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 </script>
 </body>
 </html>
