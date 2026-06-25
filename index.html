@@ -362,7 +362,44 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
   .about-img-wrap { width: 100%; max-width: 360px; margin: 0 auto; }
   .partners-grid { grid-template-columns: 1fr; }
   header { padding: 16px 0; }
-  nav a { margin-left: 12px; font-size: 0.8rem; }
+}
+
+/* --- HAMBURGER MENU --- */
+.hamburger {
+  display: none;
+  background: none;
+  border: 1px solid rgba(196,168,106,.35);
+  border-radius: 4px;
+  color: var(--cream);
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.nav-close {
+  display: none;
+  position: absolute;
+  top: 24px; right: 24px;
+  background: none; border: none;
+  color: var(--cream); font-size: 2rem;
+  cursor: pointer; line-height: 1;
+}
+@media(max-width:768px) {
+  .hamburger { display: block; }
+  nav {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(3,6,17,0.97);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+    z-index: 150;
+  }
+  nav.open { display: flex; }
+  nav a { margin-left: 0; font-size: 1rem; letter-spacing: 0.12em; }
+  .nav-close { display: block; }
 }
 </style>
 </head>
@@ -375,7 +412,8 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
     <div class="logo-container">
       <a href="index.html" class="logo">MIRAI<span>.</span></a>
     </div>
-    <nav>
+    <nav id="nav-menu">
+      <button class="nav-close" id="nav-close" aria-label="閉じる">&times;</button>
       <a href="#services">占術</a>
       <a href="#about">ご挨拶</a>
       <a href="#partners">提携ブランド</a>
@@ -384,6 +422,7 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
       <a href="#sns">SNS</a>
       <a href="https://forms.gle/kBvtDKEN1xj4Y3Xy8" target="_blank" rel="noopener noreferrer">お問い合わせ</a>
     </nav>
+    <button class="hamburger" id="menu-toggle" aria-label="メニューを開く">&#9776;</button>
   </div>
 </header>
 
@@ -904,6 +943,14 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
 
   initParticles();
   animateParticles();
+
+  // ハンバーガーメニュー
+  const menuToggle = document.getElementById('menu-toggle');
+  const navClose = document.getElementById('nav-close');
+  const navMenu = document.getElementById('nav-menu');
+  menuToggle.addEventListener('click', () => navMenu.classList.add('open'));
+  navClose.addEventListener('click', () => navMenu.classList.remove('open'));
+  navMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navMenu.classList.remove('open')));
 </script>
 </body>
 </html>
