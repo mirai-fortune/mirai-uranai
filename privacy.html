@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>プライバシーポリシー｜MIRAI</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23030611'/><text x='16' y='23' font-family='Georgia,serif' font-size='20' font-weight='400' fill='%23c4a86a' text-anchor='middle'>M</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+:root {
+  --bg-color: #030611;
+  --bg-gradient-end: #060504;
+  --cream: #f5f2eb;
+  --muted: rgba(245,242,235,.6);
+  --gold: #c4a86a;
+  --gold-glow: rgba(196, 168, 106, 0.15);
+  --glass-bg: rgba(20, 18, 15, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --font-serif: 'Noto Serif JP', serif;
+  --font-sans: 'Noto Sans JP', sans-serif;
+}
+body {
+  background: linear-gradient(135deg, var(--bg-color) 0%, var(--bg-gradient-end) 100%);
+  background-attachment: fixed;
+  color: var(--cream);
+  font-family: var(--font-sans);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+#particle-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+}
+h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 400; letter-spacing: 0.05em; }
+.container { max-width: 800px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+/* --- HEADER --- */
+header {
+  padding: 24px 0;
+  position: fixed;
+  width: 100%;
+  top: 0; z-index: 100;
+  background: linear-gradient(to bottom, rgba(3,6,17,0.9), transparent);
+  transition: backdrop-filter 0.3s;
+}
+header.scrolled { backdrop-filter: blur(10px); border-bottom: 1px solid var(--glass-border); }
+.header-wrap { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+.logo { font-family: var(--font-serif); font-size: 1.4rem; letter-spacing: 0.1em; color: var(--cream); text-decoration: none; }
+.logo span { color: var(--gold); }
+nav a { color: var(--muted); text-decoration: none; font-size: 0.85rem; margin-left: 24px; transition: color 0.3s; }
+nav a:hover { color: var(--cream); }
+
+/* --- HAMBURGER --- */
+.hamburger {
+  display: none;
+  background: none; border: none; cursor: pointer; padding: 0;
+  width: 44px; height: 44px;
+  flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+  border-radius: 8px; position: relative; z-index: 200;
+  transition: background-color 0.25s ease;
+}
+.hamburger:hover, .hamburger:focus-visible { background-color: rgba(196, 168, 106, 0.12); outline: none; }
+.hamburger-line {
+  display: block; width: 22px; height: 1.5px;
+  background-color: var(--cream); border-radius: 2px;
+  transform-origin: center;
+  transition: transform 0.38s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.22s ease;
+}
+.hamburger.open .hamburger-line:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.open .hamburger-line:nth-child(2) { opacity: 0; }
+.hamburger.open .hamburger-line:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+@media(max-width: 768px) {
+  .hamburger { display: flex; }
+  nav {
+    display: flex; position: fixed; inset: 0;
+    background: rgba(3, 6, 17, 0.97); backdrop-filter: blur(8px);
+    flex-direction: column; justify-content: center; align-items: center; gap: 32px;
+    z-index: 150; opacity: 0; visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+  }
+  nav.open { opacity: 1; visibility: visible; }
+  nav a { margin-left: 0; font-size: 1rem; letter-spacing: 0.12em; opacity: 0; transform: translateY(12px); transition: color 0.3s ease, opacity 0.4s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+  nav.open a { opacity: 1; transform: translateY(0); }
+  nav.open a:nth-of-type(1) { transition-delay: 0.06s; }
+  nav.open a:nth-of-type(2) { transition-delay: 0.12s; }
+  nav.open a:nth-of-type(3) { transition-delay: 0.18s; }
+}
+
+/* --- PAGE HERO --- */
+.page-hero {
+  padding: 160px 0 80px;
+  text-align: center;
+}
+.page-hero h1 {
+  font-size: 2rem;
+  letter-spacing: 0.12em;
+  margin-bottom: 16px;
+}
+.page-hero .en-label {
+  font-size: 0.75rem;
+  color: var(--gold);
+  letter-spacing: 0.2em;
+  display: block;
+  margin-bottom: 24px;
+}
+.page-hero .updated {
+  font-size: 0.8rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+.gold-line {
+  width: 40px; height: 1px;
+  background: var(--gold);
+  margin: 24px auto 0;
+}
+
+/* --- POLICY CONTENT --- */
+.policy-wrap {
+  padding-bottom: 120px;
+}
+.policy-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 56px 64px;
+  margin-bottom: 24px;
+}
+.policy-section {
+  margin-bottom: 48px;
+}
+.policy-section:last-child { margin-bottom: 0; }
+.policy-section h2 {
+  font-size: 1rem;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(196, 168, 106, 0.2);
+}
+.policy-section p {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 2;
+  margin-bottom: 12px;
+}
+.policy-section p:last-child { margin-bottom: 0; }
+.policy-section ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.policy-section ul li {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 2;
+  padding-left: 1.2em;
+  position: relative;
+}
+.policy-section ul li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+  font-size: 0.75rem;
+  top: 0.15em;
+}
+.policy-section a {
+  color: var(--gold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --- FOOTER --- */
+footer {
+  padding: 40px 0;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  border-top: 1px solid var(--glass-border);
+}
+.footer-links { margin-bottom: 16px; }
+.footer-links a { color: var(--muted); text-decoration: none; font-size: 0.75rem; letter-spacing: 0.08em; margin: 0 12px; transition: color 0.3s; }
+.footer-links a:hover { color: var(--gold); }
+
+@media(max-width: 768px) {
+  .policy-card { padding: 36px 28px; }
+  .page-hero h1 { font-size: 1.6rem; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="particle-canvas"></canvas>
+
+<header id="header">
+  <div class="header-wrap">
+    <a href="index.html" class="logo">MIRAI<span>.</span></a>
+    <nav id="nav-menu">
+      <a href="index.html#services">占術</a>
+      <a href="index.html#about">ご挨拶</a>
+      <a href="index.html#faq">FAQ</a>
+    </nav>
+    <button class="hamburger" id="menu-toggle"
+            aria-label="メニューを開く"
+            aria-expanded="false"
+            aria-controls="nav-menu">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="container">
+      <span class="en-label">PRIVACY POLICY</span>
+      <h1>プライバシーポリシー</h1>
+      <div class="gold-line"></div>
+      <p class="updated" style="margin-top:20px;">制定日：2026年6月26日</p>
+    </div>
+  </section>
+
+  <section class="policy-wrap">
+    <div class="container">
+      <div class="policy-card">
+
+        <div class="policy-section">
+          <h2>基本方針</h2>
+          <p>MIRAI（以下「当サイト」）は、ご利用者の個人情報の重要性を認識し、適切な取り扱いと保護に努めます。</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>取得する情報</h2>
+          <p>当サイトでは、以下の場合に個人情報をお預かりすることがあります。</p>
+          <ul>
+            <li>占いツールご利用時：生年月日、お生まれの時刻、出生地、お名前（入力任意）</li>
+            <li>お問い合わせフォームご利用時：お名前、メールアドレス、ご相談内容</li>
+          </ul>
+        </div>
+
+        <div class="policy-section">
+          <h2>利用目的</h2>
+          <ul>
+            <li>占い結果の算出・画面への表示</li>
+            <li>お問い合わせへの回答</li>
+            <li>サービスの改善・運営</li>
+          </ul>
+        </div>
+
+        <div class="policy-section">
+          <h2>情報の取り扱いについて</h2>
+          <p><strong style="color:var(--cream);">占いツールへの入力情報</strong><br>
+          四柱推命・数秘術・タロット・算命学・九星気学の各ツールに入力いただいた情報は、お使いのブラウザ内のみで処理され、当サイトのサーバーには送信・保存されません。</p>
+          <p><strong style="color:var(--cream);">西洋占星術について</strong><br>
+          西洋占星術のみ、ホロスコープ計算のため入力いただいた生年月日・出生時刻・出生地の情報を外部API（Render）に送信します。このデータは鑑定結果の算出にのみ使用され、サーバーへの保存は行っておりません。</p>
+          <p><strong style="color:var(--cream);">お問い合わせフォーム</strong><br>
+          お問い合わせにはGoogleフォームを利用しています。入力いただいた情報はGoogleのサーバーに保存されます。詳しくは<a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Googleのプライバシーポリシー</a>をご参照ください。</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>第三者への提供</h2>
+          <p>法令に基づく場合を除き、ご本人の同意なく個人情報を第三者に提供することはありません。</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>個人情報の開示・訂正・削除</h2>
+          <p>ご自身の個人情報の開示・訂正・削除をご希望の場合は、下記お問い合わせ先よりご連絡ください。ご本人確認のうえ、速やかに対応いたします。</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>免責事項</h2>
+          <p>当サイトの占いコンテンツはエンターテインメントを目的としており、鑑定結果の正確性・完全性を保証するものではありません。結果に基づくいかなる判断・行動についても、当サイトは責任を負いかねます。</p>
+          <p>リンク先の外部サービス（Googleフォーム等）における情報の取り扱いについては、各サービスのプライバシーポリシーが適用されます。</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>プライバシーポリシーの変更</h2>
+          <p>本ポリシーの内容は、法令の改正やサービスの変更に伴い、予告なく改定する場合があります。改定後のポリシーはこのページに掲載し、掲載をもって発効とします。</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>お問い合わせ</h2>
+          <p>個人情報に関するお問い合わせは、<a href="https://forms.gle/kBvtDKEN1xj4Y3Xy8" target="_blank" rel="noopener noreferrer">お問い合わせフォーム</a>よりご連絡ください。</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-links">
+      <a href="index.html">トップページ</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+    </div>
+    <p>&copy; 2026 MIRAI. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  const header = document.getElementById('header');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) header.classList.add('scrolled');
+    else header.classList.remove('scrolled');
+  });
+
+  const menuToggle = document.getElementById('menu-toggle');
+  const navMenu = document.getElementById('nav-menu');
+  function openMenu() {
+    navMenu.classList.add('open'); menuToggle.classList.add('open');
+    menuToggle.setAttribute('aria-expanded', 'true');
+    menuToggle.setAttribute('aria-label', 'メニューを閉じる');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    navMenu.classList.remove('open'); menuToggle.classList.remove('open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.setAttribute('aria-label', 'メニューを開く');
+    document.body.style.overflow = '';
+  }
+  menuToggle.addEventListener('click', () => {
+    menuToggle.classList.contains('open') ? closeMenu() : openMenu();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menuToggle.classList.contains('open')) closeMenu();
+  });
+  navMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+  /* パーティクル背景 */
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  let particlesArray = [];
+  const colorPalette = ['rgba(245,242,235,','rgba(196,168,106,','rgba(230,190,130,'];
+
+  class Particle {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 1.2 + 0.3;
+      this.baseColor = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+      this.angle = Math.random() * Math.PI * 2;
+      this.waveSpeed = Math.random() * 0.012 + 0.004;
+      this.speedY = Math.random() * 0.12 + 0.04;
+      this.directionY = Math.random() > 0.5 ? 1 : -1;
+      this.alpha = Math.random() * 0.35 + 0.08;
+      this.alphaSpeed = Math.random() * 0.015 + 0.004;
+    }
+    update() {
+      if (this.y > canvas.height) this.y = 0;
+      if (this.y < 0) this.y = canvas.height;
+      this.angle += this.waveSpeed;
+      this.x += Math.sin(this.angle) * 0.4;
+      this.y += this.speedY * this.directionY;
+      this.alpha += Math.sin(this.angle * 0.5) * this.alphaSpeed;
+      if (this.alpha > 0.45) this.alpha = 0.45;
+      if (this.alpha < 0.04) this.alpha = 0.04;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = `${this.baseColor}${this.alpha})`;
+      ctx.fill();
+    }
+  }
+
+  function initParticles() {
+    particlesArray = [];
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const n = (canvas.width * canvas.height) / 18000;
+    for (let i = 0; i < n; i++) particlesArray.push(new Particle());
+  }
+
+  function animate() {
+    requestAnimationFrame(animate);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particlesArray.forEach(p => p.update());
+  }
+
+  window.addEventListener('resize', initParticles);
+  initParticles();
+  animate();
+</script>
+</body>
+</html>
