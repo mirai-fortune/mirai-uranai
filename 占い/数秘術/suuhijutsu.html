@@ -188,6 +188,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:fl
 .form-card>*{position:relative;z-index:1;}
 /* ── NAV SCROLL SHADOW ── */
 nav.scrolled{box-shadow:0 2px 28px rgba(0,0,0,.55);}
+/* ── OTHER READINGS ── */
+.ora-section{padding:64px 40px;border-top:1px solid var(--border);}
+.ora-section-inner{max-width:1080px;margin:0 auto;}
+.ora-label{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:.32em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:14px;}
+.ora-label::before{content:'';display:block;width:28px;height:1px;background:var(--gold);}
+.ora-title{font-family:'Noto Serif JP',serif;font-size:18px;font-weight:300;letter-spacing:.1em;margin-bottom:32px;color:var(--cream);}
+.ora-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;}
+.ora-card{display:flex;flex-direction:column;align-items:center;gap:12px;padding:28px 16px;border:1px solid var(--border);text-decoration:none;color:var(--cream);transition:border-color .25s,background .25s;text-align:center;}
+.ora-card:hover{border-color:var(--gold);background:var(--gold-dim);}
+.ora-icon{font-size:22px;color:var(--gold);}
+.ora-name{font-family:'Noto Serif JP',serif;font-size:13px;font-weight:300;letter-spacing:.06em;}
+.ora-sub{font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;}
+@media(max-width:600px){.ora-section{padding:48px 20px;}.ora-grid{grid-template-columns:repeat(2,1fr);}}
 </style>
 </head>
 <body>
@@ -329,6 +342,41 @@ nav.scrolled{box-shadow:0 2px 28px rgba(0,0,0,.55);}
   毎日のセルフチェックはもちろん、プロの占い師様の鑑定補助ツールとしても<br>
   ご自由にお役立てください。
 </div>
+
+<!-- ── 他の占いへ ── -->
+<section class="ora-section">
+  <div class="ora-section-inner">
+    <p class="ora-label">Other Readings</p>
+    <p class="ora-title">他の占術も試してみる</p>
+    <div class="ora-grid">
+      <a href="../タロット/tarot.html" class="ora-card">
+        <span class="ora-icon">✦</span>
+        <span class="ora-name">タロット占い</span>
+        <span class="ora-sub">Tarot</span>
+      </a>
+      <a href="../西洋占星術/horoscope.html" class="ora-card">
+        <span class="ora-icon">☽</span>
+        <span class="ora-name">西洋占星術</span>
+        <span class="ora-sub">Horoscope</span>
+      </a>
+      <a href="../四柱推命/shichusuimei.html" class="ora-card">
+        <span class="ora-icon">☯</span>
+        <span class="ora-name">四柱推命</span>
+        <span class="ora-sub">Four Pillars</span>
+      </a>
+      <a href="../算命学/sanmeigaku.html" class="ora-card">
+        <span class="ora-icon">✧</span>
+        <span class="ora-name">算命学</span>
+        <span class="ora-sub">Sanmei</span>
+      </a>
+      <a href="../九星気学/kyuseikigaku.html" class="ora-card">
+        <span class="ora-icon">✶</span>
+        <span class="ora-name">九星気学</span>
+        <span class="ora-sub">Nine Stars</span>
+      </a>
+    </div>
+  </div>
+</section>
 
 <footer style="padding:40px;text-align:center;border-top:1px solid var(--border);font-size:11px;letter-spacing:.14em;color:var(--muted2);">
   <a href="../../index.html" style="color:var(--gold);text-decoration:none;">ASUMIRA 占い</a> ｜ 占術鑑定ツール ／ © ASUMIRA 占い All Rights Reserved.
