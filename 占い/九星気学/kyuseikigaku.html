@@ -167,6 +167,10 @@ nav.scrolled{box-shadow:0 2px 28px rgba(0,0,0,.55)}
 .ora-name{font-family:'Noto Serif JP',serif;font-size:13px;font-weight:300;letter-spacing:.06em;}
 .ora-sub{font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;}
 @media(max-width:600px){.ora-section{padding:48px 20px;}.ora-grid{grid-template-columns:repeat(2,1fr);}}
+.btn-row{display:flex;gap:10px;}
+.btn-row .calc-btn{flex:1;}
+.reset-btn{padding:15px 18px;background:transparent;color:var(--muted);border:1px solid var(--border);cursor:pointer;font-size:11px;letter-spacing:.18em;font-family:'Noto Sans JP',sans-serif;font-weight:300;transition:color .2s,border-color .2s;white-space:nowrap;}
+.reset-btn:hover{color:var(--cream);border-color:rgba(196,168,106,.4);}
 </style>
 </head>
 <body>
@@ -202,7 +206,7 @@ nav.scrolled{box-shadow:0 2px 28px rgba(0,0,0,.55)}
         <div class="gender-toggle"><input type="radio" name="nt-gender" id="nt-g-f" value="female" checked><label for="nt-g-f">女性</label><input type="radio" name="nt-gender" id="nt-g-m" value="male"><label for="nt-g-m">男性</label></div></div>
     </div>
     <hr class="form-divider">
-    <button class="calc-btn" onclick="calcNatal()">九星を鑑定する</button>
+    <div class="btn-row"><button class="calc-btn" onclick="calcNatal()">九星を鑑定する</button><button class="reset-btn" onclick="resetIndividual()">リセット</button></div>
   </div>
   <div class="result-area" id="natal-result">
     <div class="result-header"><p class="result-tag">Nine Star Ki — 個人鑑定</p><p class="result-name" id="nt-r-name"></p><p class="result-meta" id="nt-r-meta"></p></div>
@@ -233,7 +237,7 @@ nav.scrolled{box-shadow:0 2px 28px rgba(0,0,0,.55)}
         <div class="form-row"><label>性別（任意）</label><div class="gender-toggle"><input type="radio" name="syn-b-gender" id="syn-b-g-f" value="female"><label for="syn-b-g-f">女性</label><input type="radio" name="syn-b-gender" id="syn-b-g-m" value="male" checked><label for="syn-b-g-m">男性</label></div></div></div>
     </div>
     <hr class="form-divider">
-    <button class="calc-btn" onclick="calcSynastry()">相性を鑑定する</button>
+    <div class="btn-row"><button class="calc-btn" onclick="calcSynastry()">相性を鑑定する</button><button class="reset-btn" onclick="resetCompat()">リセット</button></div>
   </div>
   <div class="result-area" id="synastry-result">
     <div class="result-header"><p class="result-tag">Compatibility — 相性鑑定</p><p class="result-name" id="syn-r-name"></p><p class="result-meta" id="syn-r-meta"></p></div>
@@ -461,6 +465,12 @@ document.querySelectorAll('.form-card').forEach(function(cd){cd.addEventListener
 (function(){
   var K={n:'asumira_p1_name',y:'asumira_p1_year',m:'asumira_p1_month',d:'asumira_p1_day',g:'asumira_p1_gender'};
   function v(id){return document.getElementById(id);}
+  function resetDate(yId,mId,dId){
+    var yEl=v(yId),mEl=v(mId),dEl=v(dId);
+    if(yEl)yEl.selectedIndex=0;
+    if(mEl){mEl.selectedIndex=0;mEl.dispatchEvent(new Event('change'));}
+    if(dEl)dEl.selectedIndex=0;
+  }
   function save(){
     localStorage.setItem(K.n,v('nt-name')?.value||'');
     localStorage.setItem(K.y,v('nt-birth-year')?.value||'');
@@ -480,6 +490,19 @@ document.querySelectorAll('.form-card').forEach(function(cd){cd.addEventListener
     if(d&&dEl)dEl.value=d;
     if(g){var r=document.querySelector('input[name="nt-gender"][value="'+g+'"]');if(r)r.checked=true;}
   }
+  window.resetIndividual=function(){
+    if(v('nt-name'))v('nt-name').value='';
+    resetDate('nt-birth-year','nt-birth-month','nt-birth-day');
+    document.querySelectorAll('input[name="nt-gender"]').forEach(function(r){r.checked=r.defaultChecked;});
+    Object.values(K).forEach(function(k){localStorage.removeItem(k);});
+  };
+  window.resetCompat=function(){
+    ['syn-a','syn-b'].forEach(function(p){
+      if(v(p+'-name'))v(p+'-name').value='';
+      resetDate(p+'-birth-year',p+'-birth-month',p+'-birth-day');
+      document.querySelectorAll('input[name="'+p+'-gender"]').forEach(function(r){r.checked=r.defaultChecked;});
+    });
+  };
   window.addEventListener('DOMContentLoaded',load);
   var btn=document.querySelector('[onclick="calcNatal()"]');
   if(btn)btn.addEventListener('click',save,true);
