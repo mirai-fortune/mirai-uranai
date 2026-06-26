@@ -65,11 +65,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:fl
 .trt-cloth{
   position:relative;
   background:
-    radial-gradient(ellipse 55% 45% at 42% 50%, rgba(30,56,22,.55) 0%, transparent 65%),
-    radial-gradient(ellipse 30% 30% at 15% 18%, rgba(22,40,16,.35) 0%, transparent 55%),
-    radial-gradient(ellipse 25% 25% at 85% 82%, rgba(18,36,12,.3) 0%, transparent 55%),
-    radial-gradient(ellipse 100% 100% at 50% 50%, transparent 38%, rgba(0,0,0,.55) 100%),
-    linear-gradient(148deg, #101d0d 0%, #07100505 40%, #0d1a0a 60%, #060d04 100%);
+    radial-gradient(ellipse 55% 45% at 50% 50%, rgba(196,168,106,.05) 0%, rgba(10,8,5,0) 62%),
+    radial-gradient(ellipse 100% 100% at 50% 50%, rgba(10,8,5,0) 40%, rgba(0,0,0,.45) 100%),
+    #0a0805;
   border:1px solid rgba(196,168,106,.28);
   border-radius:7px;
   padding:40px 36px;
@@ -266,13 +264,91 @@ nav.scrolled{box-shadow:0 2px 28px rgba(0,0,0,.55);}
 .ora-name{font-family:'Noto Serif JP',serif;font-size:13px;font-weight:300;letter-spacing:.06em;}
 .ora-sub{font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;}
 @media(max-width:600px){.ora-section{padding:48px 20px;}.ora-grid{grid-template-columns:repeat(2,1fr);}}
+
+/* ══════════════════════════════════════
+   SHUFFLE ANIMATION
+══════════════════════════════════════ */
+.trt-cloth{position:relative;}
+
+#trt-shuf-overlay{
+  position:absolute;inset:0;z-index:10;border-radius:7px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:38px;
+  pointer-events:none;
+  background:rgba(10,8,5,0);
+  animation:shufBgIn .5s ease forwards;
+}
+@keyframes shufBgIn{to{background:rgba(10,8,5,.9);}}
+
+.shuf-deck{
+  position:relative;width:64px;height:112px;
+  opacity:0;transform:scale(.72) translateY(18px);
+  animation:shufDeckIn .6s .1s cubic-bezier(.35,0,.15,1) forwards;
+  transform-style:preserve-3d;perspective:700px;
+}
+@keyframes shufDeckIn{to{opacity:1;transform:scale(1) translateY(0);}}
+
+.shuf-aura{
+  position:absolute;inset:-32px -26px -10px -26px;border-radius:55% 55% 40% 40%;pointer-events:none;
+  background:radial-gradient(ellipse 78% 58% at 50% 88%,rgba(196,168,106,.26) 0%,rgba(196,168,106,.06) 52%,transparent 80%);
+  animation:shufAuraPulse 1.8s ease-in-out infinite;
+}
+@keyframes shufAuraPulse{
+  0%,100%{opacity:.65;transform:scaleX(1);}
+  50%{opacity:1;transform:scaleX(1.14);}
+}
+
+.shuf-card{
+  position:absolute;inset:0;border-radius:3px;
+  border:1px solid rgba(196,168,106,.2);overflow:hidden;background:var(--bg4);
+  transform-origin:center 100%;
+  transition:transform .84s cubic-bezier(.35,0,.15,1),box-shadow .6s ease;
+  box-shadow:0 4px 18px rgba(0,0,0,.75);
+  transform:translateY(calc(var(--ci,0)*-.65px)) translateX(calc(var(--ci,0)*.2px));
+}
+.shuf-card img{width:100%;height:100%;object-fit:cover;display:block;}
+
+.shuf-deck.shuf-fanned .shuf-card{
+  transform:rotate(calc((var(--ci,0) - 4.5)*12deg)) translateY(-84px);
+  transition-delay:calc(var(--ci,0)*50ms);
+  box-shadow:0 4px 18px rgba(0,0,0,.75),0 0 14px rgba(196,168,106,.15);
+}
+
+.shuf-deck.shuf-collapsed .shuf-card{
+  transform:translateY(calc(var(--ci,0)*-.65px)) translateX(calc(var(--ci,0)*.2px));
+  transition-delay:calc((9 - var(--ci,0))*34ms);
+}
+
+.shuf-deck.shuf-riffle{animation:shufRiffle .7s ease-in-out;}
+@keyframes shufRiffle{
+  0%{transform:rotateY(0);}
+  20%{transform:rotateY(18deg);}
+  52%{transform:rotateY(-18deg);}
+  80%{transform:rotateY(9deg);}
+  100%{transform:rotateY(0);}
+}
+
+@keyframes shufWave{
+  from{transform:rotate(-5deg);}
+  to{transform:rotate(5deg);}
+}
+
+#trt-shuf-overlay.shuf-out{animation:shufOverlayOut .6s ease forwards;}
+@keyframes shufOverlayOut{to{opacity:0;}}
+
+.shuf-txt{
+  font-family:'Cormorant Garamond',serif;font-size:10px;letter-spacing:.36em;
+  color:rgba(196,168,106,0);text-align:center;text-transform:uppercase;
+  transition:color .65s ease;white-space:nowrap;user-select:none;min-height:18px;
+}
+.shuf-txt.vis{color:rgba(196,168,106,.52);}
+.shuf-txt.glow{color:rgba(196,168,106,.9);text-shadow:0 0 16px rgba(196,168,106,.38);}
 </style>
 </head>
 <body>
 <canvas id="stars-canvas"></canvas>
 
 <nav>
-  <a class="nav-logo" href="../../index.html">ASUMIRA 占い <span>占術鑑定</span></a>
+  <a class="nav-logo" href="../../index.html">ASUMIRA 占い <span>タロット</span></a>
   <a class="nav-back" href="../../index.html">← トップへ戻る</a>
 </nav>
 
@@ -700,6 +776,61 @@ function trtBuildInterp(){
 }
 
 /* ════════════════════════════════════════
+   SHUFFLE OVERLAY ANIMATION
+════════════════════════════════════════ */
+function trtShowShuffle(onComplete){
+  const cloth=document.querySelector('.trt-cloth');
+  const ov=document.createElement('div');
+  ov.id='trt-shuf-overlay';
+
+  const deck=document.createElement('div');
+  deck.className='shuf-deck';
+
+  const aura=document.createElement('div');
+  aura.className='shuf-aura';
+  deck.appendChild(aura);
+
+  for(let i=0;i<10;i++){
+    const c=document.createElement('div');
+    c.className='shuf-card';
+    c.style.setProperty('--ci',i);
+    const img=document.createElement('img');
+    img.src='images/CardBacks.jpg';
+    img.alt='';
+    c.appendChild(img);
+    deck.appendChild(c);
+  }
+
+  const txt=document.createElement('div');
+  txt.className='shuf-txt';
+  ov.appendChild(deck);
+  ov.appendChild(txt);
+  cloth.appendChild(ov);
+
+  const T=(fn,ms)=>setTimeout(fn,ms);
+
+  T(()=>{txt.textContent='S H U F F L I N G';txt.classList.add('vis');},430);
+  T(()=>{deck.classList.add('shuf-fanned');},730);
+  T(()=>{deck.style.animation='shufWave .72s ease-in-out 2 alternate';},1680);
+  T(()=>{
+    deck.style.animation='';
+    deck.classList.remove('shuf-fanned');
+    deck.classList.add('shuf-collapsed');
+    txt.classList.remove('vis','glow');
+  },2900);
+  T(()=>{
+    deck.classList.remove('shuf-collapsed');
+    deck.classList.add('shuf-riffle');
+    txt.textContent='CARDS  AWAKEN';
+    txt.classList.add('vis','glow');
+  },3600);
+  T(()=>{
+    ov.classList.add('shuf-out');
+    T(()=>{ov.remove();onComplete();},620);
+  },5000);
+}
+
+/* ════════════════════════════════════════
    CORE: PLACE / FLIP / DRAW / RESET
 ════════════════════════════════════════ */
 function trtPlace(idx, delay, gen){
@@ -734,20 +865,25 @@ function trtFlip(idx, delay, gen){
 
 function trtDraw(){
   trtGen++;
-  const gen = trtGen;
-  document.getElementById('trt-btn-draw').disabled = true;
-  document.querySelectorAll('.trt-cat-btn').forEach(b => b.disabled = true);
-  const ids = trtShuffle(Object.keys(TRT_DATA).map(Number));
-  trtDrawn = ids.slice(0, 10).map(id => ({ id, data: TRT_DATA[id], isInv: Math.random() < .5 }));
-  trtDrawn.forEach((card, i) => trtBuildFace(card, i));
+  const gen=trtGen;
+  document.getElementById('trt-btn-draw').disabled=true;
+  document.querySelectorAll('.trt-cat-btn').forEach(b=>b.disabled=true);
+  const ids=trtShuffle(Object.keys(TRT_DATA).map(Number));
+  trtDrawn=ids.slice(0,10).map(id=>({id,data:TRT_DATA[id],isInv:Math.random()<.5}));
+  trtDrawn.forEach((card,i)=>trtBuildFace(card,i));
   trtBuildInterp();
-  const placeGap = 120, flipStart = 1800, flipGap = 750;
-  for(let i = 0; i < 10; i++) trtPlace(i, 80 + i * placeGap, gen);
-  for(let i = 0; i < 10; i++) trtFlip(i,  flipStart + i * flipGap, gen);
+  trtShowShuffle(()=>{
+    if(trtGen!==gen)return;
+    const placeGap=120,flipStart=1500,flipGap=550;
+    for(let i=0;i<10;i++)trtPlace(i,80+i*placeGap,gen);
+    for(let i=0;i<10;i++)trtFlip(i,flipStart+i*flipGap,gen);
+  });
 }
 
 function trtReset(){
   trtGen++;
+  const shufOv=document.getElementById('trt-shuf-overlay');
+  if(shufOv)shufOv.remove();
   for(let i = 0; i < 10; i++){
     const inner = document.getElementById('trt-card-' + i);
     if(inner){
