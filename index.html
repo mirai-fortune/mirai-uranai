@@ -505,6 +505,66 @@ nav a:hover { color: var(--cream); }
 
 footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--muted); letter-spacing: 0.1em; border-top: 1px solid var(--glass-border); }
 
+/* --- VOICES (お客様の声) SECTION --- */
+.voices-section { padding: 80px 0; }
+.voices-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.voice-card {
+  padding: 36px 32px 28px;
+  display: flex;
+  flex-direction: column;
+}
+.voice-featured { grid-column: span 2; }
+.voice-deco {
+  font-family: Georgia, serif;
+  font-size: 2.8rem;
+  line-height: 1;
+  color: var(--gold);
+  opacity: 0.28;
+  margin-bottom: 10px;
+  display: block;
+  letter-spacing: -0.05em;
+}
+.voice-tag {
+  font-size: 0.72rem;
+  color: var(--gold);
+  letter-spacing: 0.14em;
+  margin-bottom: 14px;
+  display: block;
+}
+.voice-text {
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 2;
+  flex-grow: 1;
+  margin-bottom: 24px;
+}
+.voice-featured .voice-text { font-size: 0.95rem; }
+.voice-attr {
+  font-size: 0.82rem;
+  color: var(--cream);
+  margin-bottom: 6px;
+  display: block;
+}
+.voice-event {
+  font-size: 0.7rem;
+  color: var(--gold);
+  opacity: 0.55;
+  letter-spacing: 0.08em;
+  display: block;
+}
+@media (max-width: 900px) {
+  .voices-grid { grid-template-columns: repeat(2, 1fr); }
+  .voice-featured { grid-column: span 2; }
+}
+@media (max-width: 600px) {
+  .voices-grid { grid-template-columns: 1fr; }
+  .voice-featured { grid-column: span 1; }
+}
+
 /* --- RESPONSIVE DESIGN --- */
 @media(max-width: 960px){
   .partners-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
@@ -601,6 +661,7 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
   nav.open a:nth-of-type(5) { transition-delay: 0.30s; }
   nav.open a:nth-of-type(6) { transition-delay: 0.36s; }
   nav.open a:nth-of-type(7) { transition-delay: 0.42s; }
+  nav.open a:nth-of-type(8) { transition-delay: 0.48s; }
 }
 </style>
 </head>
@@ -616,6 +677,7 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
     <nav id="nav-menu">
       <a href="#services">無料占い</a>
       <a href="#about">ご挨拶</a>
+      <a href="#voices">お客様の声</a>
       <a href="#partners">提携ブランド</a>
       <a href="#marche">活動実績</a>
       <a href="#faq">FAQ</a>
@@ -736,6 +798,98 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
         <p>
           コンテンツを試してみて、「もう少し深く話したい」「頭の中を整理したい」と感じたときは、ZoomまたはGoogle Meetを使ったオンライン電話相談も承っています。WEB相談のため、<strong>全国どこからでも</strong>ご利用いただけます。一人で抱え込まず、まずはお気軽にご相談ください。
         </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="voices" class="voices-section">
+    <div class="container">
+      <div class="section-title reveal">
+        <h2>お客様の声</h2>
+        <p class="section-subtitle">対面鑑定・ご相談の感想より</p>
+      </div>
+      <div class="voices-grid">
+
+        <div class="glass-card voice-card voice-featured reveal">
+          <span class="voice-deco">"</span>
+          <span class="voice-tag">報告と感謝</span>
+          <p class="voice-text">1年前、結婚を迷っていたときにここに来ていました。相性鑑定で「ぶつかるけど補い合う関係」と言われた言葉が頭に残って、その後入籍しました。どうしても報告したくて、また来てしまいました。答えをもらったわけじゃないんです。でも、自分が決めるための整理を一緒にしてもらえた。その時間がいまも大切な記憶です。</p>
+          <span class="voice-attr">— 30代・会社員・女性（再来場）</span>
+          <span class="voice-event">Vol.8 &nbsp;/&nbsp; 2024 Autumn &nbsp;/&nbsp; 新宿</span>
+        </div>
+
+        <div class="glass-card voice-card reveal" style="transition-delay:0.08s;">
+          <span class="voice-deco">"</span>
+          <span class="voice-tag">初めての占い</span>
+          <p class="voice-text">占いって当たるかどうかより、信じていいのかどうかが分からなくて、ずっと遠ざけていました。友人に誘われて半信半疑で行ったら、入りやすい雰囲気でまず安心しました。テーブルを挟んで話しているうちに、気づいたら自分でも整理できていなかった本音をしゃべっていました。心がスッキリしました。</p>
+          <span class="voice-attr">— 20代・会社員・女性</span>
+          <span class="voice-event">Vol.1 &nbsp;/&nbsp; 2022 Summer &nbsp;/&nbsp; 新宿</span>
+        </div>
+
+        <div class="glass-card voice-card reveal" style="transition-delay:0.12s;">
+          <span class="voice-deco">"</span>
+          <span class="voice-tag">場所を変えると気持ちが変わる</span>
+          <p class="voice-text">横浜で初めて開催と聞いて、地元だから行ってみようと思いました。おしゃれな空間で、占いの場というより、少し特別なカフェみたいな雰囲気でした。引っ越しを迷っていた話をしたら、どこに住むかより何のために動くかを一緒に考えてくれて。結局引っ越しはしませんでしたが、迷いはなくなりました。</p>
+          <span class="voice-attr">— 30代・会社員・女性</span>
+          <span class="voice-event">Vol.2 &nbsp;/&nbsp; 2022 Autumn &nbsp;/&nbsp; 横浜</span>
+        </div>
+
+        <div class="glass-card voice-card reveal" style="transition-delay:0.16s;">
+          <span class="voice-deco">"</span>
+          <span class="voice-tag">年末の棚卸し</span>
+          <p class="voice-text">年末に今年を振り返りたくて行きました。沢山の人がいて、思ったより明るくて温かい場所でした。四柱推命で今年の流れを見てもらったら、しんどかった時期に理由があると分かって。うまくいかなかったことを責め続けていたのが、少し緩んだ気がしました。来年の自分が少し楽しみになって帰りました。</p>
+          <span class="voice-attr">— 30代・自営業・女性</span>
+          <span class="voice-event">Vol.3 &nbsp;/&nbsp; 2022 Winter &nbsp;/&nbsp; 新宿</span>
+        </div>
+
+        <div class="glass-card voice-card reveal" style="transition-delay:0.2s;">
+          <span class="voice-deco">"</span>
+          <span class="voice-tag">新生活の不安</span>
+          <p class="voice-text">4月から転勤で横浜に来て、知り合いも少なくて落ち着かなかった時期に参加しました。会場は人が多くて賑やかで、それだけで少し気持ちが楽になりました。数秘術で自分の本質を見てもらったら、「環境に慣れるのに時間がかかるタイプ」と言われて、焦っていた自分がやっと腑に落ちました。</p>
+          <span class="voice-attr">— 20代・会社員・男性</span>
+          <span class="voice-event">Vol.4 &nbsp;/&nbsp; 2023 Spring &nbsp;/&nbsp; 横浜</span>
+        </div>
+
+        <div class="glass-card voice-card reveal" style="transition-delay:0.24s;">
+          <span class="voice-deco">"</span>
+          <span class="voice-tag">人混みの中の対話</span>
+          <p class="voice-text">会場に着いたらすごい人の数で、文化祭みたいで思わず笑いました。順番を待っている間も隣の人と話したりして、来てよかったと思えた気がします。本番では転職の相談をしたら、今の仕事に向いていないわけじゃないと言われて。逃げたいだけだったことに自分で気づいて、少し恥ずかしかったです。それが正直ありがたかったです。</p>
+          <span class="voice-attr">— 30代・会社員・女性</span>
+          <span class="voice-event">Vol.5 &nbsp;/&nbsp; 2023 Summer &nbsp;/&nbsp; 新宿</span>
+        </div>
+
+        <div class="glass-card voice-card reveal" style="transition-delay:0.28s;">
+          <span class="voice-deco">"</span>
+          <span class="voice-tag">二度目の正直</span>
+          <p class="voice-text">一度目は友人に連れられて来ていたので、今回は自分の意志で予約しました。雰囲気が明るい会場で、前回より落ち着いて話せた気がします。恋愛を諦めかけていた話をしたら、タロットで引いたカードの意味を説明しながらも、最後は私自身がどうしたいかを聞いてくれました。答えをくれる場所じゃなくて、答えを探す場所でした。</p>
+          <span class="voice-attr">— 30代・パート・女性</span>
+          <span class="voice-event">Vol.6 &nbsp;/&nbsp; 2023 Autumn &nbsp;/&nbsp; 横浜</span>
+        </div>
+
+        <div class="glass-card voice-card reveal" style="transition-delay:0.32s;">
+          <span class="voice-deco">"</span>
+          <span class="voice-tag">親との関係</span>
+          <p class="voice-text">母親との関係がずっとうまくいかなくて、でも誰にも話せなかった。友人に話すには重すぎて、カウンセラーに行くほどでもないと思っていて。占いならちょうどいい距離感かなと思って来ました。九星気学で親子の星を見てもらったら、衝突しやすい組み合わせだと教えてもらえて。自分たちのせいじゃないと思えたことが、一番の収穫でした。</p>
+          <span class="voice-attr">— 40代・主婦・女性</span>
+          <span class="voice-event">Vol.7 &nbsp;/&nbsp; 2024 Spring &nbsp;/&nbsp; 横浜</span>
+        </div>
+
+        <div class="glass-card voice-card reveal" style="transition-delay:0.36s;">
+          <span class="voice-deco">"</span>
+          <span class="voice-tag">流れに乗る勇気</span>
+          <p class="voice-text">会場に入ったら想像より何倍も広くて、たくさんの人が思い思いに話していて驚きました。こんなに人が来るイベントになったんだと、なんだか誇らしい気持ちになりました。算命学で大運の流れを見てもらったら、今がまさに動く時期だと言われて。帰り道、ずっと後回しにしていたことを一つだけ、その日のうちに動かしました。</p>
+          <span class="voice-attr">— 40代・会社員・女性</span>
+          <span class="voice-event">Vol.9 &nbsp;/&nbsp; 2025 Spring &nbsp;/&nbsp; 横浜</span>
+        </div>
+
+        <div class="glass-card voice-card reveal" style="transition-delay:0.4s;">
+          <span class="voice-deco">"</span>
+          <span class="voice-tag">自分を装うこと</span>
+          <p class="voice-text">アクセサリーのブースと占いが並ぶ、いつもより少し華やかな会場でした。手に取りながらゆっくり選ぶ時間と、じっくり話せる時間が一緒にあって、不思議と贅沢な気持ちになりました。数秘術で「表現することが人生のテーマ」と言われたとき、ずっと地味にしていた自分がちょっと恥ずかしくなりました。その日、勇気を出してブースのアクセサリーを一つ買って帰りました。今も毎日つけています。自分へのOKサインみたいな感じがして。</p>
+          <span class="voice-attr">— 30代・フリーランス・女性</span>
+          <span class="voice-event">Vol.10 &nbsp;/&nbsp; 2025 Winter &nbsp;/&nbsp; 横浜</span>
+        </div>
+
       </div>
     </div>
   </section>
