@@ -176,6 +176,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:fl
 .daiun-tbl .rel-chuu{color:var(--wood);font-size:11px;}
 .daiun-tbl .rel-san{color:var(--gold2);font-size:11px;}
 
+/* ── SCROLL HINT ── */
+.scroll-hint{display:flex;align-items:center;gap:12px;margin-bottom:20px;font-family:'Cormorant Garamond',serif;font-size:10px;letter-spacing:.16em;color:var(--muted2);}
+.scroll-hint::before,.scroll-hint::after{content:'';flex:1;height:1px;background:var(--muted2);opacity:.3;}
+
 /* ── SECTION DIVIDER ── */
 .sec-div{margin:64px 0;display:flex;align-items:center;gap:20px;}
 .sec-div::before,.sec-div::after{content:'';flex:1;height:1px;background:var(--border);}
@@ -368,7 +372,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:fl
 
 /* ── RESPONSIVE ── */
 @media(max-width:900px){.form-grid,.form-grid-3{grid-template-columns:1fr;}.analysis-grid{grid-template-columns:1fr;}.compat-charts{grid-template-columns:1fr;}.num-overview{grid-template-columns:repeat(2,1fr);}.ndc-grid2{grid-template-columns:1fr;}.ai-people{grid-template-columns:1fr;}}
-@media(max-width:640px){nav{padding:14px 18px;}.hero,.panel-body{padding-left:18px;padding-right:18px;}.mode-nav{padding:0 18px;}.form-card{padding:24px 18px;}.ndc{padding:28px 18px;}.analysis-card{padding:24px 18px;}.gogyou-card,.daiun-card{padding:24px 18px;}.section-person{padding:20px 16px;}.meishiki{grid-template-columns:repeat(4,1fr);}.meishiki.three-col{grid-template-columns:repeat(3,1fr);}.pillar-stem,.pillar-branch{font-size:20px;}.pillar-main{padding:10px 3px;}.pillar-top,.pillar-bottom{padding:8px 4px;}.pillar-tsuhen{font-size:10px;}.pillar-juni{font-size:10px;}.pillar-elem-tag{font-size:8px;}.pillar-hidden{font-size:9px;}.pillar-none{min-height:72px;font-size:11px;}.sm-pillar-kan,.sm-pillar-shi{font-size:20px;}.sm-pillar-main{padding:12px 4px;}.sm-pillar-top,.sm-pillar-bottom{padding:8px 4px;}.nav-logo span{display:none;}}
+@media(max-width:640px){nav{padding:14px 18px;}.hero,.panel-body{padding-left:18px;padding-right:18px;}.mode-nav{padding:0 18px;}.form-card{padding:24px 18px;}.ndc{padding:28px 18px;}.analysis-card{padding:24px 18px;}.gogyou-card,.daiun-card{padding:24px 18px;}.section-person{padding:20px 16px;}.meishiki{grid-template-columns:repeat(4,1fr);}.meishiki.three-col{grid-template-columns:repeat(3,1fr);}.pillar-stem,.pillar-branch{font-size:20px;}.pillar-main{padding:10px 3px;}.pillar-top,.pillar-bottom{padding:8px 4px;}.pillar-tsuhen{font-size:10px;}.pillar-juni{font-size:10px;}.pillar-elem-tag{font-size:8px;}.pillar-hidden{font-size:9px;}.pillar-none{min-height:72px;font-size:11px;}.sm-pillar-kan,.sm-pillar-shi{font-size:20px;}.sm-pillar-main{padding:12px 4px;}.sm-pillar-top,.sm-pillar-bottom{padding:8px 4px;}.nav-logo span{display:none;}.cmd-inner{padding:14px 10px;}.cmd-table{min-width:0;}.cmd-table th,.cmd-table td{padding:8px 5px;}.cmd-table td.rh{padding:8px 7px;font-size:9px;min-width:40px;}.cmd-table .ck,.cmd-table .cs{font-size:18px;}.cmd-table .ct,.cmd-table .cz,.cmd-table .czt,.cmd-table .cr{font-size:11px;}}
 
 /* ── TAROT CELTIC CROSS ─────────────────────────────────────── */
 #panel-tarot .panel-body{max-width:1040px;margin:0 auto;}
@@ -1451,7 +1455,7 @@ function calcIndividual(){
       ${ip.line3?`<p class="daiun-interp-line"><span class="interp-src">${relLabel}</span>${ip.line3}</p>`:''}`;
   }
 
-  let tbl=`<p class="daiun-title">大運（10年サイクル）</p><p class="daiun-sub">大運は${daiun.isForward?'順行':'逆行'}で${daiun.startAge}年立運です。</p><div style="overflow-x:auto;"><table class="daiun-tbl" id="daiun-tbl-el">`;
+  let tbl=`<p class="daiun-title">大運（10年サイクル）</p><p class="daiun-sub">大運は${daiun.isForward?'順行':'逆行'}で${daiun.startAge}年立運です。</p><p class="scroll-hint">横にスクロールできます</p><div style="overflow-x:auto;"><table class="daiun-tbl" id="daiun-tbl-el">`;
 
   // 年齢 row
   tbl+=`<tr><td class="rh">年齢</td>`;
@@ -1599,7 +1603,7 @@ function calcIndividual(){
   }
 
   // 歳運 table HTML
-  let sTblH=`<p class="daiun-title">歳運（1年サイクル）</p><p class="daiun-sub">各年の干支があなたの日主にどのような影響を与えるかを示します。</p><div style="overflow-x:auto;-webkit-overflow-scrolling:touch;"><table class="daiun-tbl" id="saiun-tbl-el">`;
+  let sTblH=`<p class="daiun-title">歳運（1年サイクル）</p><p class="daiun-sub">各年の干支があなたの日主にどのような影響を与えるかを示します。</p><p class="scroll-hint">横にスクロールできます</p><div style="overflow-x:auto;-webkit-overflow-scrolling:touch;"><table class="daiun-tbl" id="saiun-tbl-el">`;
 
   // 年 row
   sTblH+=`<tr><td class="rh">年</td>`;
