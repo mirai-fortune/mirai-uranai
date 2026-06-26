@@ -229,12 +229,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:fl
 
 /* Responsive */
 @media(max-width:700px){
-  .trt-celtic{flex-direction:column;gap:10px;align-items:center;}
-  .trt-cross-section{grid-template-columns:repeat(3,15vw);gap:2vw;}
+  .trt-celtic{gap:2vw;justify-content:center;align-items:center;flex-wrap:nowrap;}
+  .trt-cross-section{grid-template-columns:repeat(3,15vw);gap:1.5vw;}
   .trt-scene{width:15vw;height:26vw;}
-  .trt-staff-section{flex-direction:row;gap:2vw;justify-content:center;}
+  .trt-staff-section{gap:1.5vw;}
   .trt-ni-name{font-size:7px;}
-  .trt-cloth{padding:20px 14px;}
+  .trt-cloth{padding:20px 10px;}
   .trt-cloth::before{inset:8px;}
 }
 @media(max-width:640px){
