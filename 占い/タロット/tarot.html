@@ -206,7 +206,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:fl
 
 /* Draw area */
 .trt-draw-area{text-align:center;padding:28px 24px 40px;}
-.trt-btn-draw{display:inline-block;padding:14px 60px;border:1px solid rgba(196,168,106,.3);background:transparent;color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:.32em;cursor:pointer;transition:background .4s,border-color .4s,letter-spacing .4s;}
+.trt-btn-draw{display:inline-block;padding:14px 60px;border:1px solid rgba(196,168,106,.3);background:transparent;color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:.32em;cursor:pointer;transition:background .4s,border-color .4s,letter-spacing .4s;text-align:center;}
+.trt-btn-draw span{white-space:nowrap;}
 .trt-btn-draw:hover:not(:disabled){background:rgba(196,168,106,.07);border-color:rgba(196,168,106,.55);letter-spacing:.4em;}
 .trt-btn-draw:disabled{opacity:.25;cursor:not-allowed;}
 .trt-btn-reset{display:none;margin-top:24px;background:transparent;border:none;color:var(--muted);font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.18em;cursor:pointer;text-decoration:underline;text-underline-offset:3px;transition:color .2s;}
@@ -312,7 +313,7 @@ nav.scrolled{box-shadow:0 2px 28px rgba(0,0,0,.55);}
 </div>
 
 <div class="trt-draw-area">
-  <button class="trt-btn-draw" id="trt-btn-draw" disabled>C A R D &nbsp; D R A W</button>
+  <button class="trt-btn-draw" id="trt-btn-draw" disabled><span>C A R D</span> <span>D R A W</span></button>
   <br>
   <button class="trt-btn-reset" id="trt-btn-reset">もう一度引く</button>
 </div>
