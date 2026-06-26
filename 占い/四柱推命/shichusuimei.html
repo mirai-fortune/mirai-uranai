@@ -1897,26 +1897,28 @@ document.querySelectorAll('.form-card').forEach(function(card){
   var K={n:'asumira_p1_name',y:'asumira_p1_year',m:'asumira_p1_month',d:'asumira_p1_day',t:'asumira_p1_time',g:'asumira_p1_gender'};
   function v(id){return document.getElementById(id);}
   function save(){
-    localStorage.setItem(K.n, v('si-name')?.value||'');
-    localStorage.setItem(K.y, v('si-birth-year')?.value||'');
-    localStorage.setItem(K.m, v('si-birth-month')?.value||'');
-    localStorage.setItem(K.d, v('si-birth-day')?.value||'');
-    localStorage.setItem(K.t, v('si-time')?.value||'');
-    localStorage.setItem(K.g, v('si-gender')?.value||'');
+    localStorage.setItem(K.n,v('si-name')?.value||'');
+    localStorage.setItem(K.y,v('si-birth-year')?.value||'');
+    localStorage.setItem(K.m,v('si-birth-month')?.value||'');
+    localStorage.setItem(K.d,v('si-birth-day')?.value||'');
+    localStorage.setItem(K.t,v('si-time')?.value||'');
+    localStorage.setItem(K.g,v('si-gender')?.value||'');
   }
   function load(){
     var n=localStorage.getItem(K.n),y=localStorage.getItem(K.y),mo=localStorage.getItem(K.m),
         d=localStorage.getItem(K.d),t=localStorage.getItem(K.t),g=localStorage.getItem(K.g);
-    if(n && v('si-name')) v('si-name').value=n;
-    if(y && v('si-birth-year')) v('si-birth-year').value=y;
-    if(mo && v('si-birth-month')) v('si-birth-month').value=mo;
-    if(d && v('si-birth-day')) v('si-birth-day').value=d;
-    if(t && v('si-time')){v('si-time').value=t; var e=v('si-time');if(e.oninput)e.oninput();}
-    if(g && v('si-gender')) v('si-gender').value=g;
+    if(n&&v('si-name'))v('si-name').value=n;
+    var yEl=v('si-birth-year'),mEl=v('si-birth-month'),dEl=v('si-birth-day');
+    if(y&&yEl)yEl.value=y;
+    if(mo&&mEl)mEl.value=mo;
+    if(mEl)mEl.dispatchEvent(new Event('change'));
+    if(d&&dEl)dEl.value=d;
+    if(t&&v('si-time')){v('si-time').value=t;var e=v('si-time');if(e.oninput)e.oninput();}
+    if(g&&v('si-gender'))v('si-gender').value=g;
   }
-  document.addEventListener('DOMContentLoaded', load);
+  window.addEventListener('DOMContentLoaded',load);
   var btn=document.querySelector('[onclick="calcIndividual()"]');
-  if(btn) btn.addEventListener('click', save, true);
+  if(btn)btn.addEventListener('click',save,true);
 })();
 </script>
 </body>

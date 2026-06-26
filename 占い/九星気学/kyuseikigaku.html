@@ -462,25 +462,27 @@ document.querySelectorAll('.form-card').forEach(function(cd){cd.addEventListener
   var K={n:'asumira_p1_name',y:'asumira_p1_year',m:'asumira_p1_month',d:'asumira_p1_day',g:'asumira_p1_gender'};
   function v(id){return document.getElementById(id);}
   function save(){
-    localStorage.setItem(K.n, v('nt-name')?.value||'');
-    localStorage.setItem(K.y, v('nt-birth-year')?.value||'');
-    localStorage.setItem(K.m, v('nt-birth-month')?.value||'');
-    localStorage.setItem(K.d, v('nt-birth-day')?.value||'');
+    localStorage.setItem(K.n,v('nt-name')?.value||'');
+    localStorage.setItem(K.y,v('nt-birth-year')?.value||'');
+    localStorage.setItem(K.m,v('nt-birth-month')?.value||'');
+    localStorage.setItem(K.d,v('nt-birth-day')?.value||'');
     var gv=document.querySelector('input[name="nt-gender"]:checked');
-    localStorage.setItem(K.g, gv?gv.value:'');
+    localStorage.setItem(K.g,gv?gv.value:'');
   }
   function load(){
     var n=localStorage.getItem(K.n),y=localStorage.getItem(K.y),mo=localStorage.getItem(K.m),
         d=localStorage.getItem(K.d),g=localStorage.getItem(K.g);
-    if(n && v('nt-name')) v('nt-name').value=n;
-    if(y && v('nt-birth-year')) v('nt-birth-year').value=y;
-    if(mo && v('nt-birth-month')) v('nt-birth-month').value=mo;
-    if(d && v('nt-birth-day')) v('nt-birth-day').value=d;
+    if(n&&v('nt-name'))v('nt-name').value=n;
+    var yEl=v('nt-birth-year'),mEl=v('nt-birth-month'),dEl=v('nt-birth-day');
+    if(y&&yEl)yEl.value=y;
+    if(mo&&mEl)mEl.value=mo;
+    if(mEl)mEl.dispatchEvent(new Event('change'));
+    if(d&&dEl)dEl.value=d;
     if(g){var r=document.querySelector('input[name="nt-gender"][value="'+g+'"]');if(r)r.checked=true;}
   }
-  document.addEventListener('DOMContentLoaded', load);
+  window.addEventListener('DOMContentLoaded',load);
   var btn=document.querySelector('[onclick="calcNatal()"]');
-  if(btn) btn.addEventListener('click', save, true);
+  if(btn)btn.addEventListener('click',save,true);
 })();
 </script>
 </body>

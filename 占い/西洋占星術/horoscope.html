@@ -1694,24 +1694,26 @@ document.querySelectorAll('.form-card').forEach(function(card) {
   var K={n:'asumira_p1_name',y:'asumira_p1_year',m:'asumira_p1_month',d:'asumira_p1_day',t:'asumira_p1_time'};
   function v(id){return document.getElementById(id);}
   function save(){
-    localStorage.setItem(K.n, v('hor-name')?.value||'');
-    localStorage.setItem(K.y, v('hor-birth-year')?.value||'');
-    localStorage.setItem(K.m, v('hor-birth-month')?.value||'');
-    localStorage.setItem(K.d, v('hor-birth-day')?.value||'');
-    localStorage.setItem(K.t, v('hor-time')?.value||'');
+    localStorage.setItem(K.n,v('hor-name')?.value||'');
+    localStorage.setItem(K.y,v('hor-birth-year')?.value||'');
+    localStorage.setItem(K.m,v('hor-birth-month')?.value||'');
+    localStorage.setItem(K.d,v('hor-birth-day')?.value||'');
+    localStorage.setItem(K.t,v('hor-time')?.value||'');
   }
   function load(){
     var n=localStorage.getItem(K.n),y=localStorage.getItem(K.y),mo=localStorage.getItem(K.m),
         d=localStorage.getItem(K.d),t=localStorage.getItem(K.t);
-    if(n && v('hor-name')) v('hor-name').value=n;
-    if(y && v('hor-birth-year')) v('hor-birth-year').value=y;
-    if(mo && v('hor-birth-month')) v('hor-birth-month').value=mo;
-    if(d && v('hor-birth-day')) v('hor-birth-day').value=d;
-    if(t && v('hor-time')) v('hor-time').value=t;
+    if(n&&v('hor-name'))v('hor-name').value=n;
+    var yEl=v('hor-birth-year'),mEl=v('hor-birth-month'),dEl=v('hor-birth-day');
+    if(y&&yEl)yEl.value=y;
+    if(mo&&mEl)mEl.value=mo;
+    if(mEl)mEl.dispatchEvent(new Event('change'));
+    if(d&&dEl)dEl.value=d;
+    if(t&&v('hor-time'))v('hor-time').value=t;
   }
-  document.addEventListener('DOMContentLoaded', load);
+  window.addEventListener('DOMContentLoaded',load);
   var btn=document.querySelector('[onclick="calcHoroscope()"]');
-  if(btn) btn.addEventListener('click', save, true);
+  if(btn)btn.addEventListener('click',save,true);
 })();
 </script>
 </body>
