@@ -530,21 +530,22 @@ nav a:hover { color: var(--cream); }
   align-items: center;
   gap: 6px;
   padding: 7px 16px;
-  background: #06C755;
+  background: transparent;
+  border: 1px solid rgba(196, 168, 106, 0.6);
   border-radius: 20px;
   text-decoration: none;
-  color: #fff;
+  color: var(--gold);
   font-size: 0.78rem;
   font-family: var(--font-sans);
   letter-spacing: 0.05em;
   white-space: nowrap;
   flex-shrink: 0;
   margin-left: 16px;
-  box-shadow: 0 2px 14px rgba(6, 199, 85, 0.3);
-  transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0 12px rgba(196, 168, 106, 0.15);
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
-.line-header-btn:hover { opacity: 0.88; transform: translateY(-1px); box-shadow: 0 4px 18px rgba(6, 199, 85, 0.4); }
-.line-header-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+.line-header-btn:hover { background: rgba(196, 168, 106, 0.08); transform: translateY(-1px); box-shadow: 0 0 20px rgba(196, 168, 106, 0.3); }
+.line-header-btn svg { width: 15px; height: 15px; flex-shrink: 0; fill: var(--gold); }
 @media (max-width: 768px) {
   .line-header-btn { padding: 6px 14px; font-size: 0.72rem; margin-left: 0; }
 }
@@ -786,7 +787,7 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
       <a href="index.html" class="logo">ASUMIRA 占い</a>
     </div>
     <nav id="nav-menu">
-      <a href="占い/週次タロット/index.html">今週のタロット</a>
+      <a href="占い/weekly/index.html">今週のタロット</a>
       <a href="#services">無料占い</a>
       <a href="#about">ご挨拶</a>
       <a href="#voices">お客様の声</a>
