@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>今週のタロット｜ASUMIRA 占い</title>
+<meta name="description" content="毎週月曜更新。今週のタロットカードが示す流れと、あなたへのメッセージをお届けします。現役占い師監修・ASUMIRA 占い。">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="今週のタロット｜ASUMIRA 占い">
+<meta property="og:description" content="毎週月曜更新。今週のタロットカードが示す流れと、あなたへのメッセージをお届けします。">
+<meta property="og:image" content="https://mirai-fortune.github.io/mirai-uranai/images/ogp.png">
+<meta property="og:site_name" content="ASUMIRA 占い">
+<meta property="og:locale" content="ja_JP">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23030611'/><text x='16' y='23' font-family='Georgia,serif' font-size='20' font-weight='400' fill='%23c4a86a' text-anchor='middle'>A</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+:root{
+  --bg:#030611;--bg2:#0d0b08;--bg3:#131009;--bg4:#1a1710;
+  --cream:#f5f2eb;--muted:rgba(245,242,235,.6);--muted2:rgba(245,242,235,.28);
+  --gold:#c4a86a;--gold2:#e8d4a0;--gold-dim:rgba(196,168,106,.12);--gold-glow:rgba(196,168,106,.18);
+  --border:rgba(196,168,106,.14);--border2:rgba(255,255,255,.07);--glass-bg:rgba(20,18,15,.4);
+  --font-serif:'Noto Serif JP',serif;--font-sans:'Noto Sans JP',sans-serif;--font-deco:'Cormorant Garamond',serif;
+}
+body{background:linear-gradient(135deg,var(--bg) 0%,#060504 100%);background-attachment:fixed;color:var(--cream);font-family:var(--font-sans);font-weight:300;line-height:1.8;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+#stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+h1,h2,h3,h4{font-family:var(--font-serif);font-weight:400;letter-spacing:.05em;}
+.container{max-width:1080px;margin:0 auto;padding:0 24px;position:relative;z-index:1;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:flex;justify-content:space-between;align-items:center;background:rgba(3,6,17,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border);transition:box-shadow .3s;}
+nav.scrolled{box-shadow:0 2px 28px rgba(0,0,0,.55);}
+.nav-logo{font-family:var(--font-deco);font-size:20px;letter-spacing:.18em;color:var(--cream);text-decoration:none;}
+.nav-logo span{color:var(--gold);margin-left:8px;font-size:11px;letter-spacing:.22em;font-family:var(--font-sans);}
+.nav-back{font-size:11px;letter-spacing:.16em;color:var(--muted);text-decoration:none;text-transform:uppercase;display:flex;align-items:center;gap:8px;transition:color .2s;}
+.nav-back:hover{color:var(--gold);}
+
+/* ── HERO ── */
+.hero{min-height:44vh;display:flex;flex-direction:column;justify-content:flex-end;padding:100px 0 56px;position:relative;overflow:hidden;border-bottom:1px solid var(--border);}
+.hero-orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;}
+.orb1{width:600px;height:600px;background:rgba(196,168,106,.06);top:-160px;right:-100px;}
+.orb2{width:400px;height:400px;background:rgba(80,80,180,.04);bottom:-80px;left:5%;}
+.hero-inner{position:relative;z-index:1;animation:heroIn .9s cubic-bezier(.25,1,.5,1) both;}
+@keyframes heroIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+.hero-tag{font-family:var(--font-deco);font-size:11px;letter-spacing:.38em;color:var(--gold);text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:14px;}
+.hero-tag::before{content:'';display:block;width:28px;height:1px;background:var(--gold);}
+.hero-title{font-size:clamp(28px,4.5vw,52px);font-weight:300;line-height:1.4;letter-spacing:.08em;margin-bottom:16px;}
+.hero-period{font-family:var(--font-deco);font-size:16px;letter-spacing:.14em;color:var(--gold);margin-bottom:8px;}
+.hero-update{font-size:11px;color:var(--muted2);letter-spacing:.14em;}
+
+/* ── CARD + MESSAGE ── */
+.reading-section{padding:72px 0 56px;}
+.reading-grid{display:grid;grid-template-columns:220px 1fr;gap:72px;align-items:start;}
+
+/* Card flip */
+.card-stage{display:flex;flex-direction:column;align-items:center;gap:24px;position:relative;}
+.card-scene{width:200px;height:350px;perspective:900px;cursor:default;position:relative;}
+.card-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 1.4s cubic-bezier(.35,0,.15,1);}
+.card-inner.revealed{transform:rotateY(180deg);}
+.card-back,.card-front{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:10px;overflow:hidden;border:1px solid rgba(196,168,106,.22);box-shadow:0 24px 60px rgba(0,0,0,.75);}
+.card-back{background:var(--bg4);}
+.card-front{transform:rotateY(180deg);background:#090807;}
+.card-back img,.card-front img{width:100%;height:100%;object-fit:cover;display:block;}
+.card-aura{position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);width:160px;height:36px;background:radial-gradient(ellipse,rgba(196,168,106,.25) 0%,transparent 70%);filter:blur(14px);opacity:0;transition:opacity 1.6s ease;pointer-events:none;}
+@keyframes cardGlowPulse{0%,100%{box-shadow:0 24px 60px rgba(0,0,0,.75),0 0 0 rgba(196,168,106,0);}50%{box-shadow:0 24px 60px rgba(0,0,0,.75),0 0 32px rgba(196,168,106,.14);}}
+.card-inner.revealed .card-front{animation:cardGlowPulse 4s 1.6s infinite ease-in-out;}
+.card-info{text-align:center;}
+.card-number{font-family:var(--font-deco);font-size:11px;letter-spacing:.36em;color:var(--muted2);margin-bottom:8px;}
+.card-name-jp{font-family:var(--font-serif);font-size:1.25rem;letter-spacing:.14em;color:var(--cream);margin-bottom:4px;}
+.card-name-en{font-family:var(--font-deco);font-size:14px;letter-spacing:.18em;color:var(--gold);font-style:italic;}
+
+/* Message */
+.msg-area{}
+.msg-eyebrow{font-family:var(--font-deco);font-size:11px;letter-spacing:.36em;color:var(--gold);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.msg-eyebrow::before{content:'';display:block;width:22px;height:1px;background:var(--gold);}
+.msg-theme{font-family:var(--font-serif);font-size:clamp(17px,2.2vw,26px);font-weight:300;letter-spacing:.1em;line-height:1.65;color:var(--cream);margin-bottom:24px;}
+.keyword-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;}
+.keyword-chip{padding:4px 14px;border:1px solid rgba(196,168,106,.35);border-radius:20px;font-size:.72rem;color:var(--gold);letter-spacing:.1em;background:rgba(196,168,106,.05);}
+.msg-body{font-size:.92rem;line-height:2.15;letter-spacing:.04em;color:var(--muted);}
+.msg-body p{margin-bottom:18px;}
+.msg-body p:last-child{margin-bottom:0;}
+
+/* ── SECTION DIVIDER ── */
+.sec-label{font-family:var(--font-deco);font-size:11px;letter-spacing:.36em;color:var(--gold);text-transform:uppercase;margin-bottom:28px;display:flex;align-items:center;gap:14px;}
+.sec-label::before{content:'';display:block;width:28px;height:1px;background:var(--gold);}
+
+/* ── FOCUS TABS ── */
+.focus-section{padding:0 0 56px;}
+.focus-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:36px;}
+.focus-tab-btn{padding:13px 30px;border:none;background:transparent;color:var(--muted2);font-family:var(--font-serif);font-size:.9rem;letter-spacing:.14em;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .3s,border-color .3s;white-space:nowrap;}
+.focus-tab-btn:hover{color:var(--muted);}
+.focus-tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
+.focus-tab-content{display:none;font-size:.92rem;line-height:2.15;color:var(--muted);letter-spacing:.04em;max-width:720px;}
+.focus-tab-content.active{display:block;animation:tabFadeIn .4s ease;}
+@keyframes tabFadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* ── LUCKY GRID ── */
+.lucky-section{padding:0 0 64px;}
+.lucky-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.lucky-card{padding:32px 24px;border:1px solid var(--border);border-radius:10px;background:var(--glass-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);text-align:center;}
+.lucky-label{font-family:var(--font-deco);font-size:10px;letter-spacing:.34em;color:var(--muted2);text-transform:uppercase;margin-bottom:14px;display:block;}
+.lucky-value{font-family:var(--font-serif);font-size:.95rem;letter-spacing:.08em;color:var(--cream);line-height:1.6;}
+
+/* ── CTA ── */
+.cta-section{padding:56px 0;border-top:1px solid var(--border);text-align:center;}
+.cta-eyebrow{font-family:var(--font-deco);font-size:10px;letter-spacing:.34em;color:var(--muted2);text-transform:uppercase;margin-bottom:20px;}
+.cta-lead{font-family:var(--font-serif);font-size:clamp(16px,2vw,22px);font-weight:300;letter-spacing:.08em;line-height:1.75;margin-bottom:12px;}
+.cta-sub{font-size:.87rem;color:var(--muted);letter-spacing:.05em;margin-bottom:40px;line-height:2;}
+.cta-buttons{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;}
+.btn-consult{display:inline-flex;align-items:center;gap:10px;padding:15px 36px;background:rgba(196,168,106,.09);border:1px solid rgba(196,168,106,.45);border-radius:3px;color:var(--gold2);font-family:var(--font-serif);font-size:.9rem;letter-spacing:.12em;text-decoration:none;transition:background .3s,border-color .3s,box-shadow .3s;}
+.btn-consult:hover{background:rgba(196,168,106,.17);border-color:var(--gold);box-shadow:0 0 22px rgba(196,168,106,.14);}
+.btn-line{display:inline-flex;align-items:center;gap:8px;padding:15px 28px;background:#06C755;border-radius:3px;color:#fff;font-family:var(--font-sans);font-size:.85rem;letter-spacing:.05em;text-decoration:none;transition:opacity .2s,transform .2s;}
+.btn-line:hover{opacity:.88;transform:translateY(-2px);}
+.btn-line svg{width:17px;height:17px;flex-shrink:0;}
+
+/* ── NEXT HINT ── */
+.next-hint-wrap{padding:0 0 64px;}
+.next-hint{max-width:600px;margin:0 auto;text-align:center;padding:28px 40px;border:1px solid var(--border);border-radius:8px;background:rgba(196,168,106,.03);}
+.next-hint-label{font-family:var(--font-deco);font-size:10px;letter-spacing:.32em;color:var(--muted2);text-transform:uppercase;margin-bottom:14px;display:block;}
+.next-hint-text{font-family:var(--font-serif);font-size:.95rem;font-style:italic;letter-spacing:.08em;color:var(--muted);line-height:1.9;}
+
+/* ── ARCHIVE ── */
+.archive-section{padding:0 0 80px;}
+.archive-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;}
+.archive-card{display:flex;gap:18px;align-items:center;padding:20px;border:1px solid var(--border2);border-radius:8px;background:rgba(20,18,15,.3);text-decoration:none;color:var(--cream);transition:border-color .3s,background .3s;}
+.archive-card:hover{border-color:var(--border);background:rgba(20,18,15,.55);}
+.archive-thumb{width:50px;height:87px;border-radius:5px;overflow:hidden;border:1px solid var(--border);flex-shrink:0;background:var(--bg4);}
+.archive-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.archive-date{font-size:.7rem;color:var(--gold);letter-spacing:.1em;margin-bottom:5px;display:block;}
+.archive-theme{font-family:var(--font-serif);font-size:.85rem;letter-spacing:.05em;line-height:1.5;}
+.archive-card-name{font-size:.72rem;color:var(--muted2);margin-top:4px;letter-spacing:.06em;}
+
+/* ── OTHER READINGS ── */
+.ora-section{padding:64px 0;border-top:1px solid var(--border);}
+.ora-label{font-family:var(--font-deco);font-size:12px;letter-spacing:.32em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:14px;}
+.ora-label::before{content:'';display:block;width:28px;height:1px;background:var(--gold);}
+.ora-title{font-family:var(--font-serif);font-size:18px;font-weight:300;letter-spacing:.1em;margin-bottom:32px;}
+.ora-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;}
+.ora-card{display:flex;flex-direction:column;align-items:center;gap:10px;padding:24px 16px;border:1px solid var(--border);text-decoration:none;color:var(--cream);transition:border-color .25s,background .25s;text-align:center;}
+.ora-card:hover{border-color:var(--gold);background:var(--gold-dim);}
+.ora-icon{font-size:20px;color:var(--gold);}
+.ora-name{font-family:var(--font-serif);font-size:13px;font-weight:300;letter-spacing:.06em;}
+.ora-sub{font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;}
+
+/* ── FOOTER ── */
+footer{padding:32px 0;text-align:center;font-size:.72rem;color:var(--muted2);letter-spacing:.1em;border-top:1px solid var(--border);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:860px){
+  .reading-grid{grid-template-columns:1fr;gap:48px;}
+  .card-stage{flex-direction:row;justify-content:flex-start;align-items:flex-start;gap:28px;}
+  .card-scene{width:150px;height:262px;}
+  .card-info{text-align:left;padding-top:8px;}
+  .lucky-grid{grid-template-columns:1fr;gap:12px;}
+  .focus-tabs{overflow-x:auto;}
+}
+@media(max-width:540px){
+  nav{padding:14px 18px;}
+  .hero{padding:88px 0 44px;}
+  .card-stage{flex-direction:column;align-items:center;}
+  .card-info{text-align:center;}
+  .cta-buttons{flex-direction:column;align-items:center;}
+  .next-hint{padding:24px 20px;}
+  .archive-grid{grid-template-columns:1fr;}
+  .focus-tab-btn{padding:11px 18px;font-size:.82rem;}
+}
+</style>
+</head>
+<body>
+<canvas id="stars-canvas"></canvas>
+
+<nav id="nav">
+  <a class="nav-logo" href="../../index.html">ASUMIRA 占い <span>週次タロット</span></a>
+  <a class="nav-back" href="../../index.html">← トップへ戻る</a>
+</nav>
+
+<main>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-orb orb1"></div>
+  <div class="hero-orb orb2"></div>
+  <div class="container hero-inner">
+    <p class="hero-tag">Weekly Tarot</p>
+    <h1 class="hero-title">今週のタロット</h1>
+    <p class="hero-period" id="hero-period">読み込み中...</p>
+    <p class="hero-update">毎週月曜 0:00 更新</p>
+  </div>
+</section>
+
+<!-- ── CARD + MESSAGE ── -->
+<section class="reading-section">
+  <div class="container">
+    <div class="reading-grid">
+
+      <!-- カードフリップ -->
+      <div class="card-stage">
+        <div class="card-scene" id="card-scene">
+          <div class="card-inner" id="card-inner">
+            <div class="card-back">
+              <img src="../タロット/images/CardBacks.jpg" alt="タロットカードの裏面">
+            </div>
+            <div class="card-front">
+              <img src="" alt="今週のタロットカード" id="card-img">
+            </div>
+          </div>
+          <div class="card-aura" id="card-aura"></div>
+        </div>
+        <div class="card-info">
+          <div class="card-number" id="card-number">—</div>
+          <div class="card-name-jp" id="card-name-jp">—</div>
+          <div class="card-name-en" id="card-name-en">—</div>
+        </div>
+      </div>
+
+      <!-- メッセージ -->
+      <div class="msg-area">
+        <div class="msg-eyebrow">今週のテーマ</div>
+        <h2 class="msg-theme" id="msg-theme">—</h2>
+        <div class="keyword-row" id="keyword-row"></div>
+        <div class="msg-body" id="msg-body"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── FOCUS TABS ── -->
+<section class="focus-section">
+  <div class="container">
+    <div class="sec-label">今週の焦点</div>
+    <div class="focus-tabs">
+      <button class="focus-tab-btn active" data-tab="overall">全体運</button>
+      <button class="focus-tab-btn" data-tab="work">仕事</button>
+      <button class="focus-tab-btn" data-tab="love">恋愛</button>
+    </div>
+    <div class="focus-tab-content active" id="tab-overall"></div>
+    <div class="focus-tab-content" id="tab-work"></div>
+    <div class="focus-tab-content" id="tab-love"></div>
+  </div>
+</section>
+
+<!-- ── LUCKY ── -->
+<section class="lucky-section">
+  <div class="container">
+    <div class="sec-label">今週を彩るヒント</div>
+    <div class="lucky-grid">
+      <div class="lucky-card">
+        <span class="lucky-label">Lucky Color</span>
+        <span class="lucky-value" id="lucky-color">—</span>
+      </div>
+      <div class="lucky-card">
+        <span class="lucky-label">Action</span>
+        <span class="lucky-value" id="lucky-action">—</span>
+      </div>
+      <div class="lucky-card">
+        <span class="lucky-label">Keyword</span>
+        <span class="lucky-value" id="lucky-keyword">—</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cta-section">
+  <div class="container">
+    <p class="cta-eyebrow">More</p>
+    <h3 class="cta-lead">このメッセージが、もう少し気になったら。</h3>
+    <p class="cta-sub">
+      カードの示す流れを、あなた自身の状況に重ねて深掘りしたい方へ。<br>
+      Google Meet でのオンライン電話相談を承っています。
+    </p>
+    <div class="cta-buttons">
+      <a href="https://mosh.jp/services/a0fd0418cb734cd4b465ba387ccd8336?openExternalBrowser=1" target="_blank" rel="noopener noreferrer" class="btn-consult">
+        個別相談を予約する（30分 ¥3,500）
+      </a>
+      <a href="https://lin.ee/OzDP0DQ" target="_blank" rel="noopener noreferrer" class="btn-line">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.003 2C6.547 2 2.005 5.866 2.005 10.618c0 3.016 1.793 5.672 4.487 7.236L5.5 21l3.586-1.742c.919.254 1.893.393 2.917.393 5.457 0 9.998-3.866 9.998-8.619C22.001 5.866 17.46 2 12.003 2z"/></svg>
+        LINE で更新を受け取る
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── NEXT WEEK HINT ── -->
+<div class="container next-hint-wrap">
+  <div class="next-hint">
+    <span class="next-hint-label">Next Week</span>
+    <p class="next-hint-text" id="next-hint-text">—</p>
+  </div>
+</div>
+
+<!-- ── ARCHIVE ── -->
+<section class="archive-section" id="archive-section">
+  <div class="container">
+    <div class="sec-label">バックナンバー</div>
+    <div class="archive-grid" id="archive-grid"></div>
+  </div>
+</section>
+
+<!-- ── OTHER READINGS ── -->
+<section class="ora-section">
+  <div class="container">
+    <p class="ora-label">Free Tools</p>
+    <p class="ora-title">無料占いも試してみる</p>
+    <div class="ora-grid">
+      <a href="../タロット/tarot.html" class="ora-card">
+        <span class="ora-icon">✦</span>
+        <span class="ora-name">タロット</span>
+        <span class="ora-sub">Celtic Cross</span>
+      </a>
+      <a href="../西洋占星術/horoscope.html" class="ora-card">
+        <span class="ora-icon">☽</span>
+        <span class="ora-name">西洋占星術</span>
+        <span class="ora-sub">Horoscope</span>
+      </a>
+      <a href="../四柱推命/shichusuimei.html" class="ora-card">
+        <span class="ora-icon">☯</span>
+        <span class="ora-name">四柱推命</span>
+        <span class="ora-sub">Four Pillars</span>
+      </a>
+      <a href="../数秘術/suuhijutsu.html" class="ora-card">
+        <span class="ora-icon">∞</span>
+        <span class="ora-name">数秘術</span>
+        <span class="ora-sub">Numerology</span>
+      </a>
+      <a href="../算命学/sanmeigaku.html" class="ora-card">
+        <span class="ora-icon">✧</span>
+        <span class="ora-name">算命学</span>
+        <span class="ora-sub">Sanmei</span>
+      </a>
+      <a href="../九星気学/kyuseikigaku.html" class="ora-card">
+        <span class="ora-icon">✶</span>
+        <span class="ora-name">九星気学</span>
+        <span class="ora-sub">Nine Stars</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>© 2025 ASUMIRA 占い</p>
+</footer>
+
+<script>
+/* ══════════════════════════════════════
+   週次コンテンツデータ
+   【更新方法】毎週月曜に新しいエントリを追加してください。
+   キー = その週の月曜日の日付（"YYYY-MM-DD" 形式）
+══════════════════════════════════════ */
+const WEEKLY_CONTENT = {
+
+  "2026-06-22": {
+    card: { number:"XVIII", nameJp:"月", nameEn:"The Moon", image:"../タロット/images/moon.jpg" },
+    period: "2026年6月22日（月）〜6月28日（日）",
+    theme: "見えないものを、感じ取る力",
+    keywords: ["直感", "不確かさ", "幻想", "変容"],
+    message: [
+      "今週は「月（The Moon）」のエネルギーが漂っています。物事がはっきりしない、答えが見えにくいと感じているかもしれません。しかしこのカードは「不確かさの中に立っていることを、怖がらないで」と語りかけています。",
+      "直感と感情が正確な情報を持っている週です。論理より感覚を信じてみてください。曖昧さに慣れることで、今まで見えなかった景色が見えてきます。"
+    ],
+    focus: {
+      overall: "感情の波が高くなりやすい週です。感受性が普段より研ぎ澄まされているため、一人の時間を意図的に作り、心を整えることが先決です。流れに逆らわず、ただ「今ここ」にいることを自分に許してあげてください。",
+      work: "状況がはっきりしない案件があっても、焦って白黒つけようとしない方が賢明です。相手の言葉より、雰囲気や態度から情報を読む週。重要な決断は来週以降に持ち越せるなら、そうする方が良い結果につながります。",
+      love: "相手の本当の気持ちを読み解こうとしすぎると、混乱が増します。今週は「感じる」ことに集中してください。相手の言葉よりも、一緒にいるときの空気感、目の動き、声のトーンを信じてみて。"
+    },
+    lucky: { color:"深い藍色・白", action:"夜空を5分だけ静かに眺める", keyword:"感受" },
+    nextHint: "来週は、霧が晴れるような清らかな光が差し込んでくるかもしれません。"
+  },
+
+  "2026-06-29": {
+    card: { number:"XVII", nameJp:"星", nameEn:"The Star", image:"../タロット/images/star.jpg" },
+    period: "2026年6月29日（月）〜7月5日（日）",
+    theme: "希望の光を、手放さないで",
+    keywords: ["希望", "浄化", "再生", "インスピレーション"],
+    message: [
+      "今週は「星（The Star）」があなたに語りかけています。先週まで続いていた緊張や疲れが少しずつほぐれていくような、穏やかな解放の流れが訪れます。理想が遠く感じるとき、この星は「それでもあなたは正しい方向を見ている」と伝えています。",
+      "焦りや自己批判を手放し、今自分が持っているものを一度静かに見つめ直してみてください。清らかな水が澱みをすすぐように、心の余白を作ることが今週の鍵です。"
+    ],
+    focus: {
+      overall: "解放と回復のエネルギーが流れる一週間です。体を丁寧に扱い、十分な休息を。水に触れること（入浴、雨音、川や海のそばを歩く）が心のリセットになります。小さな美しいものを意識して探してみてください。",
+      work: "成果が見えにくい局面でも、今週は着実に種が芽吹き始める時期です。評価を急がず、自分のペースを信じてください。ふと浮かんだアイデアは、流さずメモしておいて。",
+      love: "恋愛においては「待つ」ことに意味がある週です。相手への期待を手放したとき、自然な流れが生まれやすくなります。気になる人へは、無理に近づこうとしなくて大丈夫。あなたの誠実さは、すでに伝わっています。"
+    },
+    lucky: { color:"淡い水色・シルバー", action:"夜、窓の外を眺める静かな時間を作る", keyword:"浄化" },
+    nextHint: "来週は「内なる声」がより明確に聞こえてくるかもしれません。"
+  },
+
+  "2026-07-06": {
+    card: { number:"II", nameJp:"女教皇", nameEn:"The High Priestess", image:"../タロット/images/highpriestess.jpg" },
+    period: "2026年7月6日（月）〜7月12日（日）",
+    theme: "答えは、すでにあなたの中にある",
+    keywords: ["内省", "直感", "沈黙", "洞察"],
+    message: [
+      "今週は「女教皇（The High Priestess）」が扉の前に静かに立っています。このカードは「知っているのに、言葉にできない感覚」を表します。情報を増やすより、すでに自分の中にある答えに耳を澄ませることが大切な週。",
+      "誰かの意見や外側の情報に頼りすぎると、かえって迷路に入ってしまいやすい時期です。一人の時間、静寂の時間を意図的に作ってみてください。その沈黙の中に、あなたが探していたものがあります。"
+    ],
+    focus: {
+      overall: "直感力が冴える一週間です。夢が象徴的なメッセージを持つことも。手帳やノートに思いついたことを書き留めておくと、後で大切な気づきになるかもしれません。SNSから意識的に距離を取る時間を設けると、思考が澄んでいきます。",
+      work: "重要な決断は、情報収集より直感を信じる場面があります。「なんとなくしっくりこない」という感覚も大切な判断材料です。焦らず、もう一晩置いてから判断してみてください。",
+      love: "相手の言葉の裏側にある感情を、焦らず読み取る週です。告白より関係の深化に適した週なので、今は育てることに集中して。あなたの「感じ取る力」が、関係の質を高めます。"
+    },
+    lucky: { color:"白・深い青", action:"スマホを置いて15分だけ静かに過ごす", keyword:"洞察" },
+    nextHint: "来週は大きな転換のエネルギーが動き始めます。"
+  },
+
+  "2026-07-13": {
+    card: { number:"X", nameJp:"運命の輪", nameEn:"Wheel of Fortune", image:"../タロット/images/wheeloffortune.jpg" },
+    period: "2026年7月13日（月）〜7月19日（日）",
+    theme: "流れは、変わろうとしている",
+    keywords: ["転換", "変化", "チャンス", "巡り"],
+    message: [
+      "今週は「運命の輪（Wheel of Fortune）」が回り始めます。「ずっと同じ状態が続く」と思い込んでいたことが、少しずつ動き出す予感がする週です。いい方向への変化も、そうでない変化も、すべては大きな流れの一部。",
+      "抵抗せず、流れに乗ることが今週の鍵です。偶然の出会いや思いがけない情報が、重要なヒントになる可能性があります。「これは偶然ではないかもしれない」と感じた瞬間を、見逃さないでください。"
+    ],
+    focus: {
+      overall: "変化を恐れず受け入れることで、ラッキーが引き寄せられる週です。思い切ってやってみることに、今週は良い反応が返ってきやすいです。いつもより少し行動範囲を広げてみることが、予想外の展開につながるかもしれません。",
+      work: "環境の変化や予期しない展開に柔軟に対応できるかどうかが問われます。計画通りにいかないことも「ちょうど良い」と思えると、新しい可能性が開きます。今週来た仕事の話は、よく聞いてみる価値があります。",
+      love: "恋愛運に動きが出やすい週です。偶然の再会、予想外の展開など、「運命的な」感覚を伴う出来事が起きやすい時期。チャンスは一瞬なので、感覚を大切にして、少し勇気を出してみてください。"
+    },
+    lucky: { color:"ゴールド・黄色", action:"いつもと違うルートで帰り道を歩く", keyword:"転換" },
+    nextHint: "来週は、内側の強さが静かに試される週になりそうです。"
+  },
+
+  "2026-07-20": {
+    card: { number:"VIII", nameJp:"力", nameEn:"Strength", image:"../タロット/images/strength.jpg" },
+    period: "2026年7月20日（月）〜7月26日（日）",
+    theme: "やさしさが、最も強い武器",
+    keywords: ["柔剛", "忍耐", "包容力", "内なる強さ"],
+    message: [
+      "今週は「力（Strength）」があなたに語りかけています。このカードは、ライオンを強引に従わせるのではなく、優しく包み込むことで鎮める女性の姿が描かれています。強さとは「抑圧」ではなく「包容力」。",
+      "今週あなたが感じている葛藤や不安は、正面から戦うのではなく、ただ「そこにある」と認めることで和らいでいきます。感情を否定せず、でも飲み込まれずにいること——それが今週のテーマです。"
+    ],
+    focus: {
+      overall: "内面の強さを試される週ですが、同時に自分の柔軟性を発見できる週でもあります。「弱さを認める勇気」が、今週あなたを最も強くします。焦りを感じたら、深呼吸して「今、ここにいる」と自分に伝えてみてください。",
+      work: "難しい状況でも、焦らず丁寧に対処する姿勢が周囲の信頼を得ます。感情的になりそうな場面こそ、深呼吸してから言葉を選ぶと良い結果につながります。あなたの穏やかな対応が、チームの空気を変えます。",
+      love: "相手を変えようとするより、自分の揺らぎを落ち着かせることが先です。あなたの穏やかな在り方が、関係をより深いところへ連れて行きます。「今この人のそばにいられる」という感謝を、今週意識してみてください。"
+    },
+    lucky: { color:"深紅・白", action:"深呼吸を3回、意識してゆっくりと", keyword:"柔剛" },
+    nextHint: "来週は、新しい始まりのエネルギーが静かに芽吹きます。"
+  }
+
+};
+
+/* ══════════════════════════════════════
+   週の計算（月曜基点）
+══════════════════════════════════════ */
+function getMondayISO(date) {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  d.setDate(d.getDate() + diff);
+  return d.toISOString().slice(0, 10);
+}
+
+function findCurrentKey() {
+  const todayMonday = getMondayISO(new Date());
+  const keys = Object.keys(WEEKLY_CONTENT).sort();
+  if (WEEKLY_CONTENT[todayMonday]) return todayMonday;
+  let best = keys[0];
+  for (const k of keys) {
+    if (k <= todayMonday) best = k;
+  }
+  return best;
+}
+
+/* ══════════════════════════════════════
+   レンダリング
+══════════════════════════════════════ */
+function renderContent(key) {
+  const data = WEEKLY_CONTENT[key];
+  if (!data) return;
+
+  document.getElementById('hero-period').textContent = data.period;
+
+  document.getElementById('card-number').textContent = data.card.number;
+  document.getElementById('card-name-jp').textContent = data.card.nameJp;
+  document.getElementById('card-name-en').textContent = data.card.nameEn;
+  const cardImg = document.getElementById('card-img');
+  cardImg.src = data.card.image;
+  cardImg.alt = data.card.nameJp + 'のタロットカード';
+
+  document.getElementById('msg-theme').textContent = '「' + data.theme + '」';
+
+  const kwRow = document.getElementById('keyword-row');
+  kwRow.innerHTML = '';
+  data.keywords.forEach(kw => {
+    const s = document.createElement('span');
+    s.className = 'keyword-chip';
+    s.textContent = kw;
+    kwRow.appendChild(s);
+  });
+
+  document.getElementById('msg-body').innerHTML = data.message.map(p => `<p>${p}</p>`).join('');
+
+  document.getElementById('tab-overall').textContent = data.focus.overall;
+  document.getElementById('tab-work').textContent = data.focus.work;
+  document.getElementById('tab-love').textContent = data.focus.love;
+
+  document.getElementById('lucky-color').textContent = data.lucky.color;
+  document.getElementById('lucky-action').textContent = data.lucky.action;
+  document.getElementById('lucky-keyword').textContent = data.lucky.keyword;
+
+  document.getElementById('next-hint-text').textContent = data.nextHint;
+
+  // Archive: past weeks (up to 3)
+  const keys = Object.keys(WEEKLY_CONTENT).sort();
+  const idx = keys.indexOf(key);
+  const pastKeys = keys.slice(0, idx).reverse().slice(0, 3);
+  const archiveSection = document.getElementById('archive-section');
+  const archiveGrid = document.getElementById('archive-grid');
+
+  if (pastKeys.length === 0) {
+    archiveSection.style.display = 'none';
+  } else {
+    archiveGrid.innerHTML = '';
+    pastKeys.forEach(k => {
+      const d = WEEKLY_CONTENT[k];
+      const el = document.createElement('div');
+      el.className = 'archive-card';
+      el.innerHTML = `
+        <div class="archive-thumb">
+          <img src="${d.card.image}" alt="${d.card.nameJp}" loading="lazy">
+        </div>
+        <div>
+          <span class="archive-date">${d.period.split('〜')[0].trim()}</span>
+          <div class="archive-theme">${d.theme}</div>
+          <div class="archive-card-name">${d.card.nameJp} &mdash; ${d.card.nameEn}</div>
+        </div>`;
+      archiveGrid.appendChild(el);
+    });
+  }
+}
+
+/* ══════════════════════════════════════
+   カードフリップ
+══════════════════════════════════════ */
+function initCardFlip() {
+  const inner = document.getElementById('card-inner');
+  const aura = document.getElementById('card-aura');
+  let revealed = false;
+
+  function reveal() {
+    if (revealed) return;
+    revealed = true;
+    inner.classList.add('revealed');
+    setTimeout(() => { aura.style.opacity = '1'; }, 1700);
+  }
+
+  setTimeout(reveal, 1100);
+}
+
+/* ══════════════════════════════════════
+   タブ切り替え
+══════════════════════════════════════ */
+function initTabs() {
+  document.querySelectorAll('.focus-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.focus-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.focus-tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const content = document.getElementById('tab-' + btn.dataset.tab);
+      content.classList.add('active');
+    });
+  });
+}
+
+/* ══════════════════════════════════════
+   ナビゲーション
+══════════════════════════════════════ */
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('nav');
+  nav.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+/* ══════════════════════════════════════
+   起動
+══════════════════════════════════════ */
+(function () {
+  renderContent(findCurrentKey());
+  initCardFlip();
+  initTabs();
+})();
+
+/* ══════════════════════════════════════
+   星空パーティクル（既存ページと同一実装）
+══════════════════════════════════════ */
+(function () {
+  var c = document.getElementById('stars-canvas');
+  if (!c || !c.getContext) return;
+  var ctx = c.getContext('2d'), S = [];
+  function resize() {
+    c.width = window.innerWidth; c.height = window.innerHeight; S = [];
+    var n = Math.floor(c.width * c.height / 7500);
+    for (var i = 0; i < n; i++) S.push({ x: Math.random() * c.width, y: Math.random() * c.height, r: Math.random() * 1.1 + .2, a: Math.random() * .4 + .08, sp: Math.random() * .0018 + .0006, ph: Math.random() * Math.PI * 2 });
+  }
+  var SS = [], ssLast = 0, ssDelay = 2500 + Math.random() * 4000;
+  function ShootingStar() {
+    this.x = c.width * (0.45 + Math.random() * 0.55); this.y = c.height * (Math.random() * 0.28);
+    var ang = (155 + Math.random() * 15) * Math.PI / 180, spd = 5 + Math.random() * 4;
+    this.vx = Math.cos(ang) * spd; this.vy = Math.sin(ang) * spd;
+    this.len = 90 + Math.random() * 80; this.life = 0; this.maxLife = 60 + Math.random() * 35; this.op = 0;
+    var mag = Math.sqrt(this.vx * this.vx + this.vy * this.vy); this.nx = -this.vx / mag; this.ny = -this.vy / mag;
+  }
+  ShootingStar.prototype.update = function () { this.life++; this.x += this.vx; this.y += this.vy; var p = this.life / this.maxLife; this.op = p < 0.15 ? p / 0.15 : p > 0.65 ? Math.max(0, 1 - (p - 0.65) / 0.35) : 1; };
+  ShootingStar.prototype.draw = function () { var tx = this.x + this.nx * this.len, ty = this.y + this.ny * this.len; var g = ctx.createLinearGradient(this.x, this.y, tx, ty); g.addColorStop(0, 'rgba(255,252,245,' + this.op + ')'); g.addColorStop(0.25, 'rgba(230,210,165,' + (this.op * 0.7) + ')'); g.addColorStop(0.7, 'rgba(196,168,106,' + (this.op * 0.2) + ')'); g.addColorStop(1, 'rgba(196,168,106,0)'); ctx.save(); ctx.beginPath(); ctx.moveTo(this.x, this.y); ctx.lineTo(tx, ty); ctx.strokeStyle = g; ctx.lineWidth = 1.5; ctx.shadowColor = 'rgba(255,245,200,0.55)'; ctx.shadowBlur = 6; ctx.stroke(); var b = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, 9); b.addColorStop(0, 'rgba(255,255,252,' + this.op + ')'); b.addColorStop(0.35, 'rgba(240,225,180,' + (this.op * 0.5) + ')'); b.addColorStop(1, 'rgba(196,168,106,0)'); ctx.shadowBlur = 0; ctx.beginPath(); ctx.arc(this.x, this.y, 9, 0, Math.PI * 2); ctx.fillStyle = b; ctx.fill(); ctx.restore(); };
+  ShootingStar.prototype.isDead = function () { return this.life >= this.maxLife; };
+  function draw(t) { ctx.clearRect(0, 0, c.width, c.height); for (var i = 0; i < S.length; i++) { var s = S[i]; ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, 6.2832); ctx.fillStyle = 'rgba(245,242,235,' + (s.a * (.55 + .45 * Math.sin(t * s.sp + s.ph))) + ')'; ctx.fill(); } if (!ssLast) ssLast = t; if (t - ssLast > ssDelay) { SS.push(new ShootingStar()); ssLast = t; ssDelay = 2500 + Math.random() * 5000; } for (var j = SS.length - 1; j >= 0; j--) { SS[j].update(); SS[j].draw(); if (SS[j].isDead()) SS.splice(j, 1); } requestAnimationFrame(draw); }
+  resize(); window.addEventListener('resize', resize); requestAnimationFrame(draw);
+})();
+</script>
+
+</body>
+</html>
