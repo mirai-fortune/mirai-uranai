@@ -220,6 +220,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:fl
 .daiun-tbl .rel-chuu{color:var(--wood);font-size:11px;}
 .daiun-tbl .rel-san{color:var(--gold2);font-size:11px;}
 
+/* ── スクロールヒント ── */
+.daiun-scroll-hint{display:none;text-align:center;font-size:11px;color:var(--muted2);letter-spacing:.08em;padding:6px 0 10px;user-select:none;}
+
 /* ── RESPONSIVE ── */
 @media(max-width:900px){.form-grid{grid-template-columns:1fr;}.ai-people{grid-template-columns:1fr;}}
 @media(max-width:640px){
@@ -231,6 +234,25 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:fl
   .gousho-item{flex-direction:column; gap:16px; padding:24px 20px;}
   .section-person{padding:20px 16px;}
   .nav-logo span{display:none;}
+
+  /* 宿命陰占盤：横スクロールなしで収まるよう調整 */
+  .cmd-inner{padding:16px 12px 18px;}
+  .cmd-table{min-width:0;}
+  .cmd-table th,.cmd-table td{padding:8px 10px;}
+  .cmd-table td.rh{padding:8px 8px;font-size:9px;}
+  .cmd-table .ck,.cmd-table .cs,.cmd-table .czt{font-size:20px;}
+
+  /* 陽占（人体星図）：aspect-ratioを解除してコンテンツ量に合わせて縦に伸ばす */
+  .sm-cell{aspect-ratio:auto;min-height:80px;padding:10px 4px;}
+  .sm-cell.empty-cell{min-height:80px;}
+  .sm-cell-theme{margin-top:6px;}
+
+  /* 相性鑑定 統合星図：同上 */
+  .compat-chart{padding:20px 12px !important;}
+  .compat-chart .sm-cell{aspect-ratio:auto;padding:8px 4px;}
+
+  /* 大運・年運 スクロールヒント表示 */
+  .daiun-scroll-hint{display:block;}
 }
 
 #stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
@@ -1032,7 +1054,7 @@ function calcIndividual(){
       ${ip.line3 ? `<p class="daiun-interp-line"><span class="interp-src">${relLabel}</span>${ip.line3}</p>` : ''}`;
   }
 
-  let tbl = `<p class="daiun-title">大運（10年サイクル）</p><p class="daiun-sub">大運は${daiun.isForward ? '順行' : '逆行'}で${daiun.startAge}年立運です。</p><div style="overflow-x:auto;"><table class="daiun-tbl" id="daiun-tbl-el">`;
+  let tbl = `<p class="daiun-title">大運（10年サイクル）</p><p class="daiun-sub">大運は${daiun.isForward ? '順行' : '逆行'}で${daiun.startAge}年立運です。</p><p class="daiun-scroll-hint">← 左右にスクロールして確認できます →</p><div style="overflow-x:auto;" id="daiun-scroll-wrap"><table class="daiun-tbl" id="daiun-tbl-el">`;
 
   tbl += `<tr><td class="rh">年齢</td>`;
   allDu.forEach((du, i) => {
@@ -1084,6 +1106,20 @@ function calcIndividual(){
   const interpHTML = currDuIdx >= 0 ? `<div class="daiun-interp" id="si-daiun-interp">${renderDaiunInterp(currDuIdx)}</div>` : '';
   const daiunNote = `<p class="daiun-note">※大運は、宿命の星図に流れる「季節の潮流」です。生まれた時から始まり、約10年ごとに新たな運勢の流れへと切り替わります。算命学では大運の天干が「十大主星」として現れ、地支が「十二大従星」として個人のエネルギー状態を示します。各期間の星の組み合わせと命式全体の位相法（干支の関係性）を見極めることが鑑定の要となります。天中殺の期間は努力が空回りしやすいため、大きな決断は慎重に行ってください。</p>`;
   document.getElementById('si-daiun').innerHTML = tbl + interpHTML + daiunNote;
+
+  // 初期表示で「現在」列を中央に来るようスクロール
+  requestAnimationFrame(() => {
+    const wrap = document.getElementById('daiun-scroll-wrap');
+    const tblEl2 = document.getElementById('daiun-tbl-el');
+    if (wrap && tblEl2) {
+      const currTd = tblEl2.querySelector('td.curr');
+      if (currTd) {
+        const wrapRect = wrap.getBoundingClientRect();
+        const cellRect = currTd.getBoundingClientRect();
+        wrap.scrollLeft = wrap.scrollLeft + (cellRect.left - wrapRect.left) - (wrap.offsetWidth / 2 - currTd.offsetWidth / 2);
+      }
+    }
+  });
 
   const tblEl = document.getElementById('daiun-tbl-el');
   const interpEl = document.getElementById('si-daiun-interp');
@@ -1169,7 +1205,7 @@ function calcIndividual(){
       ${ip.line3 ? `<p class="daiun-interp-line"><span class="interp-src">${relLabel}</span>${ip.line3}</p>` : ''}`;
   }
 
-  let nTblH = `<p class="daiun-title">年運（1年サイクル）</p><p class="daiun-sub">各年の干支があなたの日干にどのような影響を与えるかを示します。</p><div style="overflow-x:auto;-webkit-overflow-scrolling:touch;"><table class="daiun-tbl" id="nenun-tbl-el">`;
+  let nTblH = `<p class="daiun-title">年運（1年サイクル）</p><p class="daiun-sub">各年の干支があなたの日干にどのような影響を与えるかを示します。</p><p class="daiun-scroll-hint">← 左右にスクロールして確認できます →</p><div style="overflow-x:auto;-webkit-overflow-scrolling:touch;" id="nenun-scroll-wrap"><table class="daiun-tbl" id="nenun-tbl-el">`;
 
   nTblH += `<tr><td class="rh">年</td>`;
   nenunYears.forEach((su, i) => {
@@ -1228,6 +1264,20 @@ function calcIndividual(){
   const nenunNote = `<p class="daiun-note">※ 年運とは、その年の干支が命式にどのような影響をもたらすかを読み解くものです。算命学では大運（10年周期）が人生の大きな潮流とすれば、年運はその流れに注ぐ1年ごとの支流にあたります。大運と年運の気が重なり合う年ほど、運勢の変化が顕著に現れやすいとされています。また、年運支が天中殺に入る年は結果が出にくく、準備と内省の時期として活用することが賢明です。</p>`;
 
   document.getElementById('si-nenun').innerHTML = nTblH + nenunInterpHTML + nenunNote;
+
+  // 初期表示で「現在」列を中央に来るようスクロール
+  requestAnimationFrame(() => {
+    const nWrap = document.getElementById('nenun-scroll-wrap');
+    const nTblEl2 = document.getElementById('nenun-tbl-el');
+    if (nWrap && nTblEl2) {
+      const currTd = nTblEl2.querySelector('td.curr');
+      if (currTd) {
+        const wrapRect = nWrap.getBoundingClientRect();
+        const cellRect = currTd.getBoundingClientRect();
+        nWrap.scrollLeft = nWrap.scrollLeft + (cellRect.left - wrapRect.left) - (nWrap.offsetWidth / 2 - currTd.offsetWidth / 2);
+      }
+    }
+  });
 
   const nTblEl = document.getElementById('nenun-tbl-el');
   const nInterpEl = document.getElementById('si-nenun-interp');
