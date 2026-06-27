@@ -518,6 +518,10 @@ nav a:hover { color: var(--cream); }
 .sns-id { font-size: 0.75rem; color: rgba(245,242,235,.4); letter-spacing: 0.05em; }
 .sns-card.line-card { border-color: rgba(6, 199, 85, 0.3); }
 .sns-card.line-card:hover { border-color: rgba(6, 199, 85, 0.6); }
+.sns-card.instagram-card { border-color: rgba(221, 42, 123, 0.3); }
+.sns-card.instagram-card:hover { border-color: rgba(221, 42, 123, 0.6); }
+.sns-card.note-card { border-color: rgba(62, 168, 255, 0.3); }
+.sns-card.note-card:hover { border-color: rgba(62, 168, 255, 0.6); }
 .sns-icon { width: 34px; height: 34px; margin-bottom: 10px; flex-shrink: 0; }
 
 /* --- LINE HEADER CTA BUTTON --- */
@@ -1201,11 +1205,30 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
           <span class="sns-name">LINE公式</span>
           <span class="sns-id">友達追加はこちら</span>
         </a>
-        <a href="https://www.instagram.com/mirai_reading/" target="_blank" rel="noopener noreferrer" class="sns-card glass-card">
+        <a href="https://www.instagram.com/mirai_reading/" target="_blank" rel="noopener noreferrer" class="sns-card glass-card instagram-card">
+          <svg class="sns-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <radialGradient id="ig-grad" cx="30%" cy="107%" r="150%">
+                <stop offset="0%" stop-color="#fdf497"/>
+                <stop offset="5%" stop-color="#fdf497"/>
+                <stop offset="45%" stop-color="#fd5949"/>
+                <stop offset="60%" stop-color="#d6249f"/>
+                <stop offset="90%" stop-color="#285AEB"/>
+              </radialGradient>
+            </defs>
+            <rect x="2" y="2" width="20" height="20" rx="5" fill="url(#ig-grad)"/>
+            <circle cx="12" cy="12" r="4.3" fill="none" stroke="white" stroke-width="2"/>
+            <circle cx="17.1" cy="6.9" r="1.2" fill="white"/>
+          </svg>
           <span class="sns-name">Instagram</span>
           <span class="sns-id">@mirai_reading</span>
         </a>
-        <a href="https://note.com/factbase_mirai" target="_blank" class="sns-card glass-card">
+        <a href="https://note.com/factbase_mirai" target="_blank" class="sns-card glass-card note-card">
+          <svg class="sns-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="4" fill="#3EA8FF"/>
+            <path d="M7.5 17V8.5Q7.5 6.5 10.5 6.5Q13.5 6.5 13.5 9V17"
+                  fill="none" stroke="white" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
           <span class="sns-name">Note (コラム)</span>
           <span class="sns-id">@factbase_mirai</span>
         </a>
