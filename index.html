@@ -516,6 +516,34 @@ nav a:hover { color: var(--cream); }
 .sns-card { text-decoration: none; display: flex; flex-direction: column; align-items: center; width: 160px; padding: 24px; }
 .sns-name { font-size: 0.9rem; margin-bottom: 4px; color: var(--cream); }
 .sns-id { font-size: 0.75rem; color: rgba(245,242,235,.4); letter-spacing: 0.05em; }
+.sns-card.line-card { border-color: rgba(6, 199, 85, 0.3); }
+.sns-card.line-card:hover { border-color: rgba(6, 199, 85, 0.6); }
+.sns-icon { width: 34px; height: 34px; margin-bottom: 10px; flex-shrink: 0; }
+
+/* --- LINE HEADER CTA BUTTON --- */
+.line-header-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  background: #06C755;
+  border-radius: 20px;
+  text-decoration: none;
+  color: #fff;
+  font-size: 0.78rem;
+  font-family: var(--font-sans);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: 16px;
+  box-shadow: 0 2px 14px rgba(6, 199, 85, 0.3);
+  transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.line-header-btn:hover { opacity: 0.88; transform: translateY(-1px); box-shadow: 0 4px 18px rgba(6, 199, 85, 0.4); }
+.line-header-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+@media (max-width: 768px) {
+  .line-header-btn { padding: 6px 14px; font-size: 0.72rem; margin-left: 0; }
+}
 
 footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--muted); letter-spacing: 0.1em; border-top: 1px solid var(--glass-border); }
 
@@ -727,6 +755,12 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
       <a href="#sns">SNS</a>
       <a href="https://forms.gle/kBvtDKEN1xj4Y3Xy8" target="_blank" rel="noopener noreferrer">お問い合わせ</a>
     </nav>
+    <a href="https://lin.ee/OzDP0DQ" target="_blank" rel="noopener noreferrer" class="line-header-btn" aria-label="LINE公式アカウントを友達追加する">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M12.003 2C6.547 2 2.005 5.866 2.005 10.618c0 3.016 1.793 5.672 4.487 7.236L5.5 21l3.586-1.742c.919.254 1.893.393 2.917.393 5.457 0 9.998-3.866 9.998-8.619C22.001 5.866 17.46 2 12.003 2z"/>
+      </svg>
+      友達追加
+    </a>
     <button class="hamburger" id="menu-toggle"
             aria-label="メニューを開く"
             aria-expanded="false"
@@ -1064,8 +1098,16 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
     <div class="container">
       <div class="section-title">
         <h2>繋がる</h2>
+        <p class="section-subtitle">LINE友達追加でイベント優先案内・最新情報をお届けします</p>
       </div>
       <div class="sns-grid">
+        <a href="https://lin.ee/OzDP0DQ" target="_blank" rel="noopener noreferrer" class="sns-card glass-card line-card">
+          <svg class="sns-icon" viewBox="0 0 24 24" fill="#06C755" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12.003 2C6.547 2 2.005 5.866 2.005 10.618c0 3.016 1.793 5.672 4.487 7.236L5.5 21l3.586-1.742c.919.254 1.893.393 2.917.393 5.457 0 9.998-3.866 9.998-8.619C22.001 5.866 17.46 2 12.003 2z"/>
+          </svg>
+          <span class="sns-name">LINE公式</span>
+          <span class="sns-id">友達追加はこちら</span>
+        </a>
         <a href="https://www.instagram.com/mirai_reading/" target="_blank" rel="noopener noreferrer" class="sns-card glass-card">
           <span class="sns-name">Instagram</span>
           <span class="sns-id">@mirai_reading</span>
