@@ -545,6 +545,40 @@ nav a:hover { color: var(--cream); }
   .line-header-btn { padding: 6px 14px; font-size: 0.72rem; margin-left: 0; }
 }
 
+/* --- CONSULTATION SECTION --- */
+.consult-section { padding: 80px 0; border-top: 1px solid var(--glass-border); }
+.consult-intro { text-align: center; color: var(--muted); margin-bottom: 48px; font-size: 0.95rem; line-height: 2; }
+.consult-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 28px; }
+.consult-card { position: relative; text-align: center; }
+.consult-card-body { padding: 44px 28px 36px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.consult-recommended { border-color: rgba(196, 168, 106, 0.5); }
+.consult-badge {
+  position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+  background: var(--gold); color: var(--bg-color);
+  font-size: 0.68rem; letter-spacing: 0.14em; padding: 4px 22px;
+  border-radius: 0 0 8px 8px; font-family: var(--font-serif); white-space: nowrap;
+}
+.consult-tag { font-size: 0.75rem; color: var(--gold); letter-spacing: 0.12em; }
+.consult-time { font-family: var(--font-serif); font-size: 3.5rem; line-height: 1; color: var(--cream); }
+.consult-time span { font-size: 1.1rem; }
+.consult-price { font-size: 1.5rem; color: var(--cream); font-family: var(--font-serif); }
+.consult-price .tax { font-size: 0.72rem; color: var(--muted); }
+.consult-features { list-style: none; color: var(--muted); font-size: 0.83rem; line-height: 2.1; text-align: left; align-self: stretch; }
+.consult-features li::before { content: '・'; color: var(--gold); }
+.consult-btn {
+  display: inline-block; padding: 11px 28px;
+  border: 1px solid var(--glass-border); border-radius: 24px;
+  text-decoration: none; color: var(--cream); font-size: 0.83rem; letter-spacing: 0.08em;
+  transition: border-color 0.3s, color 0.3s; margin-top: 8px;
+}
+.consult-btn:hover { border-color: var(--gold); color: var(--gold); }
+.consult-btn-gold { background: rgba(196,168,106,0.1); border-color: rgba(196,168,106,0.5); color: var(--gold); }
+.consult-btn-gold:hover { background: rgba(196,168,106,0.2); border-color: var(--gold); }
+.consult-note { text-align: center; font-size: 0.78rem; color: rgba(245,242,235,.35); letter-spacing: 0.06em; }
+@media (max-width: 768px) {
+  .consult-grid { grid-template-columns: 1fr; max-width: 340px; margin: 0 auto 28px; }
+}
+
 footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--muted); letter-spacing: 0.1em; border-top: 1px solid var(--glass-border); }
 
 /* --- VOICES (お客様の声) SECTION --- */
@@ -703,6 +737,7 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
   nav.open a:nth-of-type(6) { transition-delay: 0.36s; }
   nav.open a:nth-of-type(7) { transition-delay: 0.42s; }
   nav.open a:nth-of-type(8) { transition-delay: 0.48s; }
+  nav.open a:nth-of-type(9) { transition-delay: 0.54s; }
 }
 </style>
 <script type="application/ld+json">
@@ -749,6 +784,7 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
       <a href="#services">無料占い</a>
       <a href="#about">ご挨拶</a>
       <a href="#voices">お客様の声</a>
+      <a href="#consult">ご相談</a>
       <a href="#partners">提携ブランド</a>
       <a href="#marche">活動実績</a>
       <a href="#faq">FAQ</a>
@@ -873,7 +909,7 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
           占い師様向けのご活用・ご相談は、<a href="https://forms.gle/kBvtDKEN1xj4Y3Xy8" target="_blank" rel="noopener noreferrer" style="color: var(--gold); text-decoration: underline; text-underline-offset: 3px;">お問い合わせフォーム</a>よりお気軽にどうぞ。
         </p>
         <p>
-          コンテンツを試してみて、「もう少し深く話したい」「頭の中を整理したい」と感じたときは、ZoomまたはGoogle Meetを使ったオンライン電話相談も承っています。WEB相談のため、<strong>全国どこからでも</strong>ご利用いただけます。一人で抱え込まず、まずはお気軽にご相談ください。
+          コンテンツを試してみて、「もう少し深く話したい」「頭の中を整理したい」と感じたときは、Google Meetを使った<a href="#consult" style="color: var(--gold); text-decoration: underline; text-underline-offset: 3px;">オンライン電話相談</a>も承っています。WEB相談のため、<strong>全国どこからでも</strong>ご利用いただけます。一人で抱え込まず、まずはお気軽にご相談ください。
         </p>
       </div>
     </div>
@@ -968,6 +1004,63 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
         </div>
 
       </div>
+    </div>
+  </section>
+
+  <section id="consult" class="consult-section">
+    <div class="container">
+      <div class="section-title reveal">
+        <h2>オンライン電話相談</h2>
+        <p class="section-subtitle">Google Meet にて全国どこからでもご利用いただけます</p>
+      </div>
+      <p class="consult-intro reveal">
+        「もう少し深く話したい」と感じたときは、ご相談ください。<br>
+        占いコンテンツをヒントにしながら、あなたのモヤモヤを一緒に整理します。
+      </p>
+      <div class="consult-grid">
+
+        <div class="glass-card consult-card reveal">
+          <div class="consult-card-body">
+            <span class="consult-tag">お試し</span>
+            <div class="consult-time">10<span>分</span></div>
+            <div class="consult-price">¥1,000<span class="tax">（税込）</span></div>
+            <ul class="consult-features">
+              <li>電話相談が初めての方</li>
+              <li>まず雰囲気を知りたい方</li>
+            </ul>
+            <a href="https://mosh.jp/services/6a8ff271305846c6acf9b8e74f21158e?openExternalBrowser=1" target="_blank" rel="noopener noreferrer" class="consult-btn">予約する &rarr;</a>
+          </div>
+        </div>
+
+        <div class="glass-card consult-card consult-recommended reveal" style="transition-delay: 0.1s;">
+          <div class="consult-badge">おすすめ</div>
+          <div class="consult-card-body">
+            <span class="consult-tag">スタンダード</span>
+            <div class="consult-time">30<span>分</span></div>
+            <div class="consult-price">¥3,500<span class="tax">（税込）</span></div>
+            <ul class="consult-features">
+              <li>具体的な悩みを整理したい</li>
+              <li>一人で考えると堂々巡りになる</li>
+            </ul>
+            <a href="https://mosh.jp/services/a0fd0418cb734cd4b465ba387ccd8336?openExternalBrowser=1" target="_blank" rel="noopener noreferrer" class="consult-btn consult-btn-gold">予約する &rarr;</a>
+          </div>
+        </div>
+
+        <div class="glass-card consult-card reveal" style="transition-delay: 0.2s;">
+          <div class="consult-card-body">
+            <span class="consult-tag">じっくり</span>
+            <div class="consult-time">60<span>分</span></div>
+            <div class="consult-price">¥6,000<span class="tax">（税込）</span></div>
+            <ul class="consult-features">
+              <li>複数の悩みをまとめて整理</li>
+              <li>人生の節目にいる方</li>
+            </ul>
+            <a href="https://mosh.jp/services/921064e4144c456cbec581b65f701393?openExternalBrowser=1" target="_blank" rel="noopener noreferrer" class="consult-btn">予約する &rarr;</a>
+          </div>
+        </div>
+
+      </div>
+      <p class="consult-note reveal">ご予約はMOSH経由となります。ご予約後、Google MeetのURLをお送りします。</p>
     </div>
   </section>
 
