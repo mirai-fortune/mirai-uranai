@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/mairo/OneDrive/�f�X�N�g�b�v/**)",
+      "WebFetch(domain:rensa.jp.net)",
+      "PowerShell(Head -50)"
+    ]
+  }
+}
