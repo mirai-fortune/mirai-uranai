@@ -18,7 +18,16 @@
 <meta name="twitter:title" content="ASUMIRA 占い │ モヤモヤを整理する占い">
 <meta name="twitter:description" content="モヤモヤを整理する占い。四柱推命・カバラ数秘術・タロット・算命学・西洋占星術・九星気学の6種を無料で体験できます。">
 <meta name="twitter:image" content="https://mirai-fortune.github.io/mirai-uranai/images/ogp.png">
+<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23030611'/><text x='16' y='23' font-family='Georgia,serif' font-size='20' font-weight='400' fill='%23c4a86a' text-anchor='middle'>A</text></svg>">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-33DC291LJ9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-33DC291LJ9');
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
@@ -122,8 +131,10 @@ nav a:hover::after { width: 100%; }
 .hero {
   height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 40px;
   position: relative;
 }
 .hero::before {
@@ -176,45 +187,124 @@ nav a:hover::after { width: 100%; }
 }
 @keyframes fadeUpLine { to { opacity: 1; transform: translateY(0); } }
 
-/* --- SCROLL INDICATOR --- */
-.scroll-indicator {
-  position: absolute;
-  bottom: 36px;
-  left: 50%;
-  transform: translateX(-50%);
+/* --- HERO CTA BUTTONS --- */
+.hero-cta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUpLine 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  animation-delay: 0.8s;
+}
+.hero-cta-btn {
+  display: inline-block;
+  padding: 13px 32px;
+  border-radius: 28px;
+  text-decoration: none;
+  font-size: 0.88rem;
+  letter-spacing: 0.08em;
+  font-family: var(--font-sans);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+.hero-cta-primary {
+  background: rgba(196, 168, 106, 0.1);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+}
+.hero-cta-primary:hover {
+  background: rgba(196, 168, 106, 0.22);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(196, 168, 106, 0.2);
+}
+.hero-cta-secondary {
+  border: 1px solid var(--glass-border);
+  color: var(--muted);
+}
+.hero-cta-secondary:hover {
+  border-color: rgba(196, 168, 106, 0.4);
+  color: var(--cream);
+  transform: translateY(-2px);
+}
+
+
+/* --- WEEKLY TAROT STRIP --- */
+.weekly-tarot-strip { padding: 40px 0 60px; }
+.weekly-tarot-card {
+  display: block;
+  text-decoration: none;
+  color: var(--cream);
+}
+.weekly-tarot-inner {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 36px 44px;
+}
+.weekly-tarot-left {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  z-index: 2;
-  padding: 8px 16px;
-  opacity: 0;
-  transition: opacity 0.6s ease;
+  flex-shrink: 0;
+  padding-right: 40px;
+  border-right: 1px solid var(--glass-border);
 }
-.scroll-indicator.visible { opacity: 1; }
-.scroll-indicator.hidden  { opacity: 0; pointer-events: none; }
-.scroll-label {
+.weekly-badge {
+  font-size: 0.63rem;
+  letter-spacing: 0.14em;
+  color: var(--bg-color);
+  background: var(--gold);
+  padding: 3px 12px;
+  border-radius: 20px;
   font-family: var(--font-sans);
-  font-size: 0.62rem;
-  letter-spacing: 0.24em;
+  white-space: nowrap;
+  animation: badgePulse 2.8s ease-in-out infinite;
+}
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(196, 168, 106, 0); }
+  50%       { box-shadow: 0 0 0 5px rgba(196, 168, 106, 0.18); }
+}
+.weekly-tag {
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  color: var(--gold);
+  font-family: var(--font-serif);
+}
+.weekly-tarot-body {
+  flex: 1;
+  padding: 0 40px;
+}
+.weekly-tarot-title {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+.weekly-tarot-desc {
   color: var(--muted);
-  text-transform: uppercase;
+  font-size: 0.88rem;
+  line-height: 1.8;
 }
-.scroll-chevron {
-  width: 14px;
-  height: 14px;
-  border-right: 1px solid var(--gold);
-  border-bottom: 1px solid var(--gold);
-  transform: rotate(45deg);
-  animation: scrollBounce 1.8s ease infinite;
-  opacity: 0.8;
+.weekly-tarot-cta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--gold);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  flex-shrink: 0;
+  transition: gap 0.3s ease;
 }
-@keyframes scrollBounce {
-  0%, 100% { transform: translateY(0)   rotate(45deg); opacity: 0.8; }
-  50%       { transform: translateY(7px) rotate(45deg); opacity: 1;   }
+.weekly-tarot-card:hover .weekly-tarot-cta { gap: 18px; }
+@media (max-width: 768px) {
+  .weekly-tarot-inner { flex-direction: column; gap: 20px; padding: 28px 24px; text-align: center; }
+  .weekly-tarot-left { flex-direction: row; padding-right: 0; border-right: none; padding-bottom: 16px; border-bottom: 1px solid var(--glass-border); width: 100%; justify-content: center; }
+  .weekly-tarot-body { padding: 0; }
+  .weekly-tarot-desc { display: none; }
+  .weekly-tarot-title { margin-bottom: 0; }
+  .weekly-tarot-cta { justify-content: center; }
 }
 
 /* --- SECTION TITLES --- */
@@ -282,7 +372,6 @@ nav a:hover::after { width: 100%; }
 .about-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
   aspect-ratio: 3 / 2;
   object-fit: cover;
   border-radius: 8px;
@@ -694,6 +783,8 @@ nav a:hover::after { width: 100%; }
 }
 
 footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--muted); letter-spacing: 0.1em; border-top: 1px solid var(--glass-border); }
+.footer-link { color: var(--muted); text-decoration: none; font-size: 0.75rem; letter-spacing: 0.1em; transition: color 0.3s; margin: 0 10px; }
+.footer-link:hover { color: var(--gold); }
 
 /* --- VOICES (お客様の声) SECTION --- */
 .voices-section { padding: 80px 0; }
@@ -762,6 +853,8 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
   .hero-content { flex-direction: column; align-items: center; gap: 40px; margin-top: 80px; }
   .hero-title { writing-mode: horizontal-tb; font-size: 1.8rem; text-align: center; }
   .hero-desc { writing-mode: horizontal-tb; height: auto; padding-top: 0; text-align: center; padding: 0 16px; letter-spacing: 0.05em;}
+  .hero-cta { gap: 12px; }
+  .hero-cta-btn { font-size: 0.85rem; padding: 12px 24px; }
   .about-flex { flex-direction: column; text-align: left; gap: 32px; padding: 40px 24px !important; }
   .about-img-wrap { width: 100%; max-width: 360px; margin: 0 auto; }
   .partners-grid { grid-template-columns: 1fr; }
@@ -1091,7 +1184,33 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         "addressCountry": "JP"
       },
       "areaServed": "JP",
-      "priceRange": "無料"
+      "priceRange": "無料〜¥6,000",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "オンライン電話相談 お試し",
+          "description": "電話相談が初めての方向け。雰囲気を確かめたい方に。",
+          "price": "1000",
+          "priceCurrency": "JPY",
+          "url": "https://mosh.jp/services/6a8ff271305846c6acf9b8e74f21158e"
+        },
+        {
+          "@type": "Offer",
+          "name": "オンライン電話相談 スタンダード",
+          "description": "具体的な悩みを整理したい方に。最もお選びいただいているプラン。",
+          "price": "3500",
+          "priceCurrency": "JPY",
+          "url": "https://mosh.jp/services/a0fd0418cb734cd4b465ba387ccd8336"
+        },
+        {
+          "@type": "Offer",
+          "name": "オンライン電話相談 じっくり",
+          "description": "複数の悩みをまとめて整理したい方・人生の節目にいる方に。",
+          "price": "6000",
+          "priceCurrency": "JPY",
+          "url": "https://mosh.jp/services/921064e4144c456cbec581b65f701393"
+        }
+      ]
     }
   ]
 }
@@ -1161,10 +1280,31 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         次の一歩になる。
       </p>
     </div>
-    <button class="scroll-indicator" id="scroll-indicator" aria-label="スクロールして続きを見る">
-      <span class="scroll-label">Scroll</span>
-      <span class="scroll-chevron"></span>
-    </button>
+    <div class="hero-cta">
+      <a href="#services" class="hero-cta-btn hero-cta-primary">無料で占ってみる &rarr;</a>
+      <a href="#consult" class="hero-cta-btn hero-cta-secondary">オンライン相談を予約する</a>
+    </div>
+  </section>
+
+  <section class="weekly-tarot-strip">
+    <div class="container">
+      <a href="占い/weekly/index.html" class="weekly-tarot-card glass-card reveal">
+        <div class="weekly-tarot-inner">
+          <div class="weekly-tarot-left">
+            <span class="weekly-badge">毎週更新</span>
+            <span class="weekly-tag">WEEKLY TAROT</span>
+          </div>
+          <div class="weekly-tarot-body">
+            <h2 class="weekly-tarot-title">今週のタロット</h2>
+            <p class="weekly-tarot-desc">今週のエネルギーを読み解くメッセージをお届けしています。カードが示す流れを、あなたの一週間のヒントに。</p>
+          </div>
+          <div class="weekly-tarot-cta">
+            <span>メッセージを読む</span>
+            <span>&rarr;</span>
+          </div>
+        </div>
+      </a>
+    </div>
   </section>
 
   <section id="services" class="container">
@@ -1173,7 +1313,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
     </div>
     <div class="navigation-grid">
       <a href="占い/四柱推命/shichusuimei.html" class="nav-card glass-card reveal">
-        <div class="img-wrapper"><img src="images/shichusuimei.png?v=2" alt="四柱推命" class="nav-card-img"></div>
+        <div class="img-wrapper"><img src="images/shichusuimei.png?v=2" alt="四柱推命" loading="lazy" class="nav-card-img"></div>
         <div class="nav-card-body">
           <span class="card-tag">生涯のロードマップ・本質</span>
           <h3>四柱推命</h3>
@@ -1182,7 +1322,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         </div>
       </a>
       <a href="占い/数秘術/suuhijutsu.html" class="nav-card glass-card reveal" style="transition-delay: 0.1s;">
-        <div class="img-wrapper"><img src="images/suuhijutsu.png?v=2" alt="カバラ数秘術" class="nav-card-img"></div>
+        <div class="img-wrapper"><img src="images/suuhijutsu.png?v=2" alt="カバラ数秘術" loading="lazy" class="nav-card-img"></div>
         <div class="nav-card-body">
           <span class="card-tag">人生のテーマ・才能の数字</span>
           <h3>カバラ数秘術</h3>
@@ -1191,7 +1331,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         </div>
       </a>
       <a href="占い/タロット/tarot.html" class="nav-card glass-card reveal" style="transition-delay: 0.2s;">
-        <div class="img-wrapper"><img src="images/tarot.png?v=2" alt="タロットカード" class="nav-card-img"></div>
+        <div class="img-wrapper"><img src="images/tarot.png?v=2" alt="タロットカード" loading="lazy" class="nav-card-img"></div>
         <div class="nav-card-body">
           <span class="card-tag">今の選択、直近の未来のヒント</span>
           <h3>タロットカード</h3>
@@ -1200,7 +1340,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         </div>
       </a>
       <a href="占い/算命学/sanmeigaku.html" class="nav-card glass-card reveal" style="transition-delay: 0.3s;">
-        <div class="img-wrapper"><img src="images/sanmeigaku.png?v=2" alt="算命学" class="nav-card-img"></div>
+        <div class="img-wrapper"><img src="images/sanmeigaku.png?v=2" alt="算命学" loading="lazy" class="nav-card-img"></div>
         <div class="nav-card-body">
           <span class="card-tag">運命の構造・天中殺・大運</span>
           <h3>算命学</h3>
@@ -1209,7 +1349,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         </div>
       </a>
       <a href="占い/西洋占星術/horoscope.html" class="nav-card glass-card reveal" style="transition-delay: 0.4s;">
-        <div class="img-wrapper"><img src="images/horoscope.png?v=2" alt="西洋占星術" class="nav-card-img"></div>
+        <div class="img-wrapper"><img src="images/horoscope.png?v=2" alt="西洋占星術" loading="lazy" class="nav-card-img"></div>
         <div class="nav-card-body">
           <span class="card-tag">魂の設計図・星の配置</span>
           <h3>西洋占星術</h3>
@@ -1218,7 +1358,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         </div>
       </a>
       <a href="占い/九星気学/kyuseikigaku.html" class="nav-card glass-card reveal" style="transition-delay: 0.5s;">
-        <div class="img-wrapper"><img src="images/kyuseikigaku.png?v=2" alt="九星気学" class="nav-card-img"></div>
+        <div class="img-wrapper"><img src="images/kyuseikigaku.png?v=2" alt="九星気学" loading="lazy" class="nav-card-img"></div>
         <div class="nav-card-body">
           <span class="card-tag">生まれ持つ気の星・本質と相性</span>
           <h3>九星気学</h3>
@@ -1234,7 +1374,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
 <section id="about" class="about-section container">
     <div class="about-flex glass-card reveal" style="padding: 60px 40px;">
       <div class="about-img-wrap">
-        <img src="images/profile.png" alt="ASUMIRA 占い 主宰" class="about-img">
+        <img src="images/profile.png" alt="ASUMIRA 占い 主宰" loading="lazy" class="about-img">
       </div>
       <div class="about-text">
         <span class="role">Facilitator</span>
@@ -1419,7 +1559,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
       
       <div class="glass-card partner-card coming-soon reveal">
         <div class="partner-img-wrapper">
-          <img src="images/partner_miradrop.png" alt="mira drop" class="partner-card-img">
+          <img src="images/partner_miradrop.png" alt="mira drop" loading="lazy" class="partner-card-img">
         </div>
         <div class="partner-body">
           <span class="tag">Selected Partner / Resin Accessories</span>
@@ -1431,7 +1571,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
 
       <div class="glass-card partner-card coming-soon reveal" style="transition-delay: 0.1s;">
         <div class="partner-img-wrapper">
-          <img src="images/partner_blessme.png" alt="bless me" class="partner-card-img">
+          <img src="images/partner_blessme.png" alt="bless me" loading="lazy" class="partner-card-img">
         </div>
         <div class="partner-body">
           <span class="tag">Selected Partner / Power Stone</span>
@@ -1443,7 +1583,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
 
       <div class="glass-card partner-card coming-soon reveal" style="transition-delay: 0.2s;">
         <div class="partner-img-wrapper">
-          <img src="images/partner_otsune.jpg?v=2" alt="おつねストーン" class="partner-card-img">
+          <img src="images/partner_otsune.jpg?v=2" alt="おつねストーン" loading="lazy" class="partner-card-img">
         </div>
         <div class="partner-body">
           <span class="tag">Selected Partner / School & Stone</span>
@@ -1455,7 +1595,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
 
       <div class="glass-card partner-card coming-soon reveal" style="transition-delay: 0.3s;">
         <div class="partner-img-wrapper">
-          <img src="images/partner_asumi.png" alt="オリジナル手相鑑定書" class="partner-card-img">
+          <img src="images/partner_asumi.png" alt="オリジナル手相鑑定書" loading="lazy" class="partner-card-img">
         </div>
         <div class="partner-body">
           <span class="tag">Selected Partner / Palm Reading</span>
@@ -1467,7 +1607,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
 
       <div class="glass-card partner-card coming-soon reveal" style="transition-delay: 0.4s;">
         <div class="partner-img-wrapper">
-          <img src="images/partner_sia.png" alt="オンラインヨーガクラス" class="partner-card-img">
+          <img src="images/partner_sia.png" alt="オンラインヨーガクラス" loading="lazy" class="partner-card-img">
         </div>
         <div class="partner-body">
           <span class="tag">Selected Partner / Online Yoga</span>
@@ -1647,7 +1787,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
           <span class="sns-name">Instagram</span>
           <span class="sns-id">@mirai_reading</span>
         </a>
-        <a href="https://note.com/factbase_mirai" target="_blank" class="sns-card glass-card note-card">
+        <a href="https://note.com/factbase_mirai" target="_blank" rel="noopener noreferrer" class="sns-card glass-card note-card">
           <svg class="sns-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <rect width="24" height="24" rx="5" fill="white"/>
             <path fill="black" fill-rule="evenodd"
@@ -1664,8 +1804,8 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
 <footer>
   <div class="container">
     <p style="margin-bottom:12px;">
-      <a href="privacy.html" style="color:var(--muted);text-decoration:none;font-size:0.75rem;letter-spacing:0.1em;transition:color 0.3s;margin:0 10px;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">プライバシーポリシー</a>
-      <a href="tokushoho.html" style="color:var(--muted);text-decoration:none;font-size:0.75rem;letter-spacing:0.1em;transition:color 0.3s;margin:0 10px;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">特定商取引法</a>
+      <a href="privacy.html" class="footer-link">プライバシーポリシー</a>
+      <a href="tokushoho.html" class="footer-link">特定商取引法</a>
     </p>
     <p>&copy; 2026 ASUMIRA 占い. All rights reserved.</p>
   </div>
@@ -1686,19 +1826,10 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
   }, observerOptions);
 
   const header = document.getElementById('header');
-  const scrollIndicator = document.getElementById('scroll-indicator');
 
   window.addEventListener('scroll', () => {
     if (window.scrollY > 50) header.classList.add('scrolled');
     else header.classList.remove('scrolled');
-
-    if (window.scrollY > 80) scrollIndicator.classList.add('hidden');
-  });
-
-  setTimeout(() => scrollIndicator.classList.add('visible'), 1800);
-
-  scrollIndicator.addEventListener('click', () => {
-    document.getElementById('services').scrollIntoView({ behavior: 'smooth' });
   });
 
   /* =========================================
@@ -2117,7 +2248,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
   }
 
   initParticles();
-  animateParticles();
+  requestAnimationFrame(animateParticles);
 
   // ハンバーガーメニュー
   const menuToggle = document.getElementById('menu-toggle');
