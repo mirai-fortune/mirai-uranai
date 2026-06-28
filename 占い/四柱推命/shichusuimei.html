@@ -191,7 +191,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:fl
 .daiun-tbl .rel-san{color:var(--gold2);font-size:11px;}
 
 /* ── SCROLL HINT ── */
-.scroll-hint{display:flex;align-items:center;gap:12px;margin-bottom:20px;font-family:'Cormorant Garamond',serif;font-size:10px;letter-spacing:.16em;color:var(--muted2);}
+.scroll-hint{display:none;align-items:center;gap:12px;margin-bottom:20px;font-family:'Cormorant Garamond',serif;font-size:10px;letter-spacing:.16em;color:var(--muted2);}
 .scroll-hint::before,.scroll-hint::after{content:'';flex:1;height:1px;background:var(--muted2);opacity:.3;}
 
 /* ── SECTION DIVIDER ── */
@@ -386,7 +386,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:fl
 
 /* ── RESPONSIVE ── */
 @media(max-width:900px){.form-grid,.form-grid-3{grid-template-columns:1fr;}.analysis-grid{grid-template-columns:1fr;}.compat-charts{grid-template-columns:1fr;}.num-overview{grid-template-columns:repeat(2,1fr);}.ndc-grid2{grid-template-columns:1fr;}.ai-people{grid-template-columns:1fr;}}
-@media(max-width:640px){nav{padding:14px 18px;}.hero,.panel-body{padding-left:18px;padding-right:18px;}.mode-nav{padding:0 18px;}.form-card{padding:24px 18px;}.ndc{padding:28px 18px;}.analysis-card{padding:24px 18px;}.gogyou-card,.daiun-card{padding:24px 18px;}.gogyou-balance-row{flex-direction:column!important;align-items:stretch!important;gap:4px;}.gogyou-balance-row>span{width:100%;}.section-person{padding:20px 16px;}.meishiki{grid-template-columns:repeat(4,1fr);}.meishiki.three-col{grid-template-columns:repeat(3,1fr);}.pillar-stem,.pillar-branch{font-size:20px;}.pillar-main{padding:10px 3px;}.pillar-top,.pillar-bottom{padding:8px 4px;}.pillar-tsuhen{font-size:10px;}.pillar-juni{font-size:10px;}.pillar-elem-tag{font-size:8px;}.pillar-hidden{font-size:9px;}.pillar-none{min-height:72px;font-size:11px;}.sm-pillar-kan,.sm-pillar-shi{font-size:20px;}.sm-pillar-main{padding:12px 4px;}.sm-pillar-top,.sm-pillar-bottom{padding:8px 4px;}.nav-logo span{display:none;}.cmd-inner{padding:14px 10px;}.cmd-table{min-width:0;}.cmd-table th,.cmd-table td{padding:8px 5px;}.cmd-table td.rh{padding:8px 7px;font-size:9px;min-width:40px;}.cmd-table .ck,.cmd-table .cs{font-size:18px;}.cmd-table .ct,.cmd-table .cz,.cmd-table .czt,.cmd-table .cr{font-size:11px;}}
+@media(max-width:640px){nav{padding:14px 18px;}.hero,.panel-body{padding-left:18px;padding-right:18px;}.mode-nav{padding:0 18px;}.form-card{padding:24px 18px;}.ndc{padding:28px 18px;}.analysis-card{padding:24px 18px;}.gogyou-card,.daiun-card{padding:24px 18px;}.gogyou-balance-row{flex-direction:column!important;align-items:stretch!important;gap:4px;}.gogyou-balance-row>span{width:100%;}.section-person{padding:20px 16px;}.meishiki{grid-template-columns:repeat(4,1fr);}.meishiki.three-col{grid-template-columns:repeat(3,1fr);}.pillar-stem,.pillar-branch{font-size:20px;}.pillar-main{padding:10px 3px;}.pillar-top,.pillar-bottom{padding:8px 4px;}.pillar-tsuhen{font-size:10px;}.pillar-juni{font-size:10px;}.pillar-elem-tag{font-size:8px;}.pillar-hidden{font-size:9px;}.pillar-none{min-height:72px;font-size:11px;}.sm-pillar-kan,.sm-pillar-shi{font-size:20px;}.sm-pillar-main{padding:12px 4px;}.sm-pillar-top,.sm-pillar-bottom{padding:8px 4px;}.nav-logo span{display:none;}.cmd-inner{padding:14px 10px;}.cmd-table{min-width:0;}.cmd-table th,.cmd-table td{padding:8px 5px;}.cmd-table td.rh{padding:8px 7px;font-size:9px;min-width:40px;}.cmd-table .ck,.cmd-table .cs{font-size:18px;}.cmd-table .ct,.cmd-table .cz,.cmd-table .czt,.cmd-table .cr{font-size:11px;}.scroll-hint{display:flex;}}
 
 /* ── TAROT CELTIC CROSS ─────────────────────────────────────── */
 #panel-tarot .panel-body{max-width:1040px;margin:0 auto;}
@@ -1557,7 +1557,7 @@ function calcIndividual(){
       ${ip.line3?`<p class="daiun-interp-line"><span class="interp-src">${relLabel}</span>${ip.line3}</p>`:''}`;
   }
 
-  let tbl=`<p class="daiun-title">大運（10年サイクル）</p><p class="daiun-sub">大運は${daiun.isForward?'順行':'逆行'}で${daiun.startAge}年立運です。</p><p class="scroll-hint">横にスクロールできます</p><div style="overflow-x:auto;"><table class="daiun-tbl" id="daiun-tbl-el">`;
+  let tbl=`<p class="daiun-title">大運（10年サイクル）</p><p class="daiun-sub">大運は${daiun.isForward?'順行':'逆行'}で${daiun.startAge}年立運です。</p><p class="scroll-hint">← 左右にスクロールして確認できます →</p><div style="overflow-x:auto;" id="daiun-scroll-wrap"><table class="daiun-tbl" id="daiun-tbl-el">`;
 
   // 年齢 row
   tbl+=`<tr><td class="rh">年齢</td>`;
@@ -1607,6 +1607,20 @@ function calcIndividual(){
   const interpHTML=currDuIdx>=0?`<div class="daiun-interp" id="si-daiun-interp">${renderInterp(currDuIdx)}</div>`:'';
   const daiunNote=`<p class="daiun-note">※大運は、人生を流れる季節のリズムに例えることができます。生まれた時期を起点として、春・夏・秋・冬のように一定の周期で運勢の流れが移り変わります。中には、その流れが通常と逆の順序で巡る方もいます。流派によって解釈は異なりますが、一般的には約10年ごとに新たな大運の時期へと切り替わるとされています。鑑定のポイントは、各大運の干支が日主（日干）にとって力を与える流れかどうか、また命式全体と調和する循環になっているかを見極めることにあります。</p>`;
   document.getElementById('si-daiun').innerHTML=tbl+interpHTML+daiunNote;
+
+  // 初期表示で「現在」列を中央に来るようスクロール
+  requestAnimationFrame(()=>{
+    const wrap=document.getElementById('daiun-scroll-wrap');
+    const tblEl2=document.getElementById('daiun-tbl-el');
+    if(wrap&&tblEl2){
+      const currTd=tblEl2.querySelector('td.curr');
+      if(currTd){
+        const wrapRect=wrap.getBoundingClientRect();
+        const cellRect=currTd.getBoundingClientRect();
+        wrap.scrollLeft=wrap.scrollLeft+(cellRect.left-wrapRect.left)-(wrap.offsetWidth/2-currTd.offsetWidth/2);
+      }
+    }
+  });
 
   // Click interactivity
   const tblEl=document.getElementById('daiun-tbl-el');
@@ -1705,7 +1719,7 @@ function calcIndividual(){
   }
 
   // 歳運 table HTML
-  let sTblH=`<p class="daiun-title">歳運（1年サイクル）</p><p class="daiun-sub">各年の干支があなたの日主にどのような影響を与えるかを示します。</p><p class="scroll-hint">横にスクロールできます</p><div style="overflow-x:auto;-webkit-overflow-scrolling:touch;"><table class="daiun-tbl" id="saiun-tbl-el">`;
+  let sTblH=`<p class="daiun-title">歳運（1年サイクル）</p><p class="daiun-sub">各年の干支があなたの日主にどのような影響を与えるかを示します。</p><p class="scroll-hint">← 左右にスクロールして確認できます →</p><div style="overflow-x:auto;-webkit-overflow-scrolling:touch;" id="saiun-scroll-wrap"><table class="daiun-tbl" id="saiun-tbl-el">`;
 
   // 年 row
   sTblH+=`<tr><td class="rh">年</td>`;
@@ -1763,6 +1777,20 @@ function calcIndividual(){
   const saiunNote=`<p class="daiun-note">※ 歳運とは、その年の干支が命式にどのような影響をもたらすかを読み解くものです。大運（10年周期）が人生の大きな川の流れとすれば、歳運はその川に注ぐ一年一年の支流にあたります。大運と歳運の気が重なり合う年ほど、運勢の変化が顕著に現れやすいとされています。また、歳運支が空亡に入る年は結果が出にくく、準備と内省の時期として活用することが賢明です。</p>`;
 
   document.getElementById('si-saiun').innerHTML=sTblH+saiunInterpHTML+saiunNote;
+
+  // 初期表示で「現在」列を中央に来るようスクロール
+  requestAnimationFrame(()=>{
+    const sWrap=document.getElementById('saiun-scroll-wrap');
+    const sTblEl2=document.getElementById('saiun-tbl-el');
+    if(sWrap&&sTblEl2){
+      const currTd=sTblEl2.querySelector('td.curr');
+      if(currTd){
+        const wrapRect=sWrap.getBoundingClientRect();
+        const cellRect=currTd.getBoundingClientRect();
+        sWrap.scrollLeft=sWrap.scrollLeft+(cellRect.left-wrapRect.left)-(sWrap.offsetWidth/2-currTd.offsetWidth/2);
+      }
+    }
+  });
 
   // Click interactivity for 歳運
   const sTblEl=document.getElementById('saiun-tbl-el');
