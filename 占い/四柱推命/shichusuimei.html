@@ -41,6 +41,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:fl
 .nav-logo span{color:var(--gold);margin-left:8px;font-size:11px;letter-spacing:.22em;}
 .nav-back{font-size:11px;letter-spacing:.16em;color:var(--muted);text-decoration:none;text-transform:uppercase;display:flex;align-items:center;gap:8px;transition:color .2s;}
 .nav-back:hover{color:var(--gold);}
+.nav-menu{position:relative;}
+.nav-menu-btn{font-size:11px;letter-spacing:.16em;color:var(--muted);background:none;border:none;cursor:pointer;text-transform:uppercase;display:flex;align-items:center;gap:5px;transition:color .2s;font-family:'Noto Sans JP',sans-serif;font-weight:300;padding:0;}
+.nav-menu-btn::after{content:'▾';font-size:9px;transition:transform .2s;}
+.nav-menu.open .nav-menu-btn{color:var(--gold);}
+.nav-menu.open .nav-menu-btn::after{transform:rotate(180deg);}
+.nav-menu-btn:hover{color:var(--gold);}
+.nav-dropdown{position:absolute;top:calc(100% + 14px);right:0;background:rgba(13,11,8,.98);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);min-width:160px;opacity:0;pointer-events:none;transform:translateY(-6px);transition:opacity .2s,transform .2s;z-index:300;}
+.nav-menu.open .nav-dropdown{opacity:1;pointer-events:auto;transform:translateY(0);}
+.nav-dropdown a{display:block;padding:11px 18px;font-size:11px;letter-spacing:.14em;color:var(--muted);text-decoration:none;border-bottom:1px solid var(--border);transition:color .2s,background .2s;white-space:nowrap;}
+.nav-dropdown a:last-child{border-bottom:none;}
+.nav-dropdown a:hover{color:var(--gold);background:rgba(196,168,106,.06);}
 
 /* ── HERO ── */
 .hero{min-height:48vh;display:flex;flex-direction:column;justify-content:flex-end;padding:110px 40px 56px;position:relative;overflow:hidden;border-bottom:1px solid var(--border);}
@@ -684,6 +695,17 @@ html.theme-minagi section { position: relative; z-index: 1; }
         <button class="theme-option" data-theme="minagi"><span class="theme-dot theme-dot-minagi"></span>水凪</button>
       </div>
     </div>
+  <div class="nav-menu" id="nav-menu">
+    <button class="nav-menu-btn" id="nav-menu-btn">他の占い</button>
+    <div class="nav-dropdown">
+      <a href="../タロット/tarot.html">✦ タロット占い</a>
+      <a href="../西洋占星術/horoscope.html">☽ 西洋占星術</a>
+      <a href="../数秘術/suuhijutsu.html">∞ 数秘術</a>
+      <a href="../算命学/sanmeigaku.html">✧ 算命学</a>
+      <a href="../九星気学/kyuseikigaku.html">✶ 九星気学</a>
+      <a href="../weekly/index.html">◈ 今週のタロット</a>
+    </div>
+  </div>
   <a class="nav-back" href="../../index.html">← トップへ戻る</a>
 </nav>
 
@@ -2205,6 +2227,13 @@ document.querySelectorAll('.form-card').forEach(function(card){
     document.querySelectorAll('.theme-option').forEach(function(btn) {
       btn.addEventListener('click', function() { setTheme(btn.dataset.theme); themePicker.classList.remove('open'); });
     });
+  }
+  var navMenu = document.getElementById('nav-menu');
+  var navMenuBtn = document.getElementById('nav-menu-btn');
+  if (navMenu && navMenuBtn) {
+    navMenuBtn.addEventListener('click', function(e) { e.stopPropagation(); navMenu.classList.toggle('open'); if (themePicker) themePicker.classList.remove('open'); });
+    document.addEventListener('click', function() { navMenu.classList.remove('open'); });
+    navMenu.querySelector('.nav-dropdown').addEventListener('click', function(e) { e.stopPropagation(); });
   }
   setTheme(localStorage.getItem('asumira-theme') || 'gold');
 })();
