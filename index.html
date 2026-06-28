@@ -748,6 +748,53 @@ nav a:hover::after { width: 100%; }
   header.nav-open ~ .line-float-btn { opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
 }
 
+/* --- CONSULTATION STATS --- */
+.consult-stats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 48px;
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  overflow: hidden;
+}
+.consult-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 28px 16px;
+}
+.consult-stat + .consult-stat {
+  border-left: 1px solid var(--glass-border);
+}
+.consult-stat-num {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  color: var(--gold);
+  line-height: 1;
+}
+.consult-stat-unit {
+  font-size: 1rem;
+}
+.consult-stat-label {
+  font-size: 0.78rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-align: center;
+  line-height: 1.6;
+}
+@media (max-width: 600px) {
+  .consult-stats { flex-direction: column; }
+  .consult-stat + .consult-stat { border-left: none; border-top: 1px solid var(--glass-border); }
+  .consult-stat { padding: 20px 16px; }
+}
+
 /* --- CONSULTATION SECTION --- */
 .consult-section { padding: 80px 0; border-top: 1px solid var(--glass-border); }
 .consult-intro { text-align: center; color: var(--muted); margin-bottom: 48px; font-size: 0.95rem; line-height: 2; }
@@ -1504,6 +1551,20 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         「もう少し深く話したい」と感じたときは、ご相談ください。<br>
         占いコンテンツをヒントにしながら、あなたのモヤモヤを一緒に整理します。
       </p>
+      <div class="consult-stats reveal">
+        <div class="consult-stat">
+          <span class="consult-stat-num">10<span class="consult-stat-unit">回</span></span>
+          <span class="consult-stat-label">イベント開催実績<br>（2022〜）</span>
+        </div>
+        <div class="consult-stat">
+          <span class="consult-stat-num">リピーター</span>
+          <span class="consult-stat-label">ご好評いただいています</span>
+        </div>
+        <div class="consult-stat">
+          <span class="consult-stat-num">全国</span>
+          <span class="consult-stat-label">どこからでも対応可<br>（Google Meet）</span>
+        </div>
+      </div>
       <div class="consult-grid">
 
         <div class="glass-card consult-card reveal">
