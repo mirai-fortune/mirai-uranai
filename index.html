@@ -176,6 +176,47 @@ nav a:hover::after { width: 100%; }
 }
 @keyframes fadeUpLine { to { opacity: 1; transform: translateY(0); } }
 
+/* --- SCROLL INDICATOR --- */
+.scroll-indicator {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 2;
+  padding: 8px 16px;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.scroll-indicator.visible { opacity: 1; }
+.scroll-indicator.hidden  { opacity: 0; pointer-events: none; }
+.scroll-label {
+  font-family: var(--font-sans);
+  font-size: 0.62rem;
+  letter-spacing: 0.24em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.scroll-chevron {
+  width: 14px;
+  height: 14px;
+  border-right: 1px solid var(--gold);
+  border-bottom: 1px solid var(--gold);
+  transform: rotate(45deg);
+  animation: scrollBounce 1.8s ease infinite;
+  opacity: 0.8;
+}
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0)   rotate(45deg); opacity: 0.8; }
+  50%       { transform: translateY(7px) rotate(45deg); opacity: 1;   }
+}
+
 /* --- SECTION TITLES --- */
 .section-title { text-align: center; margin-bottom: 60px; }
 .section-title h2 { font-size: 2rem; position: relative; display: inline-block; padding-bottom: 16px; }
@@ -1120,6 +1161,10 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         次の一歩になる。
       </p>
     </div>
+    <button class="scroll-indicator" id="scroll-indicator" aria-label="スクロールして続きを見る">
+      <span class="scroll-label">Scroll</span>
+      <span class="scroll-chevron"></span>
+    </button>
   </section>
 
   <section id="services" class="container">
@@ -1638,9 +1683,19 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
   }, observerOptions);
 
   const header = document.getElementById('header');
+  const scrollIndicator = document.getElementById('scroll-indicator');
+
   window.addEventListener('scroll', () => {
     if (window.scrollY > 50) header.classList.add('scrolled');
     else header.classList.remove('scrolled');
+
+    if (window.scrollY > 80) scrollIndicator.classList.add('hidden');
+  });
+
+  setTimeout(() => scrollIndicator.classList.add('visible'), 1800);
+
+  scrollIndicator.addEventListener('click', () => {
+    document.getElementById('services').scrollIntoView({ behavior: 'smooth' });
   });
 
   /* =========================================
