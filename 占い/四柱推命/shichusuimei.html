@@ -2004,19 +2004,40 @@ window.addEventListener('DOMContentLoaded',()=>{
   SakuraPetal.prototype.update = function () { this.sw += this.swSp; this.x += this.vx + Math.sin(this.sw) * this.swR; this.y += this.vy; this.rot += this.rotSp; };
   SakuraPetal.prototype.draw = function () { ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rot); ctx.beginPath(); ctx.ellipse(0, 0, this.sA, this.sB, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(' + this.col[0] + ',' + this.col[1] + ',' + this.col[2] + ',' + this.al + ')'; ctx.fill(); ctx.restore(); };
   SakuraPetal.prototype.isDead = function () { return this.y > c.height + 30 || this.x < -80 || this.x > c.width + 80; };
-  var SL = [], slLast = 0;
-  var LC = [[120,200,90],[90,170,75],[155,210,80],[75,155,65]];
-  function ShinryokuLeaf() {
-    this.x = Math.random() * (c.width + 100) - 50; this.y = -20;
-    this.sA = 5 + Math.random() * 6; this.sB = this.sA * 0.38;
-    this.vy = 0.4 + Math.random() * 0.45; this.vx = (Math.random() - 0.45) * 0.5;
-    this.rot = Math.random() * Math.PI * 2; this.rotSp = (Math.random() - 0.5) * 0.035;
-    this.sw = Math.random() * Math.PI * 2; this.swSp = 0.015 + Math.random() * 0.02; this.swR = 1.0 + Math.random() * 2.0;
-    this.al = 0.22 + Math.random() * 0.2; this.col = LC[Math.floor(Math.random() * LC.length)];
+  var FF = [];
+  var FFC = [[180,230,80],[150,220,100],[200,235,60]];
+  function Firefly() {
+    this.x = Math.random() * c.width; this.y = Math.random() * c.height;
+    this.r = 1.5 + Math.random() * 2.5;
+    this.vx = (Math.random() - 0.5) * 0.8; this.vy = (Math.random() - 0.5) * 0.8;
+    this.sp = 0.4 + Math.random() * 0.4;
+    this.ph = Math.random() * Math.PI * 2; this.bSp = 0.02 + Math.random() * 0.03;
+    this.bAl = 0.5 + Math.random() * 0.5;
+    this.col = FFC[Math.floor(Math.random() * FFC.length)];
   }
-  ShinryokuLeaf.prototype.update = function () { this.sw += this.swSp; this.x += this.vx + Math.sin(this.sw) * this.swR; this.y += this.vy; this.rot += this.rotSp; };
-  ShinryokuLeaf.prototype.draw = function () { ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rot); ctx.beginPath(); ctx.ellipse(0, 0, this.sA, this.sB, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(' + this.col[0] + ',' + this.col[1] + ',' + this.col[2] + ',' + this.al + ')'; ctx.fill(); ctx.restore(); };
-  ShinryokuLeaf.prototype.isDead = function () { return this.y > c.height + 30 || this.x < -80 || this.x > c.width + 80; };
+  Firefly.prototype.update = function () {
+    this.vx += (Math.random()-0.5)*0.04; this.vy += (Math.random()-0.5)*0.04;
+    var len = Math.sqrt(this.vx*this.vx + this.vy*this.vy);
+    if (len > 0) { this.vx = this.vx/len*this.sp; this.vy = this.vy/len*this.sp; }
+    var mg = 60;
+    if (this.x < mg) this.vx += 0.02; if (this.x > c.width - mg) this.vx -= 0.02;
+    if (this.y < mg) this.vy += 0.02; if (this.y > c.height - mg) this.vy -= 0.02;
+    this.x += this.vx; this.y += this.vy; this.ph += this.bSp;
+  };
+  Firefly.prototype.draw = function () {
+    var br = Math.max(0, Math.sin(this.ph)), al = this.bAl * br;
+    if (al < 0.02) return;
+    var r = this.r, co = this.col;
+    ctx.save();
+    var g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, r*4);
+    g.addColorStop(0, 'rgba('+co[0]+','+co[1]+','+co[2]+','+(al*0.6).toFixed(3)+')');
+    g.addColorStop(0.4, 'rgba('+co[0]+','+co[1]+','+co[2]+','+(al*0.2).toFixed(3)+')');
+    g.addColorStop(1, 'rgba('+co[0]+','+co[1]+','+co[2]+',0)');
+    ctx.beginPath(); ctx.arc(this.x, this.y, r*4, 0, Math.PI*2); ctx.fillStyle = g; ctx.fill();
+    ctx.beginPath(); ctx.arc(this.x, this.y, r, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,255,220,'+(al*0.9).toFixed(3)+')'; ctx.fill();
+    ctx.restore();
+  };
   var MB = [], mbLast = 0;
   function MinagiBubble() {
     this.x = Math.random() * c.width;
@@ -2057,8 +2078,8 @@ window.addEventListener('DOMContentLoaded',()=>{
       if (t - spLast > 1680) { SP.push(new SakuraPetal()); if (Math.random() < 0.15) SP.push(new SakuraPetal()); spLast = t; }
       for (var k = SP.length - 1; k >= 0; k--) { SP[k].update(); SP[k].draw(); if (SP[k].isDead()) SP.splice(k, 1); }
     } else if (shinryoku) {
-      if (t - slLast > 1680) { SL.push(new ShinryokuLeaf()); if (Math.random() < 0.15) SL.push(new ShinryokuLeaf()); slLast = t; }
-      for (var m = SL.length - 1; m >= 0; m--) { SL[m].update(); SL[m].draw(); if (SL[m].isDead()) SL.splice(m, 1); }
+      if (!FF.length) { var n = Math.max(8, Math.floor(c.width/60)); for (var qi=0;qi<n;qi++) FF.push(new Firefly()); }
+      for (var fi=0; fi<FF.length; fi++) { FF[fi].update(); FF[fi].draw(); }
     } else if (minagi) {
       if (t - mbLast > 3360) { MB.push(new MinagiBubble()); if (Math.random() < 0.2) MB.push(new MinagiBubble()); mbLast = t; }
       for (var p = MB.length - 1; p >= 0; p--) { MB[p].update(); MB[p].draw(); if (MB[p].isDead()) MB.splice(p, 1); }
