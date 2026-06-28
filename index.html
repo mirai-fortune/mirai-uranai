@@ -865,6 +865,61 @@ html.theme-sakura .partner-card.coming-soon .partner-img-wrapper::after {
 html.theme-sakura .glass-card:hover { border-color: rgba(232,145,178,0.4); }
 html.theme-sakura .faq-item:hover { border-color: rgba(232,145,178,0.3); }
 
+/* ===== SHINRYOKU THEME ===== */
+html.theme-shinryoku {
+  --bg-color: #060e08;
+  --bg-gradient-end: #030804;
+  --cream: #f0f5ef;
+  --muted: rgba(240,245,239,0.6);
+  --gold: #82c87e;
+  --gold-glow: rgba(130,200,126,0.18);
+  --glass-bg: rgba(8,22,10,0.45);
+  --glass-border: rgba(170,230,160,0.1);
+}
+html.theme-shinryoku header {
+  background: linear-gradient(to bottom, rgba(6,14,8,0.9), transparent);
+}
+html.theme-shinryoku header.scrolled { border-bottom-color: rgba(170,230,160,0.1); }
+html.theme-shinryoku nav a { text-shadow: 0 1px 8px rgba(6,14,8,0.9), 0 0 16px rgba(6,14,8,0.7); }
+html.theme-shinryoku .hero::before {
+  background: radial-gradient(circle, rgba(130,200,126,0.18) 0%, transparent 60%);
+}
+html.theme-shinryoku .hamburger { background: rgba(6,14,8,0.55); border-color: rgba(130,200,126,0.25); }
+html.theme-shinryoku .hamburger:hover,
+html.theme-shinryoku .hamburger:focus-visible { background-color: rgba(130,200,126,0.12); }
+@media (max-width: 768px) {
+  html.theme-shinryoku nav { background: rgba(6,14,8,0.97); }
+}
+html.theme-shinryoku .line-float-btn {
+  background: rgba(6,14,8,0.82);
+  border-color: rgba(130,200,126,0.65);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.45), 0 0 16px rgba(130,200,126,0.12);
+}
+html.theme-shinryoku .line-float-btn:hover,
+html.theme-shinryoku .line-float-btn:active {
+  background: rgba(130,200,126,0.1);
+  box-shadow: 0 6px 32px rgba(0,0,0,0.5), 0 0 24px rgba(130,200,126,0.22);
+}
+html.theme-shinryoku .img-wrapper { background-color: #060e06; }
+html.theme-shinryoku .partner-img-wrapper { background-color: #060e06; }
+html.theme-shinryoku .event-item { background-color: #071208; }
+html.theme-shinryoku .event-item::after {
+  background: linear-gradient(to bottom, transparent 0%, transparent 40%, rgba(6,14,8,0.78) 100%);
+}
+html.theme-shinryoku .event-vol { background: rgba(6,14,8,0.65); border-color: rgba(130,200,126,0.45); }
+html.theme-shinryoku .event-item:nth-child(1) .event-vol {
+  background: linear-gradient(135deg, rgba(130,200,126,0.25) 0%, rgba(6,14,8,0.7) 100%);
+  border-color: var(--gold);
+  box-shadow: 0 0 12px rgba(130,200,126,0.2);
+}
+html.theme-shinryoku .event-latest-badge { background: rgba(6,14,8,0.75); border-color: var(--gold); }
+html.theme-shinryoku .partner-card.coming-soon .partner-img-wrapper::after {
+  background: rgba(6,14,8,0.82);
+  border-color: rgba(130,200,126,0.5);
+}
+html.theme-shinryoku .glass-card:hover { border-color: rgba(130,200,126,0.4); }
+html.theme-shinryoku .faq-item:hover { border-color: rgba(130,200,126,0.3); }
+
 /* ===== THEME SWITCHER ===== */
 .theme-switcher { position: relative; margin-left: 12px; flex-shrink: 0; }
 .theme-btn {
@@ -906,6 +961,7 @@ html.theme-sakura .faq-item:hover { border-color: rgba(232,145,178,0.3); }
 .theme-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
 .theme-dot-gold { background: radial-gradient(circle at 35% 35%, #e8d09a, #c4a86a); }
 .theme-dot-sakura { background: radial-gradient(circle at 35% 35%, #ffb8d0, #e891b2); }
+.theme-dot-shinryoku { background: radial-gradient(circle at 35% 35%, #c0ea9a, #6dbf6a); }
 </style>
 <script type="application/ld+json">
 {
@@ -970,6 +1026,7 @@ html.theme-sakura .faq-item:hover { border-color: rgba(232,145,178,0.3); }
       <div class="theme-picker" id="theme-picker">
         <button class="theme-option active" data-theme="gold"><span class="theme-dot theme-dot-gold"></span>星空</button>
         <button class="theme-option" data-theme="sakura"><span class="theme-dot theme-dot-sakura"></span>桜花</button>
+        <button class="theme-option" data-theme="shinryoku"><span class="theme-dot theme-dot-shinryoku"></span>新緑</button>
       </div>
     </div>
     <button class="hamburger" id="menu-toggle"
@@ -1791,6 +1848,45 @@ html.theme-sakura .faq-item:hover { border-color: rgba(232,145,178,0.3); }
     isDead() { return this.y > canvas.height + 30 || this.x < -80 || this.x > canvas.width + 80; }
   }
 
+  let shinryokuLeaves = [];
+  let lastLeafTime = 0;
+  const LEAF_COLORS = [[120,200,90],[90,170,75],[155,210,80],[75,155,65]];
+  class ShinryokuLeaf {
+    constructor() {
+      this.x = Math.random() * (canvas.width + 100) - 50;
+      this.y = -20;
+      this.sizeA = 5 + Math.random() * 6;
+      this.sizeB = this.sizeA * 0.38;
+      this.speedY = 0.4 + Math.random() * 0.45;
+      this.driftX = (Math.random() - 0.45) * 0.5;
+      this.rotation = Math.random() * Math.PI * 2;
+      this.rotSpeed = (Math.random() - 0.5) * 0.035;
+      this.swayAngle = Math.random() * Math.PI * 2;
+      this.swaySpeed = 0.015 + Math.random() * 0.02;
+      this.swayRange = 1.0 + Math.random() * 2.0;
+      this.alpha = 0.22 + Math.random() * 0.2;
+      this.color = LEAF_COLORS[Math.floor(Math.random() * LEAF_COLORS.length)];
+    }
+    update() {
+      this.swayAngle += this.swaySpeed;
+      this.x += this.driftX + Math.sin(this.swayAngle) * this.swayRange;
+      this.y += this.speedY;
+      this.rotation += this.rotSpeed;
+    }
+    draw() {
+      const [r, g, b] = this.color;
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.rotation);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, this.sizeA, this.sizeB, 0, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${r},${g},${b},${this.alpha})`;
+      ctx.fill();
+      ctx.restore();
+    }
+    isDead() { return this.y > canvas.height + 30 || this.x < -80 || this.x > canvas.width + 80; }
+  }
+
   function animateParticles(timestamp) {
     requestAnimationFrame(animateParticles);
     ctx.clearRect(0, 0, innerWidth, innerHeight);
@@ -1808,6 +1904,18 @@ html.theme-sakura .faq-item:hover { border-color: rgba(232,145,178,0.3); }
         sakuraPetals[i].update();
         sakuraPetals[i].draw();
         if (sakuraPetals[i].isDead()) sakuraPetals.splice(i, 1);
+      }
+    } else if (currentTheme === 'shinryoku') {
+      // 新緑の葉っぱ
+      if (timestamp - lastLeafTime > 1680) {
+        shinryokuLeaves.push(new ShinryokuLeaf());
+        if (Math.random() < 0.15) shinryokuLeaves.push(new ShinryokuLeaf());
+        lastLeafTime = timestamp;
+      }
+      for (let i = shinryokuLeaves.length - 1; i >= 0; i--) {
+        shinryokuLeaves[i].update();
+        shinryokuLeaves[i].draw();
+        if (shinryokuLeaves[i].isDead()) shinryokuLeaves.splice(i, 1);
       }
     } else {
       // 流れ星の生成タイミング管理
@@ -1871,6 +1979,12 @@ html.theme-sakura .faq-item:hover { border-color: rgba(232,145,178,0.3); }
     'rgba(255, 160, 180, ',
     'rgba(220, 140, 170, ',
   ];
+  const SHINRYOKU_COLORS = [
+    'rgba(200, 235, 185, ',
+    'rgba(155, 210, 135, ',
+    'rgba(180, 225, 155, ',
+    'rgba(130, 195, 115, ',
+  ];
   const GOLD_COLORS = [
     'rgba(245, 242, 235, ',
     'rgba(196, 168, 106, ',
@@ -1881,11 +1995,14 @@ html.theme-sakura .faq-item:hover { border-color: rgba(232,145,178,0.3); }
   function setTheme(theme) {
     currentTheme = theme;
     const html = document.documentElement;
+    html.classList.remove('theme-sakura', 'theme-shinryoku');
     if (theme === 'sakura') {
       html.classList.add('theme-sakura');
       colorPalette = SAKURA_COLORS.slice();
+    } else if (theme === 'shinryoku') {
+      html.classList.add('theme-shinryoku');
+      colorPalette = SHINRYOKU_COLORS.slice();
     } else {
-      html.classList.remove('theme-sakura');
       colorPalette = GOLD_COLORS.slice();
     }
     localStorage.setItem('asumira-theme', theme);
@@ -1893,6 +2010,7 @@ html.theme-sakura .faq-item:hover { border-color: rgba(232,145,178,0.3); }
       btn.classList.toggle('active', btn.dataset.theme === theme);
     });
     sakuraPetals = [];
+    shinryokuLeaves = [];
     shootingStars = [];
     ssLastTime = 0;
     initParticles();

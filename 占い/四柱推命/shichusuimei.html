@@ -593,6 +593,17 @@ html.theme-sakura nav { background: rgba(22,8,16,0.92) !important; border-bottom
 html.theme-sakura body { background: linear-gradient(135deg, #160810 0%, #0a0508 100%) fixed; }
 html.theme-sakura .container { position: relative; z-index: 1; }
 html.theme-sakura section { position: relative; z-index: 1; }
+
+html.theme-shinryoku {
+  --bg: #060e08; --bg2: #0a1a0e; --bg3: #0e2014; --bg4: #122618;
+  --cream: #f0f5ef; --muted: rgba(240,245,239,.55); --muted2: rgba(240,245,239,.28);
+  --gold: #82c87e; --gold2: #b4e8b0; --gold-dim: rgba(130,200,126,.18);
+  --border: rgba(130,200,126,.14); --border2: rgba(255,255,255,.07);
+}
+html.theme-shinryoku nav { background: rgba(6,14,8,0.92) !important; border-bottom-color: rgba(130,200,126,0.14); }
+html.theme-shinryoku body { background: linear-gradient(135deg, #060e08 0%, #030804 100%) fixed; }
+html.theme-shinryoku .container { position: relative; z-index: 1; }
+html.theme-shinryoku section { position: relative; z-index: 1; }
 /* ===== THEME SWITCHER ===== */
 .theme-switcher { position: relative; }
 .theme-btn {
@@ -622,6 +633,7 @@ html.theme-sakura section { position: relative; z-index: 1; }
 .theme-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
 .theme-dot-gold { background: radial-gradient(circle at 35% 35%, #e8d09a, #c4a86a); }
 .theme-dot-sakura { background: radial-gradient(circle at 35% 35%, #ffb8d0, #e891b2); }
+.theme-dot-shinryoku { background: radial-gradient(circle at 35% 35%, #c0ea9a, #6dbf6a); }
 </style>
 <script type="application/ld+json">
 {
@@ -657,6 +669,7 @@ html.theme-sakura section { position: relative; z-index: 1; }
       <div class="theme-picker" id="theme-picker">
         <button class="theme-option active" data-theme="gold"><span class="theme-dot theme-dot-gold"></span>星空</button>
         <button class="theme-option" data-theme="sakura"><span class="theme-dot theme-dot-sakura"></span>桜花</button>
+        <button class="theme-option" data-theme="shinryoku"><span class="theme-dot theme-dot-shinryoku"></span>新緑</button>
       </div>
     </div>
   <a class="nav-back" href="../../index.html">← トップへ戻る</a>
@@ -1979,14 +1992,31 @@ window.addEventListener('DOMContentLoaded',()=>{
   SakuraPetal.prototype.update = function () { this.sw += this.swSp; this.x += this.vx + Math.sin(this.sw) * this.swR; this.y += this.vy; this.rot += this.rotSp; };
   SakuraPetal.prototype.draw = function () { ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rot); ctx.beginPath(); ctx.ellipse(0, 0, this.sA, this.sB, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(' + this.col[0] + ',' + this.col[1] + ',' + this.col[2] + ',' + this.al + ')'; ctx.fill(); ctx.restore(); };
   SakuraPetal.prototype.isDead = function () { return this.y > c.height + 30 || this.x < -80 || this.x > c.width + 80; };
+  var SL = [], slLast = 0;
+  var LC = [[120,200,90],[90,170,75],[155,210,80],[75,155,65]];
+  function ShinryokuLeaf() {
+    this.x = Math.random() * (c.width + 100) - 50; this.y = -20;
+    this.sA = 5 + Math.random() * 6; this.sB = this.sA * 0.38;
+    this.vy = 0.4 + Math.random() * 0.45; this.vx = (Math.random() - 0.45) * 0.5;
+    this.rot = Math.random() * Math.PI * 2; this.rotSp = (Math.random() - 0.5) * 0.035;
+    this.sw = Math.random() * Math.PI * 2; this.swSp = 0.015 + Math.random() * 0.02; this.swR = 1.0 + Math.random() * 2.0;
+    this.al = 0.22 + Math.random() * 0.2; this.col = LC[Math.floor(Math.random() * LC.length)];
+  }
+  ShinryokuLeaf.prototype.update = function () { this.sw += this.swSp; this.x += this.vx + Math.sin(this.sw) * this.swR; this.y += this.vy; this.rot += this.rotSp; };
+  ShinryokuLeaf.prototype.draw = function () { ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rot); ctx.beginPath(); ctx.ellipse(0, 0, this.sA, this.sB, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(' + this.col[0] + ',' + this.col[1] + ',' + this.col[2] + ',' + this.al + ')'; ctx.fill(); ctx.restore(); };
+  ShinryokuLeaf.prototype.isDead = function () { return this.y > c.height + 30 || this.x < -80 || this.x > c.width + 80; };
   function draw(t) {
     ctx.clearRect(0, 0, c.width, c.height);
     var sakura = document.documentElement.classList.contains('theme-sakura');
-    var sc = sakura ? 'rgba(255,195,215,' : 'rgba(245,242,235,';
+    var shinryoku = document.documentElement.classList.contains('theme-shinryoku');
+    var sc = sakura ? 'rgba(255,195,215,' : shinryoku ? 'rgba(200,235,180,' : 'rgba(245,242,235,';
     for (var i = 0; i < S.length; i++) { var s = S[i]; ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, 6.2832); ctx.fillStyle = sc + (s.a * (.55 + .45 * Math.sin(t * s.sp + s.ph))) + ')'; ctx.fill(); }
     if (sakura) {
       if (t - spLast > 1680) { SP.push(new SakuraPetal()); if (Math.random() < 0.15) SP.push(new SakuraPetal()); spLast = t; }
       for (var k = SP.length - 1; k >= 0; k--) { SP[k].update(); SP[k].draw(); if (SP[k].isDead()) SP.splice(k, 1); }
+    } else if (shinryoku) {
+      if (t - slLast > 1680) { SL.push(new ShinryokuLeaf()); if (Math.random() < 0.15) SL.push(new ShinryokuLeaf()); slLast = t; }
+      for (var m = SL.length - 1; m >= 0; m--) { SL[m].update(); SL[m].draw(); if (SL[m].isDead()) SL.splice(m, 1); }
     } else {
       if (!ssLast) ssLast = t; if (t - ssLast > ssDelay) { SS.push(new ShootingStar()); ssLast = t; ssDelay = 2500 + Math.random() * 5000; }
       for (var j = SS.length - 1; j >= 0; j--) { SS[j].update(); SS[j].draw(); if (SS[j].isDead()) SS.splice(j, 1); }
@@ -2063,8 +2093,9 @@ document.querySelectorAll('.form-card').forEach(function(card){
 (function() {
   function setTheme(theme) {
     var html = document.documentElement;
+    html.classList.remove('theme-sakura', 'theme-shinryoku');
     if (theme === 'sakura') html.classList.add('theme-sakura');
-    else html.classList.remove('theme-sakura');
+    else if (theme === 'shinryoku') html.classList.add('theme-shinryoku');
     localStorage.setItem('asumira-theme', theme);
     document.querySelectorAll('.theme-option').forEach(function(btn) {
       btn.classList.toggle('active', btn.dataset.theme === theme);
