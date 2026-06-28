@@ -94,8 +94,29 @@ header.nav-open.scrolled { backdrop-filter: none; -webkit-backdrop-filter: none;
 .logo { font-family: var(--font-serif); font-size: 1.4rem; letter-spacing: 0.1em; color: var(--cream); text-decoration: none; line-height: 1.2; white-space: nowrap; }
 .logo span { color: var(--gold); }
 
-nav a { color: var(--muted); text-decoration: none; font-size: 0.85rem; margin-left: 24px; transition: color 0.3s; text-shadow: 0 1px 8px rgba(3,6,17,0.9), 0 0 16px rgba(3,6,17,0.7); }
+nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  margin-left: 28px;
+  position: relative;
+  transition: color 0.3s;
+  text-shadow: 0 1px 8px rgba(3,6,17,0.9), 0 0 16px rgba(3,6,17,0.7);
+}
+nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -3px; left: 0;
+  width: 0; height: 1px;
+  background: var(--gold);
+  transition: width 0.3s ease;
+}
 nav a:hover { color: var(--cream); }
+nav a:hover::after { width: 100%; }
+@media (min-width: 769px) {
+  nav a.nav-secondary { display: none; }
+}
 
 /* --- HERO SECTION --- */
 .hero {
@@ -835,11 +856,11 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
       <a href="#about">ご挨拶</a>
       <a href="#voices">お客様の声</a>
       <a href="#consult">ご相談</a>
-      <a href="#partners">提携ブランド</a>
-      <a href="#marche">活動実績</a>
       <a href="#faq">FAQ</a>
-      <a href="#sns">SNS</a>
-      <a href="https://forms.gle/kBvtDKEN1xj4Y3Xy8" target="_blank" rel="noopener noreferrer">お問い合わせ</a>
+      <a href="#partners" class="nav-secondary">提携ブランド</a>
+      <a href="#marche" class="nav-secondary">活動実績</a>
+      <a href="#sns" class="nav-secondary">SNS</a>
+      <a href="https://forms.gle/kBvtDKEN1xj4Y3Xy8" target="_blank" rel="noopener noreferrer" class="nav-secondary">お問い合わせ</a>
     </nav>
     <a href="https://lin.ee/OzDP0DQ" target="_blank" rel="noopener noreferrer" class="line-header-btn" aria-label="LINE公式アカウントを友達追加する">
       <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
