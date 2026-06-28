@@ -1119,7 +1119,7 @@ document.querySelectorAll('.trt-cat-btn').forEach(btn => {
       if (t - slLast > 1680) { SL.push(new ShinryokuLeaf()); if (Math.random() < 0.15) SL.push(new ShinryokuLeaf()); slLast = t; }
       for (var m = SL.length - 1; m >= 0; m--) { SL[m].update(); SL[m].draw(); if (SL[m].isDead()) SL.splice(m, 1); }
     } else if (minagi) {
-      if (t - mbLast > 1680) { MB.push(new MinagiBubble()); if (Math.random() < 0.2) MB.push(new MinagiBubble()); mbLast = t; }
+      if (t - mbLast > 3360) { MB.push(new MinagiBubble()); if (Math.random() < 0.2) MB.push(new MinagiBubble()); mbLast = t; }
       for (var p = MB.length - 1; p >= 0; p--) { MB[p].update(); MB[p].draw(); if (MB[p].isDead()) MB.splice(p, 1); }
     } else {
       if (!ssLast) ssLast = t; if (t - ssLast > ssDelay) { SS.push(new ShootingStar()); ssLast = t; ssDelay = 2500 + Math.random() * 5000; }
