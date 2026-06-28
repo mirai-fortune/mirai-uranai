@@ -164,6 +164,49 @@ main {
 }
 
 @keyframes fadeIn { to { opacity: 1; } }
+/* ===== PINK SAKURA THEME ===== */
+html.theme-sakura {
+  --bg-color: #160810;
+  --bg-gradient-end: #0a0508;
+  --cream: #fef2f6;
+  --muted: rgba(254,242,246,0.6);
+  --gold: #e891b2;
+  --gold-glow: rgba(232,145,178,0.18);
+  --glass-bg: rgba(35,10,22,0.45);
+  --glass-border: rgba(255,180,210,0.1);
+}
+html.theme-sakura header { background: linear-gradient(to bottom, rgba(22,8,16,0.9), transparent); }
+html.theme-sakura nav { background: rgba(22,8,16,0.92) !important; border-bottom-color: rgba(255,180,210,0.1); }
+html.theme-sakura body { background: linear-gradient(135deg, #160810 0%, #0a0508 100%) fixed; }
+/* ===== THEME SWITCHER ===== */
+.theme-switcher { position: relative; }
+.theme-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid var(--glass-border); background: var(--glass-bg);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; transition: border-color 0.3s; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+.theme-btn:hover { border-color: var(--gold); }
+.theme-picker {
+  position: absolute; top: calc(100% + 10px); right: 0;
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  border-radius: 12px; padding: 10px;
+  display: none; flex-direction: column; gap: 6px;
+  min-width: 150px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); z-index: 300;
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+}
+.theme-picker.open { display: flex; }
+.theme-option {
+  display: flex; align-items: center; gap: 10px; padding: 7px 10px;
+  border-radius: 8px; cursor: pointer; font-size: 0.8rem; color: var(--muted);
+  border: 1px solid transparent; transition: background 0.2s, border-color 0.2s, color 0.2s;
+  background: transparent; width: 100%; text-align: left; font-family: var(--font-sans);
+}
+.theme-option:hover { background: rgba(255,255,255,0.06); color: var(--cream); }
+.theme-option.active { border-color: var(--gold); color: var(--cream); }
+.theme-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+.theme-dot-gold { background: radial-gradient(circle at 35% 35%, #e8d09a, #c4a86a); }
+.theme-dot-sakura { background: radial-gradient(circle at 35% 35%, #ffb8d0, #e891b2); }
 </style>
 </head>
 <body>
@@ -173,6 +216,13 @@ main {
 <header>
   <div class="container header-wrap">
     <a href="https://mirai-fortune.github.io/mirai-uranai/" class="logo">ASUMIRA 占い</a>
+    <div class="theme-switcher" id="theme-switcher">
+      <button class="theme-btn" id="theme-btn" aria-label="テーマを変更する" title="テーマ変更">🎨</button>
+      <div class="theme-picker" id="theme-picker">
+        <button class="theme-option active" data-theme="gold"><span class="theme-dot theme-dot-gold"></span>ゴールド神秘</button>
+        <button class="theme-option" data-theme="sakura"><span class="theme-dot theme-dot-sakura"></span>ピンク桜</button>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -340,6 +390,29 @@ main {
 
   initParticles();
   animateParticles();
+/* ===== テーマ管理 ===== */
+(function() {
+  function setTheme(theme) {
+    var html = document.documentElement;
+    if (theme === 'sakura') html.classList.add('theme-sakura');
+    else html.classList.remove('theme-sakura');
+    localStorage.setItem('asumira-theme', theme);
+    document.querySelectorAll('.theme-option').forEach(function(btn) {
+      btn.classList.toggle('active', btn.dataset.theme === theme);
+    });
+  }
+  var themeBtn = document.getElementById('theme-btn');
+  var themePicker = document.getElementById('theme-picker');
+  if (themeBtn && themePicker) {
+    themeBtn.addEventListener('click', function(e) { e.stopPropagation(); themePicker.classList.toggle('open'); });
+    document.addEventListener('click', function() { themePicker.classList.remove('open'); });
+    themePicker.addEventListener('click', function(e) { e.stopPropagation(); });
+    document.querySelectorAll('.theme-option').forEach(function(btn) {
+      btn.addEventListener('click', function() { setTheme(btn.dataset.theme); themePicker.classList.remove('open'); });
+    });
+  }
+  setTheme(localStorage.getItem('asumira-theme') || 'gold');
+})();
 </script>
 </body>
 </html>
