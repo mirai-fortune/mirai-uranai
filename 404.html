@@ -191,6 +191,19 @@ html.theme-shinryoku {
 html.theme-shinryoku header { background: linear-gradient(to bottom, rgba(6,14,8,0.9), transparent); }
 html.theme-shinryoku nav { background: rgba(6,14,8,0.92) !important; border-bottom-color: rgba(170,230,160,0.1); }
 html.theme-shinryoku body { background: linear-gradient(135deg, #060e08 0%, #030804 100%) fixed; }
+html.theme-minagi {
+  --bg-color: #04080f;
+  --bg-gradient-end: #020508;
+  --cream: #eef4fc;
+  --muted: rgba(238,244,252,0.6);
+  --gold: #6ab4e8;
+  --gold-glow: rgba(106,180,232,0.18);
+  --glass-bg: rgba(5,12,25,0.45);
+  --glass-border: rgba(150,210,240,0.1);
+}
+html.theme-minagi header { background: linear-gradient(to bottom, rgba(4,8,15,0.9), transparent); }
+html.theme-minagi nav { background: rgba(4,8,15,0.92) !important; border-bottom-color: rgba(150,210,240,0.1); }
+html.theme-minagi body { background: linear-gradient(135deg, #04080f 0%, #020508 100%) fixed; }
 /* ===== THEME SWITCHER ===== */
 .theme-switcher { position: relative; }
 .theme-btn {
@@ -221,6 +234,7 @@ html.theme-shinryoku body { background: linear-gradient(135deg, #060e08 0%, #030
 .theme-dot-gold { background: radial-gradient(circle at 35% 35%, #e8d09a, #c4a86a); }
 .theme-dot-sakura { background: radial-gradient(circle at 35% 35%, #ffb8d0, #e891b2); }
 .theme-dot-shinryoku { background: radial-gradient(circle at 35% 35%, #c0ea9a, #6dbf6a); }
+.theme-dot-minagi { background: radial-gradient(circle at 35% 35%, #b8dff8, #4a9cd4); }
 </style>
 </head>
 <body>
@@ -236,6 +250,7 @@ html.theme-shinryoku body { background: linear-gradient(135deg, #060e08 0%, #030
         <button class="theme-option active" data-theme="gold"><span class="theme-dot theme-dot-gold"></span>星空</button>
         <button class="theme-option" data-theme="sakura"><span class="theme-dot theme-dot-sakura"></span>桜花</button>
         <button class="theme-option" data-theme="shinryoku"><span class="theme-dot theme-dot-shinryoku"></span>新緑</button>
+        <button class="theme-option" data-theme="minagi"><span class="theme-dot theme-dot-minagi"></span>水凪</button>
       </div>
     </div>
   </div>
@@ -409,9 +424,10 @@ html.theme-shinryoku body { background: linear-gradient(135deg, #060e08 0%, #030
 (function() {
   function setTheme(theme) {
     var html = document.documentElement;
-    html.classList.remove('theme-sakura', 'theme-shinryoku');
+    html.classList.remove('theme-sakura', 'theme-shinryoku', 'theme-minagi');
     if (theme === 'sakura') html.classList.add('theme-sakura');
     else if (theme === 'shinryoku') html.classList.add('theme-shinryoku');
+    else if (theme === 'minagi') html.classList.add('theme-minagi');
     localStorage.setItem('asumira-theme', theme);
     document.querySelectorAll('.theme-option').forEach(function(btn) {
       btn.classList.toggle('active', btn.dataset.theme === theme);
