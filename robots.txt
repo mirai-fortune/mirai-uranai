@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mirai-fortune.github.io/mirai-uranai/sitemap.xml
