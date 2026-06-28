@@ -548,7 +548,47 @@ nav a:hover { color: var(--cream); }
 .line-header-btn:hover { background: rgba(196, 168, 106, 0.08); transform: translateY(-1px); box-shadow: 0 0 20px rgba(196, 168, 106, 0.3); }
 .line-header-btn svg { width: 15px; height: 15px; flex-shrink: 0; fill: var(--gold); }
 @media (max-width: 768px) {
-  .line-header-btn { padding: 6px 14px; font-size: 0.72rem; margin-left: 0; }
+  .line-header-btn { display: none; }
+}
+
+/* --- LINE FLOATING CTA BUTTON (mobile only) --- */
+@keyframes lineFloatIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.line-float-btn {
+  display: none;
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 22px;
+  background: rgba(3, 6, 17, 0.82);
+  border: 1px solid rgba(196, 168, 106, 0.65);
+  border-radius: 50px;
+  text-decoration: none;
+  color: var(--gold);
+  font-size: 0.85rem;
+  font-family: var(--font-sans);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45), 0 0 16px rgba(196, 168, 106, 0.12);
+  z-index: 80;
+  animation: lineFloatIn 0.5s ease 0.9s both;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.line-float-btn svg { width: 18px; height: 18px; flex-shrink: 0; fill: var(--gold); }
+.line-float-btn:hover, .line-float-btn:active {
+  background: rgba(196, 168, 106, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 32px rgba(0, 0, 0, 0.5), 0 0 24px rgba(196, 168, 106, 0.22);
+}
+@media (max-width: 768px) {
+  .line-float-btn { display: flex; }
+  header.nav-open ~ .line-float-btn { opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
 }
 
 /* --- CONSULTATION SECTION --- */
@@ -817,6 +857,13 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
     </button>
   </div>
 </header>
+
+<a href="https://lin.ee/OzDP0DQ" target="_blank" rel="noopener noreferrer" class="line-float-btn" aria-label="LINE公式アカウントを友達追加する">
+  <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M12.003 2C6.547 2 2.005 5.866 2.005 10.618c0 3.016 1.793 5.672 4.487 7.236L5.5 21l3.586-1.742c.919.254 1.893.393 2.917.393 5.457 0 9.998-3.866 9.998-8.619C22.001 5.866 17.46 2 12.003 2z"/>
+  </svg>
+  友達追加
+</a>
 
 <main>
   <section class="hero reveal">
