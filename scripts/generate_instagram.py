@@ -15,8 +15,8 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageChops
 # キャンバス定数
 # ─────────────────────────────────────────────────────────────────────
 W, H = 1080, 1080
-TOTAL = 8
-MARGIN = 72
+TOTAL = 7
+MARGIN = 88
 
 # カラーパレット
 BG_TOP   = (3,  5, 20)
@@ -67,16 +67,16 @@ def load_fonts():
     if not p:
         print("WARNING: No CJK font found, using default", file=sys.stderr)
     return {
-        "disp":  _f(p, 80),   # カード名
-        "hero":  _f(p, 62),   # テーマ（フック）
-        "title": _f(p, 52),   # セクションタイトル
-        "body":  _f(p, 44),   # 本文
-        "cap":   _f(p, 28),   # キャプション、ラベル
-        "xs":    _f(p, 22),   # フッター
+        "disp":  _f(p, 70),   # カード名
+        "hero":  _f(p, 54),   # テーマ（フック）
+        "title": _f(p, 46),   # セクションタイトル
+        "body":  _f(p, 39),   # 本文
+        "cap":   _f(p, 25),   # キャプション、ラベル
+        "xs":    _f(p, 20),   # フッター
         "en_wm": _f(s, 280),  # 透かし
-        "en_lg": _f(s, 50),   # 英語カード名
-        "en_md": _f(s, 30),   # 英語ラベル
-        "en_xs": _f(s, 22),   # 英語フッター
+        "en_lg": _f(s, 44),   # 英語カード名
+        "en_md": _f(s, 27),   # 英語ラベル
+        "en_xs": _f(s, 20),   # 英語フッター
     }
 
 # ─────────────────────────────────────────────────────────────────────
@@ -107,20 +107,29 @@ def wrap(draw, text, font, max_w):
         text = text[lo:]
     return lines
 
+def smart_wrap(draw, text, font, max_w):
+    """\\n による明示的改行を優先し、各セグメントを wrap で折り返す"""
+    lines = []
+    for seg in text.split("\n"):
+        lines.extend(wrap(draw, seg, font, max_w) if seg else [""])
+    return lines
+
 def put_center(draw, text, font, y, color, width=W):
     x = (width - tw(draw, text, font)) // 2
     draw.text((x, y), text, font=font, fill=color)
 
 def put_block(draw, text, font, x, y, max_w, color=None, leading=1.75, max_h=None):
     color = color or CREAM
-    lines = wrap(draw, text, font, max_w)
+    lines = smart_wrap(draw, text, font, max_w)
     lh = int(font.size * leading)
     for i, line in enumerate(lines):
         cy = y + i * lh
         if max_h and (cy - y + lh) > max_h:
-            draw.text((x, cy - lh), "…", font=font, fill=color)
+            if i > 0:
+                draw.text((x, y + (i-1)*lh), "…", font=font, fill=color)
             return int(cy)
-        draw.text((x, cy), line, font=font, fill=color)
+        if line:
+            draw.text((x, cy), line, font=font, fill=color)
     return int(y + len(lines) * lh)
 
 def vcenter_y(line_count, font_size, leading=1.75,
@@ -272,9 +281,10 @@ def slide_cover(data, fonts, card_img):
 
     # テーマ（最重要コピー）
     body_w = W - 2*MARGIN - 20
-    for line in wrap(draw, data["theme"], fonts["hero"], body_w):
-        put_center(draw, line, fonts["hero"], y, CREAM)
-        y += int(fonts["hero"].size * 1.2)
+    for line in smart_wrap(draw, data["theme"], fonts["hero"], body_w):
+        if line:
+            put_center(draw, line, fonts["hero"], y, CREAM)
+        y += int(fonts["hero"].size * 1.22)
     y += 10
 
     # カード名
@@ -355,30 +365,38 @@ def slide_msg_combined(data, fonts):
     draw_hline(draw, y)
     y += 34
 
-    # ── message[0]: コーチング本文（body 44px, cream）──
+    # ── message[0]: コーチング本文（body, cream）──
     msg0 = data["message"][0] if data["message"] else ""
-    lines0 = wrap(draw, msg0, fonts["body"], body_w)
-    lh0 = int(fonts["body"].size * 1.72)
+    lines0 = smart_wrap(draw, msg0, fonts["body"], body_w)
+    lh0 = int(fonts["body"].size * 1.8)
     for line in lines0:
-        draw.text((MARGIN+10, y), line, font=fonts["body"], fill=CREAM)
+        if line:
+            draw.text((MARGIN+10, y), line, font=fonts["body"], fill=CREAM)
         y += lh0
 
     # ── 仕切り線 ──
-    y += 22
+    y += 20
     draw_hline(draw, y, x0=W//4, x1=W*3//4)
     y += 22
 
-    # ── message[1]: アクションアイテム（cap 28px, gold）──
+    # ── message[1]: アクションアイテム（cap, gold, インデント付き）──
     msg1 = data["message"][1] if len(data["message"]) > 1 else ""
+    indent_x = MARGIN + 30
+    item_w   = W - indent_x - MARGIN
     if "◇" in msg1:
-        # ◇ 区切りでチェックリスト表示
         parts = [p.strip() for p in msg1.split("◇") if p.strip()]
-        lh1 = int(fonts["cap"].size * 1.9)
+        lh1 = int(fonts["cap"].size * 1.95)
         for part in parts:
-            draw.text((MARGIN+10, y), "◇  " + part, font=fonts["cap"], fill=GOLD)
-            y += lh1
+            # ◇ prefix + テキスト（smart_wrapで折り返し）
+            prefix = "◇  "
+            plines = smart_wrap(draw, prefix + part, fonts["cap"], item_w)
+            for j, pl in enumerate(plines):
+                if pl:
+                    draw.text((indent_x, y), pl, font=fonts["cap"], fill=GOLD_DIM)
+                y += lh1
+            y += 4  # アイテム間に小さな余白
     else:
-        put_block(draw, msg1, fonts["cap"], MARGIN+10, y, body_w, color=GOLD, leading=1.9)
+        put_block(draw, msg1, fonts["cap"], indent_x, y, item_w, color=GOLD_DIM, leading=1.95)
 
     # ── キーワードタグ（下部余白に）──
     if data["keywords"]:
@@ -386,16 +404,16 @@ def slide_msg_combined(data, fonts):
         draw_hline(draw, kw_y - 14)
         draw_keyword_tags(draw, fonts, data["keywords"], kw_y, center=True)
 
-    draw_footer(draw, fonts, 3)
+    draw_footer(draw, fonts, 2)
     return img
 
 # ─────────────────────────────────────────────────────────────────────
-# スライド 5–7 ── 総合運 / 仕事運 / 恋愛運（縦中央寄せ）
+# スライド 3–5 ── 総合運 / 仕事運 / 恋愛運（縦中央寄せ）
 # ─────────────────────────────────────────────────────────────────────
 FOCUS_CONFIG = [
-    ("overall", "総合運", 4),
-    ("work",    "仕事運", 5),
-    ("love",    "恋愛運", 6),
+    ("overall", "総合運", 3),
+    ("work",    "仕事運", 4),
+    ("love",    "恋愛運", 5),
 ]
 
 def slide_focus(data, fonts, idx):
@@ -412,17 +430,18 @@ def slide_focus(data, fonts, idx):
 
     # ── テキストを縦中央に配置 ──
     body_w = W - 2*MARGIN - 20
-    lines  = wrap(draw, text, fonts["body"], body_w)
-    lh     = int(fonts["body"].size * 1.75)
+    lines  = smart_wrap(draw, text, fonts["body"], body_w)
+    lh     = int(fonts["body"].size * 1.85)
     text_h = len(lines) * lh
 
-    top_reserved = y_hdr + 40
+    top_reserved = y_hdr + 44
     bot_reserved = 100
     avail = H - top_reserved - bot_reserved
     y_txt = top_reserved + max(30, (avail - text_h) // 2)
 
     for i, line in enumerate(lines):
-        draw.text((MARGIN+10, y_txt + i*lh), line, font=fonts["body"], fill=CREAM)
+        if line:
+            draw.text((MARGIN+10, y_txt + i*lh), line, font=fonts["body"], fill=CREAM)
 
     draw_footer(draw, fonts, slide_n)
     return img
@@ -431,7 +450,7 @@ def slide_focus(data, fonts, idx):
 # スライド 7 ── 今週のアクションチェック
 # ─────────────────────────────────────────────────────────────────────
 def slide_lucky(data, fonts):
-    img, draw = make_canvas(seed=7)
+    img, draw = make_canvas(seed=6)
     draw_corners(draw)
 
     # ── ヘッダー ──
@@ -453,7 +472,7 @@ def slide_lucky(data, fonts):
     lh_cap  = fonts["cap"].size
 
     def item_height(val):
-        n = len(wrap(draw, val, fonts["body"], body_w))
+        n = len(smart_wrap(draw, val, fonts["body"], body_w))
         return lh_cap + 16 + n * lh_body  # label + gap + val
 
     total_h   = sum(item_height(v) for _, _, v in items)
@@ -472,19 +491,22 @@ def slide_lucky(data, fonts):
         draw_hline(draw, line_y, x0=lx, color=(45, 35, 20))
         # 値
         val_y = line_y + 10
-        lines = wrap(draw, val, fonts["body"], body_w)
-        for i, line in enumerate(lines):
-            draw.text((lx, val_y + i*lh_body), line, font=fonts["body"], fill=CREAM)
+        lines = smart_wrap(draw, val, fonts["body"], body_w)
+        vi = 0
+        for line in lines:
+            if line:
+                draw.text((lx, val_y + vi*lh_body), line, font=fonts["body"], fill=CREAM)
+            vi += 1
         y += item_height(val) + spacing
 
-    draw_footer(draw, fonts, 7)
+    draw_footer(draw, fonts, 6)
     return img
 
 # ─────────────────────────────────────────────────────────────────────
-# スライド 8 ── CTA（来週予告 + フォロー誘導）
+# スライド 7 ── CTA（来週予告 + フォロー誘導）
 # ─────────────────────────────────────────────────────────────────────
 def slide_cta(data, fonts):
-    img, draw = make_canvas(seed=8)
+    img, draw = make_canvas(seed=7)
     draw_corners(draw)
 
     body_w = W - 2*MARGIN - 20
@@ -576,6 +598,9 @@ def parse_weekly(monday_key=None):
     msg_m     = re.search(r"message\s*:\s*\[(.*?)\]", block, re.DOTALL)
     msgs      = re.findall(r'"([^"]+)"', msg_m.group(0)) if msg_m else []
 
+    def nl(s):
+        return s.replace("\\n", "\n")
+
     return {
         "key":  monday_key,
         "card": {
@@ -585,20 +610,20 @@ def parse_weekly(monday_key=None):
             "image":  e(r'image\s*:\s*"([^"]+)"',  card_blk),
         },
         "period":   e(r'period\s*:\s*"([^"]+)"',  block),
-        "theme":    e(r'theme\s*:\s*"([^"]+)"',    block),
+        "theme":    nl(e(r'theme\s*:\s*"([^"]+)"',    block)),
         "keywords": kws,
-        "message":  msgs,
+        "message":  [nl(m) for m in msgs],
         "focus": {
-            "overall": e(r'overall\s*:\s*"([^"]+)"', focus_blk),
-            "work":    e(r'work\s*:\s*"([^"]+)"',    focus_blk),
-            "love":    e(r'love\s*:\s*"([^"]+)"',    focus_blk),
+            "overall": nl(e(r'overall\s*:\s*"([^"]+)"', focus_blk)),
+            "work":    nl(e(r'work\s*:\s*"([^"]+)"',    focus_blk)),
+            "love":    nl(e(r'love\s*:\s*"([^"]+)"',    focus_blk)),
         },
         "lucky": {
             "color":   e(r'color\s*:\s*"([^"]+)"',   lucky_blk),
-            "action":  e(r'action\s*:\s*"([^"]+)"',  lucky_blk),
+            "action":  nl(e(r'action\s*:\s*"([^"]+)"',  lucky_blk)),
             "keyword": e(r'keyword\s*:\s*"([^"]+)"', lucky_blk),
         },
-        "nextHint": e(r'nextHint\s*:\s*"([^"]+)"', block),
+        "nextHint": nl(e(r'nextHint\s*:\s*"([^"]+)"', block)),
     }
 
 def load_card_image(image_path_str):
@@ -655,10 +680,9 @@ def main():
     print("[3/4] Loading card image...")
     card_img = load_card_image(data["card"]["image"])
 
-    print("[4/4] Generating 8 slides...")
+    print("[4/4] Generating 7 slides...")
     slides = [
         slide_cover(data, fonts, card_img),
-        slide_card_detail(data, fonts),
         slide_msg_combined(data, fonts),
         slide_focus(data, fonts, 0),
         slide_focus(data, fonts, 1),
