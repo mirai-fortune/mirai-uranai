@@ -258,7 +258,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:fl
 .trt-btn-reset{display:none;margin-top:24px;background:transparent;border:none;color:var(--muted);font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.18em;cursor:pointer;text-decoration:underline;text-underline-offset:3px;transition:color .2s;}
 .trt-btn-reset:hover{color:var(--cream);}
 .trt-btn-reset.trt-vis{display:inline-block;}
-.trt-btn-skip{display:none;margin-top:16px;background:transparent;border:1px solid rgba(196,168,106,.2);color:rgba(196,168,106,.4);font-family:'Cormorant Garamond',serif;font-size:10px;letter-spacing:.24em;cursor:pointer;padding:5px 18px;transition:color .2s,border-color .2s;}
+.trt-btn-skip{display:none;background:transparent;border:1px solid rgba(196,168,106,.2);color:rgba(196,168,106,.4);font-family:'Cormorant Garamond',serif;font-size:10px;letter-spacing:.24em;cursor:pointer;padding:5px 18px;transition:color .2s,border-color .2s;}
 .trt-btn-skip:hover{color:var(--gold);border-color:rgba(196,168,106,.5);}
 .trt-btn-skip.trt-vis{display:inline-block;}
 
@@ -566,7 +566,6 @@ html.theme-minagi section { position: relative; z-index: 1; }
 <div class="trt-draw-area">
   <button class="trt-btn-draw" id="trt-btn-draw" disabled><span>C A R D</span> <span>D R A W</span></button>
   <br>
-  <button class="trt-btn-skip" id="trt-btn-skip">S K I P</button>
   <button class="trt-btn-reset" id="trt-btn-reset">もう一度引く</button>
 </div>
 
@@ -672,6 +671,10 @@ html.theme-minagi section { position: relative; z-index: 1; }
 
 </div><!-- /trt-celtic -->
 </div><!-- /trt-cloth -->
+
+<div style="text-align:center;margin:20px 0 0;">
+  <button class="trt-btn-skip" id="trt-btn-skip">S K I P</button>
+</div>
 
 <div class="sec-div" id="trt-sec-div" style="display:none"><span>CELTIC CROSS READING</span></div>
 <div class="trt-interp" id="trt-interp"></div>
