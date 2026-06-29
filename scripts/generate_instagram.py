@@ -21,11 +21,12 @@ MARGIN = 88
 # カラーパレット
 BG_TOP   = (3,  5, 20)
 BG_BOT   = (7,  3, 30)
-GOLD     = (196, 168, 106)
-GOLD_LT  = (232, 212, 155)
-GOLD_DIM = (90,  72,  44)
-CREAM    = (245, 242, 235)
-MUTED    = (150, 143, 128)
+GOLD        = (196, 168, 106)
+GOLD_LT     = (232, 212, 155)
+GOLD_DIM    = (90,  72,  44)
+GOLD_BRIGHT = (245, 200, 30)   # アクションチェック番号用（高コントラスト）
+CREAM       = (245, 242, 235)
+MUTED       = (150, 143, 128)
 
 OUTPUT_DIR = Path("instagram_output")
 OUTPUT_DIR.mkdir(exist_ok=True)
@@ -70,8 +71,9 @@ def load_fonts():
         "disp":  _f(p, 70),   # カード名
         "hero":  _f(p, 54),   # テーマ（フック）
         "title": _f(p, 46),   # セクションタイトル
-        "body":  _f(p, 39),   # 本文
-        "cap":   _f(p, 25),   # キャプション、ラベル
+        "body":    _f(p, 39),   # 本文
+        "body_sm": _f(p, 34),  # スライド2専用（挨拶文との共存用コンパクトサイズ）
+        "cap":     _f(p, 25),  # キャプション、ラベル
         "xs":    _f(p, 20),   # フッター
         "en_wm": _f(s, 280),  # 透かし
         "en_lg": _f(s, 44),   # 英語カード名
@@ -117,6 +119,52 @@ def smart_wrap(draw, text, font, max_w):
 def explicit_lines(text):
     """自動折り返しなし：\\n のみで分割。意味改行を完全にコンテンツ側で制御する"""
     return text.split("\n")
+
+def generate_greeting():
+    """実行日の月・時期に合わせた温かみのある挨拶文を動的生成"""
+    today = date.today()
+    m = today.month
+    d = today.day
+    t = "early" if d <= 10 else ("mid" if d <= 20 else "late")
+    table = {
+        (1, "early"): "新年、あけましておめでとうございます。\n今年も一緒に、一歩ずつ進んでいきましょう。",
+        (1, "mid"):   "お正月の余韻も落ち着いてきた頃ですね。\n今週もお疲れ様でした。",
+        (1, "late"):  "1月もあとわずかですね。\n寒い日が続きますが、体調はいかがですか？",
+        (2, "early"): "立春を過ぎ、春の気配が感じられますね。\n今週もお疲れ様でした。",
+        (2, "mid"):   "バレンタインの時期ですね。\n自分自身へのギフトも大切にしてください。",
+        (2, "late"):  "2月もそろそろ終わりですね。\nよく頑張った自分を、少し褒めてあげてください。",
+        (3, "early"): "3月に入りましたね。春の息吹を感じる季節です。\n今週もお疲れ様でした。",
+        (3, "mid"):   "春めいてきましたね。\n心も体も、少しずつほぐれてきた頃でしょうか。",
+        (3, "late"):  "年度末の忙しい時期ですね。\n無理せず、今週も一歩ずつ進みましょう。",
+        (4, "early"): "新年度が始まりましたね。\n新しい環境に慣れるまで、自分を労わってください。",
+        (4, "mid"):   "春の陽気が気持ちいい季節ですね。\n今週もお疲れ様でした。",
+        (4, "late"):  "ゴールデンウィークが近づいてきましたね。\nもう少し、一緒に頑張りましょう。",
+        (5, "early"): "ゴールデンウィーク明け、お疲れではないですか？\n自分のペースで、ゆっくり戻っていきましょう。",
+        (5, "mid"):   "五月晴れが続く季節ですね。\n今週もお疲れ様でした。",
+        (5, "late"):  "5月もあとわずかですね。\n新緑の季節に、少し深呼吸してみましょう。",
+        (6, "early"): "6月が始まりましたね。\n雨の季節も、心は穏やかに過ごしていきましょう。",
+        (6, "mid"):   "梅雨の季節ですね。\n気圧の変化で、体が重く感じる日もあるかと思います。",
+        (6, "late"):  "6月もあとわずかですね。\n今週もよく頑張りました。お疲れ様でした。",
+        (7, "early"): "7月に入り、夏が近づいてきましたね。\n水分をしっかり補って、今週も一緒に進みましょう。",
+        (7, "mid"):   "暑い日が続いていますね。\n体調はいかがですか？無理せず過ごしてください。",
+        (7, "late"):  "夏の暑さが本格的になってきましたね。\n今週もお疲れ様でした。",
+        (8, "early"): "お盆の季節ですね。\nゆっくりと自分を振り返る時間を取ってみてください。",
+        (8, "mid"):   "夏の後半に入りましたね。\n少しずつ秋の気配も感じられる頃でしょうか。",
+        (8, "late"):  "8月もあとわずかですね。\n夏の疲れが出やすい時期です。自分を労わってください。",
+        (9, "early"): "9月に入りましたね。\n少しずつ涼しくなってきた頃でしょうか。",
+        (9, "mid"):   "秋分の日が近いですね。\n季節の変わり目、体調はいかがですか？",
+        (9, "late"):  "9月もあとわずかですね。\n秋の夜長に、自分と向き合う時間を作ってみましょう。",
+        (10, "early"): "10月が始まりましたね。実りの秋です。\n今週もお疲れ様でした。",
+        (10, "mid"):   "秋が深まってきましたね。\n少しずつ肌寒くなってきた頃でしょうか。",
+        (10, "late"):  "10月もあとわずかですね。\n今週も自分を大切にしながら過ごしましょう。",
+        (11, "early"): "11月に入り、秋も深まってきましたね。\n体調はいかがですか？",
+        (11, "mid"):   "肌寒い日が増えてきましたね。\n温かくして、今週も一歩ずつ進みましょう。",
+        (11, "late"):  "11月もあとわずかですね。\n年末に向けて、自分のペースで整えていきましょう。",
+        (12, "early"): "12月に入りましたね。\n一年の締めくくりに向けて、自分を労わりながら進みましょう。",
+        (12, "mid"):   "年末が近づいてきましたね。\n忙しい時期ですが、無理せず過ごしてください。",
+        (12, "late"):  "いよいよ年の瀬ですね。\n今年も一年、本当にお疲れ様でした。",
+    }
+    return table.get((m, t), "今週もお疲れ様でした。\n新しい週の始まりに、一緒に前を向いていきましょう。")
 
 def put_center(draw, text, font, y, color, width=W):
     x = (width - tw(draw, text, font)) // 2
@@ -369,19 +417,30 @@ def slide_msg_combined(data, fonts):
     draw_hline(draw, y)
     y += 34
 
-    # ── message[0]: コーチング本文（body, cream）── explicit_linesで自動折り返し無効
+    # ── 挨拶文（動的生成・季節・時期に応じた労いの言葉）──
+    greeting = generate_greeting()
+    lh_greet = int(fonts["cap"].size * 1.65)
+    for line in explicit_lines(greeting):
+        if line:
+            draw.text((MARGIN+10, y), line, font=fonts["cap"], fill=MUTED)
+        y += lh_greet
+    y += 6
+    draw_hline(draw, y, x0=MARGIN+10, x1=W-MARGIN-10)
+    y += 16
+
+    # ── message[0]: コーチング本文（body_sm 34px, cream）── explicit_linesで自動折り返し無効
     msg0 = data["message"][0] if data["message"] else ""
     lines0 = explicit_lines(msg0)
-    lh0 = int(fonts["body"].size * 1.78)
+    lh0 = int(fonts["body_sm"].size * 1.68)
     for line in lines0:
         if line:
-            draw.text((MARGIN+10, y), line, font=fonts["body"], fill=CREAM)
+            draw.text((MARGIN+10, y), line, font=fonts["body_sm"], fill=CREAM)
         y += lh0
 
     # ── 仕切り線 ──
-    y += 18
+    y += 14
     draw_hline(draw, y, x0=W//4, x1=W*3//4)
-    y += 20
+    y += 16
 
     # ── message[1]: アクションアイテム（cap, gold, インデント付き）──
     msg1 = data["message"][1] if len(data["message"]) > 1 else ""
@@ -389,13 +448,13 @@ def slide_msg_combined(data, fonts):
     item_w   = W - indent_x - MARGIN
     if "◇" in msg1:
         parts = [p.strip() for p in msg1.split("◇") if p.strip()]
-        lh1 = int(fonts["cap"].size * 1.9)
+        lh1 = int(fonts["cap"].size * 1.85)
         for part in parts:
             if part:
                 draw.text((indent_x, y), "◇  " + part, font=fonts["cap"], fill=GOLD_DIM)
-            y += lh1 + 4
+            y += lh1 + 3
     else:
-        put_block(draw, msg1, fonts["cap"], indent_x, y, item_w, color=GOLD_DIM, leading=1.9)
+        put_block(draw, msg1, fonts["cap"], indent_x, y, item_w, color=GOLD_DIM, leading=1.85)
 
     draw_footer(draw, fonts, 2)
     return img
@@ -476,8 +535,9 @@ def slide_lucky(data, fonts):
 
     y = y_hdr + 30 + spacing
     for num, lbl, val in items:
-        # 番号（左側、薄いゴールド）
-        draw.text((MARGIN, y - 4), num, font=fonts["en_lg"], fill=GOLD_DIM)
+        # 番号（左側・明るいゴールド・1pxオフセットで太字感を演出）
+        for ox, oy in ((0,0),(1,0),(0,1)):
+            draw.text((MARGIN+ox, y-4+oy), num, font=fonts["en_lg"], fill=GOLD_BRIGHT)
         # ラベル
         draw.text((lx, y), lbl, font=fonts["cap"], fill=GOLD)
         # 罫線
@@ -513,8 +573,17 @@ def slide_cta(data, fonts):
     y = put_block(draw, data["nextHint"], fonts["body"],
                   MARGIN+10, y, body_w, max_h=220)
 
+    # ── コメント誘導CTA（週次のエンゲージメント問いかけ）──
+    if data.get("commentCTA"):
+        y += 28
+        lh_cta = int(fonts["cap"].size * 1.75)
+        for line in explicit_lines(data["commentCTA"]):
+            if line:
+                put_center(draw, line, fonts["cap"], y, GOLD_LT)
+            y += lh_cta
+
     # ── 中央セパレーター ──
-    sep_y = max(y + 44, 380)
+    sep_y = max(y + 36, 440)
     draw_hline(draw, sep_y)
 
     # ── 下部: CTA ブロック（残りスペースに縦中央寄せ）──
@@ -616,7 +685,8 @@ def parse_weekly(monday_key=None):
             "action":  nl(e(r'action\s*:\s*"([^"]+)"',  lucky_blk)),
             "keyword": e(r'keyword\s*:\s*"([^"]+)"', lucky_blk),
         },
-        "nextHint": nl(e(r'nextHint\s*:\s*"([^"]+)"', block)),
+        "nextHint":   nl(e(r'nextHint\s*:\s*"([^"]+)"',   block)),
+        "commentCTA": nl(e(r'commentCTA\s*:\s*"([^"]+)"', block)),
     }
 
 def load_card_image(image_path_str):
