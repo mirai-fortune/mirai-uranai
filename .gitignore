@@ -24,5 +24,6 @@ desktop.ini
 
 # AI作業場の他のプロジェクトファイル
 *.py
+!scripts/*.py
 __pycache__/
 *.ipynb
