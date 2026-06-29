@@ -374,8 +374,6 @@ def parse_weekly(monday_key=None):
         return m.group(1).strip() if m else ""
 
     card_blk  = extr(r"card\s*:\s*\{([^}]+)\}")
-    focus_blk = extr(r"focus\s*:\s*\{(.*?)\}(?=\s*,\s*lucky)", re.DOTALL) \
-                if True else ""
     focus_m   = re.search(r"focus\s*:\s*\{(.*?)\}(?=\s*,\s*lucky)", block, re.DOTALL)
     focus_blk = focus_m.group(1) if focus_m else ""
     lucky_m   = re.search(r"lucky\s*:\s*\{([^}]+)\}", block)
