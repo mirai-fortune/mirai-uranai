@@ -363,8 +363,8 @@
     var ps  = createParticles(theme, cx, cy);
     var raf;
 
-    setTimeout(function () { canvas.style.opacity = '0'; }, 950);
-    setTimeout(function () { cancelAnimationFrame(raf); canvas.remove(); }, 1650);
+    setTimeout(function () { canvas.style.opacity = '0'; }, 750);
+    setTimeout(function () { cancelAnimationFrame(raf); canvas.remove(); }, 1400);
 
     function loop() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -381,11 +381,44 @@
      ボタンにイベント付与
   ══════════════════════════════════════ */
   function attach() {
-    var btns = document.querySelectorAll('.calc-btn, .trt-btn-draw');
-    for (var i = 0; i < btns.length; i++) {
+    var i;
+
+    /*
+     * .calc-btn: onclick属性をインターセプトして「エフェクト先行・計算遅延」方式に変更。
+     *
+     * 理由: onclick="calcIndividual()" が即座に scrollIntoView() を呼ぶため、
+     *       固定canvasのエフェクトがスクロール中に画面に貼り付いて見えてしまう。
+     *
+     * 対策: onclickを外し、クリック時はエフェクトのみ起動。
+     *       300ms後（フラッシュ+リングのインパクトが完了するタイミング）に
+     *       元の処理を遅延実行する。
+     *       パーティクルはスクロール中もフェード中のため視覚的に問題なし。
+     */
+    var calcBtns = document.querySelectorAll('.calc-btn');
+    for (i = 0; i < calcBtns.length; i++) {
+      (function (btn) {
+        var original = btn.onclick;
+        if (original) {
+          btn.onclick = null;
+          btn.addEventListener('click', function () {
+            triggerEffect(btn);
+            setTimeout(function () { original.call(btn); }, 300);
+          });
+        } else {
+          btn.addEventListener('click', function () { triggerEffect(btn); });
+        }
+      })(calcBtns[i]);
+    }
+
+    /*
+     * .trt-btn-draw: タロットは既存 addEventListener を維持。
+     *                エフェクトのみ追加（スクロール挙動が異なるため遅延なし）。
+     */
+    var drawBtns = document.querySelectorAll('.trt-btn-draw');
+    for (i = 0; i < drawBtns.length; i++) {
       (function (btn) {
         btn.addEventListener('click', function () { triggerEffect(btn); });
-      })(btns[i]);
+      })(drawBtns[i]);
     }
   }
 
