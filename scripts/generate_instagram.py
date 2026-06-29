@@ -459,7 +459,7 @@ def upload_to_drive(file_paths, creds_json_str, folder_id, week_key):
     from googleapiclient.http import MediaFileUpload
 
     creds = service_account.Credentials.from_service_account_info(
-        json.loads(creds_json_str),
+        json.loads(creds_json_str.lstrip('﻿')),
         scopes=["https://www.googleapis.com/auth/drive.file"],
     )
     svc = build("drive", "v3", credentials=creds)
