@@ -62,8 +62,8 @@ def _f(path, size):
 def load_fonts():
     serif = _find(SERIF_CANDIDATES)
     sans  = _find(SANS_CANDIDATES)
-    p = sans  or serif   # sans-serif優先：より現代的な視認性
-    s = serif or sans
+    p = serif or sans    # serif優先：明朝体で高級感・内省的な雰囲気
+    s = sans  or serif   # 数字・英字ラベル用
     if not p:
         print("WARNING: No CJK font found, using default", file=sys.stderr)
     return {
@@ -113,6 +113,10 @@ def smart_wrap(draw, text, font, max_w):
     for seg in text.split("\n"):
         lines.extend(wrap(draw, seg, font, max_w) if seg else [""])
     return lines
+
+def explicit_lines(text):
+    """自動折り返しなし：\\n のみで分割。意味改行を完全にコンテンツ側で制御する"""
+    return text.split("\n")
 
 def put_center(draw, text, font, y, color, width=W):
     x = (width - tw(draw, text, font)) // 2
@@ -279,9 +283,9 @@ def slide_cover(data, fonts, card_img):
     draw_hline(draw, y, x0=160, x1=W-160)
     y += 26
 
-    # テーマ（最重要コピー）
+    # テーマ（最重要コピー） ─ explicit_linesで自動折り返し無効
     body_w = W - 2*MARGIN - 20
-    for line in smart_wrap(draw, data["theme"], fonts["hero"], body_w):
+    for line in explicit_lines(data["theme"]):
         if line:
             put_center(draw, line, fonts["hero"], y, CREAM)
         y += int(fonts["hero"].size * 1.22)
@@ -365,19 +369,19 @@ def slide_msg_combined(data, fonts):
     draw_hline(draw, y)
     y += 34
 
-    # ── message[0]: コーチング本文（body, cream）──
+    # ── message[0]: コーチング本文（body, cream）── explicit_linesで自動折り返し無効
     msg0 = data["message"][0] if data["message"] else ""
-    lines0 = smart_wrap(draw, msg0, fonts["body"], body_w)
-    lh0 = int(fonts["body"].size * 1.8)
+    lines0 = explicit_lines(msg0)
+    lh0 = int(fonts["body"].size * 1.78)
     for line in lines0:
         if line:
             draw.text((MARGIN+10, y), line, font=fonts["body"], fill=CREAM)
         y += lh0
 
     # ── 仕切り線 ──
-    y += 20
+    y += 18
     draw_hline(draw, y, x0=W//4, x1=W*3//4)
-    y += 22
+    y += 20
 
     # ── message[1]: アクションアイテム（cap, gold, インデント付き）──
     msg1 = data["message"][1] if len(data["message"]) > 1 else ""
@@ -385,24 +389,13 @@ def slide_msg_combined(data, fonts):
     item_w   = W - indent_x - MARGIN
     if "◇" in msg1:
         parts = [p.strip() for p in msg1.split("◇") if p.strip()]
-        lh1 = int(fonts["cap"].size * 1.95)
+        lh1 = int(fonts["cap"].size * 1.9)
         for part in parts:
-            # ◇ prefix + テキスト（smart_wrapで折り返し）
-            prefix = "◇  "
-            plines = smart_wrap(draw, prefix + part, fonts["cap"], item_w)
-            for j, pl in enumerate(plines):
-                if pl:
-                    draw.text((indent_x, y), pl, font=fonts["cap"], fill=GOLD_DIM)
-                y += lh1
-            y += 4  # アイテム間に小さな余白
+            if part:
+                draw.text((indent_x, y), "◇  " + part, font=fonts["cap"], fill=GOLD_DIM)
+            y += lh1 + 4
     else:
-        put_block(draw, msg1, fonts["cap"], indent_x, y, item_w, color=GOLD_DIM, leading=1.95)
-
-    # ── キーワードタグ（下部余白に）──
-    if data["keywords"]:
-        kw_y = H - 148
-        draw_hline(draw, kw_y - 14)
-        draw_keyword_tags(draw, fonts, data["keywords"], kw_y, center=True)
+        put_block(draw, msg1, fonts["cap"], indent_x, y, item_w, color=GOLD_DIM, leading=1.9)
 
     draw_footer(draw, fonts, 2)
     return img
@@ -428,9 +421,9 @@ def slide_focus(data, fonts, idx):
     y_hdr = draw_section_header(draw, fonts, label, y_hdr)
     draw_hline(draw, y_hdr)
 
-    # ── テキストを縦中央に配置 ──
+    # ── テキストを縦中央に配置 ── explicit_linesで自動折り返し無効
     body_w = W - 2*MARGIN - 20
-    lines  = smart_wrap(draw, text, fonts["body"], body_w)
+    lines  = explicit_lines(text)
     lh     = int(fonts["body"].size * 1.85)
     text_h = len(lines) * lh
 
@@ -472,7 +465,8 @@ def slide_lucky(data, fonts):
     lh_cap  = fonts["cap"].size
 
     def item_height(val):
-        n = len(smart_wrap(draw, val, fonts["body"], body_w))
+        n = len([l for l in explicit_lines(val) if l])  # 空行は高さなし
+        n = max(n, 1)
         return lh_cap + 16 + n * lh_body  # label + gap + val
 
     total_h   = sum(item_height(v) for _, _, v in items)
@@ -489,14 +483,13 @@ def slide_lucky(data, fonts):
         # 罫線
         line_y = y + lh_cap + 6
         draw_hline(draw, line_y, x0=lx, color=(45, 35, 20))
-        # 値
+        # 値（explicit_linesで自動折り返し無効）
         val_y = line_y + 10
-        lines = smart_wrap(draw, val, fonts["body"], body_w)
         vi = 0
-        for line in lines:
+        for line in explicit_lines(val):
             if line:
                 draw.text((lx, val_y + vi*lh_body), line, font=fonts["body"], fill=CREAM)
-            vi += 1
+                vi += 1
         y += item_height(val) + spacing
 
     draw_footer(draw, fonts, 6)
