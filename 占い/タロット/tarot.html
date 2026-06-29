@@ -258,6 +258,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:fl
 .trt-btn-reset{display:none;margin-top:24px;background:transparent;border:none;color:var(--muted);font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.18em;cursor:pointer;text-decoration:underline;text-underline-offset:3px;transition:color .2s;}
 .trt-btn-reset:hover{color:var(--cream);}
 .trt-btn-reset.trt-vis{display:inline-block;}
+.trt-btn-skip{display:none;margin-top:16px;background:transparent;border:1px solid rgba(196,168,106,.2);color:rgba(196,168,106,.4);font-family:'Cormorant Garamond',serif;font-size:10px;letter-spacing:.24em;cursor:pointer;padding:5px 18px;transition:color .2s,border-color .2s;}
+.trt-btn-skip:hover{color:var(--gold);border-color:rgba(196,168,106,.5);}
+.trt-btn-skip.trt-vis{display:inline-block;}
 
 /* Reading section */
 .trt-interp{max-width:660px;margin:0 auto;padding:0 24px 80px;opacity:0;transform:translateY(16px);transition:opacity .9s ease,transform .9s ease;}
@@ -563,6 +566,7 @@ html.theme-minagi section { position: relative; z-index: 1; }
 <div class="trt-draw-area">
   <button class="trt-btn-draw" id="trt-btn-draw" disabled><span>C A R D</span> <span>D R A W</span></button>
   <br>
+  <button class="trt-btn-skip" id="trt-btn-skip">S K I P</button>
   <button class="trt-btn-reset" id="trt-btn-reset">もう一度引く</button>
 </div>
 
@@ -1024,6 +1028,7 @@ function trtFlip(idx, delay, gen){
           document.getElementById('trt-sec-div').style.display = '';
           document.getElementById('trt-interp').classList.add('trt-vis');
           document.getElementById('trt-btn-reset').classList.add('trt-vis');
+          document.getElementById('trt-btn-skip').classList.remove('trt-vis');
           setTimeout(()=>{
             const sd=document.getElementById('trt-sec-div');
             if(sd){ const y=sd.getBoundingClientRect().top+window.pageYOffset-80; window.scrollTo({top:y,behavior:'smooth'}); }
@@ -1052,6 +1057,7 @@ function trtDraw(){
     const placeGap=120,flipStart=1500,flipGap=550;
     for(let i=0;i<10;i++)trtPlace(i,80+i*placeGap,gen);
     for(let i=0;i<10;i++)trtFlip(i,flipStart+i*flipGap,gen);
+    document.getElementById('trt-btn-skip').classList.add('trt-vis');
   });
 }
 
@@ -1077,6 +1083,7 @@ function trtReset(){
   interp.classList.remove('trt-vis');
   document.getElementById('trt-sec-div').style.display = 'none';
   document.getElementById('trt-btn-reset').classList.remove('trt-vis');
+  document.getElementById('trt-btn-skip').classList.remove('trt-vis');
   document.querySelectorAll('.trt-cat-btn').forEach(b => { b.classList.remove('trt-cat-active'); b.disabled = false; });
   trtCategory = null;
   document.getElementById('trt-btn-draw').disabled = true;
@@ -1087,8 +1094,32 @@ function trtReset(){
 /* ════════════════════════════════════════
    EVENT LISTENERS
 ════════════════════════════════════════ */
+function trtSkip(){
+  trtGen++;
+  for(let i=0;i<10;i++){
+    const inner=document.getElementById('trt-card-'+i);
+    if(inner){
+      inner.style.transition='none';
+      inner.classList.remove('trt-placed');
+      inner.classList.add('trt-flipped');
+      void inner.offsetWidth;
+      inner.style.transition='';
+    }
+  }
+  trtUpdatePips(10);
+  document.getElementById('trt-sec-div').style.display='';
+  document.getElementById('trt-interp').classList.add('trt-vis');
+  document.getElementById('trt-btn-reset').classList.add('trt-vis');
+  document.getElementById('trt-btn-skip').classList.remove('trt-vis');
+  setTimeout(()=>{
+    const sd=document.getElementById('trt-sec-div');
+    if(sd){ const y=sd.getBoundingClientRect().top+window.pageYOffset-80; window.scrollTo({top:y,behavior:'smooth'}); }
+  },400);
+}
+
 document.getElementById('trt-btn-draw').addEventListener('click', trtDraw);
 document.getElementById('trt-btn-reset').addEventListener('click', trtReset);
+document.getElementById('trt-btn-skip').addEventListener('click', trtSkip);
 document.getElementById('trt-scroll-btn').addEventListener('click', function(){
   const cat=document.getElementById('trt-category');
   if(cat){ const y=cat.getBoundingClientRect().top+window.pageYOffset-80; window.scrollTo({top:y,behavior:'smooth'}); }
