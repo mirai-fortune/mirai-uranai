@@ -348,12 +348,13 @@
     }, 70);
 
     /* エフェクト用 Canvas を生成 */
+    var mobile = window.innerWidth < 768;
     var canvas = document.createElement('canvas');
     canvas.style.cssText = [
       'position:fixed', 'top:0', 'left:0',
       'width:100vw', 'height:100vh',
       'z-index:9999', 'pointer-events:none',
-      'transition:opacity 0.65s ease'
+      'transition:opacity 0.55s ease'
     ].join(';');
     canvas.width  = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -363,8 +364,12 @@
     var ps  = createParticles(theme, cx, cy);
     var raf;
 
-    setTimeout(function () { canvas.style.opacity = '0'; }, 750);
-    setTimeout(function () { cancelAnimationFrame(raf); canvas.remove(); }, 1400);
+    /* スマホ: スクロール(500ms)の前にほぼ消えるよう420msでフェード開始
+       PC:    スクロール(300ms)後も余韻が残るよう750msでフェード開始 */
+    var fadeAt   = mobile ? 420  : 750;
+    var removeAt = mobile ? 920  : 1400;
+    setTimeout(function () { canvas.style.opacity = '0'; }, fadeAt);
+    setTimeout(function () { cancelAnimationFrame(raf); canvas.remove(); }, removeAt);
 
     function loop() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -402,7 +407,10 @@
           btn.onclick = null;
           btn.addEventListener('click', function () {
             triggerEffect(btn);
-            setTimeout(function () { original.call(btn); }, 300);
+            /* スマホ: smooth scrollが速い(~150ms)のでエフェクトが消えてから実行
+               PC:    smooth scrollが遅い(~400ms)のでフラッシュ完了後に実行 */
+            var scrollDelay = window.innerWidth < 768 ? 500 : 300;
+            setTimeout(function () { original.call(btn); }, scrollDelay);
           });
         } else {
           btn.addEventListener('click', function () { triggerEffect(btn); });
