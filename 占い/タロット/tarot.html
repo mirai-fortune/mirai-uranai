@@ -421,6 +421,16 @@ html.theme-minagi nav { background: rgba(4,8,15,0.92) !important; border-bottom-
 html.theme-minagi body { background: linear-gradient(135deg, #04080f 0%, #020508 100%) fixed; }
 html.theme-minagi .container { position: relative; z-index: 1; }
 html.theme-minagi section { position: relative; z-index: 1; }
+/* ── SCROLL BTN ── */
+.trt-scroll-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  margin-top:24px;padding:9px 28px;
+  border:1px solid rgba(196,168,106,.3);background:transparent;
+  color:var(--gold);font-family:'Cormorant Garamond',serif;
+  font-size:11px;letter-spacing:.28em;cursor:pointer;text-transform:uppercase;
+  transition:border-color .25s,background .25s,letter-spacing .3s;
+}
+.trt-scroll-btn:hover{border-color:rgba(196,168,106,.6);background:rgba(196,168,106,.06);letter-spacing:.34em;}
 /* ===== THEME SWITCHER ===== */
 .theme-switcher { position: relative; }
 .theme-btn {
@@ -527,6 +537,7 @@ html.theme-minagi section { position: relative; z-index: 1; }
   <p class="trt-intro-jp">ケルト十字法</p>
   <p>10枚のカードが、あなたの状況を多角的に照らし出します。<br>
   心の中の問いを抱きながら、カードを引いてください。</p>
+  <button class="trt-scroll-btn" id="trt-scroll-btn">↓ &nbsp; S C R O L L</button>
 </div>
 
 <div class="trt-category" id="trt-category">
@@ -1006,6 +1017,10 @@ function trtFlip(idx, delay, gen){
           document.getElementById('trt-sec-div').style.display = '';
           document.getElementById('trt-interp').classList.add('trt-vis');
           document.getElementById('trt-btn-reset').classList.add('trt-vis');
+          setTimeout(()=>{
+            const sd=document.getElementById('trt-sec-div');
+            if(sd){ const y=sd.getBoundingClientRect().top+window.pageYOffset-80; window.scrollTo({top:y,behavior:'smooth'}); }
+          },600);
         }, 700);
       }
     }, 850);
@@ -1026,6 +1041,8 @@ function trtDraw(){
     const placeGap=120,flipStart=1500,flipGap=550;
     for(let i=0;i<10;i++)trtPlace(i,80+i*placeGap,gen);
     for(let i=0;i<10;i++)trtFlip(i,flipStart+i*flipGap,gen);
+    const cloth=document.querySelector('.trt-cloth');
+    if(cloth){ const y=cloth.getBoundingClientRect().top+window.pageYOffset-80; window.scrollTo({top:y,behavior:'smooth'}); }
   });
 }
 
@@ -1063,6 +1080,10 @@ function trtReset(){
 ════════════════════════════════════════ */
 document.getElementById('trt-btn-draw').addEventListener('click', trtDraw);
 document.getElementById('trt-btn-reset').addEventListener('click', trtReset);
+document.getElementById('trt-scroll-btn').addEventListener('click', function(){
+  const cat=document.getElementById('trt-category');
+  if(cat){ const y=cat.getBoundingClientRect().top+window.pageYOffset-80; window.scrollTo({top:y,behavior:'smooth'}); }
+});
 
 document.querySelectorAll('.trt-cat-btn').forEach(btn => {
   btn.addEventListener('click', () => {
