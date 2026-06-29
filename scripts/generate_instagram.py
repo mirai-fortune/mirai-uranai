@@ -700,31 +700,64 @@ def load_card_image(image_path_str):
 # ─────────────────────────────────────────────────────────────────────
 # キャプション
 # ─────────────────────────────────────────────────────────────────────
+def _first_sentence(text, max_len=40):
+    """フォーカステキストの最初の一文を取得。句点で自然に区切る"""
+    segs = [s.strip() for s in text.split("\n") if s.strip()]
+    if not segs:
+        return ""
+    first = segs[0]
+    # 句点（。）で終わっていれば最初のセグメントをそのまま使用
+    if "。" in first:
+        return first[:first.index("。")+1]
+    # 読点（、）で終わっている場合は次のセグメントと結合して文を完成
+    if first and first[-1] in "、，" and len(segs) > 1:
+        combined = first + segs[1]
+        end = combined.find("。")
+        if end != -1:
+            return combined[:end+1]
+        return combined[:max_len] + ("…" if len(combined) > max_len else "")
+    return first[:max_len] + ("…" if len(first) > max_len else "")
+
 def build_caption(data):
-    card  = data["card"]["nameJp"]
-    theme = data["theme"]
-    msg1  = (data["message"][0][:60] + "…") if data["message"] else ""
-    over  = data["focus"]["overall"][:55] + "…"
-    work  = data["focus"]["work"][:55] + "…"
-    love  = data["focus"]["love"][:55] + "…"
+    card_jp   = data["card"]["nameJp"]
+    card_en   = data["card"]["nameEn"]
+    greeting  = generate_greeting()                 # 季節・時期の挨拶（動的）
+    hook_line = greeting.split("\n")[0]             # 1行目のみフック用に使用
+    over_pt   = _first_sentence(data["focus"]["overall"])
+    work_pt   = _first_sentence(data["focus"]["work"])
+    love_pt   = _first_sentence(data["focus"]["love"])
+    keyword   = data["lucky"]["keyword"]
+    comment   = data.get("commentCTA", "").replace("\n", "\n")
+
+    # キーワードからダイナミックハッシュタグを生成
+    kw_tags = " ".join(f"#{kw.replace(' ','')}" for kw in data.get("keywords", []))
+
+    # ベースハッシュタグ（固定）
+    base_tags = (
+        "#タロット占い #週間運勢 #自己分析 #マインドフルネス "
+        "#習慣化 #メンタルケア #タロットリーディング #asumira占い "
+        f"#内省 #コーチング #自己肯定感 #{card_jp}のカード"
+    )
 
     return (
-        f"✦ 今週のタロット｜{card}「{theme}」\n\n"
-        f"{msg1}\n\n"
-        f"─────────────────\n"
-        f"総合運　{over}\n"
-        f"仕事運　{work}\n"
-        f"恋愛運　{love}\n"
+        f"{hook_line}\n"
+        f"今週のタロットは、そのぜんぶを手放すためのカードでした。\n\n"
         f"─────────────────\n\n"
-        f"ラッキーカラー：{data['lucky']['color']}\n"
-        f"今週のキーワード：{data['lucky']['keyword']}\n\n"
-        f"─────────────────\n"
-        f"投稿を保存して月曜日に見返してください\n"
-        f"詳しい鑑定はプロフィールリンクから\n\n"
-        f"#タロット #タロット占い #週間運勢 #今週の運勢 "
-        f"#タロットリーディング #占い #自己啓発 #コーチング "
-        f"#スピリチュアル #占い師 #タロットカード #週間タロット "
-        f"#朝活 #ライフスタイル #{card} #asumira #asumira占い\n"
+        f"今週引いたのは「{card_jp}（{card_en}）」。\n\n"
+        f"▷ 今週のポイント\n\n"
+        f"✦ 総合運\n{over_pt}\n\n"
+        f"✦ 仕事運\n{work_pt}\n\n"
+        f"✦ 恋愛運\n{love_pt}\n\n"
+        f"─────────────────\n\n"
+        f"月曜の朝、または疲れた夜に見返すために\n"
+        f"この投稿を🔖保存しておいてください。\n\n"
+        f"─────────────────\n\n"
+        f"{comment}\n\n"
+        f"─────────────────\n\n"
+        f"より詳しい鑑定はプロフィールリンクから。\n"
+        f"毎週月曜更新中 → フォローしておくと便利です。\n\n"
+        f"@asumira_uranai\n\n"
+        f"{base_tags} {kw_tags}\n"
     )
 
 # ─────────────────────────────────────────────────────────────────────
