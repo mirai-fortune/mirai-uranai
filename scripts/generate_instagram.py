@@ -273,7 +273,7 @@ def slide_cover(data, fonts, card_img):
     y += 10
 
     # カード名
-    card_line = f"{data['card']['number']}  ✦  {data['card']['nameJp']}"
+    card_line = f"{data['card']['number']}  ◇  {data['card']['nameJp']}"
     put_center(draw, card_line, fonts["cap"], y, GOLD)
     y += 36
 
@@ -505,7 +505,7 @@ def slide_cta(data, fonts):
     put_center(draw, "毎週の流れを確認してください", fonts["body"], y, CREAM)
     y += cta_font_h + 10
 
-    put_center(draw, "▸  フォローで毎週月曜にお届け", fonts["cap"], y, MUTED)
+    put_center(draw, "▷  フォローで毎週月曜にお届け", fonts["cap"], y, MUTED)
     y += 62
 
     draw_hline(draw, y, x0=200, x1=W-200)
