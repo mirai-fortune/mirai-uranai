@@ -552,8 +552,8 @@ def main():
     saved.append(caption_path)
 
     # Google Drive アップロード
-    creds_json = os.environ.get("GOOGLE_CREDENTIALS")
-    folder_id  = os.environ.get("GOOGLE_DRIVE_FOLDER_ID")
+    creds_json = (os.environ.get("GOOGLE_CREDENTIALS") or "").lstrip('﻿')
+    folder_id  = (os.environ.get("GOOGLE_DRIVE_FOLDER_ID") or "").lstrip('﻿').strip()
 
     if creds_json and folder_id:
         print("▶ Google Driveにアップロード中...")
