@@ -54,7 +54,7 @@ jobs:
 
           text = (
               "📸 Instagram投稿セット準備完了\n\n"
-              f"▼ 画像9枚ダウンロード\n{rel_url}\n\n"
+              f"▼ 画像8枚ダウンロード\n{rel_url}\n\n"
               "━━━━━━━━━━━━━\n"
               "📋 キャプション（コピペ用）\n\n"
               f"{caption}"

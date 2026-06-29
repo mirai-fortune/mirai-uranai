@@ -15,7 +15,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageChops
 # キャンバス定数
 # ─────────────────────────────────────────────────────────────────────
 W, H = 1080, 1080
-TOTAL = 9
+TOTAL = 8
 MARGIN = 72
 
 # カラーパレット
@@ -62,8 +62,8 @@ def _f(path, size):
 def load_fonts():
     serif = _find(SERIF_CANDIDATES)
     sans  = _find(SANS_CANDIDATES)
-    p = serif or sans
-    s = sans  or serif
+    p = sans  or serif   # sans-serif優先：より現代的な視認性
+    s = serif or sans
     if not p:
         print("WARNING: No CJK font found, using default", file=sys.stderr)
     return {
@@ -82,6 +82,8 @@ def load_fonts():
 # ─────────────────────────────────────────────────────────────────────
 # ユーティリティ
 # ─────────────────────────────────────────────────────────────────────
+KINSOKU = set('。、！？」』）】…ー・')
+
 def tw(draw, text, font):
     try:
         return int(draw.textlength(text, font=font))
@@ -98,6 +100,9 @@ def wrap(draw, text, font, max_w):
                 lo = mid
             else:
                 hi = mid - 1
+        # 禁則処理：次行先頭が行頭禁則文字なら現行に繰り込む
+        if lo < len(text) and text[lo] in KINSOKU and lo > 1:
+            lo -= 1
         lines.append(text[:lo])
         text = text[lo:]
     return lines
@@ -196,7 +201,7 @@ def draw_wm_number(img, fonts, number):
     nw    = tw(ld, number, fonts["en_wm"])
     nx    = (W - nw) // 2
     ny    = (H - fonts["en_wm"].size) // 2 - 30
-    ld.text((nx, ny), number, font=fonts["en_wm"], fill=(30, 18, 60))
+    ld.text((nx, ny), number, font=fonts["en_wm"], fill=(14, 8, 28))
     layer = layer.filter(ImageFilter.GaussianBlur(radius=6))
     return ImageChops.add(img, layer)
 
@@ -315,20 +320,18 @@ def slide_card_detail(data, fonts):
     y += fonts["en_lg"].size + 36
 
     draw_hline(draw, y, x0=180, x1=W-180)
-    y += 30
-
-    # テーマ引用スタイル
-    put_center(draw, "「", fonts["title"], y, GOLD_DIM)
-    y += 6
-    for line in wrap(draw, data["theme"], fonts["title"], W-2*MARGIN-60):
-        put_center(draw, line, fonts["title"], y, CREAM)
-        y += int(fonts["title"].size * 1.3)
-    y += 2
-    put_center(draw, "」", fonts["title"], y - 8, GOLD_DIM)
-    y += 42
-
-    draw_hline(draw, y, x0=180, x1=W-180)
     y += 36
+
+    # テーマ引用スタイル（シンプルな上下ラインで囲む）
+    theme_lines = wrap(draw, data["theme"], fonts["hero"], W-2*MARGIN-60)
+    draw_hline(draw, y - 4, x0=200, x1=W-200)
+    y += 10
+    for line in theme_lines:
+        put_center(draw, line, fonts["hero"], y, CREAM)
+        y += int(fonts["hero"].size * 1.25)
+    y += 10
+    draw_hline(draw, y, x0=200, x1=W-200)
+    y += 42
 
     # キーワードタグ（中央寄せ）
     draw_keyword_tags(draw, fonts, data["keywords"], y, center=True)
@@ -337,52 +340,62 @@ def slide_card_detail(data, fonts):
     return img
 
 # ─────────────────────────────────────────────────────────────────────
-# スライド 3 & 4 ── メッセージ（縦中央寄せ）
+# スライド 3 ── 今週の行動指針（メッセージ統合・コーチング型）
 # ─────────────────────────────────────────────────────────────────────
-def slide_message(data, fonts, slide_idx):
-    n   = slide_idx + 3       # slide 3 or 4
-    msg = data["message"][slide_idx] if slide_idx < len(data["message"]) \
-          else data["message"][0]
-
-    img, draw = make_canvas(seed=n)
+def slide_msg_combined(data, fonts):
+    img, draw = make_canvas(seed=3)
     draw_corners(draw)
 
-    # ── ヘッダー ──
-    y_hdr = 90
-    put_center(draw, "今週のメッセージ", fonts["cap"], y_hdr, GOLD)
-    y_hdr += 36
-    draw_hline(draw, y_hdr)
-
-    # ── テキストを縦中央に配置 ──
     body_w = W - 2*MARGIN - 20
-    lines  = wrap(draw, msg, fonts["body"], body_w)
-    lh     = int(fonts["body"].size * 1.75)
-    text_h = len(lines) * lh
 
-    top_reserved = y_hdr + 40
-    bot_reserved = 100
-    avail = H - top_reserved - bot_reserved
-    y_txt = top_reserved + max(30, (avail - text_h) // 2)
+    # ── ヘッダー ──
+    y = 90
+    put_center(draw, "今週のメッセージ", fonts["cap"], y, GOLD)
+    y += 36
+    draw_hline(draw, y)
+    y += 34
 
-    for i, line in enumerate(lines):
-        draw.text((MARGIN+10, y_txt + i*lh), line, font=fonts["body"], fill=CREAM)
+    # ── message[0]: コーチング本文（body 44px, cream）──
+    msg0 = data["message"][0] if data["message"] else ""
+    lines0 = wrap(draw, msg0, fonts["body"], body_w)
+    lh0 = int(fonts["body"].size * 1.72)
+    for line in lines0:
+        draw.text((MARGIN+10, y), line, font=fonts["body"], fill=CREAM)
+        y += lh0
 
-    # スライド4のみ: 下部にキーワード装飾
-    if slide_idx == 1 and data["keywords"]:
-        kw_y = H - 160
-        draw_hline(draw, kw_y - 18)
+    # ── 仕切り線 ──
+    y += 22
+    draw_hline(draw, y, x0=W//4, x1=W*3//4)
+    y += 22
+
+    # ── message[1]: アクションアイテム（cap 28px, gold）──
+    msg1 = data["message"][1] if len(data["message"]) > 1 else ""
+    if "◇" in msg1:
+        # ◇ 区切りでチェックリスト表示
+        parts = [p.strip() for p in msg1.split("◇") if p.strip()]
+        lh1 = int(fonts["cap"].size * 1.9)
+        for part in parts:
+            draw.text((MARGIN+10, y), "◇  " + part, font=fonts["cap"], fill=GOLD)
+            y += lh1
+    else:
+        put_block(draw, msg1, fonts["cap"], MARGIN+10, y, body_w, color=GOLD, leading=1.9)
+
+    # ── キーワードタグ（下部余白に）──
+    if data["keywords"]:
+        kw_y = H - 148
+        draw_hline(draw, kw_y - 14)
         draw_keyword_tags(draw, fonts, data["keywords"], kw_y, center=True)
 
-    draw_footer(draw, fonts, n)
+    draw_footer(draw, fonts, 3)
     return img
 
 # ─────────────────────────────────────────────────────────────────────
 # スライド 5–7 ── 総合運 / 仕事運 / 恋愛運（縦中央寄せ）
 # ─────────────────────────────────────────────────────────────────────
 FOCUS_CONFIG = [
-    ("overall", "総合運", 5),
-    ("work",    "仕事運", 6),
-    ("love",    "恋愛運", 7),
+    ("overall", "総合運", 4),
+    ("work",    "仕事運", 5),
+    ("love",    "恋愛運", 6),
 ]
 
 def slide_focus(data, fonts, idx):
@@ -415,22 +428,22 @@ def slide_focus(data, fonts, idx):
     return img
 
 # ─────────────────────────────────────────────────────────────────────
-# スライド 8 ── ラッキー（ナンバリングスタイル）
+# スライド 7 ── 今週のアクションチェック
 # ─────────────────────────────────────────────────────────────────────
 def slide_lucky(data, fonts):
-    img, draw = make_canvas(seed=8)
+    img, draw = make_canvas(seed=7)
     draw_corners(draw)
 
     # ── ヘッダー ──
     y_hdr = 90
-    put_center(draw, "今週のラッキー", fonts["title"], y_hdr, GOLD)
+    put_center(draw, "今週のアクションチェック", fonts["title"], y_hdr, GOLD)
     y_hdr += fonts["title"].size + 22
     draw_hline(draw, y_hdr)
 
     items = [
-        ("01", "ラッキーカラー", data["lucky"]["color"]),
-        ("02", "行動のヒント",   data["lucky"]["action"]),
-        ("03", "キーワード",     data["lucky"]["keyword"]),
+        ("01", "ラッキーカラー",   data["lucky"]["color"]),
+        ("02", "今週の習慣",       data["lucky"]["action"]),
+        ("03", "今週のキーワード", data["lucky"]["keyword"]),
     ]
 
     # 各アイテムの高さを計算（縦均等配置のため）
@@ -464,45 +477,44 @@ def slide_lucky(data, fonts):
             draw.text((lx, val_y + i*lh_body), line, font=fonts["body"], fill=CREAM)
         y += item_height(val) + spacing
 
-    draw_footer(draw, fonts, 8)
+    draw_footer(draw, fonts, 7)
     return img
 
 # ─────────────────────────────────────────────────────────────────────
-# スライド 9 ── CTA
+# スライド 8 ── CTA（来週予告 + フォロー誘導）
 # ─────────────────────────────────────────────────────────────────────
 def slide_cta(data, fonts):
-    img, draw = make_canvas(seed=9)
+    img, draw = make_canvas(seed=8)
     draw_corners(draw)
 
     body_w = W - 2*MARGIN - 20
 
-    # ── 上部: 来週のヒント ──
+    # ── 上部: 来週の予告（保存する明確な理由）──
     y = 90
-    put_center(draw, "来週のヒント", fonts["cap"], y, GOLD)
+    put_center(draw, "来週のテーマ予告", fonts["cap"], y, GOLD)
     y += 34
     draw_hline(draw, y)
     y += 30
     y = put_block(draw, data["nextHint"], fonts["body"],
                   MARGIN+10, y, body_w, max_h=220)
 
-    # ── 中央セパレーター（動的位置: 上部コンテンツの下 or 最低 y=380）──
+    # ── 中央セパレーター ──
     sep_y = max(y + 44, 380)
     draw_hline(draw, sep_y)
 
     # ── 下部: CTA ブロック（残りスペースに縦中央寄せ）──
-    # CTA コンテンツの総高さを先に見積もる
     cta_font_h = int(fonts["body"].size * 1.6)
     cap_font_h = int(fonts["cap"].size * 1.5)
     acc_font_h = fonts["disp"].size + 16
     total_cta  = cta_font_h * 2 + cap_font_h + 62 + acc_font_h
 
-    avail_below  = H - 100 - (sep_y + 20)  # footer + sep
+    avail_below  = H - 100 - (sep_y + 20)
     cta_start    = sep_y + 20 + max(0, (avail_below - total_cta) // 2)
 
     y = int(cta_start)
     put_center(draw, "今週の投稿を保存して", fonts["body"], y, CREAM)
     y += cta_font_h
-    put_center(draw, "毎週の流れを確認してください", fonts["body"], y, CREAM)
+    put_center(draw, "月曜日に見返してください", fonts["body"], y, CREAM)
     y += cta_font_h + 10
 
     put_center(draw, "▷  フォローで毎週月曜にお届け", fonts["cap"], y, MUTED)
@@ -617,14 +629,14 @@ def build_caption(data):
         f"恋愛運　{love}\n"
         f"─────────────────\n\n"
         f"ラッキーカラー：{data['lucky']['color']}\n"
-        f"キーワード：{data['lucky']['keyword']}\n\n"
+        f"今週のキーワード：{data['lucky']['keyword']}\n\n"
         f"─────────────────\n"
-        f"投稿を保存して毎週見返してください\n"
+        f"投稿を保存して月曜日に見返してください\n"
         f"詳しい鑑定はプロフィールリンクから\n\n"
         f"#タロット #タロット占い #週間運勢 #今週の運勢 "
-        f"#タロットリーディング #占い #運勢 #引き寄せ "
+        f"#タロットリーディング #占い #自己啓発 #コーチング "
         f"#スピリチュアル #占い師 #タロットカード #週間タロット "
-        f"#朝活 #自己啓発 #{card} #asumira #asumira占い\n"
+        f"#朝活 #ライフスタイル #{card} #asumira #asumira占い\n"
     )
 
 # ─────────────────────────────────────────────────────────────────────
@@ -643,12 +655,11 @@ def main():
     print("[3/4] Loading card image...")
     card_img = load_card_image(data["card"]["image"])
 
-    print("[4/4] Generating 9 slides...")
+    print("[4/4] Generating 8 slides...")
     slides = [
         slide_cover(data, fonts, card_img),
         slide_card_detail(data, fonts),
-        slide_message(data, fonts, 0),
-        slide_message(data, fonts, 1),
+        slide_msg_combined(data, fonts),
         slide_focus(data, fonts, 0),
         slide_focus(data, fonts, 1),
         slide_focus(data, fonts, 2),
