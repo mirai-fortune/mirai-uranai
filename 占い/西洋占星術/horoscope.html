@@ -227,6 +227,10 @@ nav.scrolled{box-shadow:0 2px 28px rgba(0,0,0,.55);}
   .horo-aspect-row{grid-template-columns:auto 1fr;gap:8px;}
   .horo-aspect-name,.horo-aspect-sym{display:none;}
   .nav-logo span{display:none;}
+  .horo-postable{min-width:0;}
+  .horo-postable th:nth-child(4),.horo-postable td:nth-child(4),
+  .horo-postable th:nth-child(5),.horo-postable td:nth-child(5){display:none;}
+  .horo-postable th,.horo-postable td{padding:7px 8px;font-size:11px;}
 }
 
 /* ── PLANET POSITIONS TABLE ── */
@@ -1281,7 +1285,7 @@ function buildReadingCards(data, apiTexts) {
         </div>` : '';
       return `<div class="horo-reading-card wide" id="horo-card-${def.key}">
         <div class="horo-rc-top"><div class="horo-rc-eyebrow">${def.eyebrow}</div><div class="horo-rc-sub">${def.sub}</div></div>
-        <div class="horo-rc-headline">${who}の${def.bodyJp}のサインは<span class="horo-rc-signname">『${sign.jp}』</span></div>
+        <div class="horo-rc-headline">${who}の${def.bodyJp}のサインは<br><span class="horo-rc-signname">『${sign.jp}』</span></div>
         ${posTableHtml(pos, [def.key])}
         ${kwHtml}
         ${text}
