@@ -3,11 +3,13 @@ name: Instagram投稿準備
 on:
   schedule:
     - cron: '0 22 * * 0'  # 毎週日曜 22:00 UTC = 月曜 07:00 JST
-  workflow_dispatch:       # 手動実行も可能
+  workflow_dispatch:
 
 jobs:
   generate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
@@ -16,12 +18,64 @@ jobs:
         run: sudo apt-get install -y fonts-noto-cjk
 
       - name: Python依存関係インストール
-        run: pip install Pillow google-api-python-client google-auth
+        run: pip install Pillow
 
-      - name: Instagram画像生成 & Driveアップロード & LINE通知
-        env:
-          GOOGLE_CREDENTIALS:    ${{ secrets.GOOGLE_CREDENTIALS }}
-          GOOGLE_DRIVE_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
-          LINE_CHANNEL_TOKEN:    ${{ secrets.LINE_CHANNEL_TOKEN }}
-          LINE_USER_ID:          ${{ secrets.LINE_USER_ID }}
+      - name: Instagram画像生成
         run: python scripts/generate_instagram.py
+
+      - name: GitHubリリースを作成して画像を公開
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="instagram-$(date -u '+%Y%m%d-%H%M')"
+          gh release create "$TAG" \
+            instagram_output/slide_*.png \
+            instagram_output/caption.txt \
+            --title "Instagram投稿セット $(date -u '+%Y/%m/%d')" \
+            --notes "今週のInstagram投稿画像・キャプション" \
+            --repo ${{ github.repository }}
+          echo "RELEASE_TAG=$TAG" >> $GITHUB_ENV
+          echo "RELEASE_URL=https://github.com/${{ github.repository }}/releases/tag/$TAG" >> $GITHUB_ENV
+
+      - name: LINE通知（投稿セット準備完了）
+        env:
+          LINE_CHANNEL_TOKEN: ${{ secrets.LINE_CHANNEL_TOKEN }}
+          LINE_USER_ID:       ${{ secrets.LINE_USER_ID }}
+          RELEASE_URL:        ${{ env.RELEASE_URL }}
+        run: |
+          python3 << 'PYEOF'
+          import json, os, urllib.request
+          from pathlib import Path
+
+          caption  = Path("instagram_output/caption.txt").read_text(encoding="utf-8")
+          rel_url  = os.environ["RELEASE_URL"]
+          token    = os.environ["LINE_CHANNEL_TOKEN"]
+          user_id  = os.environ["LINE_USER_ID"]
+
+          text = (
+              "📸 Instagram投稿セット準備完了\n\n"
+              f"▼ 画像8枚ダウンロード\n{rel_url}\n\n"
+              "━━━━━━━━━━━━━\n"
+              "📋 キャプション（コピペ用）\n\n"
+              f"{caption}"
+              "━━━━━━━━━━━━━\n"
+              "⏰ 今日17〜19時の投稿が効果的です"
+          )[:5000]
+
+          body = json.dumps({
+              "to": user_id,
+              "messages": [{"type": "text", "text": text}]
+          }).encode("utf-8")
+
+          req = urllib.request.Request(
+              "https://api.line.me/v2/bot/message/push",
+              data=body,
+              headers={
+                  "Content-Type": "application/json",
+                  "Authorization": f"Bearer {token}"
+              },
+              method="POST"
+          )
+          with urllib.request.urlopen(req) as res:
+              print(f"LINE通知送信: {res.status}")
+          PYEOF

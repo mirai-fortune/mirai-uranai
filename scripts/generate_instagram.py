@@ -452,67 +452,6 @@ def build_caption(data):
 #タロット #タロット占い #週間運勢 #今週の運勢 #タロットリーディング #占い #運勢 #引き寄せ #スピリチュアル #占い師 #タロットカード #週間タロット #朝活 #自己啓発 #{card} #asumira #asumira占い
 """
 
-# ── Google Drive アップロード ──────────────────────────────────────────
-def upload_to_drive(file_paths, creds_json_str, folder_id, week_key):
-    from google.oauth2 import service_account
-    from googleapiclient.discovery import build
-    from googleapiclient.http import MediaFileUpload
-
-    creds = service_account.Credentials.from_service_account_info(
-        json.loads(creds_json_str.lstrip('﻿')),
-        scopes=["https://www.googleapis.com/auth/drive.file"],
-    )
-    svc = build("drive", "v3", credentials=creds)
-
-    # 週別サブフォルダ作成
-    sub = svc.files().create(
-        body={
-            "name": f"instagram_{week_key.replace('-', '')}",
-            "mimeType": "application/vnd.google-apps.folder",
-            "parents": [folder_id],
-        },
-        fields="id",
-    ).execute()
-    sub_id = sub["id"]
-
-    # 全員閲覧可に設定（スマホからそのままDLできる）
-    svc.permissions().create(
-        fileId=sub_id,
-        body={"type": "anyone", "role": "reader"},
-    ).execute()
-
-    for fp in file_paths:
-        fp = Path(fp)
-        mime = "image/png" if fp.suffix == ".png" else "text/plain; charset=utf-8"
-        svc.files().create(
-            body={"name": fp.name, "parents": [sub_id]},
-            media_body=MediaFileUpload(str(fp), mimetype=mime),
-        ).execute()
-        print(f"  ✓ {fp.name}")
-
-    return f"https://drive.google.com/drive/folders/{sub_id}"
-
-# ── LINE通知 ─────────────────────────────────────────────────────────
-def notify_line(text):
-    token   = os.environ.get("LINE_CHANNEL_TOKEN")
-    user_id = os.environ.get("LINE_USER_ID")
-    if not (token and user_id):
-        print("⚠ LINE_CHANNEL_TOKEN/LINE_USER_ID 未設定 → スキップ")
-        return
-    body = json.dumps({
-        "to": user_id,
-        "messages": [{"type": "text", "text": text}],
-    }).encode("utf-8")
-    req = urllib.request.Request(
-        "https://api.line.me/v2/bot/message/push",
-        data=body,
-        headers={"Content-Type": "application/json",
-                 "Authorization": f"Bearer {token}"},
-        method="POST",
-    )
-    with urllib.request.urlopen(req) as res:
-        print(f"LINE通知送信: {res.status}")
-
 # ── メイン ────────────────────────────────────────────────────────────
 def main():
     monday_key = sys.argv[1] if len(sys.argv) > 1 else None
@@ -539,39 +478,14 @@ def main():
         slide_cta(data, fonts),
     ]
 
-    saved = []
     for i, slide in enumerate(slides, 1):
         p = OUTPUT_DIR / f"slide_{i:02d}.png"
         slide.save(p, "PNG")
-        saved.append(p)
         print(f"  ✓ slide_{i:02d}.png")
 
     caption_path = OUTPUT_DIR / "caption.txt"
     caption_path.write_text(build_caption(data), encoding="utf-8")
     print("  ✓ caption.txt")
-    saved.append(caption_path)
-
-    # Google Drive アップロード
-    creds_json = (os.environ.get("GOOGLE_CREDENTIALS") or "").lstrip('﻿')
-    folder_id  = (os.environ.get("GOOGLE_DRIVE_FOLDER_ID") or "").lstrip('﻿').strip()
-
-    if creds_json and folder_id:
-        print("▶ Google Driveにアップロード中...")
-        drive_url = upload_to_drive(saved, creds_json, folder_id, data["key"])
-        print(f"  ✓ {drive_url}")
-
-        notify_line(
-            f"📸 Instagram投稿セット準備完了\n\n"
-            f"✦ カード：{data['card']['nameJp']}\n"
-            f"テーマ：{data['theme']}\n\n"
-            f"▼ 画像＆キャプション（Googleドライブ）\n"
-            f"{drive_url}\n\n"
-            f"💡 caption.txt をコピペしてください\n"
-            f"⏰ 今日17〜19時の投稿が効果的です"
-        )
-    else:
-        print(f"ℹ Drive未設定 → ローカル保存のみ: {OUTPUT_DIR}/")
-
     print("▶ 完了")
 
 
