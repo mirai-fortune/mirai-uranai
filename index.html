@@ -2233,12 +2233,12 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
     constructor() {
       this.x = Math.random() * canvas.width;
       this.y = canvas.height + 15;
-      this.r = 5 + Math.random() * 18;
+      this.r = 2.5 + Math.random() * 9;
       this.speedY = -(0.5 + Math.random() * 0.65);
       this.driftX = (Math.random() - 0.5) * 0.6;
       this.wobble = Math.random() * Math.PI * 2;
       this.wobbleSpeed = 0.018 + Math.random() * 0.022;
-      this.alpha = 0.15 + Math.random() * 0.15;
+      this.alpha = 0.08 + Math.random() * 0.08;
       this.hue = 195 + Math.random() * 45;
     }
     update() {
@@ -2257,12 +2257,12 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
       ctx.arc(this.x, this.y, r, 0, Math.PI * 2);
       ctx.fillStyle = g;
       ctx.fill();
-      ctx.strokeStyle = `hsla(${this.hue},70%,82%,${Math.min(al * 2.5, 0.6).toFixed(3)})`;
+      ctx.strokeStyle = `hsla(${this.hue},70%,82%,${Math.min(al * 2.0, 0.28).toFixed(3)})`;
       ctx.lineWidth = 0.8;
       ctx.stroke();
       ctx.beginPath();
       ctx.arc(this.x - r * 0.32, this.y - r * 0.35, r * 0.18, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255,255,255,${Math.min(al * 3, 0.55).toFixed(3)})`;
+      ctx.fillStyle = `rgba(255,255,255,${Math.min(al * 2.5, 0.22).toFixed(3)})`;
       ctx.fill();
       ctx.restore();
     }
@@ -2295,7 +2295,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
       }
     } else if (currentTheme === 'minagi') {
       // 水凪シャボン玉
-      if (timestamp - lastBlobTime > 3360) {
+      if (timestamp - lastBlobTime > 5040) {
         minagiBlobs.push(new MinagiBubble());
         if (Math.random() < 0.2) minagiBlobs.push(new MinagiBubble());
         lastBlobTime = timestamp;

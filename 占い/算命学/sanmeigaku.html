@@ -1716,12 +1716,12 @@ window.addEventListener('DOMContentLoaded', () => {
   function MinagiBubble() {
     this.x = Math.random() * c.width;
     this.y = c.height + 15;
-    this.r = 5 + Math.random() * 18;
+    this.r = 2.5 + Math.random() * 9;
     this.vy = -(0.5 + Math.random() * 0.65);
     this.vx = (Math.random() - 0.5) * 0.6;
     this.wb = Math.random() * Math.PI * 2;
     this.wbSp = 0.018 + Math.random() * 0.022;
-    this.al = 0.15 + Math.random() * 0.15;
+    this.al = 0.08 + Math.random() * 0.08;
     this.hue = 195 + Math.random() * 45;
   }
   MinagiBubble.prototype.update = function () { this.wb += this.wbSp; this.x += this.vx + Math.sin(this.wb) * 0.5; this.y += this.vy; };
@@ -1734,10 +1734,10 @@ window.addEventListener('DOMContentLoaded', () => {
     g.addColorStop(1, 'hsla(' + this.hue + ',90%,58%,' + (al*0.55).toFixed(3) + ')');
     ctx.beginPath(); ctx.arc(this.x, this.y, r, 0, Math.PI*2);
     ctx.fillStyle = g; ctx.fill();
-    ctx.strokeStyle = 'hsla(' + this.hue + ',70%,82%,' + Math.min(al*2.5,0.6).toFixed(3) + ')';
+    ctx.strokeStyle = 'hsla(' + this.hue + ',70%,82%,' + Math.min(al*2.0,0.28).toFixed(3) + ')';
     ctx.lineWidth = 0.8; ctx.stroke();
     ctx.beginPath(); ctx.arc(this.x - r*0.32, this.y - r*0.35, r*0.18, 0, Math.PI*2);
-    ctx.fillStyle = 'rgba(255,255,255,' + Math.min(al*3,0.55).toFixed(3) + ')'; ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,' + Math.min(al*2.5,0.22).toFixed(3) + ')'; ctx.fill();
     ctx.restore();
   };
   MinagiBubble.prototype.isDead = function () { return this.y < -this.r * 2; };
@@ -1755,7 +1755,7 @@ window.addEventListener('DOMContentLoaded', () => {
       if (!FF.length) { var n = Math.max(8, Math.floor(c.width/60)); for (var qi=0;qi<n;qi++) FF.push(new Firefly()); }
       for (var fi=0; fi<FF.length; fi++) { FF[fi].update(); FF[fi].draw(); }
     } else if (minagi) {
-      if (t - mbLast > 3360) { MB.push(new MinagiBubble()); if (Math.random() < 0.2) MB.push(new MinagiBubble()); mbLast = t; }
+      if (t - mbLast > 5040) { MB.push(new MinagiBubble()); if (Math.random() < 0.2) MB.push(new MinagiBubble()); mbLast = t; }
       for (var p = MB.length - 1; p >= 0; p--) { MB[p].update(); MB[p].draw(); if (MB[p].isDead()) MB.splice(p, 1); }
     } else {
       if (!ssLast) ssLast = t; if (t - ssLast > ssDelay) { SS.push(new ShootingStar()); ssLast = t; ssDelay = 2500 + Math.random() * 5000; }
