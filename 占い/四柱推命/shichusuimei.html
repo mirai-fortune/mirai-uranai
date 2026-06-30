@@ -683,6 +683,11 @@ html.theme-minagi section { position: relative; z-index: 1; }
 .theme-dot-sakura { background: radial-gradient(circle at 35% 35%, #ffb8d0, #e891b2); }
 .theme-dot-shinryoku { background: radial-gradient(circle at 35% 35%, #c0ea9a, #6dbf6a); }
 .theme-dot-minagi { background: radial-gradient(circle at 35% 35%, #b8dff8, #4a9cd4); }
+/* ── 鑑定書ボタン ── */
+.kantei-btn-wrap{margin:52px 0 0;text-align:center;}
+.kantei-btn{padding:13px 52px;background:transparent;border:1px solid var(--gold);color:var(--gold);cursor:pointer;font-size:11px;letter-spacing:.36em;font-family:'Cormorant Garamond',serif;transition:background .25s,color .25s;text-transform:uppercase;}
+.kantei-btn:hover{background:var(--gold-dim);color:var(--gold2);}
+.kantei-btn-hint{font-size:10px;color:var(--muted2);margin-top:11px;letter-spacing:.06em;}
 </style>
 <script type="application/ld+json">
 {
@@ -813,6 +818,11 @@ html.theme-minagi section { position: relative; z-index: 1; }
 
   <div class="sec-div"><span>歳運（1年サイクル）</span></div>
   <div class="daiun-card" id="si-saiun"></div>
+
+  <div class="kantei-btn-wrap" id="si-kantei-wrap" style="display:none;">
+    <button class="kantei-btn" onclick="openKantei()">鑑定書を作成する</button>
+    <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+  </div>
 </div>
 
 </div>
@@ -1863,9 +1873,436 @@ function calcIndividual(){
   // ── 歳運ここまで ──────────────────────────────────
 
 
+  // 鑑定書データ保存
+  window._siKantei={name,y,m,d,timeVal,gender,yp,mp,dp,hp,daySi,pillars,daiun,allDu,allInterps,voidBr,curAge,saiunYears,currentYear,days};
+  const kwEl=document.getElementById('si-kantei-wrap');
+  if(kwEl)kwEl.style.display='block';
+
   const ra=document.getElementById('si-result');
   ra.classList.add('show');
   ra.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ══════════════════════════════════════
+   鑑定書出力（横スライド形式）
+══════════════════════════════════════ */
+function openKantei(){
+  const k=window._siKantei;
+  if(!k){alert('先に命式を鑑定してください。');return;}
+  const {name,y,m,d,timeVal,gender,yp,mp,dp,hp,daySi,pillars,daiun,allDu,allInterps,voidBr,curAge}=k;
+  const saiunYears=k.saiunYears||[];
+  const currentYear=k.currentYear||(new Date().getFullYear());
+
+  const dayE=STEM_ELEM[daySi];
+  const dayEDesc=ELEM_DESC[dayE]||{};
+  const dayEDetail=ELEM_DETAIL[dayE]||{};
+  const today=new Date();
+  const todayStr=today.getFullYear()+'年'+(today.getMonth()+1)+'月'+today.getDate()+'日';
+  const todayFile='shichusuimei_'+today.getFullYear()+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0');
+  const genderLabel=gender==='male'?'男性':'女性';
+  const timeLabel=timeVal?timeVal+'（'+getJiName(parseInt(timeVal.split(':')[0]))+'）':'時間不明';
+
+  const cnt={木:0,火:0,土:0,金:0,水:0};
+  pillars.forEach(p=>{cnt[STEM_ELEM[p.si]]++;cnt[BRANCH_ELEM[p.bi]]++;});
+  const total=pillars.length*2;
+  const elems=['木','火','土','金','水'];
+  const eHex={木:'#6db87a',火:'#c97878',土:'#c9b464',金:'#a8b4c4',水:'#6888c4'};
+  const eJp={木:'木（もく）',火:'火（か）',土:'土（ど）',金:'金（こん）',水:'水（すい）'};
+  const eYomi={木:'もく',火:'か',土:'ど',金:'こん',水:'すい'};
+
+  const void1=BRANCHES[voidBr[0]];
+  const void2=BRANCHES[voidBr[1]];
+  const c60=getCycle60(dp.si,dp.bi);
+  const [nayinName,nayinDesc]=NAYIN[Math.floor(c60/2)];
+
+  const pillarsK=[yp,mp,dp,...(hp?[hp]:[])];
+  const pLabels=['年柱','月柱','日柱',...(hp?['時柱']:[])];
+
+  const ypTg=getTenGod(daySi,yp.si);
+  const mpTg=getTenGod(daySi,mp.si);
+  const hpTg=hp?getTenGod(daySi,hp.si):null;
+  const ypDet=TG_DETAIL[ypTg]||{};
+  const mpDet=TG_DETAIL[mpTg]||{};
+  const hpDet=hp?(TG_DETAIL[hpTg]||{}):null;
+
+  const currDuIdx=allInterps.findIndex(x=>x.isCurr);
+  const currIp=currDuIdx>=0?allInterps[currDuIdx]:null;
+  const currDu=currDuIdx>=0?allDu[currDuIdx]:null;
+
+  const yojin=YOJIN_MAP[dayE]||{};
+  const dominant=elems.reduce((a,b)=>(cnt[a]||0)>=(cnt[b]||0)?a:b);
+  const tr=(s,n)=>s&&s.length>n?s.slice(0,n)+'…':s||'—';
+
+  // ── Slide HTML builders ──────────────────────────
+
+  // S1: 表紙
+  const s1='<div style="text-align:center;max-width:680px;margin:0 auto;">'
+    +'<p style="font-family:var(--serif);font-size:.68rem;letter-spacing:.42em;color:rgba(196,168,106,.42);text-transform:uppercase;margin-bottom:32px;">ASUMIRA 占い　四柱推命</p>'
+    +'<h1 style="font-family:var(--serif);font-size:clamp(2.2rem,4vw,3.4rem);font-weight:300;letter-spacing:.14em;color:var(--cream);margin-bottom:6px;">四柱推命鑑定書</h1>'
+    +'<div style="width:36px;height:1px;background:var(--gold);margin:22px auto 28px;"></div>'
+    +'<p style="font-family:var(--serif);font-size:1.8rem;font-weight:300;letter-spacing:.12em;color:var(--cream);margin-bottom:14px;">'+name+'様</p>'
+    +'<p style="font-size:.82rem;color:var(--muted);letter-spacing:.1em;line-height:2.6;">'+y+'年'+m+'月'+d+'日生まれ　'+genderLabel+'<br>生まれ時間：'+timeLabel+'</p>'
+    +'<p style="margin-top:48px;font-size:.68rem;color:rgba(245,242,235,.2);letter-spacing:.14em;border-top:1px solid rgba(255,255,255,.07);padding-top:22px;display:inline-block;">作成日　'+todayStr+'　／　現役占い師監修　ASUMIRA 占い</p>'
+    +'</div>';
+
+  // S2: 命式表
+  const kdDays=k.days!=null?k.days:0;
+  const rclr={'cr-kuu':'#c97878','cr-go':'#c4a86a','cr-chuu':'#e08080'};
+  const thH=pLabels.map(l=>'<th style="background:rgba(31,28,18,.92);padding:8px 12px;font-family:var(--serif);font-size:.66rem;letter-spacing:.2em;color:var(--gold);border-bottom:1px solid rgba(196,168,106,.14);text-align:center;">'+l+'</th>').join('');
+  const kanH=pillarsK.map(p=>'<td style="padding:10px 12px;text-align:center;border:1px solid rgba(255,255,255,.04);"><div style="font-family:var(--serif);font-size:1.5rem;font-weight:300;line-height:1;color:var(--cream);">'+STEMS[p.si]+'</div><div style="font-size:.54rem;color:rgba(245,242,235,.28);margin-top:3px;">'+STEMS_YOMI[p.si]+'</div></td>').join('');
+  const shiH=pillarsK.map(p=>{const iv=voidBr.includes(p.bi);return'<td style="padding:10px 12px;text-align:center;border:1px solid rgba(255,255,255,.04);"><div style="font-family:var(--serif);font-size:1.5rem;font-weight:300;line-height:1;color:'+(iv?'#c97878':'var(--gold)')+';">'+BRANCHES[p.bi]+'</div><div style="font-size:.54rem;color:rgba(245,242,235,.28);margin-top:3px;">'+BRANCHES_YOMI[p.bi]+'</div></td>';}).join('');
+  const tgH=pillarsK.map((p,i)=>{const isDay=pLabels[i]==='日柱';return'<td style="padding:6px 12px;text-align:center;border:1px solid rgba(255,255,255,.04);font-size:.8rem;color:var(--muted);">'+(isDay?'日主':getTenGod(daySi,p.si))+'</td>';}).join('');
+  const zkH=pillarsK.map(p=>{const zk=getZokkan(p.bi,kdDays);return'<td style="padding:6px 12px;text-align:center;border:1px solid rgba(255,255,255,.04);font-size:.8rem;color:rgba(245,242,235,.5);">'+STEMS[zk]+'</td>';}).join('');
+  const zkTgH=pillarsK.map(p=>{const zk=getZokkan(p.bi,kdDays);const tg=getTenGod(daySi,zk);const iv=voidBr.includes(p.bi);return'<td style="padding:6px 12px;text-align:center;border:1px solid rgba(255,255,255,.04);font-size:.8rem;color:'+(iv?'#c97878':'rgba(245,242,235,.4)')+';">'+tg+'</td>';}).join('');
+  const relH=pillarsK.map((p,i)=>{const isDay=pLabels[i]==='日柱';const nilTd='<td style="padding:6px 12px;text-align:center;border:1px solid rgba(255,255,255,.04);font-size:.7rem;color:rgba(245,242,235,.18);">—</td>';if(isDay)return nilTd;const rels=getRelations(dp,p,daySi,voidBr);if(!rels.length)return nilTd;return'<td style="padding:5px 10px;text-align:center;border:1px solid rgba(255,255,255,.04);line-height:1.8;">'+rels.map(r=>'<span style="font-size:.66rem;display:inline-block;color:'+(rclr[r.c]||'var(--muted)')+';">'+r.t+'</span>').join('<br>')+'</td>';}).join('');
+  const rlbl='padding:6px 12px;background:rgba(31,28,18,.7);font-size:.6rem;letter-spacing:.12em;color:rgba(245,242,235,.3);white-space:nowrap;';
+  const s2='<div style="width:100%;max-width:860px;margin:0 auto;">'
+    +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Birth Chart</span>'
+    +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;">命式表</h2>'
+    +'<div style="background:rgba(18,16,12,.6);border:1px solid rgba(196,168,106,.12);border-radius:8px;overflow-x:auto;margin-bottom:12px;">'
+    +'<table style="width:100%;border-collapse:collapse;">'
+    +'<thead><tr><th style="background:rgba(31,28,18,.92);padding:8px 12px;font-size:.56rem;color:rgba(245,242,235,.2);border-bottom:1px solid rgba(196,168,106,.14);text-align:left;min-width:80px;"></th>'+thH+'</tr></thead>'
+    +'<tbody>'
+    +'<tr><td style="'+rlbl+'">天干</td>'+kanH+'</tr>'
+    +'<tr><td style="'+rlbl+'">地支</td>'+shiH+'</tr>'
+    +'<tr><td style="'+rlbl+'">通変星（天干）</td>'+tgH+'</tr>'
+    +'<tr><td style="'+rlbl+'">蔵干</td>'+zkH+'</tr>'
+    +'<tr><td style="'+rlbl+'">通変星（蔵干）</td>'+zkTgH+'</tr>'
+    +'<tr><td style="'+rlbl+'">関係</td>'+relH+'</tr>'
+    +'</tbody></table></div>'
+    +'<div style="display:flex;gap:20px;flex-wrap:wrap;font-size:.75rem;color:var(--muted);">'
+    +'<span>空亡：<strong style="color:var(--gold);">'+void1+'・'+void2+'</strong></span>'
+    +'<span>日主：<strong style="color:var(--gold);">'+STEMS[daySi]+'（'+STEMS_YOMI[daySi]+'）</strong></span>'
+    +'<span>五行：<strong style="color:var(--gold);">'+dayE+'</strong></span>'
+    +'<span>立運：<strong style="color:var(--gold);">'+daiun.startAge+'歳（'+(daiun.isForward?'順行':'逆行')+'）</strong></span>'
+    +'</div></div>';
+
+  // S3: 五行バランス
+  const barsH=elems.map(e=>{const n=cnt[e]||0;const pct=total>0?Math.round(n/total*100):0;const col=eHex[e];
+    return'<div style="display:grid;grid-template-columns:96px 1fr 26px;gap:12px;align-items:center;margin-bottom:14px;">'
+      +'<span style="font-size:.78rem;color:rgba(245,242,235,.5);">'+eJp[e]+'</span>'
+      +'<div style="height:4px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;"><div style="height:100%;width:'+pct+'%;background:'+col+';border-radius:2px;"></div></div>'
+      +'<span style="font-family:var(--serif);font-size:.95rem;color:'+col+';text-align:right;">'+n+'</span>'
+      +'</div>';}).join('');
+  const s3='<div style="width:100%;max-width:860px;margin:0 auto;">'
+    +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Five Elements</span>'
+    +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">五行バランス</h2>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">'
+    +'<div class="card"><p style="font-size:.68rem;letter-spacing:.18em;color:var(--gold);margin-bottom:16px;">五行分布（全'+total+'点）</p>'+barsH+'</div>'
+    +'<div class="card"><p style="font-size:.68rem;letter-spacing:.18em;color:var(--gold);margin-bottom:12px;">命式の傾向</p>'
+    +'<p style="font-family:var(--serif);font-size:.95rem;color:var(--cream);margin-bottom:10px;">'+dayE+'の人　─　'+dayEDesc.nature+'</p>'
+    +'<p style="font-size:.77rem;color:var(--muted);line-height:2;margin-bottom:12px;">'+tr(dayEDesc.personality,100)+'</p>'
+    +'<div style="padding-top:10px;border-top:1px solid var(--border);font-size:.73rem;color:var(--muted);line-height:2;">'
+    +'<span style="color:var(--gold);">強み：</span>'+dayEDesc.strength+'<br>'
+    +'<span style="color:var(--gold);">開運：</span>'+dayEDesc.lucky
+    +'</div></div></div></div>';
+
+  // S4: 日主の本質
+  const s4='<div style="width:100%;max-width:860px;margin:0 auto;">'
+    +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Core Nature</span>'
+    +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">日主の本質</h2>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">'
+    +'<div class="card">'
+    +'<p style="font-size:.66rem;letter-spacing:.22em;color:var(--gold);margin-bottom:10px;">日干の気質</p>'
+    +'<p style="font-family:var(--serif);font-size:1rem;color:var(--cream);margin-bottom:12px;">'+dayE+'（'+eYomi[dayE]+'）　─　'+dayEDesc.nature+'</p>'
+    +'<p style="font-size:.77rem;color:var(--muted);line-height:2;margin-bottom:12px;">'+tr(dayEDetail.kishitsu||dayEDesc.personality,140)+'</p>'
+    +'<div style="padding-top:10px;border-top:1px solid var(--border);font-size:.73rem;color:var(--muted);line-height:2;">'
+    +'<span style="color:var(--gold);">長所：</span>'+tr(dayEDetail.chosho||dayEDesc.strength,72)+'<br>'
+    +'<span style="color:var(--gold);">課題：</span>'+tr(dayEDetail.tansho||dayEDesc.challenge,72)
+    +'</div></div>'
+    +'<div class="card">'
+    +'<p style="font-size:.66rem;letter-spacing:.22em;color:var(--gold);margin-bottom:10px;">日柱の納音</p>'
+    +'<h3 style="font-family:var(--serif);font-size:1.2rem;color:var(--gold);margin-bottom:12px;letter-spacing:.06em;">〜 '+nayinName+' 〜</h3>'
+    +'<p style="font-size:.77rem;color:var(--muted);line-height:2;margin-bottom:14px;">'+tr(nayinDesc,170)+'</p>'
+    +'<div style="padding:10px 14px;border:1px solid rgba(196,168,106,.18);background:rgba(196,168,106,.04);border-radius:6px;font-size:.72rem;color:var(--muted);line-height:2;">'
+    +'<strong style="color:var(--cream);">空亡：</strong>'+void1+'・'+void2+'<br>'
+    +'<span style="color:rgba(245,242,235,.3);">空亡の時期は内省と充電のサイクルです</span>'
+    +'</div></div></div></div>';
+
+  // S5: 月柱
+  const s5='<div style="width:100%;max-width:860px;margin:0 auto;">'
+    +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Month Pillar</span>'
+    +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">月柱の解読 ─ 性格・仕事運・恋愛運・適職</h2>'
+    +'<div class="card" style="display:grid;grid-template-columns:172px 1fr;padding:0;overflow:hidden;">'
+    +'<div style="padding:26px 18px;border-right:1px solid var(--border);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(10,9,7,.3);">'
+    +'<p style="font-size:.62rem;letter-spacing:.2em;color:var(--gold);">月柱</p>'
+    +'<div style="display:flex;gap:14px;justify-content:center;align-items:flex-end;margin:2px 0;">'
+    +'<div style="text-align:center;"><div style="font-size:.5rem;color:rgba(245,242,235,.28);letter-spacing:.04em;margin-bottom:3px;">'+STEMS_YOMI[mp.si]+'</div>'
+    +'<div style="font-family:var(--serif);font-size:2.5rem;font-weight:300;color:var(--cream);line-height:1;">'+STEMS[mp.si]+'</div></div>'
+    +'<div style="text-align:center;"><div style="font-size:.5rem;color:rgba(245,242,235,.28);letter-spacing:.04em;margin-bottom:3px;">'+BRANCHES_YOMI[mp.bi]+'</div>'
+    +'<div style="font-family:var(--serif);font-size:2.5rem;font-weight:300;color:var(--gold);line-height:1;">'+BRANCHES[mp.bi]+'</div></div>'
+    +'</div>'
+    +'<p style="font-size:.8rem;color:var(--muted);margin-top:4px;">'+mpTg+'</p>'
+    +'<p style="font-size:.6rem;color:rgba(245,242,235,.28);">20代〜中年期</p>'
+    +'</div>'
+    +'<div style="padding:22px 24px;display:flex;flex-direction:column;gap:14px;">'
+    +[{k:'性格',v:mpDet.seikaku},{k:'仕事運',v:mpDet.shigoto},{k:'恋愛運',v:mpDet.ren_ai},{k:'適職',v:mpDet.tekishoku}].map(r=>'<div><p style="font-size:.6rem;letter-spacing:.18em;color:var(--gold);margin-bottom:4px;">'+r.k+'</p><p style="font-size:.76rem;color:var(--muted);line-height:1.85;">'+tr(r.v,82)+'</p></div>').join('')
+    +'</div></div></div>';
+
+  // S6: 年柱 & 時柱
+  const ypBox='<div class="card" style="padding:0;overflow:hidden;"><div style="display:grid;grid-template-columns:130px 1fr;">'
+    +'<div style="padding:20px 14px;border-right:1px solid var(--border);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:rgba(10,9,7,.3);">'
+    +'<p style="font-size:.6rem;letter-spacing:.2em;color:var(--gold);">年柱</p>'
+    +'<div style="display:flex;gap:10px;justify-content:center;align-items:flex-end;margin:2px 0;">'
+    +'<div style="text-align:center;"><div style="font-size:.48rem;color:rgba(245,242,235,.28);letter-spacing:.03em;margin-bottom:3px;">'+STEMS_YOMI[yp.si]+'</div>'
+    +'<div style="font-family:var(--serif);font-size:2.1rem;font-weight:300;color:var(--cream);line-height:1;">'+STEMS[yp.si]+'</div></div>'
+    +'<div style="text-align:center;"><div style="font-size:.48rem;color:rgba(245,242,235,.28);letter-spacing:.03em;margin-bottom:3px;">'+BRANCHES_YOMI[yp.bi]+'</div>'
+    +'<div style="font-family:var(--serif);font-size:2.1rem;font-weight:300;color:var(--gold);line-height:1;">'+BRANCHES[yp.bi]+'</div></div>'
+    +'</div>'
+    +'<p style="font-size:.74rem;color:var(--muted);margin-top:2px;">'+ypTg+'</p>'
+    +'<p style="font-size:.58rem;color:rgba(245,242,235,.28);">〜20代の運勢</p>'
+    +'</div>'
+    +'<div style="padding:18px 18px;display:flex;flex-direction:column;gap:8px;">'
+    +'<p style="font-family:var(--serif);font-size:.9rem;color:var(--cream);">'+ypTg+'の年柱</p>'
+    +'<p style="font-size:.75rem;color:var(--muted);line-height:1.9;">'+tr(ypDet.seikaku,72)+'</p>'
+    +'<p style="font-size:.7rem;color:var(--muted);margin-top:auto;"><span style="color:var(--gold);">適職：</span>'+tr(ypDet.tekishoku,52)+'</p>'
+    +'</div></div></div>';
+  const hpBox=hp
+    ?('<div class="card" style="padding:0;overflow:hidden;"><div style="display:grid;grid-template-columns:130px 1fr;">'
+      +'<div style="padding:20px 14px;border-right:1px solid var(--border);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:rgba(10,9,7,.3);">'
+      +'<p style="font-size:.6rem;letter-spacing:.2em;color:var(--gold);">時柱</p>'
+      +'<div style="display:flex;gap:10px;justify-content:center;align-items:flex-end;margin:2px 0;">'
+      +'<div style="text-align:center;"><div style="font-size:.48rem;color:rgba(245,242,235,.28);letter-spacing:.03em;margin-bottom:3px;">'+STEMS_YOMI[hp.si]+'</div>'
+      +'<div style="font-family:var(--serif);font-size:2.1rem;font-weight:300;color:var(--cream);line-height:1;">'+STEMS[hp.si]+'</div></div>'
+      +'<div style="text-align:center;"><div style="font-size:.48rem;color:rgba(245,242,235,.28);letter-spacing:.03em;margin-bottom:3px;">'+BRANCHES_YOMI[hp.bi]+'</div>'
+      +'<div style="font-family:var(--serif);font-size:2.1rem;font-weight:300;color:var(--gold);line-height:1;">'+BRANCHES[hp.bi]+'</div></div>'
+      +'</div>'
+      +'<p style="font-size:.74rem;color:var(--muted);margin-top:2px;">'+hpTg+'</p>'
+      +'<p style="font-size:.58rem;color:rgba(245,242,235,.28);">晩年・子孫の運勢</p>'
+      +'</div>'
+      +'<div style="padding:18px 18px;display:flex;flex-direction:column;gap:8px;">'
+      +'<p style="font-family:var(--serif);font-size:.9rem;color:var(--cream);">'+hpTg+'の時柱</p>'
+      +'<p style="font-size:.75rem;color:var(--muted);line-height:1.9;">'+tr(hpDet?hpDet.seikaku:'',72)+'</p>'
+      +'<p style="font-size:.7rem;color:var(--muted);margin-top:auto;"><span style="color:var(--gold);">適職：</span>'+tr(hpDet?hpDet.tekishoku:'',52)+'</p>'
+      +'</div></div></div>')
+    :'<div class="card" style="display:flex;align-items:center;justify-content:center;"><p style="font-size:.8rem;color:rgba(245,242,235,.3);text-align:center;line-height:2;">生まれ時間が未入力のため<br>時柱の算出はありません</p></div>';
+  const s6='<div style="width:100%;max-width:860px;margin:0 auto;">'
+    +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Pillars Analysis</span>'
+    +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">年柱・時柱の解読</h2>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">'+ypBox+hpBox+'</div></div>';
+
+  // S7: 大運一覧
+  const duRows=allDu.map((du,i)=>{
+    const ip=allInterps[i];
+    const isCurr=ip&&ip.isCurr;const isPast=ip&&ip.isPast&&!isCurr;
+    const period=du.isPre?'0〜'+du.endAge+'歳':du.age+'〜'+du.endAge+'歳';
+    return'<tr style="'+(isCurr?'background:rgba(196,168,106,.1);border-left:3px solid var(--gold);':'')+(isPast?'opacity:.34;':'')+'">'
+      +'<td style="padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.04);font-size:.74rem;'+(isCurr?'color:var(--cream);':'color:var(--muted);')+'">'
+      +(isCurr?'<span style="font-size:.54rem;background:var(--gold);color:#0d0b08;padding:1px 5px;letter-spacing:.06em;display:inline-block;margin-right:5px;">現在</span>':'')+period+'</td>'
+      +'<td style="padding:5px 8px;border-bottom:1px solid rgba(255,255,255,.04);text-align:center;font-family:var(--serif);font-size:1.1rem;font-weight:300;color:var(--cream);">'+STEMS[du.si]+'</td>'
+      +'<td style="padding:5px 8px;border-bottom:1px solid rgba(255,255,255,.04);text-align:center;font-family:var(--serif);font-size:1.1rem;font-weight:300;color:var(--gold);">'+BRANCHES[du.bi]+'</td>'
+      +'<td style="padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.04);font-size:.73rem;color:var(--muted);">'+(ip?ip.tg:'')+'</td>'
+      +'<td style="padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.04);font-size:.68rem;color:rgba(245,242,235,.3);">'+tr(ip&&ip.line1?ip.line1:'',38)+'</td>'
+      +'</tr>';}).join('');
+  const s7='<div style="width:100%;max-width:860px;margin:0 auto;">'
+    +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Major Luck Cycle</span>'
+    +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:8px;">大運一覧（10年サイクル）</h2>'
+    +'<p style="font-size:.74rem;color:var(--muted);margin-bottom:10px;">'+daiun.startAge+'歳から立運（'+(daiun.isForward?'順行':'逆行')+'）。現在 '+curAge+'歳。</p>'
+    +'<div style="background:rgba(18,16,12,.6);border:1px solid rgba(196,168,106,.12);border-radius:8px;overflow-x:auto;">'
+    +'<table style="width:100%;border-collapse:collapse;min-width:480px;">'
+    +'<thead><tr>'
+    +['年齢','天干','地支','通変星','テーマ'].map((h,i)=>'<th style="background:rgba(24,21,14,.98);padding:6px '+(i>0?'8':'10')+'px;font-size:.6rem;letter-spacing:.18em;color:var(--gold);border-bottom:1px solid rgba(196,168,106,.14);text-align:'+(i===0||i>2?'left':'center')+';">'+h+'</th>').join('')
+    +'</tr></thead>'
+    +'<tbody>'+duRows+'</tbody></table></div></div>';
+
+  // S8: 現在の大運詳細
+  const s8=currIp&&currDu
+    ?('<div style="width:100%;max-width:860px;margin:0 auto;">'
+      +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Current Period</span>'
+      +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">現在の大運詳細</h2>'
+      +'<div style="display:grid;grid-template-columns:184px 1fr;gap:14px;">'
+      +'<div class="card" style="text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">'
+      +'<p style="font-size:.64rem;letter-spacing:.2em;color:var(--gold);">現在の大運</p>'
+      +'<div style="display:flex;gap:14px;justify-content:center;align-items:flex-end;margin:2px 0;">'
+      +'<div style="text-align:center;"><div style="font-size:.5rem;color:rgba(245,242,235,.28);letter-spacing:.04em;margin-bottom:3px;">'+STEMS_YOMI[currDu.si]+'</div>'
+      +'<div style="font-family:var(--serif);font-size:2.8rem;font-weight:300;color:var(--cream);line-height:1;">'+STEMS[currDu.si]+'</div></div>'
+      +'<div style="text-align:center;"><div style="font-size:.5rem;color:rgba(245,242,235,.28);letter-spacing:.04em;margin-bottom:3px;">'+BRANCHES_YOMI[currDu.bi]+'</div>'
+      +'<div style="font-family:var(--serif);font-size:2.8rem;font-weight:300;color:var(--gold);line-height:1;">'+BRANCHES[currDu.bi]+'</div></div>'
+      +'</div>'
+      +'<p style="font-size:.8rem;color:var(--muted);">'+currIp.tg+'大運</p>'
+      +'<p style="font-size:.76rem;color:var(--gold);">'+currIp.period+'</p>'
+      +'<p style="font-size:.62rem;color:rgba(245,242,235,.28);">現在 '+curAge+'歳</p>'
+      +'</div>'
+      +'<div class="card" style="display:flex;flex-direction:column;gap:14px;">'
+      +'<p style="font-size:.64rem;letter-spacing:.2em;color:var(--gold);">この時期のテーマ</p>'
+      +'<p style="font-family:var(--serif);font-size:.92rem;color:var(--cream);line-height:1.85;">'+tr(currIp.line1,150)+'</p>'
+      +(currIp.line3?'<div style="padding-top:12px;border-top:1px solid var(--border);font-size:.77rem;color:var(--muted);line-height:2;"><strong style="color:var(--gold);">次の大運について</strong><br>'+tr(currIp.line3,130)+'</div>':'')
+      +'</div></div></div>')
+    :('<div style="width:100%;max-width:860px;margin:0 auto;">'
+      +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Current Period</span>'
+      +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">現在の大運</h2>'
+      +'<div class="card"><p style="font-size:.85rem;color:var(--muted);">大運の詳細を特定できませんでした。</p></div></div>');
+
+  // S9: 歳運
+  const syShow=saiunYears.filter(s=>s.year>=currentYear-2&&s.year<=currentYear+7);
+  const syRows=syShow.map(sy=>{
+    const isCurr=sy.year===currentYear;
+    const tg=getTenGod(daySi,sy.si);
+    const col=eHex[STEM_ELEM[sy.si]]||'var(--muted)';
+    return'<tr style="'+(isCurr?'background:rgba(196,168,106,.1);border-left:3px solid var(--gold);':'')+'">'
+      +'<td style="padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.04);font-size:.74rem;'+(isCurr?'color:var(--cream);':'color:var(--muted);')+'">'
+      +(isCurr?'<span style="font-size:.54rem;background:var(--gold);color:#0d0b08;padding:1px 5px;margin-right:5px;display:inline-block;">今年</span>':'')+sy.year+'年</td>'
+      +'<td style="padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.04);font-size:.74rem;color:var(--muted);">'+sy.age+'歳</td>'
+      +'<td style="padding:5px 8px;border-bottom:1px solid rgba(255,255,255,.04);text-align:center;font-family:var(--serif);font-size:1.1rem;font-weight:300;color:var(--cream);">'+STEMS[sy.si]+'</td>'
+      +'<td style="padding:5px 8px;border-bottom:1px solid rgba(255,255,255,.04);text-align:center;font-family:var(--serif);font-size:1.1rem;font-weight:300;color:var(--gold);">'+BRANCHES[sy.bi]+'</td>'
+      +'<td style="padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.04);font-size:.74rem;color:var(--muted);">'+tg+'</td>'
+      +'<td style="padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.04);font-size:.7rem;color:'+col+';">'+STEM_ELEM[sy.si]+'</td>'
+      +'</tr>';}).join('');
+  const s9='<div style="width:100%;max-width:860px;margin:0 auto;">'
+    +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Annual Luck</span>'
+    +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:8px;">歳運（年運）</h2>'
+    +'<p style="font-size:.74rem;color:var(--muted);margin-bottom:10px;">直近の歳運。今年（'+currentYear+'年）を軸に確認してください。</p>'
+    +(syRows
+      ?('<div style="background:rgba(18,16,12,.6);border:1px solid rgba(196,168,106,.12);border-radius:8px;overflow-x:auto;">'
+        +'<table style="width:100%;border-collapse:collapse;min-width:420px;">'
+        +'<thead><tr>'
+        +['年','年齢','天干','地支','通変星','五行'].map((h,i)=>'<th style="background:rgba(24,21,14,.98);padding:6px '+(i>1&&i<4?'8':'10')+'px;font-size:.6rem;letter-spacing:.16em;color:var(--gold);border-bottom:1px solid rgba(196,168,106,.14);text-align:'+(i>=2&&i<=3?'center':'left')+';">'+h+'</th>').join('')
+        +'</tr></thead>'
+        +'<tbody>'+syRows+'</tbody></table></div>')
+      :'<div class="card"><p style="font-size:.8rem;color:var(--muted);">再度鑑定を行うと歳運データが表示されます。</p></div>')
+    +'</div>';
+
+  // S9b: 歳運詳細
+  const TENKYU_THEME={
+    '比肩':'自立心と競争意識が高まる年。自分のペースで新しい挑戦を始めるのに適した時期です。',
+    '劫財':'変化と刺激が多い年。焦りや衝動には注意しながらも、果敢に動くことで道が開けます。',
+    '食神':'才能の発揮と楽しみが広がる年。創造的な活動や自己表現が実を結びやすい時期です。',
+    '傷官':'革新と突破力が高まる年。既存の枠を超える発想が評価され、才能が光りやすい時期です。',
+    '偏財':'チャンスが舞い込みやすい年。行動力を発揮することで好機を掴みやすい時期です。',
+    '正財':'着実な積み上げが実を結ぶ年。地道な努力と誠実さが信頼と結果を呼ぶ時期です。',
+    '偏官':'挑戦と責任が重なる年。プレッシャーをエネルギーに変えることで大きく成長できます。',
+    '正官':'名誉と社会的信用が高まる年。誠実な取り組みが評価され、地位が安定しやすい時期です。',
+    '偏印':'直感と学びの年。新しい知識の吸収や内省が深まり、精神的充実を得やすい時期です。',
+    '印綬':'守護とサポートを受けやすい年。学業・資格・内省に力を注ぐと未来の糧になります。',
+    '日主':'自己確認の年。原点に立ち返り、自分らしさを見つめ直す大切な時期です。',
+  };
+  const curSy=saiunYears.find(s=>s.year===currentYear);
+  const nextSy=saiunYears.find(s=>s.year===currentYear+1);
+  const curSyTg=curSy?getTenGod(daySi,curSy.si):'';
+  const curSyRels=curSy?getRelations(dp,curSy,daySi,voidBr):[];
+  const curSyED=curSy?(ELEM_DESC[STEM_ELEM[curSy.si]]||{nature:'',lucky:''}):null;
+  const s9b=curSy
+    ?('<div style="width:100%;max-width:860px;margin:0 auto;">'
+      +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Annual Luck Detail</span>'
+      +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:12px;">歳運詳細 ─ '+currentYear+'年</h2>'
+      +'<div style="display:grid;grid-template-columns:184px 1fr;gap:14px;">'
+      +'<div class="card" style="text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">'
+      +'<p style="font-size:.64rem;letter-spacing:.2em;color:var(--gold);">今年の歳運</p>'
+      +'<div style="display:flex;gap:14px;justify-content:center;align-items:flex-end;margin:2px 0;">'
+      +'<div style="text-align:center;"><div style="font-size:.5rem;color:rgba(245,242,235,.28);letter-spacing:.04em;margin-bottom:3px;">'+STEMS_YOMI[curSy.si]+'</div>'
+      +'<div style="font-family:var(--serif);font-size:2.8rem;font-weight:300;color:var(--cream);line-height:1;">'+STEMS[curSy.si]+'</div></div>'
+      +'<div style="text-align:center;"><div style="font-size:.5rem;color:rgba(245,242,235,.28);letter-spacing:.04em;margin-bottom:3px;">'+BRANCHES_YOMI[curSy.bi]+'</div>'
+      +'<div style="font-family:var(--serif);font-size:2.8rem;font-weight:300;color:var(--gold);line-height:1;">'+BRANCHES[curSy.bi]+'</div></div>'
+      +'</div>'
+      +'<p style="font-size:.8rem;color:var(--muted);">'+curSyTg+'年</p>'
+      +'<p style="font-size:.76rem;color:var(--gold);">'+currentYear+'年</p>'
+      +'<p style="font-size:.62rem;color:rgba(245,242,235,.28);">'+curSy.age+'歳</p>'
+      +'</div>'
+      +'<div class="card" style="display:flex;flex-direction:column;gap:14px;">'
+      +'<p style="font-size:.64rem;letter-spacing:.2em;color:var(--gold);">今年のテーマ</p>'
+      +'<p style="font-family:var(--serif);font-size:.92rem;color:var(--cream);line-height:1.85;">'+(TENKYU_THEME[curSyTg]||'今年の流れをよく観察しながら、着実に歩を進めてください。')+'</p>'
+      +'<div style="padding-top:12px;border-top:1px solid var(--border);font-size:.77rem;color:var(--muted);line-height:2.2;">'
+      +'<strong style="color:var(--gold);">今年の五行：</strong>'+STEM_ELEM[curSy.si]+'（'+(curSyED?curSyED.nature:'')+'）<br>'
+      +'<strong style="color:var(--gold);">開運ヒント：</strong>'+(curSyED?curSyED.lucky:'')+'<br>'
+      +(curSyRels.length?'<strong style="color:var(--gold);">関係：</strong>'+curSyRels.map(r=>r.t).join('・')+'<br>':'')
+      +(nextSy?'<strong style="color:var(--gold);">来年（'+(currentYear+1)+'年）：</strong>'+STEMS[nextSy.si]+BRANCHES[nextSy.bi]+'　'+getTenGod(daySi,nextSy.si)+'年':'')
+      +'</div></div></div></div>')
+    :('<div style="width:100%;max-width:860px;margin:0 auto;">'
+      +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Annual Luck Detail</span>'
+      +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">歳運詳細</h2>'
+      +'<div class="card"><p style="font-size:.85rem;color:var(--muted);">歳運の詳細を特定できませんでした。</p></div></div>');
+
+  // S10: 用神
+  const yCards=[{label:'食傷',elem:yojin.shokusho},{label:'財',elem:yojin.zai},{label:'官',elem:yojin.kan},{label:'印',elem:yojin.in_el}]
+    .map(v=>{const adv=YOJIN_ADVICE[v.elem]||{};const col=eHex[v.elem]||'var(--gold)';
+      return'<div class="card" style="border-left:3px solid '+col+';">'
+        +'<p style="font-size:.6rem;letter-spacing:.18em;color:var(--gold);margin-bottom:6px;">'+v.label+'</p>'
+        +'<p style="font-family:var(--serif);font-size:1.2rem;color:var(--cream);margin-bottom:6px;">'+v.elem+'（'+eYomi[v.elem]+'）</p>'
+        +'<p style="font-size:.73rem;color:var(--muted);line-height:1.8;margin-bottom:5px;">'+tr(adv.effect,30)+'</p>'
+        +'<p style="font-size:.67rem;color:rgba(245,242,235,.32);line-height:1.8;">'+tr(adv.env,42)+'</p>'
+        +'</div>';}).join('');
+  const yAdv=YOJIN_ADVICE[yojin.shokusho]||{};
+  const s10='<div style="width:100%;max-width:860px;margin:0 auto;">'
+    +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Lucky Elements</span>'
+    +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">用神 ─ 開運の五行</h2>'
+    +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;">'+yCards+'</div>'
+    +'<div class="card" style="padding:14px 18px;font-size:.76rem;color:var(--muted);line-height:2;">'
+    +(yAdv.act?'<strong style="color:var(--gold);">推奨行動：</strong>'+yAdv.act+'　':'')
+    +(yAdv.env?'<strong style="color:var(--gold);">推奨環境：</strong>'+yAdv.env:'')
+    +'</div></div>';
+
+  // S11: まとめ
+  const tags=[dayE+'の日主',dayEDesc.nature,mpTg+'（月柱）','〜'+nayinName+'〜','空亡：'+void1+'・'+void2,daiun.startAge+'歳立運'];
+  const s11='<div style="text-align:center;max-width:680px;margin:0 auto;">'
+    +'<p style="font-family:var(--serif);font-size:.68rem;letter-spacing:.4em;color:rgba(196,168,106,.4);text-transform:uppercase;margin-bottom:26px;">Summary</p>'
+    +'<h2 style="font-family:var(--serif);font-size:1.75rem;font-weight:300;letter-spacing:.12em;margin-bottom:20px;">あなたの命式キーワード</h2>'
+    +'<div style="width:36px;height:1px;background:var(--gold);margin:0 auto 24px;"></div>'
+    +'<div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:30px;">'
+    +tags.map(t=>'<span style="font-size:.8rem;border:1px solid rgba(196,168,106,.3);color:var(--gold);padding:6px 16px;border-radius:20px;">'+t+'</span>').join('')
+    +'</div>'
+    +'<p style="font-size:.84rem;color:var(--muted);line-height:2.4;margin-bottom:40px;">四柱推命は、東洋命理学の考え方に基づき、ご自身の性質や可能性を見つめ直すための参考情報です。この鑑定書が、自己理解を深め、これからの選択や行動を考えるきっかけとなれば幸いです。</p>'
+    +'<p style="font-size:.68rem;color:rgba(245,242,235,.2);letter-spacing:.14em;border-top:1px solid rgba(255,255,255,.07);padding-top:22px;display:inline-block;">ASUMIRA 占い　─　現役占い師監修　／　'+todayStr+'</p>'
+    +'</div>';
+
+  // ── Assemble HTML ────────────────────────────────
+  const NS=12;
+  const slides=[s1,s2,s3,s4,s5,s6,s7,s8,s9,s9b,s10,s11];
+  const deckHtml=slides.map((s,i)=>'<div class="slide'+(i===0?' active':'')+'" id="sl'+i+'">'+s+'</div>').join('\n');
+
+  const html='<!DOCTYPE html>\n'
+    +'<html lang="ja">\n<head>\n'
+    +'<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">\n'
+    +'<title>'+todayFile+'_'+name+'様</title>\n'
+    +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">\n'
+    +'<style>\n'
+    +'*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}\n'
+    +':root{--bg:#030611;--cream:#f5f2eb;--muted:rgba(245,242,235,.6);--gold:#c4a86a;--border:rgba(255,255,255,.07);--serif:"Noto Serif JP",serif;--sans:"Noto Sans JP",sans-serif;}\n'
+    +'html,body{width:100%;height:100%;background:var(--bg);color:var(--cream);font-family:var(--sans);font-weight:300;overflow:hidden;-webkit-font-smoothing:antialiased;}\n'
+    +'.glow{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:60vw;height:60vw;background:radial-gradient(circle,rgba(196,168,106,.055) 0%,transparent 65%);pointer-events:none;z-index:0;}\n'
+    +'.deck{width:100%;height:100%;position:relative;}\n'
+    +'.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:52px 80px 76px;opacity:0;pointer-events:none;transition:opacity .48s ease,transform .48s ease;transform:translateX(40px);z-index:1;}\n'
+    +'.slide>div{position:relative;z-index:1;width:100%;}\n'
+    +'.slide.active{opacity:1;pointer-events:all;transform:translateX(0);}\n'
+    +'.slide.exit{opacity:0;transform:translateX(-40px);pointer-events:none;}\n'
+    +'.card{background:rgba(18,16,12,.55);border:1px solid var(--border);border-radius:10px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:22px 26px;}\n'
+    +'nav.ctrl{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:16px;z-index:100;}\n'
+    +'.nbtn{background:rgba(18,16,12,.65);border:1px solid rgba(255,255,255,.08);color:rgba(245,242,235,.52);padding:9px 22px;border-radius:24px;font-size:.78rem;letter-spacing:.08em;cursor:pointer;font-family:var(--sans);transition:border-color .28s,color .28s;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}\n'
+    +'.nbtn:hover:not(:disabled){border-color:var(--gold);color:var(--gold);}\n'
+    +'.nbtn:disabled{opacity:.25;cursor:default;}\n'
+    +'.cnt{font-size:.75rem;color:rgba(245,242,235,.38);letter-spacing:.1em;min-width:52px;text-align:center;}\n'
+    +'.sno{position:fixed;top:20px;right:26px;font-size:.64rem;color:rgba(245,242,235,.18);letter-spacing:.14em;z-index:10;font-family:var(--serif);}\n'
+    +'@media(max-width:800px){.slide{padding:44px 20px 70px;}}\n'
+    +'@page{size:A4 landscape;margin:0;}\n'
+    +'@media print{\n'
+    +'*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}\n'
+    +'html,body{width:297mm!important;height:auto!important;overflow:visible!important;background:#030611!important;}\n'
+    +'.glow,.sno,nav.ctrl{display:none!important;}\n'
+    +'.deck{position:static!important;height:auto!important;display:block!important;}\n'
+    +'.slide{position:relative!important;display:flex!important;opacity:1!important;transform:none!important;pointer-events:none!important;inset:auto!important;width:297mm!important;height:210mm!important;page-break-after:always!important;break-after:page!important;overflow:hidden!important;padding:44px 60px 44px!important;}\n'
+    +'.slide:last-child{page-break-after:avoid!important;break-after:avoid!important;}\n'
+    +'.card{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(20,17,13,.96)!important;border:1px solid rgba(196,168,106,.3)!important;}\n'
+    +'}\n'
+    +'</style>\n</head>\n<body>\n'
+    +'<div class="glow"></div>\n'
+    +'<span class="sno" id="sno">01 / '+NS+'</span>\n'
+    +'<div class="deck">'+deckHtml+'</div>\n'
+    +'<nav class="ctrl">'
+    +'<button class="nbtn" id="pb" disabled>← 前へ</button>'
+    +'<span class="cnt" id="cnt">1 / '+NS+'</span>'
+    +'<button class="nbtn" id="nb">次へ →</button>'
+    +'</nav>\n'
+    +'<script>\n'
+    +'var ss=document.querySelectorAll(".slide"),pb=document.getElementById("pb"),nb=document.getElementById("nb"),cnt=document.getElementById("cnt"),sno=document.getElementById("sno"),cur=0;\n'
+    +'function pad(n){return(n<10?"0":"")+n;}\n'
+    +'function goTo(i){ss[cur].classList.remove("active");ss[cur].classList.add("exit");var p=cur;setTimeout(function(){ss[p].classList.remove("exit");},500);cur=i;ss[cur].classList.add("active");cnt.textContent=(cur+1)+" / "+ss.length;sno.textContent=pad(cur+1)+" / "+ss.length;pb.disabled=cur===0;nb.disabled=cur===ss.length-1;}\n'
+    +'pb.addEventListener("click",function(){if(cur>0)goTo(cur-1);});\n'
+    +'nb.addEventListener("click",function(){if(cur<ss.length-1)goTo(cur+1);});\n'
+    +'document.addEventListener("keydown",function(e){if(e.key==="ArrowRight"||e.key==="ArrowDown"){if(cur<ss.length-1)goTo(cur+1);}if(e.key==="ArrowLeft"||e.key==="ArrowUp"){if(cur>0)goTo(cur-1);}});\n'
+    +'<\/script>\n</body>\n</html>';
+
+  const w=window.open('','_blank');
+  if(w){w.document.open();w.document.write(html);w.document.close();}
+  else alert('ポップアップがブロックされています。ブラウザの設定でポップアップを許可してください。');
 }
 
 /* ══════════════════════════════════════
