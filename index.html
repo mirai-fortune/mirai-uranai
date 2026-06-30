@@ -54,6 +54,8 @@ html{scroll-behavior:smooth;}
   --glass-border: rgba(255, 255, 255, 0.08);
   --font-serif: 'Noto Serif JP', serif;
   --font-sans: 'Noto Sans JP', sans-serif;
+  /* ヘッダー高さの唯一の真実の源。JSが実測値で上書きするためCSSのデフォルト値として機能する */
+  --header-h: 72px;
 }
 
 body {
@@ -96,7 +98,9 @@ img {
 
 /* --- HEADER & LOGO --- */
 header {
-  padding: 24px 0;
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
   position: fixed;
   width: 100%;
   top: 0; z-index: 100;
@@ -136,12 +140,13 @@ nav a:hover::after { width: 100%; }
 
 /* --- HERO SECTION --- */
 .hero {
-  height: 100vh;
+  min-height: 100dvh;
+  padding-top: var(--header-h);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 40px;
+  gap: clamp(16px, 2.5vh, 48px);
   position: relative;
 }
 .hero::before {
@@ -170,14 +175,13 @@ nav a:hover::after { width: 100%; }
 }
 .hero-title {
   writing-mode: vertical-rl;
-  font-size: 2.8rem;
+  font-size: clamp(1.6rem, 5vh, 2.8rem);
   line-height: 1.4;
   letter-spacing: 0.15em;
   text-shadow: 0 0 20px rgba(196,168,106,0.2);
   animation: fadeUpLine 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   opacity: 0;
   transform: translateY(30px);
-  padding-top: 72px;
 }
 .hero-desc {
   writing-mode: vertical-rl;
@@ -185,8 +189,7 @@ nav a:hover::after { width: 100%; }
   font-size: 1rem;
   line-height: 2.5;
   letter-spacing: 0.15em;
-  height: auto; 
-  padding-top: 72px;
+  height: auto;
   animation: fadeUpLine 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   opacity: 0;
   transform: translateY(30px);
@@ -904,15 +907,26 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
   .partners-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
 }
 @media(max-width: 768px){
-  .hero-content { flex-direction: column; align-items: center; gap: 40px; margin-top: 80px; }
+  :root { --header-h: 64px; }
+  .hero-content { flex-direction: column; align-items: center; gap: 40px; }
   .hero-title { writing-mode: horizontal-tb; font-size: 1.8rem; text-align: center; }
-  .hero-desc { writing-mode: horizontal-tb; height: auto; padding-top: 0; text-align: center; padding: 0 16px; letter-spacing: 0.05em;}
+  .hero-desc { writing-mode: horizontal-tb; height: auto; text-align: center; padding: 0 16px; letter-spacing: 0.05em;}
   .hero-cta { gap: 12px; }
   .hero-cta-btn { font-size: 0.85rem; padding: 12px 24px; }
   .about-flex { flex-direction: column; text-align: left; gap: 32px; padding: 40px 24px !important; }
   .about-img-wrap { width: 100%; max-width: 360px; margin: 0 auto; }
   .partners-grid { grid-template-columns: 1fr; }
-  header { padding: 16px 0; }
+}
+
+/* --- HEIGHT-BASED RESPONSIVE (短いビューポート対応) --- */
+@media (max-height: 720px) and (min-width: 769px) {
+  .hero-content { gap: 48px; }
+  .hero-desc { font-size: 0.88rem; line-height: 2.2; }
+}
+@media (max-height: 600px) and (min-width: 769px) {
+  :root { --header-h: 56px; }
+  .hero { gap: 12px; }
+  .hero-content { gap: 36px; }
 }
 
 /* --- HAMBURGER MENU --- */
@@ -1887,6 +1901,21 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
 </footer>
 
 <script>
+  /* =========================================
+     0. ヘッダー高さをCSS変数に同期
+        フォントレンダリング差・OSズーム差を吸収するため、
+        実際のoffsetHeightを計測して--header-hを上書きする
+     ========================================= */
+  (function syncHeaderHeight() {
+    const root = document.documentElement;
+    const hdr = document.getElementById('header');
+    function update() {
+      root.style.setProperty('--header-h', hdr.offsetHeight + 'px');
+    }
+    update();
+    window.addEventListener('resize', update);
+  })();
+
   /* =========================================
      1. スクロール連動フェードイン
      ========================================= */
