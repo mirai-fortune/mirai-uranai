@@ -37,6 +37,7 @@ html{scroll-behavior:smooth;}
   --gold:#c4a86a;--gold2:#e8d4a0;--gold-dim:rgba(196,168,106,.12);--gold-glow:rgba(196,168,106,.18);
   --border:rgba(196,168,106,.14);--border2:rgba(255,255,255,.07);--glass-bg:rgba(20,18,15,.4);
   --font-serif:'Noto Serif JP',serif;--font-sans:'Noto Sans JP',sans-serif;--font-deco:'Cormorant Garamond',serif;
+  --nav-text:rgba(245,242,235,.82);
 }
 body{background:linear-gradient(135deg,var(--bg) 0%,#060504 100%);background-attachment:fixed;color:var(--cream);font-family:var(--font-sans);font-weight:300;line-height:1.8;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 #stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
@@ -48,10 +49,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:fl
 nav.scrolled{box-shadow:0 2px 28px rgba(0,0,0,.55);}
 .nav-logo{font-family:var(--font-deco);font-size:20px;letter-spacing:.18em;color:var(--cream);text-decoration:none;}
 .nav-logo span{color:var(--gold);margin-left:8px;font-size:11px;letter-spacing:.22em;font-family:var(--font-sans);}
-.nav-back{font-size:11px;letter-spacing:.16em;color:var(--muted);text-decoration:none;text-transform:uppercase;display:flex;align-items:center;gap:8px;transition:color .2s;}
+.nav-back{font-size:11px;letter-spacing:.16em;color:var(--nav-text);text-decoration:none;text-transform:uppercase;display:flex;align-items:center;gap:8px;transition:color .2s;}
 .nav-back:hover{color:var(--gold);}
 .nav-menu{position:relative;}
-.nav-menu-btn{font-size:11px;letter-spacing:.16em;color:var(--muted);background:none;border:none;cursor:pointer;text-transform:uppercase;display:flex;align-items:center;gap:5px;transition:color .2s;font-family:'Noto Sans JP',sans-serif;font-weight:300;padding:0;}
+.nav-menu-btn{font-size:11px;letter-spacing:.16em;color:var(--nav-text);background:none;border:none;cursor:pointer;text-transform:uppercase;display:flex;align-items:center;gap:5px;transition:color .2s;font-family:'Noto Sans JP',sans-serif;font-weight:300;padding:0;}
 .nav-menu-btn::after{content:'▾';font-size:9px;transition:transform .2s;}
 .nav-menu.open .nav-menu-btn{color:var(--gold);}
 .nav-menu.open .nav-menu-btn::after{transform:rotate(180deg);}
@@ -67,8 +68,9 @@ nav.scrolled{box-shadow:0 2px 28px rgba(0,0,0,.55);}
   .nav-logo{font-size:15px;white-space:nowrap;}
   .nav-logo span{display:none;}
   .nav-right{gap:12px;}
-  .nav-back{font-size:10px;letter-spacing:.1em;}
-  .nav-menu-btn{font-size:10px;letter-spacing:.1em;}
+  .nav-back{font-size:12px;letter-spacing:.08em;padding:10px 2px;}
+  .nav-menu-btn{font-size:12px;letter-spacing:.08em;padding:10px 0;}
+  .nav-back-label{display:none;}
 }
 
 /* ── HERO ── */
@@ -206,6 +208,7 @@ html.theme-sakura {
   --cream: #fef2f6; --muted: rgba(254,242,246,.6); --muted2: rgba(254,242,246,.28);
   --gold: #e891b2; --gold2: #f5c0d5; --gold-dim: rgba(232,145,178,.12);
   --gold-glow: rgba(232,145,178,.18); --border: rgba(232,145,178,.14); --border2: rgba(255,200,220,.07);
+  --nav-text:rgba(254,242,246,.82);
 }
 html.theme-sakura nav { background: rgba(22,8,16,0.92) !important; border-bottom-color: rgba(232,145,178,0.14); }
 html.theme-sakura body { background: linear-gradient(135deg, #160810 0%, #0a0508 100%) fixed; }
@@ -217,6 +220,7 @@ html.theme-shinryoku {
   --cream: #f0f5ef; --muted: rgba(240,245,239,.55); --muted2: rgba(240,245,239,.28);
   --gold: #82c87e; --gold2: #b4e8b0; --gold-dim: rgba(130,200,126,.18);
   --border: rgba(130,200,126,.14); --border2: rgba(255,255,255,.07);
+  --nav-text:rgba(240,245,239,.82);
 }
 html.theme-shinryoku nav { background: rgba(6,14,8,0.92) !important; border-bottom-color: rgba(130,200,126,0.14); }
 html.theme-shinryoku body { background: linear-gradient(135deg, #060e08 0%, #030804 100%) fixed; }
@@ -227,6 +231,7 @@ html.theme-minagi {
   --cream: #eef4fc; --muted: rgba(238,244,252,.55); --muted2: rgba(238,244,252,.28);
   --gold: #6ab4e8; --gold2: #a0d4f4; --gold-dim: rgba(106,180,232,.18);
   --border: rgba(106,180,232,.14); --border2: rgba(255,255,255,.07);
+  --nav-text:rgba(238,244,252,.82);
 }
 html.theme-minagi nav { background: rgba(4,8,15,0.92) !important; border-bottom-color: rgba(106,180,232,0.14); }
 html.theme-minagi body { background: linear-gradient(135deg, #04080f 0%, #020508 100%) fixed; }
@@ -282,7 +287,7 @@ html.theme-minagi section { position: relative; z-index: 1; }
         <a href="../九星気学/kyuseikigaku.html">✶ 九星気学</a>
       </div>
     </div>
-    <a class="nav-back" href="../../index.html">← トップへ戻る</a>
+    <a class="nav-back" href="../../index.html">← <span class="nav-back-label">トップへ戻る</span></a>
     <div class="theme-switcher" id="theme-switcher">
       <button class="theme-btn" id="theme-btn" aria-label="テーマを変更する" title="テーマ変更">🎨</button>
       <div class="theme-picker" id="theme-picker">
