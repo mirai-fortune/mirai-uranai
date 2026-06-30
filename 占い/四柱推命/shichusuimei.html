@@ -1874,7 +1874,7 @@ function calcIndividual(){
 
 
   // 鑑定書データ保存
-  window._siKantei={name,y,m,d,timeVal,gender,yp,mp,dp,hp,daySi,pillars,daiun,allDu,allInterps,voidBr,curAge,saiunYears,currentYear,days};
+  window._siKantei={name,y,m,d,timeVal,gender,yp,mp,dp,hp,daySi,pillars,daiun,allDu,allInterps,voidBr,curAge,saiunYears,saiunInterps,currentYear,days};
   const kwEl=document.getElementById('si-kantei-wrap');
   if(kwEl)kwEl.style.display='block';
 
@@ -1891,6 +1891,7 @@ function openKantei(){
   if(!k){alert('先に命式を鑑定してください。');return;}
   const {name,y,m,d,timeVal,gender,yp,mp,dp,hp,daySi,pillars,daiun,allDu,allInterps,voidBr,curAge}=k;
   const saiunYears=k.saiunYears||[];
+  const saiunInterps=k.saiunInterps||[];
   const currentYear=k.currentYear||(new Date().getFullYear());
 
   const dayE=STEM_ELEM[daySi];
@@ -2163,25 +2164,9 @@ function openKantei(){
     +'</div>';
 
   // S9b: 歳運詳細
-  const TENKYU_THEME={
-    '比肩':'自立心と競争意識が高まる年。自分のペースで新しい挑戦を始めるのに適した時期です。',
-    '劫財':'変化と刺激が多い年。焦りや衝動には注意しながらも、果敢に動くことで道が開けます。',
-    '食神':'才能の発揮と楽しみが広がる年。創造的な活動や自己表現が実を結びやすい時期です。',
-    '傷官':'革新と突破力が高まる年。既存の枠を超える発想が評価され、才能が光りやすい時期です。',
-    '偏財':'チャンスが舞い込みやすい年。行動力を発揮することで好機を掴みやすい時期です。',
-    '正財':'着実な積み上げが実を結ぶ年。地道な努力と誠実さが信頼と結果を呼ぶ時期です。',
-    '偏官':'挑戦と責任が重なる年。プレッシャーをエネルギーに変えることで大きく成長できます。',
-    '正官':'名誉と社会的信用が高まる年。誠実な取り組みが評価され、地位が安定しやすい時期です。',
-    '偏印':'直感と学びの年。新しい知識の吸収や内省が深まり、精神的充実を得やすい時期です。',
-    '印綬':'守護とサポートを受けやすい年。学業・資格・内省に力を注ぐと未来の糧になります。',
-    '日主':'自己確認の年。原点に立ち返り、自分らしさを見つめ直す大切な時期です。',
-  };
+  const currSaunIp=saiunInterps.find(x=>x.isCurr)||null;
   const curSy=saiunYears.find(s=>s.year===currentYear);
-  const nextSy=saiunYears.find(s=>s.year===currentYear+1);
-  const curSyTg=curSy?getTenGod(daySi,curSy.si):'';
-  const curSyRels=curSy?getRelations(dp,curSy,daySi,voidBr):[];
-  const curSyED=curSy?(ELEM_DESC[STEM_ELEM[curSy.si]]||{nature:'',lucky:''}):null;
-  const s9b=curSy
+  const s9b=currSaunIp&&curSy
     ?('<div style="width:100%;max-width:860px;margin:0 auto;">'
       +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Annual Luck Detail</span>'
       +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:12px;">歳運詳細 ─ '+currentYear+'年</h2>'
@@ -2194,19 +2179,15 @@ function openKantei(){
       +'<div style="text-align:center;"><div style="font-size:.5rem;color:rgba(245,242,235,.28);letter-spacing:.04em;margin-bottom:3px;">'+BRANCHES_YOMI[curSy.bi]+'</div>'
       +'<div style="font-family:var(--serif);font-size:2.8rem;font-weight:300;color:var(--gold);line-height:1;">'+BRANCHES[curSy.bi]+'</div></div>'
       +'</div>'
-      +'<p style="font-size:.8rem;color:var(--muted);">'+curSyTg+'年</p>'
+      +'<p style="font-size:.8rem;color:var(--muted);">'+currSaunIp.tg+'年</p>'
       +'<p style="font-size:.76rem;color:var(--gold);">'+currentYear+'年</p>'
       +'<p style="font-size:.62rem;color:rgba(245,242,235,.28);">'+curSy.age+'歳</p>'
       +'</div>'
-      +'<div class="card" style="display:flex;flex-direction:column;gap:14px;">'
+      +'<div class="card" style="display:flex;flex-direction:column;gap:14px;overflow-y:auto;">'
       +'<p style="font-size:.64rem;letter-spacing:.2em;color:var(--gold);">今年のテーマ</p>'
-      +'<p style="font-family:var(--serif);font-size:.92rem;color:var(--cream);line-height:1.85;">'+(TENKYU_THEME[curSyTg]||'今年の流れをよく観察しながら、着実に歩を進めてください。')+'</p>'
-      +'<div style="padding-top:12px;border-top:1px solid var(--border);font-size:.77rem;color:var(--muted);line-height:2.2;">'
-      +'<strong style="color:var(--gold);">今年の五行：</strong>'+STEM_ELEM[curSy.si]+'（'+(curSyED?curSyED.nature:'')+'）<br>'
-      +'<strong style="color:var(--gold);">開運ヒント：</strong>'+(curSyED?curSyED.lucky:'')+'<br>'
-      +(curSyRels.length?'<strong style="color:var(--gold);">関係：</strong>'+curSyRels.map(r=>r.t).join('・')+'<br>':'')
-      +(nextSy?'<strong style="color:var(--gold);">来年（'+(currentYear+1)+'年）：</strong>'+STEMS[nextSy.si]+BRANCHES[nextSy.bi]+'　'+getTenGod(daySi,nextSy.si)+'年':'')
-      +'</div></div></div></div>')
+      +'<p style="font-family:var(--serif);font-size:.88rem;color:var(--cream);line-height:1.9;">'+currSaunIp.line1+'</p>'
+      +(currSaunIp.line3?'<div style="padding-top:12px;border-top:1px solid var(--border);font-size:.77rem;color:var(--muted);line-height:2;"><strong style="color:var(--gold);">'+(currSaunIp.rels&&currSaunIp.rels.length>0?'関係「'+currSaunIp.rels[0].t+'」について':'翌年の歳運')+'</strong><br>'+currSaunIp.line3+'</div>':'')
+      +'</div></div></div>')
     :('<div style="width:100%;max-width:860px;margin:0 auto;">'
       +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Annual Luck Detail</span>'
       +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">歳運詳細</h2>'
