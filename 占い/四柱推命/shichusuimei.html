@@ -1995,7 +1995,7 @@ function openKantei(){
   const s3='<div style="width:100%;max-width:860px;margin:0 auto;">'
     +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Five Elements</span>'
     +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">五行バランス</h2>'
-    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">'
+    +'<div class="g2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">'
     +'<div class="card"><p style="font-size:.68rem;letter-spacing:.18em;color:var(--gold);margin-bottom:16px;">五行分布（全'+total+'点）</p>'+barsH+'</div>'
     +'<div class="card"><p style="font-size:.68rem;letter-spacing:.18em;color:var(--gold);margin-bottom:12px;">命式の傾向</p>'
     +'<p style="font-family:var(--serif);font-size:.95rem;color:var(--cream);margin-bottom:10px;">'+dayE+'の人　─　'+dayEDesc.nature+'</p>'
@@ -2009,7 +2009,7 @@ function openKantei(){
   const s4='<div style="width:100%;max-width:860px;margin:0 auto;">'
     +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Core Nature</span>'
     +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">日主の本質</h2>'
-    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">'
+    +'<div class="g2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">'
     +'<div class="card">'
     +'<p style="font-size:.66rem;letter-spacing:.22em;color:var(--gold);margin-bottom:10px;">日干の気質</p>'
     +'<p style="font-family:var(--serif);font-size:1rem;color:var(--cream);margin-bottom:12px;">'+dayE+'（'+eYomi[dayE]+'）　─　'+dayEDesc.nature+'</p>'
@@ -2031,7 +2031,7 @@ function openKantei(){
   const s5='<div style="width:100%;max-width:860px;margin:0 auto;">'
     +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Month Pillar</span>'
     +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">月柱の解読 ─ 性格・仕事運・恋愛運・適職</h2>'
-    +'<div class="card" style="display:grid;grid-template-columns:172px 1fr;padding:0;overflow:hidden;">'
+    +'<div class="card gside" style="display:grid;grid-template-columns:172px 1fr;padding:0;overflow:hidden;">'
     +'<div style="padding:26px 18px;border-right:1px solid var(--border);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(10,9,7,.3);">'
     +'<p style="font-size:.62rem;letter-spacing:.2em;color:var(--gold);">月柱</p>'
     +'<div style="display:flex;gap:14px;justify-content:center;align-items:flex-end;margin:2px 0;">'
@@ -2048,7 +2048,7 @@ function openKantei(){
     +'</div></div></div>';
 
   // S6: 年柱 & 時柱
-  const ypBox='<div class="card" style="padding:0;overflow:hidden;"><div style="display:grid;grid-template-columns:130px 1fr;">'
+  const ypBox='<div class="card" style="padding:0;overflow:hidden;"><div class="gside" style="display:grid;grid-template-columns:130px 1fr;">'
     +'<div style="padding:20px 14px;border-right:1px solid var(--border);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:rgba(10,9,7,.3);">'
     +'<p style="font-size:.6rem;letter-spacing:.2em;color:var(--gold);">年柱</p>'
     +'<div style="display:flex;gap:10px;justify-content:center;align-items:flex-end;margin:2px 0;">'
@@ -2066,7 +2066,7 @@ function openKantei(){
     +'<p style="font-size:.7rem;color:var(--muted);margin-top:auto;"><span style="color:var(--gold);">適職：</span>'+tr(ypDet.tekishoku,52)+'</p>'
     +'</div></div></div>';
   const hpBox=hp
-    ?('<div class="card" style="padding:0;overflow:hidden;"><div style="display:grid;grid-template-columns:130px 1fr;">'
+    ?('<div class="card" style="padding:0;overflow:hidden;"><div class="gside" style="display:grid;grid-template-columns:130px 1fr;">'
       +'<div style="padding:20px 14px;border-right:1px solid var(--border);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:rgba(10,9,7,.3);">'
       +'<p style="font-size:.6rem;letter-spacing:.2em;color:var(--gold);">時柱</p>'
       +'<div style="display:flex;gap:10px;justify-content:center;align-items:flex-end;margin:2px 0;">'
@@ -2087,7 +2087,7 @@ function openKantei(){
   const s6='<div style="width:100%;max-width:860px;margin:0 auto;">'
     +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Pillars Analysis</span>'
     +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">年柱・時柱の解読</h2>'
-    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">'+ypBox+hpBox+'</div></div>';
+    +'<div class="g2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">'+ypBox+hpBox+'</div></div>';
 
   // S7: 大運一覧
   const duRows=allDu.map((du,i)=>{
@@ -2118,7 +2118,7 @@ function openKantei(){
     ?('<div style="width:100%;max-width:860px;margin:0 auto;">'
       +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Current Period</span>'
       +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">現在の大運詳細</h2>'
-      +'<div style="display:grid;grid-template-columns:184px 1fr;gap:14px;">'
+      +'<div class="g184" style="display:grid;grid-template-columns:184px 1fr;gap:14px;">'
       +'<div class="card" style="text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">'
       +'<p style="font-size:.64rem;letter-spacing:.2em;color:var(--gold);">現在の大運</p>'
       +'<div style="display:flex;gap:14px;justify-content:center;align-items:flex-end;margin:2px 0;">'
@@ -2177,7 +2177,7 @@ function openKantei(){
     ?('<div style="width:100%;max-width:860px;margin:0 auto;">'
       +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Annual Luck Detail</span>'
       +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:12px;">歳運詳細 ─ '+currentYear+'年</h2>'
-      +'<div style="display:grid;grid-template-columns:184px 1fr;gap:14px;">'
+      +'<div class="g184" style="display:grid;grid-template-columns:184px 1fr;gap:14px;">'
       +'<div class="card" style="text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">'
       +'<p style="font-size:.64rem;letter-spacing:.2em;color:var(--gold);">今年の歳運</p>'
       +'<div style="display:flex;gap:14px;justify-content:center;align-items:flex-end;margin:2px 0;">'
@@ -2213,7 +2213,7 @@ function openKantei(){
   const s10='<div style="width:100%;max-width:860px;margin:0 auto;">'
     +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Lucky Elements</span>'
     +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">用神 ─ 開運の五行</h2>'
-    +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;">'+yCards+'</div>'
+    +'<div class="g4" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;">'+yCards+'</div>'
     +'<div class="card" style="padding:14px 18px;font-size:.76rem;color:var(--muted);line-height:2;">'
     +(yAdv.act?'<strong style="color:var(--gold);">推奨行動：</strong>'+yAdv.act+'　':'')
     +(yAdv.env?'<strong style="color:var(--gold);">推奨環境：</strong>'+yAdv.env:'')
@@ -2260,6 +2260,7 @@ function openKantei(){
     +'.cnt{font-size:.75rem;color:rgba(245,242,235,.38);letter-spacing:.1em;min-width:52px;text-align:center;}\n'
     +'.sno{position:fixed;top:20px;right:26px;font-size:.64rem;color:rgba(245,242,235,.18);letter-spacing:.14em;z-index:10;font-family:var(--serif);}\n'
     +'@media(max-width:800px){.slide{padding:44px 20px 70px;}}\n'
+    +'@media(max-width:640px){.slide{padding:30px 14px 62px!important;}.card{padding:14px 16px!important;}.g2,.g184,.gside{grid-template-columns:1fr!important;}.g4{grid-template-columns:1fr 1fr!important;}h2{font-size:1.25rem!important;}}\n'
     +'@page{size:A4 landscape;margin:0;}\n'
     +'@media print{\n'
     +'*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}\n'
