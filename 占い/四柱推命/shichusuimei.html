@@ -1894,6 +1894,12 @@ function openKantei(){
   const saiunInterps=k.saiunInterps||[];
   const currentYear=k.currentYear||(new Date().getFullYear());
 
+  const _th=document.documentElement.classList.contains('theme-sakura')?'sakura'
+    :document.documentElement.classList.contains('theme-shinryoku')?'shinryoku'
+    :document.documentElement.classList.contains('theme-minagi')?'minagi':'gold';
+  const TH={gold:{bg:'#030611',cream:'#f5f2eb',muted:'rgba(245,242,235,.6)',acc:'#c4a86a',acc2:'#e8d09a',glow:'rgba(196,168,106,.055)',bdr:'rgba(196,168,106,.12)',bdr2:'rgba(196,168,106,.14)',bdrM:'rgba(196,168,106,.28)',bdrHi:'rgba(196,168,106,.18)',gd4:'rgba(196,168,106,.4)',hlBg:'rgba(196,168,106,.1)',cardBg:'rgba(15,13,9,.7)',theadBg:'rgba(28,24,12,.96)',tblBg:'rgba(18,16,12,.6)',rlblBg:'rgba(28,24,12,.7)',label:'星空'},sakura:{bg:'#160810',cream:'#fef2f6',muted:'rgba(254,242,246,.6)',acc:'#e891b2',acc2:'#f5c0d5',glow:'rgba(232,145,178,.055)',bdr:'rgba(232,145,178,.12)',bdr2:'rgba(232,145,178,.14)',bdrM:'rgba(232,145,178,.28)',bdrHi:'rgba(232,145,178,.18)',gd4:'rgba(232,145,178,.4)',hlBg:'rgba(232,145,178,.1)',cardBg:'rgba(26,10,18,.7)',theadBg:'rgba(34,12,22,.96)',tblBg:'rgba(30,12,20,.6)',rlblBg:'rgba(34,12,22,.7)',label:'桜花'},shinryoku:{bg:'#060e08',cream:'#f0f5ef',muted:'rgba(240,245,239,.6)',acc:'#82c87e',acc2:'#b4e8b0',glow:'rgba(130,200,126,.055)',bdr:'rgba(130,200,126,.12)',bdr2:'rgba(130,200,126,.14)',bdrM:'rgba(130,200,126,.28)',bdrHi:'rgba(130,200,126,.18)',gd4:'rgba(130,200,126,.4)',hlBg:'rgba(130,200,126,.1)',cardBg:'rgba(10,18,12,.7)',theadBg:'rgba(14,26,16,.96)',tblBg:'rgba(12,22,14,.6)',rlblBg:'rgba(14,26,16,.7)',label:'蛍火'},minagi:{bg:'#04080f',cream:'#eef4fc',muted:'rgba(238,244,252,.6)',acc:'#6ab4e8',acc2:'#a0d4f4',glow:'rgba(106,180,232,.055)',bdr:'rgba(106,180,232,.12)',bdr2:'rgba(106,180,232,.14)',bdrM:'rgba(106,180,232,.28)',bdrHi:'rgba(106,180,232,.18)',gd4:'rgba(106,180,232,.4)',hlBg:'rgba(106,180,232,.1)',cardBg:'rgba(8,12,22,.7)',theadBg:'rgba(10,18,34,.96)',tblBg:'rgba(8,14,26,.6)',rlblBg:'rgba(10,18,34,.7)',label:'水凪'}}[_th];
+  const s1motif={gold:'<span style="position:absolute;top:8%;left:6%;font-size:9px;color:rgba(196,168,106,.18);">✦</span><span style="position:absolute;top:14%;right:11%;font-size:5px;color:rgba(196,168,106,.12);">✦</span><span style="position:absolute;top:70%;left:8%;font-size:7px;color:rgba(196,168,106,.14);">✦</span><span style="position:absolute;top:82%;right:9%;font-size:10px;color:rgba(196,168,106,.12);">✦</span><span style="position:absolute;top:45%;left:3%;font-size:4px;color:rgba(196,168,106,.1);">✦</span><span style="position:absolute;top:55%;right:4%;font-size:5px;color:rgba(196,168,106,.1);">✦</span><span style="position:absolute;top:90%;left:38%;font-size:4px;color:rgba(196,168,106,.08);">✦</span><span style="position:absolute;top:25%;left:18%;font-size:3px;color:rgba(196,168,106,.08);">✦</span>',sakura:'<span style="position:absolute;top:10%;right:8%;font-size:20px;color:rgba(232,145,178,.14);transform:rotate(-25deg);display:inline-block;">✿</span><span style="position:absolute;top:22%;left:7%;font-size:13px;color:rgba(232,145,178,.1);transform:rotate(15deg);display:inline-block;">✿</span><span style="position:absolute;top:76%;right:11%;font-size:24px;color:rgba(232,145,178,.11);transform:rotate(40deg);display:inline-block;">✿</span><span style="position:absolute;top:65%;left:9%;font-size:15px;color:rgba(232,145,178,.09);transform:rotate(-10deg);display:inline-block;">✿</span><span style="position:absolute;top:88%;right:30%;font-size:11px;color:rgba(232,145,178,.08);transform:rotate(30deg);display:inline-block;">✿</span><span style="position:absolute;top:6%;left:32%;font-size:8px;color:rgba(232,145,178,.08);transform:rotate(-45deg);display:inline-block;">✿</span><span style="position:absolute;top:42%;right:22%;font-size:6px;color:rgba(232,145,178,.08);transform:rotate(20deg);display:inline-block;">✿</span>',shinryoku:'<div style="position:absolute;top:18%;left:12%;width:5px;height:5px;border-radius:50%;background:rgba(130,200,126,.35);box-shadow:0 0 8px 3px rgba(130,200,126,.18);"></div><div style="position:absolute;top:40%;right:15%;width:4px;height:4px;border-radius:50%;background:rgba(130,200,126,.28);box-shadow:0 0 6px 2px rgba(130,200,126,.14);"></div><div style="position:absolute;top:72%;left:20%;width:6px;height:6px;border-radius:50%;background:rgba(130,200,126,.3);box-shadow:0 0 10px 4px rgba(130,200,126,.14);"></div><div style="position:absolute;top:60%;right:8%;width:3px;height:3px;border-radius:50%;background:rgba(130,200,126,.25);box-shadow:0 0 5px 2px rgba(130,200,126,.12);"></div><div style="position:absolute;top:85%;left:35%;width:4px;height:4px;border-radius:50%;background:rgba(130,200,126,.22);box-shadow:0 0 6px 2px rgba(130,200,126,.12);"></div><div style="position:absolute;top:30%;left:5%;width:3px;height:3px;border-radius:50%;background:rgba(130,200,126,.2);box-shadow:0 0 5px 2px rgba(130,200,126,.1);"></div><div style="position:absolute;top:8%;right:25%;width:4px;height:4px;border-radius:50%;background:rgba(130,200,126,.22);box-shadow:0 0 7px 3px rgba(130,200,126,.12);"></div>',minagi:'<div style="position:absolute;bottom:28%;left:0;right:0;height:1px;background:linear-gradient(to right,transparent 5%,rgba(106,180,232,.1) 30%,rgba(106,180,232,.12) 50%,rgba(106,180,232,.1) 70%,transparent 95%);"></div><div style="position:absolute;bottom:24%;left:0;right:0;height:1px;background:linear-gradient(to right,transparent 10%,rgba(106,180,232,.07) 35%,rgba(106,180,232,.09) 55%,rgba(106,180,232,.07) 75%,transparent 90%);"></div><div style="position:absolute;bottom:20%;left:0;right:0;height:1px;background:linear-gradient(to right,transparent 15%,rgba(106,180,232,.05) 40%,rgba(106,180,232,.07) 60%,rgba(106,180,232,.05) 80%,transparent 85%);"></div><div style="position:absolute;top:0;right:0;width:120px;height:80px;background:radial-gradient(ellipse at top right,rgba(106,180,232,.06) 0%,transparent 70%);"></div><div style="position:absolute;bottom:0;left:0;width:100px;height:60px;background:radial-gradient(ellipse at bottom left,rgba(106,180,232,.05) 0%,transparent 70%);"></div>'}[_th];
+
   const dayE=STEM_ELEM[daySi];
   const dayEDesc=ELEM_DESC[dayE]||{};
   const dayEDetail=ELEM_DETAIL[dayE]||{};
@@ -1937,8 +1943,9 @@ function openKantei(){
   // ── Slide HTML builders ──────────────────────────
 
   // S1: 表紙
-  const s1='<div style="text-align:center;max-width:680px;margin:0 auto;">'
-    +'<p style="font-family:var(--serif);font-size:.68rem;letter-spacing:.42em;color:rgba(196,168,106,.42);text-transform:uppercase;margin-bottom:32px;">ASUMIRA 占い　四柱推命</p>'
+  const s1='<div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0;" aria-hidden="true">'+s1motif+'</div>'
+    +'<div style="text-align:center;max-width:680px;margin:0 auto;">'
+    +'<p style="font-family:var(--serif);font-size:.68rem;letter-spacing:.42em;color:var(--gd4);text-transform:uppercase;margin-bottom:32px;">ASUMIRA 占い　四柱推命</p>'
     +'<h1 style="font-family:var(--serif);font-size:clamp(2.2rem,4vw,3.4rem);font-weight:300;letter-spacing:.14em;color:var(--cream);margin-bottom:6px;">四柱推命鑑定書</h1>'
     +'<div style="width:36px;height:1px;background:var(--gold);margin:22px auto 28px;"></div>'
     +'<p style="font-family:var(--serif);font-size:1.8rem;font-weight:300;letter-spacing:.12em;color:var(--cream);margin-bottom:14px;">'+name+'様</p>'
@@ -1949,20 +1956,20 @@ function openKantei(){
   // S2: 命式表
   const kdDays=k.days!=null?k.days:0;
   const rclr={'cr-kuu':'#c97878','cr-go':'#c4a86a','cr-chuu':'#e08080'};
-  const thH=pLabels.map(l=>'<th style="background:rgba(31,28,18,.92);padding:8px 12px;font-family:var(--serif);font-size:.66rem;letter-spacing:.2em;color:var(--gold);border-bottom:1px solid rgba(196,168,106,.14);text-align:center;">'+l+'</th>').join('');
+  const thH=pLabels.map(l=>'<th style="background:var(--thead-bg);padding:8px 12px;font-family:var(--serif);font-size:.66rem;letter-spacing:.2em;color:var(--gold);border-bottom:1px solid var(--bdr2);text-align:center;">'+l+'</th>').join('');
   const kanH=pillarsK.map(p=>'<td style="padding:10px 12px;text-align:center;border:1px solid rgba(255,255,255,.04);"><div style="font-family:var(--serif);font-size:1.5rem;font-weight:300;line-height:1;color:var(--cream);">'+STEMS[p.si]+'</div><div style="font-size:.54rem;color:rgba(245,242,235,.28);margin-top:3px;">'+STEMS_YOMI[p.si]+'</div></td>').join('');
   const shiH=pillarsK.map(p=>{const iv=voidBr.includes(p.bi);return'<td style="padding:10px 12px;text-align:center;border:1px solid rgba(255,255,255,.04);"><div style="font-family:var(--serif);font-size:1.5rem;font-weight:300;line-height:1;color:'+(iv?'#c97878':'var(--gold)')+';">'+BRANCHES[p.bi]+'</div><div style="font-size:.54rem;color:rgba(245,242,235,.28);margin-top:3px;">'+BRANCHES_YOMI[p.bi]+'</div></td>';}).join('');
   const tgH=pillarsK.map((p,i)=>{const isDay=pLabels[i]==='日柱';return'<td style="padding:6px 12px;text-align:center;border:1px solid rgba(255,255,255,.04);font-size:.8rem;color:var(--muted);">'+(isDay?'日主':getTenGod(daySi,p.si))+'</td>';}).join('');
   const zkH=pillarsK.map(p=>{const zk=getZokkan(p.bi,kdDays);return'<td style="padding:6px 12px;text-align:center;border:1px solid rgba(255,255,255,.04);font-size:.8rem;color:rgba(245,242,235,.5);">'+STEMS[zk]+'</td>';}).join('');
   const zkTgH=pillarsK.map(p=>{const zk=getZokkan(p.bi,kdDays);const tg=getTenGod(daySi,zk);const iv=voidBr.includes(p.bi);return'<td style="padding:6px 12px;text-align:center;border:1px solid rgba(255,255,255,.04);font-size:.8rem;color:'+(iv?'#c97878':'rgba(245,242,235,.4)')+';">'+tg+'</td>';}).join('');
   const relH=pillarsK.map((p,i)=>{const isDay=pLabels[i]==='日柱';const nilTd='<td style="padding:6px 12px;text-align:center;border:1px solid rgba(255,255,255,.04);font-size:.7rem;color:rgba(245,242,235,.18);">—</td>';if(isDay)return nilTd;const rels=getRelations(dp,p,daySi,voidBr);if(!rels.length)return nilTd;return'<td style="padding:5px 10px;text-align:center;border:1px solid rgba(255,255,255,.04);line-height:1.8;">'+rels.map(r=>'<span style="font-size:.66rem;display:inline-block;color:'+(rclr[r.c]||'var(--muted)')+';">'+r.t+'</span>').join('<br>')+'</td>';}).join('');
-  const rlbl='padding:6px 12px;background:rgba(31,28,18,.7);font-size:.6rem;letter-spacing:.12em;color:rgba(245,242,235,.3);white-space:nowrap;';
+  const rlbl='padding:6px 12px;background:var(--rlbl-bg);font-size:.6rem;letter-spacing:.12em;color:rgba(245,242,235,.3);white-space:nowrap;';
   const s2='<div style="width:100%;max-width:860px;margin:0 auto;">'
     +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Birth Chart</span>'
     +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;">命式表</h2>'
-    +'<div style="background:rgba(18,16,12,.6);border:1px solid rgba(196,168,106,.12);border-radius:8px;overflow-x:auto;margin-bottom:12px;">'
+    +'<div style="background:var(--tbl-bg);border:1px solid var(--bdr);border-radius:8px;overflow-x:auto;margin-bottom:12px;">'
     +'<table style="width:100%;border-collapse:collapse;">'
-    +'<thead><tr><th style="background:rgba(31,28,18,.92);padding:8px 12px;font-size:.56rem;color:rgba(245,242,235,.2);border-bottom:1px solid rgba(196,168,106,.14);text-align:left;min-width:80px;"></th>'+thH+'</tr></thead>'
+    +'<thead><tr><th style="background:var(--thead-bg);padding:8px 12px;font-size:.56rem;color:rgba(245,242,235,.2);border-bottom:1px solid var(--bdr2);text-align:left;min-width:80px;"></th>'+thH+'</tr></thead>'
     +'<tbody>'
     +'<tr><td style="'+rlbl+'">天干</td>'+kanH+'</tr>'
     +'<tr><td style="'+rlbl+'">地支</td>'+shiH+'</tr>'
@@ -2015,7 +2022,7 @@ function openKantei(){
     +'<p style="font-size:.66rem;letter-spacing:.22em;color:var(--gold);margin-bottom:10px;">日柱の納音</p>'
     +'<h3 style="font-family:var(--serif);font-size:1.2rem;color:var(--gold);margin-bottom:12px;letter-spacing:.06em;">〜 '+nayinName+' 〜</h3>'
     +'<p style="font-size:.77rem;color:var(--muted);line-height:2;margin-bottom:14px;">'+tr(nayinDesc,170)+'</p>'
-    +'<div style="padding:10px 14px;border:1px solid rgba(196,168,106,.18);background:rgba(196,168,106,.04);border-radius:6px;font-size:.72rem;color:var(--muted);line-height:2;">'
+    +'<div style="padding:10px 14px;border:1px solid var(--bdrHi);background:rgba(255,255,255,.02);border-radius:6px;font-size:.72rem;color:var(--muted);line-height:2;">'
     +'<strong style="color:var(--cream);">空亡：</strong>'+void1+'・'+void2+'<br>'
     +'<span style="color:rgba(245,242,235,.3);">空亡の時期は内省と充電のサイクルです</span>'
     +'</div></div></div></div>';
@@ -2087,7 +2094,7 @@ function openKantei(){
     const ip=allInterps[i];
     const isCurr=ip&&ip.isCurr;const isPast=ip&&ip.isPast&&!isCurr;
     const period=du.isPre?'0〜'+du.endAge+'歳':du.age+'〜'+du.endAge+'歳';
-    return'<tr style="'+(isCurr?'background:rgba(196,168,106,.1);border-left:3px solid var(--gold);':'')+(isPast?'opacity:.34;':'')+'">'
+    return'<tr style="'+(isCurr?'background:var(--hl-bg);border-left:3px solid var(--gold);':'')+(isPast?'opacity:.34;':'')+'">'
       +'<td style="padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.04);font-size:.74rem;'+(isCurr?'color:var(--cream);':'color:var(--muted);')+'">'
       +(isCurr?'<span style="font-size:.54rem;background:var(--gold);color:#0d0b08;padding:1px 5px;letter-spacing:.06em;display:inline-block;margin-right:5px;">現在</span>':'')+period+'</td>'
       +'<td style="padding:5px 8px;border-bottom:1px solid rgba(255,255,255,.04);text-align:center;font-family:var(--serif);font-size:1.1rem;font-weight:300;color:var(--cream);">'+STEMS[du.si]+'</td>'
@@ -2099,10 +2106,10 @@ function openKantei(){
     +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Major Luck Cycle</span>'
     +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:8px;">大運一覧（10年サイクル）</h2>'
     +'<p style="font-size:.74rem;color:var(--muted);margin-bottom:10px;">'+daiun.startAge+'歳から立運（'+(daiun.isForward?'順行':'逆行')+'）。現在 '+curAge+'歳。</p>'
-    +'<div style="background:rgba(18,16,12,.6);border:1px solid rgba(196,168,106,.12);border-radius:8px;overflow-x:auto;">'
+    +'<div style="background:var(--tbl-bg);border:1px solid var(--bdr);border-radius:8px;overflow-x:auto;">'
     +'<table style="width:100%;border-collapse:collapse;min-width:480px;">'
     +'<thead><tr>'
-    +['年齢','天干','地支','通変星','テーマ'].map((h,i)=>'<th style="background:rgba(24,21,14,.98);padding:6px '+(i>0?'8':'10')+'px;font-size:.6rem;letter-spacing:.18em;color:var(--gold);border-bottom:1px solid rgba(196,168,106,.14);text-align:'+(i===0||i>2?'left':'center')+';">'+h+'</th>').join('')
+    +['年齢','天干','地支','通変星','テーマ'].map((h,i)=>'<th style="background:var(--thead-bg);padding:6px '+(i>0?'8':'10')+'px;font-size:.6rem;letter-spacing:.18em;color:var(--gold);border-bottom:1px solid var(--bdr2);text-align:'+(i===0||i>2?'left':'center')+';">'+h+'</th>').join('')
     +'</tr></thead>'
     +'<tbody>'+duRows+'</tbody></table></div></div>';
 
@@ -2140,7 +2147,7 @@ function openKantei(){
     const isCurr=sy.year===currentYear;
     const tg=getTenGod(daySi,sy.si);
     const col=eHex[STEM_ELEM[sy.si]]||'var(--muted)';
-    return'<tr style="'+(isCurr?'background:rgba(196,168,106,.1);border-left:3px solid var(--gold);':'')+'">'
+    return'<tr style="'+(isCurr?'background:var(--hl-bg);border-left:3px solid var(--gold);':'')+'">'
       +'<td style="padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.04);font-size:.74rem;'+(isCurr?'color:var(--cream);':'color:var(--muted);')+'">'
       +(isCurr?'<span style="font-size:.54rem;background:var(--gold);color:#0d0b08;padding:1px 5px;margin-right:5px;display:inline-block;">今年</span>':'')+sy.year+'年</td>'
       +'<td style="padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.04);font-size:.74rem;color:var(--muted);">'+sy.age+'歳</td>'
@@ -2154,10 +2161,10 @@ function openKantei(){
     +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:8px;">歳運（年運）</h2>'
     +'<p style="font-size:.74rem;color:var(--muted);margin-bottom:10px;">直近の歳運。今年（'+currentYear+'年）を軸に確認してください。</p>'
     +(syRows
-      ?('<div style="background:rgba(18,16,12,.6);border:1px solid rgba(196,168,106,.12);border-radius:8px;overflow-x:auto;">'
+      ?('<div style="background:var(--tbl-bg);border:1px solid var(--bdr);border-radius:8px;overflow-x:auto;">'
         +'<table style="width:100%;border-collapse:collapse;min-width:420px;">'
         +'<thead><tr>'
-        +['年','年齢','天干','地支','通変星','五行'].map((h,i)=>'<th style="background:rgba(24,21,14,.98);padding:6px '+(i>1&&i<4?'8':'10')+'px;font-size:.6rem;letter-spacing:.16em;color:var(--gold);border-bottom:1px solid rgba(196,168,106,.14);text-align:'+(i>=2&&i<=3?'center':'left')+';">'+h+'</th>').join('')
+        +['年','年齢','天干','地支','通変星','五行'].map((h,i)=>'<th style="background:var(--thead-bg);padding:6px '+(i>1&&i<4?'8':'10')+'px;font-size:.6rem;letter-spacing:.16em;color:var(--gold);border-bottom:1px solid var(--bdr2);text-align:'+(i>=2&&i<=3?'center':'left')+';">'+h+'</th>').join('')
         +'</tr></thead>'
         +'<tbody>'+syRows+'</tbody></table></div>')
       :'<div class="card"><p style="font-size:.8rem;color:var(--muted);">再度鑑定を行うと歳運データが表示されます。</p></div>')
@@ -2215,11 +2222,11 @@ function openKantei(){
   // S11: まとめ
   const tags=[dayE+'の日主',dayEDesc.nature,mpTg+'（月柱）','〜'+nayinName+'〜','空亡：'+void1+'・'+void2,daiun.startAge+'歳立運'];
   const s11='<div style="text-align:center;max-width:680px;margin:0 auto;">'
-    +'<p style="font-family:var(--serif);font-size:.68rem;letter-spacing:.4em;color:rgba(196,168,106,.4);text-transform:uppercase;margin-bottom:26px;">Summary</p>'
+    +'<p style="font-family:var(--serif);font-size:.68rem;letter-spacing:.4em;color:var(--gd4);text-transform:uppercase;margin-bottom:26px;">Summary</p>'
     +'<h2 style="font-family:var(--serif);font-size:1.75rem;font-weight:300;letter-spacing:.12em;margin-bottom:20px;">あなたの命式キーワード</h2>'
     +'<div style="width:36px;height:1px;background:var(--gold);margin:0 auto 24px;"></div>'
     +'<div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:30px;">'
-    +tags.map(t=>'<span style="font-size:.8rem;border:1px solid rgba(196,168,106,.3);color:var(--gold);padding:6px 16px;border-radius:20px;">'+t+'</span>').join('')
+    +tags.map(t=>'<span style="font-size:.8rem;border:1px solid var(--bdrM);color:var(--gold);padding:6px 16px;border-radius:20px;">'+t+'</span>').join('')
     +'</div>'
     +'<p style="font-size:.84rem;color:var(--muted);line-height:2.4;margin-bottom:40px;">四柱推命は、東洋命理学の考え方に基づき、ご自身の性質や可能性を見つめ直すための参考情報です。この鑑定書が、自己理解を深め、これからの選択や行動を考えるきっかけとなれば幸いです。</p>'
     +'<p style="font-size:.68rem;color:rgba(245,242,235,.2);letter-spacing:.14em;border-top:1px solid rgba(255,255,255,.07);padding-top:22px;display:inline-block;">ASUMIRA 占い　─　現役占い師監修　／　'+todayStr+'</p>'
@@ -2237,15 +2244,15 @@ function openKantei(){
     +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">\n'
     +'<style>\n'
     +'*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}\n'
-    +':root{--bg:#030611;--cream:#f5f2eb;--muted:rgba(245,242,235,.6);--gold:#c4a86a;--border:rgba(255,255,255,.07);--serif:"Noto Serif JP",serif;--sans:"Noto Sans JP",sans-serif;}\n'
+    +':root{--bg:'+TH.bg+';--cream:'+TH.cream+';--muted:'+TH.muted+';--gold:'+TH.acc+';--gold2:'+TH.acc2+';--bdr:'+TH.bdr+';--bdr2:'+TH.bdr2+';--bdrM:'+TH.bdrM+';--bdrHi:'+TH.bdrHi+';--gd4:'+TH.gd4+';--hl-bg:'+TH.hlBg+';--card-bg:'+TH.cardBg+';--thead-bg:'+TH.theadBg+';--tbl-bg:'+TH.tblBg+';--rlbl-bg:'+TH.rlblBg+';--border:rgba(255,255,255,.07);--serif:"Noto Serif JP",serif;--sans:"Noto Sans JP",sans-serif;}\n'
     +'html,body{width:100%;height:100%;background:var(--bg);color:var(--cream);font-family:var(--sans);font-weight:300;overflow:hidden;-webkit-font-smoothing:antialiased;}\n'
-    +'.glow{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:60vw;height:60vw;background:radial-gradient(circle,rgba(196,168,106,.055) 0%,transparent 65%);pointer-events:none;z-index:0;}\n'
+    +'.glow{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:60vw;height:60vw;background:radial-gradient(circle,'+TH.glow+' 0%,transparent 65%);pointer-events:none;z-index:0;}\n'
     +'.deck{width:100%;height:100%;position:relative;}\n'
     +'.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:52px 80px 76px;opacity:0;pointer-events:none;transition:opacity .48s ease,transform .48s ease;transform:translateX(40px);z-index:1;}\n'
     +'.slide>div{position:relative;z-index:1;width:100%;}\n'
     +'.slide.active{opacity:1;pointer-events:all;transform:translateX(0);}\n'
     +'.slide.exit{opacity:0;transform:translateX(-40px);pointer-events:none;}\n'
-    +'.card{background:rgba(18,16,12,.55);border:1px solid var(--border);border-radius:10px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:22px 26px;}\n'
+    +'.card{background:var(--card-bg);border:1px solid var(--bdr);border-radius:10px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:22px 26px;}\n'
     +'nav.ctrl{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:16px;z-index:100;}\n'
     +'.nbtn{background:rgba(18,16,12,.65);border:1px solid rgba(255,255,255,.08);color:rgba(245,242,235,.52);padding:9px 22px;border-radius:24px;font-size:.78rem;letter-spacing:.08em;cursor:pointer;font-family:var(--sans);transition:border-color .28s,color .28s;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}\n'
     +'.nbtn:hover:not(:disabled){border-color:var(--gold);color:var(--gold);}\n'
@@ -2256,7 +2263,7 @@ function openKantei(){
     +'@page{size:A4 landscape;margin:0;}\n'
     +'@media print{\n'
     +'*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}\n'
-    +'html,body{width:297mm!important;height:auto!important;overflow:visible!important;background:#030611!important;}\n'
+    +'html,body{width:297mm!important;height:auto!important;overflow:visible!important;background:'+TH.bg+'!important;}\n'
     +'.glow,.sno,nav.ctrl{display:none!important;}\n'
     +'.deck{position:static!important;height:auto!important;display:block!important;}\n'
     +'.slide{position:relative!important;display:flex!important;opacity:1!important;transform:none!important;pointer-events:none!important;inset:auto!important;width:297mm!important;height:210mm!important;page-break-after:always!important;break-after:page!important;overflow:hidden!important;padding:44px 60px 44px!important;}\n'
