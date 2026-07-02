@@ -429,6 +429,13 @@ html.theme-minagi nav { background: rgba(4,8,15,0.92) !important; border-bottom-
 html.theme-minagi body { background: linear-gradient(135deg, #04080f 0%, #020508 100%) fixed; }
 html.theme-minagi .container { position: relative; z-index: 1; }
 html.theme-minagi section { position: relative; z-index: 1; }
+/* ── 鑑定書ボタン ── */
+.kantei-btn-wrap{margin:52px 0 0;text-align:center;}
+.kantei-btn{padding:13px 52px;background:transparent;border:1px solid var(--gold);color:var(--gold);cursor:pointer;font-size:11px;letter-spacing:.36em;font-family:'Cormorant Garamond',serif;transition:background .25s,color .25s;text-transform:uppercase;}
+.kantei-btn:hover{background:var(--gold-dim);color:var(--gold2);}
+.kantei-btn-hint{font-size:10px;color:var(--muted2);margin-top:11px;letter-spacing:.06em;}
+@media(max-width:768px){.kantei-btn-wrap{display:none;}}
+
 /* ── SCROLL BTN ── */
 .trt-scroll-btn{
   display:inline-flex;align-items:center;justify-content:center;
@@ -715,6 +722,11 @@ html.theme-minagi section { position: relative; z-index: 1; }
 <div class="sec-div" id="trt-sec-div" style="display:none"><span>CELTIC CROSS READING</span></div>
 <div class="trt-interp" id="trt-interp"></div>
 
+<div class="kantei-btn-wrap" id="trt-kantei-wrap" style="display:none;">
+  <button class="kantei-btn" onclick="openKanteiTRT()">鑑定書を作成する</button>
+  <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+</div>
+
 <div class="caution">※ 本ツールは78枚フルデッキ（大アルカナ22枚＋小アルカナ56枚）によるケルト十字法（10枚展開）を採用しています。カードの引き順と正逆位置はランダム関数（Math.random）で決定します。予言や運命の断定を目的とするものではありません。<br><br>※当サイトの占術ロジックは、現役占い師監修のもと本格的な仕様で構築しています。毎日のセルフチェックはもちろん、プロの占い師様の鑑定補助ツールとしてもご自由にお役立てください。</div>
 
 </div>
@@ -942,6 +954,7 @@ function trtBuildInterp(){
   const sec = document.getElementById('trt-interp');
   sec.innerHTML = '';
   const descs = TRT_CAT_DESCS[trtCategory] || TRT_CAT_DESCS.love;
+  window._trtKantei = { drawn: trtDrawn, category: trtCategory, imageDir: window.location.href.replace(/[^/]*$/, '') };
   const catSuffix = TRT_CAT_SUFFIX[trtCategory] || TRT_CAT_SUFFIX.love;
 
   // 全10枚のテキストを収集してから多様化処理を適用
@@ -1068,6 +1081,7 @@ function trtFlip(idx, delay, gen){
           document.getElementById('trt-interp').classList.add('trt-vis');
           document.getElementById('trt-btn-reset').classList.add('trt-vis');
           document.getElementById('trt-btn-skip').classList.remove('trt-vis');
+          document.getElementById('trt-kantei-wrap').style.display = '';
           setTimeout(()=>{
             const sd=document.getElementById('trt-sec-div');
             if(sd){ const y=sd.getBoundingClientRect().top+window.pageYOffset-80; window.scrollTo({top:y,behavior:'smooth'}); }
@@ -1123,11 +1137,243 @@ function trtReset(){
   document.getElementById('trt-sec-div').style.display = 'none';
   document.getElementById('trt-btn-reset').classList.remove('trt-vis');
   document.getElementById('trt-btn-skip').classList.remove('trt-vis');
+  document.getElementById('trt-kantei-wrap').style.display = 'none';
   document.querySelectorAll('.trt-cat-btn').forEach(b => { b.classList.remove('trt-cat-active'); b.disabled = false; });
   trtCategory = null;
   document.getElementById('trt-btn-draw').disabled = true;
   trtDrawn = [];
   trtUpdatePips(0);
+}
+
+/* ════════════════════════════════════════
+   タロット 鑑定書出力（横スライド形式・12枚）
+════════════════════════════════════════ */
+function openKanteiTRT(){
+  var k = window._trtKantei;
+  if(!k){ alert('先に鑑定してください。'); return; }
+
+  var drawn = k.drawn;
+  var category = k.category;
+  var imageDir = k.imageDir;
+
+  var _th = document.documentElement.classList.contains('theme-sakura') ? 'sakura'
+    : document.documentElement.classList.contains('theme-shinryoku') ? 'shinryoku'
+    : document.documentElement.classList.contains('theme-minagi') ? 'minagi' : 'gold';
+  var TH = {
+    gold:      {bg:'#030611',cream:'#f5f2eb',muted:'rgba(245,242,235,.6)',acc:'#c4a86a',acc2:'#e8d09a',bdr:'rgba(196,168,106,.12)',bdrM:'rgba(196,168,106,.28)',gd4:'rgba(196,168,106,.4)',cardBg:'rgba(15,13,9,.9)',theadBg:'rgba(28,24,12,.96)',tblBg:'rgba(18,16,12,.6)'},
+    sakura:    {bg:'#160810',cream:'#fef2f6',muted:'rgba(254,242,246,.6)',acc:'#e891b2',acc2:'#f5c0d5',bdr:'rgba(232,145,178,.12)',bdrM:'rgba(232,145,178,.28)',gd4:'rgba(232,145,178,.4)',cardBg:'rgba(26,10,18,.9)',theadBg:'rgba(34,12,22,.96)',tblBg:'rgba(30,12,20,.6)'},
+    shinryoku: {bg:'#060e08',cream:'#f0f5ef',muted:'rgba(240,245,239,.6)',acc:'#82c87e',acc2:'#b4e8b0',bdr:'rgba(130,200,126,.12)',bdrM:'rgba(130,200,126,.28)',gd4:'rgba(130,200,126,.4)',cardBg:'rgba(10,18,12,.9)',theadBg:'rgba(14,26,16,.96)',tblBg:'rgba(12,22,14,.6)'},
+    minagi:    {bg:'#04080f',cream:'#eef4fc',muted:'rgba(238,244,252,.6)',acc:'#6ab4e8',acc2:'#a0d4f4',bdr:'rgba(106,180,232,.12)',bdrM:'rgba(106,180,232,.28)',gd4:'rgba(106,180,232,.4)',cardBg:'rgba(8,12,22,.9)',theadBg:'rgba(10,18,34,.96)',tblBg:'rgba(8,14,26,.6)'}
+  }[_th];
+
+  var today = new Date();
+  var todayStr = today.getFullYear()+'年'+(today.getMonth()+1)+'月'+today.getDate()+'日';
+  var todayFile = 'タロット_'+today.getFullYear()+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0');
+  var catLabel = TRT_CAT_LABEL[category] || category;
+  var catDescs = TRT_CAT_DESCS[category] || TRT_CAT_DESCS.marriage;
+  var catSuffix = TRT_CAT_SUFFIX[category] || TRT_CAT_SUFFIX.marriage;
+
+  function getImgSrc(id){ var rel = TRT_IMAGE_MAP[id]; return rel ? imageDir + rel : ''; }
+
+  // ── S1: 表紙 ──
+  var s1 = '<div style="text-align:center;max-width:680px;margin:0 auto;">'
+    +'<p style="font-family:var(--serif);font-size:.65rem;letter-spacing:.42em;color:var(--gd4);text-transform:uppercase;margin-bottom:28px;">ASUMIRA 占い  ─  タロット</p>'
+    +'<h1 style="font-family:var(--serif);font-size:clamp(2rem,4vw,3.2rem);font-weight:300;letter-spacing:.14em;color:var(--cream);margin-bottom:6px;">タロット鑑定書</h1>'
+    +'<div style="width:36px;height:1px;background:var(--gold);margin:22px auto 26px;"></div>'
+    +'<p style="font-family:var(--serif);font-size:1.55rem;font-weight:300;letter-spacing:.14em;color:var(--gold);margin-bottom:10px;">【 '+catLabel+' 】</p>'
+    +'<p style="font-size:.8rem;color:var(--muted);letter-spacing:.14em;">ケルト十字法　10枚展開</p>'
+    +'<p style="margin-top:48px;font-size:.65rem;color:rgba(245,242,235,.18);letter-spacing:.14em;border-top:1px solid rgba(255,255,255,.07);padding-top:20px;display:inline-block;">鑑定日　'+todayStr+'　／　現役占い師監修　ASUMIRA 占い</p>'
+    +'</div>';
+
+  // ── S2: ケルト十字配置図 + カード一覧 ──
+  var tblRows = '';
+  for(var ri = 0; ri < drawn.length; ri++){
+    var rc = drawn[ri];
+    var rp = TRT_POSITIONS[ri];
+    var rOri = rc.isInv ? '▽ 逆' : '△ 正';
+    var rOriCol = rc.isInv ? TH.muted : TH.acc2;
+    var rBg = ri % 2 !== 0 ? 'background:rgba(255,255,255,.018);' : '';
+    tblRows += '<tr style="border-bottom:1px solid '+TH.bdr+';'+rBg+'">'
+      +'<td style="padding:7px 10px;text-align:center;font-family:var(--serif);font-size:.9rem;font-weight:300;color:'+TH.gd4+';">'+rp.en+'</td>'
+      +'<td style="padding:7px 10px;font-size:.64rem;color:'+TH.muted+';letter-spacing:.03em;white-space:nowrap;">'+rp.jp+'</td>'
+      +'<td style="padding:7px 10px;">'
+      +'<span style="font-family:var(--serif);font-size:.86rem;color:'+TH.cream+';">'+rc.data.nameEn+'</span>'
+      +'<span style="font-size:.6rem;color:'+TH.muted+';margin-left:6px;">'+rc.data.name+'</span>'
+      +'</td>'
+      +'<td style="padding:7px 10px;text-align:center;font-size:.64rem;color:'+rOriCol+';white-space:nowrap;">'+rOri+'</td>'
+      +'</tr>';
+  }
+
+  // mini card helpers for spread viz
+  var cw=40,ch=70;
+  function mkCImg(card){
+    var src=getImgSrc(card.id);
+    var inv=card.isInv?'transform:rotate(180deg);':'';
+    return src
+      ?'<img src="'+src+'" alt="" style="width:100%;height:100%;object-fit:cover;display:block;'+inv+'">'
+      :'<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:3px;">'
+        +'<div style="font-size:6px;color:'+TH.gd4+';font-family:var(--serif);">'+card.data.number+'</div>'
+        +'<div style="font-size:5.5px;color:rgba(255,255,255,.35);text-align:center;">'+card.data.name+'</div>'
+        +'</div>';
+  }
+  function mkCBox(card,label){
+    return '<div style="display:flex;flex-direction:column;align-items:center;gap:3px;">'
+      +'<div style="font-size:7px;letter-spacing:.1em;color:'+TH.gd4+';font-family:var(--serif);">'+label+'</div>'
+      +'<div style="width:'+cw+'px;height:'+ch+'px;border:1px solid '+TH.bdrM+';border-radius:2px;overflow:hidden;background:'+TH.cardBg+';">'+mkCImg(card)+'</div>'
+      +'</div>';
+  }
+  var s2Center='<div style="display:flex;flex-direction:column;align-items:center;gap:3px;">'
+    +'<div style="font-size:7px;letter-spacing:.1em;color:'+TH.gd4+';font-family:var(--serif);">I</div>'
+    +'<div style="position:relative;width:'+cw+'px;height:'+ch+'px;">'
+    +'<div style="position:absolute;inset:0;border:1px solid '+TH.bdrM+';border-radius:2px;overflow:hidden;background:'+TH.cardBg+';">'+mkCImg(drawn[0])+'</div>'
+    +'<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">'
+    +'<div style="width:'+cw+'px;height:'+ch+'px;transform:rotate(90deg);border:1px solid rgba(196,168,106,.65);border-radius:2px;overflow:hidden;background:'+TH.cardBg+';">'+mkCImg(drawn[1])+'</div>'
+    +'</div>'
+    +'</div>'
+    +'<div style="font-size:7px;letter-spacing:.1em;color:'+TH.gd4+';font-family:var(--serif);">II</div>'
+    +'</div>';
+  var s2Cross='<div style="display:grid;grid-template-columns:repeat(3,auto);gap:6px;align-items:center;justify-items:center;">'
+    +'<div></div>'+mkCBox(drawn[2],'III')+'<div></div>'
+    +mkCBox(drawn[4],'V')+s2Center+mkCBox(drawn[5],'VI')
+    +'<div></div>'+mkCBox(drawn[3],'IV')+'<div></div>'
+    +'</div>';
+  var s2Staff='<div style="display:flex;flex-direction:column;gap:6px;align-items:center;">'
+    +mkCBox(drawn[9],'X')+mkCBox(drawn[8],'IX')+mkCBox(drawn[7],'VIII')+mkCBox(drawn[6],'VII')
+    +'</div>';
+  var s2Spread='<div style="display:flex;gap:16px;align-items:center;">'
+    +s2Cross+s2Staff+'</div>';
+
+  var s2 = '<div style="width:100%;max-width:960px;margin:0 auto;display:flex;gap:44px;align-items:flex-start;">'
+    +'<div style="flex-shrink:0;">'
+    +'<div style="font-size:.6rem;color:'+TH.acc+';letter-spacing:.22em;text-transform:uppercase;margin-bottom:8px;">Celtic Cross Layout</div>'
+    +'<h2 style="font-family:var(--serif);font-size:1.2rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;color:'+TH.cream+';">ケルト十字配置</h2>'
+    +s2Spread
+    +'</div>'
+    +'<div style="flex:1;min-width:0;">'
+    +'<div style="font-size:.6rem;color:'+TH.acc+';letter-spacing:.22em;text-transform:uppercase;margin-bottom:8px;">Card Reference</div>'
+    +'<h2 style="font-family:var(--serif);font-size:1.2rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;color:'+TH.cream+';">カード一覧</h2>'
+    +'<table style="width:100%;border-collapse:collapse;border:1px solid '+TH.bdr+';background:'+TH.tblBg+';">'
+    +'<thead><tr style="border-bottom:1px solid '+TH.bdrM+';">'
+    +'<th style="padding:6px 10px;background:'+TH.theadBg+';font-family:var(--serif);font-size:.52rem;letter-spacing:.14em;color:'+TH.gd4+';font-weight:300;text-align:center;width:36px;">#</th>'
+    +'<th style="padding:6px 10px;background:'+TH.theadBg+';font-family:var(--serif);font-size:.52rem;letter-spacing:.14em;color:'+TH.gd4+';font-weight:300;text-align:left;">ポジション</th>'
+    +'<th style="padding:6px 10px;background:'+TH.theadBg+';font-family:var(--serif);font-size:.52rem;letter-spacing:.14em;color:'+TH.gd4+';font-weight:300;text-align:left;">カード</th>'
+    +'<th style="padding:6px 10px;background:'+TH.theadBg+';font-family:var(--serif);font-size:.52rem;letter-spacing:.14em;color:'+TH.gd4+';font-weight:300;text-align:center;width:60px;">正逆</th>'
+    +'</tr></thead>'
+    +'<tbody>'+tblRows+'</tbody></table>'
+    +'</div>'
+    +'</div>';
+
+  // ── S3-S12: 各カード詳細 ──
+  var cardSlides = [];
+  for(var ci = 0; ci < drawn.length; ci++){
+    var card = drawn[ci];
+    var pos = TRT_POSITIONS[ci];
+    var oriKey = card.isInv ? 'inverted' : 'normal';
+    var rawText = card.data[oriKey][pos.key] || card.data[oriKey][pos.legacyKey] || '';
+    var catMsg = catSuffix[oriKey][ci] || '';
+    var catDesc = catDescs[ci] || '';
+    var imgSrc = getImgSrc(card.id);
+    var imgStyle = card.isInv ? 'transform:rotate(180deg);' : '';
+    var oriLabel = card.isInv ? '▽ 逆位置' : '△ 正位置';
+    var oriColor = card.isInv ? TH.muted : TH.acc2;
+
+    var imgHtml = imgSrc
+      ? '<img src="'+imgSrc+'" alt="" style="width:100%;height:100%;object-fit:cover;display:block;'+imgStyle+'">'
+      : '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:16px;text-align:center;">'
+        +'<div style="font-family:var(--serif);font-size:.75rem;color:'+TH.gd4+';margin-bottom:8px;">'+card.data.number+'</div>'
+        +'<div style="font-family:var(--serif);font-size:1.1rem;color:'+TH.cream+';">'+card.data.name+'</div>'
+        +'<div style="font-size:.65rem;color:'+TH.muted+';margin-top:4px;font-style:italic;">'+card.data.nameEn+'</div>'
+        +'</div>';
+
+    cardSlides.push(
+      '<div style="display:flex;gap:56px;align-items:center;width:100%;max-width:960px;margin:0 auto;">'
+      // ─ 左: カード画像
+      +'<div style="flex-shrink:0;width:152px;">'
+      +'<div style="font-family:var(--serif);font-size:2.6rem;font-weight:300;color:'+TH.gd4+';line-height:1;margin-bottom:10px;text-align:center;">'+pos.en+'</div>'
+      +'<div style="width:152px;height:266px;border:1px solid '+TH.bdrM+';border-radius:3px;overflow:hidden;background:'+TH.cardBg+';">'
+      +imgHtml
+      +'</div>'
+      +'<div style="text-align:center;margin-top:9px;">'
+      +'<span style="font-size:.62rem;letter-spacing:.14em;color:'+oriColor+';">'+oriLabel+'</span>'
+      +'</div>'
+      +'</div>'
+      // ─ 右: テキスト
+      +'<div style="flex:1;min-width:0;">'
+      +'<div style="font-size:.6rem;letter-spacing:.3em;color:'+TH.gd4+';text-transform:uppercase;margin-bottom:5px;">Position '+pos.en+'</div>'
+      +'<div style="font-size:.75rem;letter-spacing:.1em;color:'+TH.muted+';margin-bottom:14px;">'+pos.jp+'</div>'
+      +'<div style="width:24px;height:1px;background:'+TH.bdr+';margin-bottom:14px;"></div>'
+      +'<div style="font-family:var(--serif);font-size:1.85rem;font-weight:300;color:'+TH.cream+';line-height:1.2;margin-bottom:4px;">'+card.data.nameEn+'</div>'
+      +'<div style="font-size:.72rem;color:'+TH.muted+';letter-spacing:.12em;margin-bottom:14px;">'+card.data.number+'　'+card.data.name+'</div>'
+      +'<div style="width:24px;height:1px;background:'+TH.bdr+';margin-bottom:14px;"></div>'
+      +'<div style="font-size:.72rem;letter-spacing:.06em;color:'+TH.gd4+';margin-bottom:12px;line-height:1.8;">'+catDesc+'</div>'
+      +'<div style="font-size:.82rem;line-height:2.05;letter-spacing:.04em;color:'+TH.cream+';margin-bottom:14px;">'+rawText+'</div>'
+      +'<div style="font-size:.76rem;line-height:1.9;letter-spacing:.04em;color:'+TH.acc+';padding-top:12px;border-top:1px solid '+TH.bdr+';">'+catMsg+'</div>'
+      +'</div>'
+      +'</div>'
+    );
+  }
+
+  var allSlides = [s1, s2].concat(cardSlides);
+  var NS = allSlides.length;
+
+  var deckHtml = '';
+  for(var si = 0; si < allSlides.length; si++){
+    deckHtml += '<div class="slide'+(si===0?' active':'')+'">'+ allSlides[si] +'</div>';
+  }
+
+  var css = '*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact;}'
+    +':root{'
+    +'--bg:'+TH.bg+';--cream:'+TH.cream+';--muted:'+TH.muted+';--gold:'+TH.acc+';'
+    +'--gd4:'+TH.gd4+';--bdr:'+TH.bdr+';--bdrM:'+TH.bdrM+';'
+    +'--tbl-bg:'+TH.tblBg+';--thead-bg:'+TH.theadBg+';--card-bg:'+TH.cardBg+';'
+    +'--serif:"Cormorant Garamond","Noto Serif JP",serif;'
+    +'}'
+    +'html,body{width:100%;height:100%;background:var(--bg);color:var(--cream);font-family:"Noto Sans JP",sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;}'
+    +'.deck{position:relative;width:100%;height:100vh;overflow:hidden;}'
+    +'.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:52px 80px 76px;opacity:0;transform:translateX(60px);transition:all .5s ease;pointer-events:none;}'
+    +'.slide.active{opacity:1;transform:translateX(0);pointer-events:auto;}'
+    +'.ctrl{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);display:flex;gap:12px;z-index:99;}'
+    +'.ctrl button{padding:9px 26px;background:transparent;border:1px solid '+TH.bdr+';color:'+TH.muted+';cursor:pointer;font-family:"Cormorant Garamond",serif;font-size:15px;letter-spacing:.18em;transition:color .2s,border-color .2s;}'
+    +'.ctrl button:hover{border-color:'+TH.acc+';color:'+TH.cream+';}'
+    +'.sno{position:fixed;bottom:30px;right:36px;font-size:.62rem;letter-spacing:.2em;color:'+TH.gd4+';z-index:99;}'
+    +'@page{size:A4 landscape;margin:0;}'
+    +'@media print{'
+    +'.deck{position:static;height:auto;display:block;}'
+    +'.slide{position:relative;display:flex;opacity:1;transform:none;width:297mm;height:210mm;page-break-after:always;overflow:hidden;}'
+    +'.slide:last-child{page-break-after:avoid;}'
+    +'.ctrl,.sno{display:none;}'
+    +'}';
+
+  var html = '<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8">'
+    +'<title>'+todayFile+'</title>'
+    +'<link rel="preconnect" href="https://fonts.googleapis.com">'
+    +'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+    +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">'
+    +'<style>'+css+'</style>'
+    +'</head><body>'
+    +'<div class="deck" id="dk">'+deckHtml+'</div>'
+    +'<div class="ctrl"><button onclick="go(-1)">◂ PREV</button><button onclick="go(1)">NEXT ▸</button></div>'
+    +'<div class="sno" id="sno">1 / '+NS+'</div>'
+    +'<script>'
+    +'var cur=0,NS='+NS+';'
+    +'function go(d){'
+    +'var ss=document.querySelectorAll(".slide");'
+    +'ss[cur].classList.remove("active");'
+    +'cur=Math.max(0,Math.min(NS-1,cur+d));'
+    +'ss[cur].classList.add("active");'
+    +'document.getElementById("sno").textContent=(cur+1)+" / "+NS;'
+    +'}'
+    +'document.addEventListener("keydown",function(e){'
+    +'if(e.key==="ArrowRight"||e.key==="ArrowDown")go(1);'
+    +'if(e.key==="ArrowLeft"||e.key==="ArrowUp")go(-1);'
+    +'});'
+    +'<\/script>'
+    +'</body></html>';
+
+  var w = window.open('','_blank');
+  if(!w){ alert('ポップアップがブロックされました。ブラウザの設定でポップアップを許可してください。'); return; }
+  w.document.write(html);
+  w.document.close();
 }
 
 /* ════════════════════════════════════════
@@ -1150,6 +1396,7 @@ function trtSkip(){
   document.getElementById('trt-interp').classList.add('trt-vis');
   document.getElementById('trt-btn-reset').classList.add('trt-vis');
   document.getElementById('trt-btn-skip').classList.remove('trt-vis');
+  document.getElementById('trt-kantei-wrap').style.display='';
   setTimeout(()=>{
     const sd=document.getElementById('trt-sec-div');
     if(sd){ const y=sd.getBoundingClientRect().top+window.pageYOffset-80; window.scrollTo({top:y,behavior:'smooth'}); }
