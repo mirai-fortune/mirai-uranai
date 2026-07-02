@@ -2030,7 +2030,7 @@ function openKanteiHor() {
     +'#ctrl-prev{left:calc(50% - 60px);}'
     +'#ctrl-next{right:calc(50% - 60px);}'
     +'.sno{position:fixed;bottom:34px;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:.22em;color:rgba(245,242,235,.32);z-index:10;}'
-    +'@media print{@page{size:A4 landscape;margin:0;}html,body{overflow:visible;}.deck{position:static;height:auto;display:block;}.slide{position:relative;display:flex;opacity:1;transform:none;width:297mm;height:210mm;page-break-after:always;overflow:hidden;}.slide:last-child{page-break-after:avoid;}.ctrl,.sno{display:none;}}';
+    +'@media print{@page{size:A4 landscape;margin:0;}html,body{overflow:visible;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.deck{position:static;height:auto;display:block;background:#0d0b08;}.slide{position:relative;display:flex;opacity:1;transform:none;width:297mm;height:210mm;page-break-after:always;overflow:hidden;background:#0d0b08;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.slide:last-child{page-break-after:avoid;}.ctrl,.sno{display:none;}}';
 
   var js = '(function(){'
     +'var cur=0,ns='+NS+';'
