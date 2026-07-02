@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASUMIRA 占い — サイト紹介資料</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #030611;
+  --cream: #f5f2eb;
+  --muted: rgba(245,242,235,.6);
+  --gold: #c4a86a;
+  --gold-dim: rgba(196,168,106,0.15);
+  --glass: rgba(20,18,15,0.5);
+  --border: rgba(255,255,255,0.08);
+  --serif: 'Noto Serif JP', serif;
+  --sans: 'Noto Sans JP', sans-serif;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  background: var(--bg);
+  color: var(--cream);
+  font-family: var(--sans);
+  overflow: hidden;
+}
+
+/* ===== SLIDE ENGINE ===== */
+.deck { width: 100%; height: 100%; position: relative; }
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 80px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: translateX(40px);
+}
+.slide.active {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(0);
+}
+.slide.exit {
+  opacity: 0;
+  transform: translateX(-40px);
+  pointer-events: none;
+}
+
+/* ===== BACKGROUND DECORATION ===== */
+.bg-glow {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60vw; height: 60vw;
+  background: radial-gradient(circle, rgba(196,168,106,0.06) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ===== LAYOUT HELPERS ===== */
+.slide > * { position: relative; z-index: 1; width: 100%; }
+
+.label {
+  font-size: 0.72rem;
+  color: var(--gold);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-family: var(--serif);
+  margin-bottom: 20px;
+  display: block;
+}
+.divider {
+  width: 40px; height: 1px;
+  background: var(--gold);
+  margin: 20px 0;
+  opacity: 0.6;
+}
+.muted { color: var(--muted); }
+
+/* ===== GLASS CARD ===== */
+.card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 28px 32px;
+}
+
+/* ===== NAVIGATION ===== */
+nav.controls {
+  position: fixed;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  z-index: 100;
+}
+.nav-btn {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 10px 24px;
+  border-radius: 24px;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: border-color 0.3s, color 0.3s;
+  backdrop-filter: blur(8px);
+}
+.nav-btn:hover { border-color: var(--gold); color: var(--gold); }
+.nav-btn:disabled { opacity: 0.3; cursor: default; }
+.slide-counter {
+  font-size: 0.78rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  min-width: 60px;
+  text-align: center;
+}
+
+/* ===== SLIDE 1: COVER ===== */
+#s1 { text-align: center; }
+#s1 .main-title {
+  font-family: var(--serif);
+  font-size: 3.2rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  line-height: 1.3;
+  margin-bottom: 16px;
+}
+#s1 .main-title span { color: var(--gold); }
+#s1 .sub {
+  font-size: 1rem;
+  color: var(--muted);
+  letter-spacing: 0.15em;
+  margin-bottom: 48px;
+  font-family: var(--serif);
+}
+#s1 .meta {
+  font-size: 0.78rem;
+  color: rgba(245,242,235,.3);
+  letter-spacing: 0.1em;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+  display: inline-block;
+}
+
+/* ===== SLIDE 2: CONCEPT ===== */
+#s2 .concept-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 8px;
+}
+#s2 .concept-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px 28px;
+}
+#s2 .concept-card.highlight {
+  border-color: rgba(196,168,106,0.35);
+  background: rgba(196,168,106,0.06);
+}
+#s2 .concept-card h3 {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  margin-bottom: 14px;
+  color: var(--gold);
+}
+#s2 .concept-card p {
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 2;
+}
+
+/* ===== SLIDE 3: FEATURES ===== */
+#s3 .features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 8px;
+}
+#s3 .feat {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px 20px;
+}
+#s3 .feat-tag {
+  font-size: 0.68rem;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  display: block;
+  margin-bottom: 8px;
+}
+#s3 .feat h3 {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  margin-bottom: 10px;
+}
+#s3 .feat p {
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.8;
+}
+
+/* ===== SLIDE 4: SERVICES ===== */
+#s4 .services-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 8px;
+  align-items: start;
+}
+#s4 .svc-block h3 {
+  font-family: var(--serif);
+  font-size: 1rem;
+  color: var(--gold);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+#s4 .svc-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+#s4 .svc-name { font-size: 0.9rem; }
+#s4 .svc-name span {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+#s4 .svc-price {
+  font-family: var(--serif);
+  color: var(--gold);
+  font-size: 0.95rem;
+  text-align: right;
+  flex-shrink: 0;
+}
+#s4 .svc-price .recommend {
+  display: block;
+  font-size: 0.62rem;
+  background: var(--gold);
+  color: var(--bg);
+  padding: 1px 8px;
+  border-radius: 10px;
+  margin-top: 4px;
+  font-family: var(--sans);
+  letter-spacing: 0.08em;
+}
+#s4 .free-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 0;
+}
+#s4 .free-tag {
+  font-size: 0.78rem;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 14px;
+  color: var(--muted);
+}
+
+/* ===== SLIDE 5: DESIGN ===== */
+#s5 .design-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 8px;
+}
+#s5 .theme-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+#s5 .theme-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 14px;
+}
+#s5 .dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+#s5 .d-gold { background: radial-gradient(circle at 35% 35%, #e8d09a, #c4a86a); }
+#s5 .d-sakura { background: radial-gradient(circle at 35% 35%, #ffb8d0, #e891b2); }
+#s5 .d-green { background: radial-gradient(circle at 35% 35%, #c0ea9a, #6dbf6a); }
+#s5 .d-blue { background: radial-gradient(circle at 35% 35%, #b8dff8, #4a9cd4); }
+#s5 .design-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+#s5 .design-list li {
+  font-size: 0.85rem;
+  color: var(--muted);
+  padding-left: 16px;
+  position: relative;
+  line-height: 1.7;
+}
+#s5 .design-list li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+  font-size: 0.7rem;
+}
+#s5 .h3 {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+
+/* ===== SLIDE 6: TECH ===== */
+#s6 .tech-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 8px;
+}
+#s6 .tech-block {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+}
+#s6 .tech-block h3 {
+  font-size: 0.75rem;
+  color: var(--gold);
+  letter-spacing: 0.14em;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+#s6 .tech-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+#s6 .tech-row:last-child { border-bottom: none; }
+#s6 .tech-row .key { color: var(--muted); }
+#s6 .tech-row .val { color: var(--cream); text-align: right; }
+
+/* ===== SLIDE 7: OPERATION ===== */
+#s7 .flow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+#s7 .flow-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+}
+#s7 .flow-time {
+  font-family: var(--serif);
+  color: var(--gold);
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  width: 110px;
+  padding-top: 2px;
+}
+#s7 .flow-desc {
+  font-size: 0.85rem;
+  line-height: 1.8;
+  color: var(--muted);
+}
+#s7 .flow-desc strong { color: var(--cream); }
+
+/* ===== SLIDE 8: SNS ===== */
+#s8 .sns-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 8px;
+}
+#s8 .sns-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 24px;
+  text-align: center;
+}
+#s8 .sns-name { font-size: 1rem; margin-bottom: 8px; font-family: var(--serif); }
+#s8 .sns-id { font-size: 0.75rem; color: var(--muted); display: block; margin-bottom: 16px; }
+#s8 .sns-role { font-size: 0.8rem; color: var(--muted); line-height: 1.8; }
+#s8 .url-note {
+  margin-top: 32px;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+#s8 .url-note span { color: var(--gold); }
+
+/* ===== SLIDE 9: FUTURE ===== */
+#s9 .future-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 8px;
+}
+#s9 .future-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+}
+#s9 .future-card h3 {
+  font-family: var(--serif);
+  font-size: 1rem;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+#s9 .future-card p {
+  font-size: 0.83rem;
+  color: var(--muted);
+  line-height: 1.9;
+}
+#s9 .status {
+  display: inline-block;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  border: 1px solid rgba(196,168,106,0.4);
+  color: var(--gold);
+  border-radius: 10px;
+  padding: 2px 10px;
+  margin-bottom: 12px;
+}
+
+/* ===== SLIDE 10: END ===== */
+#s10 { text-align: center; }
+#s10 .end-title {
+  font-family: var(--serif);
+  font-size: 2.4rem;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  margin-bottom: 16px;
+}
+#s10 .end-title span { color: var(--gold); }
+#s10 .end-url {
+  font-size: 0.85rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 48px;
+}
+#s10 .end-meta {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+#s10 .end-meta-item .key {
+  font-size: 0.68rem;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  display: block;
+  margin-bottom: 6px;
+}
+#s10 .end-meta-item .val {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+/* ===== PAGE TITLE (print/header) ===== */
+.slide-no {
+  position: absolute;
+  top: 28px;
+  right: 36px;
+  font-size: 0.7rem;
+  color: rgba(245,242,235,.2);
+  letter-spacing: 0.12em;
+  z-index: 10;
+}
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: COVER -->
+  <div class="slide active" id="s1">
+    <div style="text-align:center; max-width:680px; margin:0 auto;">
+      <span class="label" style="margin-bottom:32px;">Site Overview</span>
+      <h1 class="main-title">ASUMIRA <span>占い</span></h1>
+      <p class="sub">モヤモヤを整理する占い</p>
+      <div class="divider" style="margin:0 auto 32px;"></div>
+      <p class="muted" style="font-size:0.9rem; line-height:2; margin-bottom:40px;">
+        自己分析の手段として占いを活用できる、<br>
+        プロの占い師も訪れる本格的なWebサイト
+      </p>
+      <p class="meta">https://mirai-fortune.github.io/mirai-uranai/ &nbsp;|&nbsp; 作成：MIRAI &nbsp;|&nbsp; 2026.06</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: CONCEPT -->
+  <div class="slide" id="s2">
+    <span class="slide-no">02 / 10</span>
+    <span class="label">Concept</span>
+    <h2 style="font-family:var(--serif); font-size:1.8rem; font-weight:400; margin-bottom:8px;">このサイトのコンセプト</h2>
+    <div class="divider"></div>
+    <div class="concept-grid">
+      <div class="concept-card highlight">
+        <h3>占いを「自己分析の手段」として</h3>
+        <p>スピリチュアルな体験としてではなく、自分自身を客観的に見つめ直すためのフレームワークとして占いを提供します。頭の中でぐるぐると考えていても見えなかった「本質」を、占いというレンズで言語化します。</p>
+      </div>
+      <div class="concept-card highlight">
+        <h3>プロの占い師も訪れるクオリティへ</h3>
+        <p>一般の方のセルフチェックはもちろん、現役の占い師が日々の鑑定で活用できる「補助ツール」としての水準も目指しています。無料でありながら、本格的なロジックを実装しています。</p>
+      </div>
+      <div class="concept-card">
+        <h3>キャッチコピー</h3>
+        <p style="font-family:var(--serif); font-size:1.1rem; color:var(--cream); line-height:2;">「迷うのは、前に進みたいから。」<br><span style="font-size:0.85rem; color:var(--muted);">うまく言葉にならない感覚。<br>それが何なのかを知ることが、次の一歩になる。</span></p>
+      </div>
+      <div class="concept-card">
+        <h3>差別化ポイント</h3>
+        <p>スピリチュアル系の多くのサイトとは異なり、<strong style="color:var(--cream);">知的・論理的</strong>なアプローチを求める層に向けた設計。答えを「与える」のではなく、利用者が自分で「気づく」ための場を提供します。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: 6 FORTUNE METHODS -->
+  <div class="slide" id="s3">
+    <span class="slide-no">03 / 10</span>
+    <span class="label">Features</span>
+    <h2 style="font-family:var(--serif); font-size:1.8rem; font-weight:400; margin-bottom:8px;">6つの無料占いコンテンツ</h2>
+    <div class="divider"></div>
+    <div class="features-grid">
+      <div class="feat">
+        <span class="feat-tag">生涯のロードマップ</span>
+        <h3>四柱推命</h3>
+        <p>生年月日から性質と人生の流れを分析。自分の「取扱説明書」を知る。</p>
+      </div>
+      <div class="feat">
+        <span class="feat-tag">才能と人生のテーマ</span>
+        <h3>カバラ数秘術</h3>
+        <p>数字から隠れた才能や人生の節目をシンプルに言語化。</p>
+      </div>
+      <div class="feat">
+        <span class="feat-tag">今の選択・直近の未来</span>
+        <h3>タロットカード</h3>
+        <p>現在の悩みや二者択一に対してカードを引き、内なる答えを探す。</p>
+      </div>
+      <div class="feat">
+        <span class="feat-tag">運命の構造・天中殺</span>
+        <h3>算命学</h3>
+        <p>干支盤を起こし、宿命の星・大運・天中殺まで本格鑑定。</p>
+      </div>
+      <div class="feat">
+        <span class="feat-tag">魂の設計図</span>
+        <h3>西洋占星術</h3>
+        <p>ホロスコープを元に10天体を読み解く。バックエンドAPI実装。</p>
+      </div>
+      <div class="feat">
+        <span class="feat-tag">気の星・相性</span>
+        <h3>九星気学</h3>
+        <p>九つの星から本質・運勢・他者との相性をひも解く。</p>
+      </div>
+    </div>
+    <p class="muted" style="font-size:0.78rem; margin-top:16px; text-align:center;">すべて現役占い師監修 / 5占術はフロントエンドのみ完結 / 西洋占星術はJavaバックエンドAPI実装</p>
+  </div>
+
+  <!-- SLIDE 4: SERVICES -->
+  <div class="slide" id="s4">
+    <span class="slide-no">04 / 10</span>
+    <span class="label">Services</span>
+    <h2 style="font-family:var(--serif); font-size:1.8rem; font-weight:400; margin-bottom:8px;">サービスラインナップ</h2>
+    <div class="divider"></div>
+    <div class="services-wrap">
+      <div class="card svc-block">
+        <h3>無料占いコンテンツ</h3>
+        <div class="free-list">
+          <span class="free-tag">四柱推命</span>
+          <span class="free-tag">カバラ数秘術</span>
+          <span class="free-tag">タロット</span>
+          <span class="free-tag">算命学</span>
+          <span class="free-tag">西洋占星術</span>
+          <span class="free-tag">九星気学</span>
+        </div>
+        <div style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border);">
+          <p style="font-size:0.82rem; color:var(--muted); line-height:1.9;">
+            ・すべて無料・登録不要<br>
+            ・毎週更新の「週次タロット」コンテンツあり<br>
+            ・LINE公式登録でイベント優先案内
+          </p>
+        </div>
+      </div>
+      <div class="card svc-block">
+        <h3>オンライン電話相談（有料）</h3>
+        <div class="svc-item">
+          <div class="svc-name">
+            お試しプラン
+            <span>電話相談が初めての方</span>
+          </div>
+          <div class="svc-price">10分 / ¥1,000</div>
+        </div>
+        <div class="svc-item" style="border-color:rgba(196,168,106,0.3);">
+          <div class="svc-name">
+            スタンダードプラン
+            <span>最もお選びいただくプラン</span>
+          </div>
+          <div class="svc-price">
+            30分 / ¥3,500
+            <span class="recommend">おすすめ</span>
+          </div>
+        </div>
+        <div class="svc-item" style="border-bottom:none;">
+          <div class="svc-name">
+            じっくりプラン
+            <span>複数の悩み・人生の節目に</span>
+          </div>
+          <div class="svc-price">60分 / ¥6,000</div>
+        </div>
+        <p style="font-size:0.75rem; color:var(--muted); margin-top:14px; line-height:1.7;">予約：MOSH ／ 実施：Google Meet（全国対応）</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: DESIGN -->
+  <div class="slide" id="s5">
+    <span class="slide-no">05 / 10</span>
+    <span class="label">Design</span>
+    <h2 style="font-family:var(--serif); font-size:1.8rem; font-weight:400; margin-bottom:8px;">デザイン・世界観</h2>
+    <div class="divider"></div>
+    <div class="design-grid">
+      <div class="card">
+        <div class="h3">カラーテーマ（切り替え機能あり）</div>
+        <div class="theme-row">
+          <span class="theme-chip"><span class="dot d-gold"></span>星空（デフォルト）</span>
+          <span class="theme-chip"><span class="dot d-sakura"></span>桜花</span>
+          <span class="theme-chip"><span class="dot d-green"></span>蛍火</span>
+          <span class="theme-chip"><span class="dot d-blue"></span>水凪</span>
+        </div>
+        <div style="margin-top:20px; font-size:0.82rem; color:var(--muted); line-height:1.9;">
+          ベースカラー：ディープネイビー<br>
+          アクセント：ゴールド<br>
+          フォント：Noto Serif JP（見出し）/ Noto Sans JP（本文）
+        </div>
+      </div>
+      <div class="card">
+        <div class="h3">UI・演出</div>
+        <ul class="design-list">
+          <li>Glassmorphism（すりガラスカード）</li>
+          <li>パーティクルアニメーション背景（canvas）</li>
+          <li>スクロールリビールアニメーション</li>
+          <li>マウス追従グロウエフェクト</li>
+          <li>ハンバーガーメニュー（スマホ）</li>
+          <li>LINEフローティングボタン（スマホ）</li>
+        </ul>
+      </div>
+      <div class="card" style="grid-column: span 2;">
+        <div class="h3">レスポンシブ対応</div>
+        <div style="display:flex; gap:24px;">
+          <div style="flex:1; font-size:0.82rem; color:var(--muted); line-height:1.9;"><strong style="color:var(--cream);">PC（769px〜）</strong><br>フルレイアウト・ナビゲーション横並び</div>
+          <div style="flex:1; font-size:0.82rem; color:var(--muted); line-height:1.9;"><strong style="color:var(--cream);">タブレット（769px以下）</strong><br>ハンバーガーメニュー・縦積みレイアウト</div>
+          <div style="flex:1; font-size:0.82rem; color:var(--muted); line-height:1.9;"><strong style="color:var(--cream);">スマートフォン（600px以下）</strong><br>1カラム・LINEフローティングボタン表示</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: TECH -->
+  <div class="slide" id="s6">
+    <span class="slide-no">06 / 10</span>
+    <span class="label">Technology</span>
+    <h2 style="font-family:var(--serif); font-size:1.8rem; font-weight:400; margin-bottom:8px;">技術スタック</h2>
+    <div class="divider"></div>
+    <div class="tech-grid">
+      <div class="tech-block">
+        <h3>フロントエンド</h3>
+        <div class="tech-row"><span class="key">言語</span><span class="val">HTML / CSS / JavaScript</span></div>
+        <div class="tech-row"><span class="key">フレームワーク</span><span class="val">なし（バニラJS）</span></div>
+        <div class="tech-row"><span class="key">フォント</span><span class="val">Google Fonts（Noto）</span></div>
+        <div class="tech-row"><span class="key">アニメーション</span><span class="val">CSS + Canvas API</span></div>
+      </div>
+      <div class="tech-block">
+        <h3>バックエンド（西洋占星術のみ）</h3>
+        <div class="tech-row"><span class="key">言語</span><span class="val">Java（Spring Boot）</span></div>
+        <div class="tech-row"><span class="key">ホスティング</span><span class="val">Render</span></div>
+        <div class="tech-row"><span class="key">API</span><span class="val">個人鑑定 / 相性鑑定</span></div>
+      </div>
+      <div class="tech-block">
+        <h3>インフラ・ツール</h3>
+        <div class="tech-row"><span class="key">ホスティング</span><span class="val">GitHub Pages（無料）</span></div>
+        <div class="tech-row"><span class="key">CI/CD</span><span class="val">GitHub Actions</span></div>
+        <div class="tech-row"><span class="key">アナリティクス</span><span class="val">Google Analytics 4</span></div>
+        <div class="tech-row"><span class="key">予約・決済</span><span class="val">MOSH</span></div>
+      </div>
+      <div class="tech-block">
+        <h3>SEO・構造化データ</h3>
+        <div class="tech-row"><span class="key">メタタグ</span><span class="val">OGP / Twitter Card</span></div>
+        <div class="tech-row"><span class="key">構造化データ</span><span class="val">Schema.org（JSON-LD）</span></div>
+        <div class="tech-row"><span class="key">サイトマップ</span><span class="val">sitemap.xml</span></div>
+        <div class="tech-row"><span class="key">canonical</span><span class="val">設定済み</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: OPERATION -->
+  <div class="slide" id="s7">
+    <span class="slide-no">07 / 10</span>
+    <span class="label">Operation</span>
+    <h2 style="font-family:var(--serif); font-size:1.8rem; font-weight:400; margin-bottom:8px;">コンテンツ自動化・運用フロー</h2>
+    <div class="divider"></div>
+    <div class="flow">
+      <div class="flow-item">
+        <span class="flow-time">日曜 23:00</span>
+        <div class="flow-desc"><strong>AIエージェント（CCR）が週次タロットを自動生成</strong><br>大アルカナ22枚から1枚を選択し、今週のメッセージ・運勢・ラッキー情報をブランドボイスで執筆 → index.html を更新</div>
+      </div>
+      <div class="flow-item">
+        <span class="flow-time">月曜 17:00</span>
+        <div class="flow-desc"><strong>GitHub Actions が LINE に通知を自動送信</strong><br>今週のカード名・テーマ・サイトURLを管理者のLINEへプッシュ</div>
+      </div>
+      <div class="flow-item">
+        <span class="flow-time">月曜 20:00</span>
+        <div class="flow-desc"><strong>LINE公式にてブロードキャスト配信（約3分の手動作業）</strong><br>通知メッセージをコピーして全友達に一斉配信 → サイトへの集客</div>
+      </div>
+      <div class="flow-item">
+        <span class="flow-time">毎週月曜</span>
+        <div class="flow-desc"><strong>Instagram自動化フロー（GitHub Actions連携）</strong><br>占い画像・キャプションを生成 → LINE通知受け取り → 手動投稿（約3分）</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: SNS -->
+  <div class="slide" id="s8">
+    <span class="slide-no">08 / 10</span>
+    <span class="label">SNS & Community</span>
+    <h2 style="font-family:var(--serif); font-size:1.8rem; font-weight:400; margin-bottom:8px;">SNS・集客設計</h2>
+    <div class="divider"></div>
+    <div class="sns-grid">
+      <div class="sns-card" style="border-color:rgba(6,199,85,0.25);">
+        <div class="sns-name">LINE 公式</div>
+        <span class="sns-id">友達追加で優先案内</span>
+        <p class="sns-role">メイン集客ツール。イベント優先案内・週次タロット配信・1:1相談誘導</p>
+      </div>
+      <div class="sns-card" style="border-color:rgba(221,42,123,0.25);">
+        <div class="sns-name">Instagram</div>
+        <span class="sns-id">@asumira_uranai</span>
+        <p class="sns-role">ビジュアル集客・認知拡大。毎週月曜投稿（自動化済み）</p>
+      </div>
+      <div class="sns-card" style="border-color:rgba(62,168,255,0.25);">
+        <div class="sns-name">Note</div>
+        <span class="sns-id">@factbase_mirai</span>
+        <p class="sns-role">占いコラム・深掘り記事によるSEO補完・ファン育成</p>
+      </div>
+    </div>
+    <div class="url-note">
+      公開URL：<span>https://mirai-fortune.github.io/mirai-uranai/</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: FUTURE -->
+  <div class="slide" id="s9">
+    <span class="slide-no">09 / 10</span>
+    <span class="label">Roadmap</span>
+    <h2 style="font-family:var(--serif); font-size:1.8rem; font-weight:400; margin-bottom:8px;">将来構想</h2>
+    <div class="divider"></div>
+    <div class="future-grid">
+      <div class="future-card">
+        <span class="status">COMING SOON</span>
+        <h3>提携ブランド公開</h3>
+        <p>現在5ブランドが準備中。レジンアクセサリー（mira drop）・パワーストーン（bless me）・占い教室（おつねストーン）・手相鑑定書・オンラインヨーガを順次公開予定。</p>
+      </div>
+      <div class="future-card">
+        <span class="status">PLANNING</span>
+        <h3>占い師向け B2B サービス</h3>
+        <p>既存の占いWebツールを占い師向けにカスタマイズして提供する事業構想。スタンダード（¥60,000）・プレミアム（¥150,000）の2プランを想定。</p>
+      </div>
+      <div class="future-card" style="grid-column:span 2;">
+        <span class="status">CONTINUOUS</span>
+        <h3>コンテンツ拡充・自動化の深化</h3>
+        <p>週次タロットの継続更新（毎週自動生成）、Instagram投稿の自動化強化、占術コンテンツの精度向上。プロの占い師との協力関係を深め、コンテンツの専門性を高めていく。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: END -->
+  <div class="slide" id="s10">
+    <div style="text-align:center; max-width:640px; margin:0 auto;">
+      <span class="label" style="margin-bottom:32px;">Thank you</span>
+      <h2 class="end-title">ASUMIRA <span>占い</span></h2>
+      <p class="end-url">https://mirai-fortune.github.io/mirai-uranai/</p>
+      <div class="divider" style="margin:0 auto 32px;"></div>
+      <p class="muted" style="font-size:0.88rem; line-height:2.2;">
+        占いを「自己分析の手段」として活用できるサイトを目指し、<br>
+        プロの占い師も訪れる本格的なコンテンツを無料で提供しています。
+      </p>
+      <div class="end-meta">
+        <div class="end-meta-item">
+          <span class="key">運営者</span>
+          <span class="val">MIRAI（横浜みなとみらい）</span>
+        </div>
+        <div class="end-meta-item">
+          <span class="key">Instagram</span>
+          <span class="val">@asumira_uranai</span>
+        </div>
+        <div class="end-meta-item">
+          <span class="key">LINE</span>
+          <span class="val">lin.ee/OzDP0DQ</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<nav class="controls">
+  <button class="nav-btn" id="prev-btn" disabled>← 前へ</button>
+  <span class="slide-counter" id="counter">1 / 10</span>
+  <button class="nav-btn" id="next-btn">次へ →</button>
+</nav>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const counter = document.getElementById('counter');
+let current = 0;
+
+function goTo(index) {
+  slides[current].classList.remove('active');
+  slides[current].classList.add('exit');
+  setTimeout(() => slides[current].classList.remove('exit'), 500);
+
+  current = index;
+  slides[current].classList.add('active');
+
+  counter.textContent = `${current + 1} / ${slides.length}`;
+  prevBtn.disabled = current === 0;
+  nextBtn.disabled = current === slides.length - 1;
+}
+
+prevBtn.addEventListener('click', () => { if (current > 0) goTo(current - 1); });
+nextBtn.addEventListener('click', () => { if (current < slides.length - 1) goTo(current + 1); });
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { if (current < slides.length - 1) goTo(current + 1); }
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { if (current > 0) goTo(current - 1); }
+});
+</script>
+</body>
+</html>

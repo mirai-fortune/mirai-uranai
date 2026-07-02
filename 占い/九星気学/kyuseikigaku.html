@@ -285,6 +285,12 @@ html.theme-minagi section { position: relative; z-index: 1; }
 .theme-dot-sakura { background: radial-gradient(circle at 35% 35%, #ffb8d0, #e891b2); }
 .theme-dot-shinryoku { background: radial-gradient(circle at 35% 35%, #c0ea9a, #6dbf6a); }
 .theme-dot-minagi { background: radial-gradient(circle at 35% 35%, #b8dff8, #4a9cd4); }
+/* ── 鑑定書ボタン ── */
+.kantei-btn-wrap{margin:52px 0 0;text-align:center;}
+.kantei-btn{padding:13px 52px;background:transparent;border:1px solid var(--gold);color:var(--gold);cursor:pointer;font-size:11px;letter-spacing:.36em;font-family:'Cormorant Garamond',serif;transition:background .25s,color .25s;text-transform:uppercase;}
+.kantei-btn:hover{background:var(--gold-dim);color:var(--gold2);}
+.kantei-btn-hint{font-size:10px;color:var(--muted2);margin-top:11px;letter-spacing:.06em;}
+@media(max-width:768px){.kantei-btn-wrap{display:none;}}
 </style>
 <script type="application/ld+json">
 {
@@ -374,6 +380,10 @@ html.theme-minagi section { position: relative; z-index: 1; }
     <div class="boards-wrap" id="nt-boards"></div>
     <div class="sec-div"><span>鑑定テキスト</span></div>
     <div class="kg-readings" id="nt-readings"></div>
+    <div class="kantei-btn-wrap" id="kg-kantei-wrap" style="display:none;">
+      <button class="kantei-btn" onclick="openKanteiKG()">鑑定書を作成する</button>
+      <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+    </div>
   </div>
 </div>
 </div>
@@ -568,6 +578,8 @@ function calcNatal(){
   cards.push(cardGen('⑥ あなたに与えられている結婚縁','パートナーとのご縁','縁',chE,MARRY_TEXT[r.honmei]+'<br><br>五行でみると相生（育み合う関係）になりやすいのは、'+ELEM_JP[mE]+'性・'+ELEM_JP[chE]+'性の星——<strong>'+starsToNames(ms)+'</strong>。これらを本命星に持つ相手とは自然に支え合える良縁になりやすいでしょう。詳しくは「相性鑑定」へ。'));
   cards.push(cardGen('⑦ あなたらしく生きるために','日々の過ごし方','日',myE,DAILY_TEXT[r.honmei]));
   document.getElementById('nt-readings').innerHTML=cards.join('');
+  window._kgKantei={name:name,y:y,m:m,d:d,gender:gender,vy:vy,r:r};
+  var kwEl=document.getElementById('kg-kantei-wrap');if(kwEl)kwEl.style.display='block';
   var a=document.getElementById('natal-result');a.classList.add('show');setTimeout(function(){a.scrollIntoView({behavior:'smooth',block:'start'})},60);
 }
 function card(type,star,text,kw,note){var h='<div class="kg-card"><div class="kg-card-head"><div class="kg-card-badge">'+star+'</div><div class="kg-card-meta"><div class="kg-card-type">'+type+'</div><div class="kg-card-name">'+STAR[star].name+'<span class="kg-card-elem '+elemClassOf(star)+'">'+STAR[star].elemJP+'</span></div><div class="kg-card-sub">'+STAR[star].yomi+'</div></div></div><div class="kg-card-text">'+text+'</div>';if(kw)h+='<div class="kg-kw">'+kw.map(function(x){return'<span class="kg-kw-item">'+x+'</span>'}).join('')+'</div>';if(note)h+='<div class="kg-note">'+note+'</div>';return h+'</div>'}
@@ -815,6 +827,343 @@ document.querySelectorAll('.form-card').forEach(function(cd){cd.addEventListener
   }
   setTheme(localStorage.getItem('asumira-theme') || 'gold');
 })();
+</script>
+<script src="../../js/btn-effects.js"></script>
+<script>
+/* ══════════════════════════════════════
+   九星気学 鑑定書出力（横スライド形式）
+══════════════════════════════════════ */
+function openKanteiKG(){
+  var k=window._kgKantei;
+  if(!k){alert('先に鑑定してください。');return;}
+  var name=k.name,y=k.y,m=k.m,d=k.d,gender=k.gender,vy=k.vy,r=k.r;
+
+  var _th=document.documentElement.classList.contains('theme-sakura')?'sakura'
+    :document.documentElement.classList.contains('theme-shinryoku')?'shinryoku'
+    :document.documentElement.classList.contains('theme-minagi')?'minagi':'gold';
+  var TH={
+    gold:{bg:'#030611',cream:'#f5f2eb',muted:'rgba(245,242,235,.6)',acc:'#c4a86a',acc2:'#e8d09a',glow:'rgba(196,168,106,.055)',bdr:'rgba(196,168,106,.12)',bdr2:'rgba(196,168,106,.14)',bdrM:'rgba(196,168,106,.28)',bdrHi:'rgba(196,168,106,.18)',gd4:'rgba(196,168,106,.4)',cardBg:'rgba(15,13,9,.7)',theadBg:'rgba(28,24,12,.96)'},
+    sakura:{bg:'#160810',cream:'#fef2f6',muted:'rgba(254,242,246,.6)',acc:'#e891b2',acc2:'#f5c0d5',glow:'rgba(232,145,178,.055)',bdr:'rgba(232,145,178,.12)',bdr2:'rgba(232,145,178,.14)',bdrM:'rgba(232,145,178,.28)',bdrHi:'rgba(232,145,178,.18)',gd4:'rgba(232,145,178,.4)',cardBg:'rgba(26,10,18,.7)',theadBg:'rgba(34,12,22,.96)'},
+    shinryoku:{bg:'#060e08',cream:'#f0f5ef',muted:'rgba(240,245,239,.6)',acc:'#82c87e',acc2:'#b4e8b0',glow:'rgba(130,200,126,.055)',bdr:'rgba(130,200,126,.12)',bdr2:'rgba(130,200,126,.14)',bdrM:'rgba(130,200,126,.28)',bdrHi:'rgba(130,200,126,.18)',gd4:'rgba(130,200,126,.4)',cardBg:'rgba(10,18,12,.7)',theadBg:'rgba(14,26,16,.96)'},
+    minagi:{bg:'#04080f',cream:'#eef4fc',muted:'rgba(238,244,252,.6)',acc:'#6ab4e8',acc2:'#a0d4f4',glow:'rgba(106,180,232,.055)',bdr:'rgba(106,180,232,.12)',bdr2:'rgba(106,180,232,.14)',bdrM:'rgba(106,180,232,.28)',bdrHi:'rgba(106,180,232,.18)',gd4:'rgba(106,180,232,.4)',cardBg:'rgba(8,12,22,.7)',theadBg:'rgba(10,18,34,.96)'}
+  }[_th];
+
+  var today=new Date();
+  var todayStr=today.getFullYear()+'年'+(today.getMonth()+1)+'月'+today.getDate()+'日';
+  var todayFile='kyuseikigaku_'+today.getFullYear()+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0');
+  var genderLabel=gender==='male'?'男性':'女性';
+  var nameDisp=name||'ご自身';
+
+  var hon=STAR[r.honmei],gets=STAR[r.getsumei],nichi=STAR[r.nichimei];
+  var myE=hon.elem,mE=MOTHER_ELEM[myE],cE=CTRL_ELEM[myE],chE=GEN[myE];
+  var ms=ELEM_STARS[mE].concat(ELEM_STARS[chE]);
+  var ECOL={water:'#6888c4',wood:'#6db87a',fire:'#c97878',earth:'#c9b464',metal:'#a8b4c4'};
+
+  // ── 九星盤ビルダー ──────────────────────────
+  function brd(center,markH){
+    var ch=chartWithCenter(center);
+    var out='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:'+TH.bdr+';padding:2px;border:1px solid '+TH.bdrM+';border-radius:4px;">';
+    for(var i=0;i<GRID_ORDER.length;i++){
+      var dir=GRID_ORDER[i],st=ch[dir],isC=dir==='C',isMk=markH&&!isC&&st===markH;
+      var nc=ECOL[STAR[st].elem]||TH.acc;
+      out+='<div style="background:'+(isC?'rgba(196,168,106,.1)':'rgba(12,10,8,.5)')+';height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;'+(isMk?'box-shadow:inset 0 0 0 1px '+TH.acc+';':'')+'">'
+        +'<div style="font-size:7px;color:rgba(245,242,235,.22);font-family:Cormorant Garamond,serif;letter-spacing:.06em;">'+DIR_LABEL[dir]+'</div>'
+        +'<div style="font-family:Cormorant Garamond,serif;font-size:'+(isC?'20':'16')+'px;color:'+nc+';line-height:1.1;">'+st+'</div>'
+        +'<div style="font-size:7px;color:'+TH.cream+';margin-top:2px;letter-spacing:.02em;">'+STAR[st].name.slice(0,2)+'</div>'
+        +(isMk?'<div style="position:absolute;top:2px;right:3px;font-size:6px;color:'+TH.acc+';">本命</div>':'')
+        +'</div>';
+    }
+    return out+'</div>';
+  }
+
+  // ── S1: 表紙 ──────────────────────────────
+  var s1='<div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0;" aria-hidden="true">'
+    +'<span style="position:absolute;top:8%;left:6%;font-size:9px;color:rgba(196,168,106,.16);">✦</span>'
+    +'<span style="position:absolute;top:14%;right:11%;font-size:5px;color:rgba(196,168,106,.1);">✦</span>'
+    +'<span style="position:absolute;top:70%;left:8%;font-size:7px;color:rgba(196,168,106,.12);">✦</span>'
+    +'<span style="position:absolute;top:82%;right:9%;font-size:10px;color:rgba(196,168,106,.1);">✦</span>'
+    +'<span style="position:absolute;top:45%;left:3%;font-size:4px;color:rgba(196,168,106,.09);">✦</span>'
+    +'<span style="position:absolute;top:55%;right:4%;font-size:5px;color:rgba(196,168,106,.09);">✦</span>'
+    +'</div>'
+    +'<div style="display:flex;flex-direction:column;align-items:center;max-width:680px;margin:0 auto;text-align:center;">'
+    +'<p style="font-family:Cormorant Garamond,serif;font-size:.68rem;letter-spacing:.42em;color:'+TH.gd4+';text-transform:uppercase;margin-bottom:20px;">ASUMIRA 占い　九星気学</p>'
+    +'<h1 style="font-family:Noto Serif JP,serif;font-size:clamp(2rem,3.8vw,3.2rem);font-weight:300;letter-spacing:.14em;color:'+TH.cream+';margin-bottom:4px;">九星気学鑑定書</h1>'
+    +'<div style="width:36px;height:1px;background:'+TH.acc+';margin:18px 0;"></div>'
+    +'<p style="font-family:Noto Serif JP,serif;font-size:1.7rem;font-weight:300;letter-spacing:.12em;color:'+TH.cream+';margin-bottom:10px;">'+nameDisp+'様</p>'
+    +'<p style="font-size:.82rem;color:'+TH.muted+';letter-spacing:.1em;line-height:2.4;margin-bottom:30px;">'+y+'年'+m+'月'+d+'日生まれ　'+genderLabel+'</p>'
+    +'<div style="width:100%;max-width:460px;border:1px solid '+TH.bdrHi+';background:rgba(0,0,0,.25);padding:24px 40px;display:flex;align-items:center;justify-content:center;gap:28px;">'
+    +'<div style="font-family:Cormorant Garamond,serif;font-size:4.2rem;color:'+ECOL[myE]+';line-height:1;flex-shrink:0;">'+r.honmei+'</div>'
+    +'<div style="width:1px;height:60px;background:'+TH.bdrM+';flex-shrink:0;"></div>'
+    +'<div style="text-align:left;">'
+    +'<div style="font-size:.6rem;letter-spacing:.24em;color:'+TH.gd4+';text-transform:uppercase;margin-bottom:7px;">本命星</div>'
+    +'<div style="font-family:Noto Serif JP,serif;font-size:1.25rem;font-weight:300;color:'+TH.cream+';letter-spacing:.06em;margin-bottom:5px;">'+hon.name+'</div>'
+    +'<div style="font-size:.72rem;color:'+TH.muted+';letter-spacing:.05em;margin-bottom:6px;">'+hon.yomi+'</div>'
+    +'<div style="display:inline-block;font-size:.6rem;border:1px solid '+ECOL[myE]+';color:'+ECOL[myE]+';padding:2px 9px;letter-spacing:.1em;">'+ELEM_JP[myE]+'性</div>'
+    +'</div>'
+    +'</div>'
+    +'<p style="margin-top:36px;font-size:.64rem;color:rgba(245,242,235,.16);letter-spacing:.14em;border-top:1px solid rgba(255,255,255,.06);padding-top:18px;width:100%;text-align:center;">作成日　'+todayStr+'　／　現役占い師監修　ASUMIRA 占い</p>'
+    +'</div>';
+
+  // ── S2: 三星・傾斜・同会 ──────────────────
+  function starCard(lbl,num,starName,yomi){
+    var ec=ECOL[STAR[num].elem]||TH.acc;
+    return '<div style="background:'+TH.cardBg+';border:1px solid '+TH.bdr+';border-radius:8px;padding:18px 12px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;">'
+      +'<div style="font-size:.6rem;letter-spacing:.18em;color:'+TH.gd4+';">'+lbl+'</div>'
+      +'<div style="font-family:Cormorant Garamond,serif;font-size:2rem;color:'+ec+';line-height:1;">'+num+'</div>'
+      +'<div style="font-family:Noto Serif JP,serif;font-size:.84rem;color:'+TH.cream+';letter-spacing:.04em;">'+starName+'</div>'
+      +'<div style="font-size:.66rem;color:'+TH.muted+';">'+yomi+'</div>'
+      +'</div>';
+  }
+  function dirCard(lbl,val,sub){
+    return '<div style="background:'+TH.cardBg+';border:1px solid '+TH.bdrM+';border-radius:8px;padding:18px 16px;text-align:center;">'
+      +'<div style="font-size:.6rem;letter-spacing:.18em;color:'+TH.gd4+';margin-bottom:8px;">'+lbl+'</div>'
+      +'<div style="font-family:Noto Serif JP,serif;font-size:.96rem;color:'+TH.cream+';letter-spacing:.06em;margin-bottom:5px;">'+val+'</div>'
+      +'<div style="font-size:.7rem;color:'+TH.muted+';">'+sub+'</div>'
+      +'</div>';
+  }
+  var s2='<div style="width:100%;max-width:860px;margin:0 auto;">'
+    +'<span style="font-size:.68rem;color:'+TH.acc+';letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Core Stars</span>'
+    +'<h2 style="font-family:Noto Serif JP,serif;font-size:1.5rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;">三星・傾斜・同会</h2>'
+    +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px;">'
+    +starCard('本命星',r.honmei,hon.name,hon.yomi)
+    +starCard('月命星',r.getsumei,gets.name,gets.yomi)
+    +starCard('日命星',r.nichimei,nichi.name,nichi.yomi)
+    +'</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">'
+    +dirCard('傾斜宮',r.keisha.name,r.keisha.special?'中宮傾斜（本命星＝月命星）':'月命星 '+gets.name+' が中宮の月盤')
+    +dirCard('同会（'+vy+'年）',r.doukai.name,r.doukai.special?'中宮同会 — 最大注目の年':'本年の気の流れ')
+    +'</div>'
+    +'</div>';
+
+  // ── S3: 九星盤 ────────────────────────────
+  var leisha_lbl=r.keisha.special
+    ?'本命星と月命星が同一のため<b style="color:'+TH.acc2+';">中宮傾斜</b>（特殊傾斜）。本命の性質が二重に強まります。'
+    :'枠で示した<b style="color:'+TH.acc2+';">本命星 '+hon.name+'</b>が回座する方位が<b style="color:'+TH.acc2+';">'+r.keisha.name+'</b>。あなたの性格・本質を表します。';
+  var s3='<div style="width:100%;max-width:860px;margin:0 auto;">'
+    +'<span style="font-size:.68rem;color:'+TH.acc+';letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Birth Chart</span>'
+    +'<h2 style="font-family:Noto Serif JP,serif;font-size:1.5rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;">九星盤 — 年盤・月盤（後天定位）</h2>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;">'
+    +'<div>'
+    +'<div style="font-size:.7rem;color:'+TH.acc+';letter-spacing:.18em;margin-bottom:5px;">年盤 — Year Board</div>'
+    +'<div style="font-size:.66rem;color:'+TH.muted+';margin-bottom:8px;">中宮＝本命星 '+hon.name+'（'+r.kigakuYear+'年）</div>'
+    +brd(r.honmei,null)
+    +'<div style="font-size:.68rem;color:'+TH.muted+';line-height:1.85;margin-top:8px;padding:8px 12px;border:1px solid '+TH.bdr+';background:rgba(255,255,255,.015);">生まれ年の気の配置。中央に座す<b style="color:'+TH.acc2+';">'+hon.name+'</b>が、人生の基本の性質を司ります。</div>'
+    +'</div>'
+    +'<div>'
+    +'<div style="font-size:.7rem;color:'+TH.acc+';letter-spacing:.18em;margin-bottom:5px;">月盤 — Month Board</div>'
+    +'<div style="font-size:.66rem;color:'+TH.muted+';margin-bottom:8px;">中宮＝月命星 '+gets.name+'（生まれ月の気）</div>'
+    +brd(r.getsumei,r.honmei)
+    +'<div style="font-size:.68rem;color:'+TH.muted+';line-height:1.85;margin-top:8px;padding:8px 12px;border:1px solid '+TH.bdr+';background:rgba(255,255,255,.015);">'+leisha_lbl+'</div>'
+    +'</div>'
+    +'</div>'
+    +'</div>';
+
+  // ── S4: 本命星の詳細 ──────────────────────
+  var ht=HONMEI_TEXT[r.honmei];
+  var kws=ht.kw.map(function(x){return'<span style="font-size:.76rem;border:1px solid '+TH.bdrM+';color:'+TH.acc2+';padding:4px 12px;">'+x+'</span>';}).join('');
+  var s4='<div style="width:100%;max-width:860px;margin:0 auto;">'
+    +'<span style="font-size:.68rem;color:'+TH.acc+';letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Honmei Star</span>'
+    +'<h2 style="font-family:Noto Serif JP,serif;font-size:1.5rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;">本命星 — 生まれ持った運命の流れ</h2>'
+    +'<div style="background:'+TH.cardBg+';border:1px solid '+TH.bdr+';border-radius:10px;padding:22px 26px;display:grid;grid-template-columns:100px 1fr;gap:22px;position:relative;overflow:hidden;">'
+    +'<div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,'+TH.acc+',transparent);"></div>'
+    +'<div style="text-align:center;border-right:1px solid '+TH.bdr+';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding-right:18px;">'
+    +'<div style="font-family:Cormorant Garamond,serif;font-size:3rem;color:'+ECOL[myE]+';line-height:1;">'+r.honmei+'</div>'
+    +'<div style="font-family:Noto Serif JP,serif;font-size:.85rem;color:'+TH.cream+';letter-spacing:.04em;line-height:1.5;">'+hon.name+'</div>'
+    +'<div style="font-size:.64rem;color:'+TH.muted+';">'+hon.yomi+'</div>'
+    +'<div style="font-size:.66rem;border:1px solid '+ECOL[myE]+';color:'+ECOL[myE]+';padding:2px 8px;">'+ELEM_JP[myE]+'性</div>'
+    +'</div>'
+    +'<div style="display:flex;flex-direction:column;gap:12px;">'
+    +'<div style="font-size:.8rem;color:'+TH.muted+';line-height:2.2;letter-spacing:.04em;">'+ht.t+'</div>'
+    +'<div style="display:flex;flex-wrap:wrap;gap:7px;">'+kws+'</div>'
+    +'<div style="font-size:.72rem;color:rgba(245,242,235,.35);padding-top:10px;border-top:1px solid '+TH.bdr+';">'+ht.job+'</div>'
+    +'</div>'
+    +'</div>'
+    +'</div>';
+
+  // ── S5: 傾斜宮 ────────────────────────────
+  var kkt,kke;
+  if(r.keisha.special){
+    kkt='本命星と月命星がともに<strong style="color:'+TH.cream+';">'+hon.name+'</strong>で重なる<strong style="color:'+TH.cream+';">中宮傾斜</strong>。本命星の性質がそのまま性格の核として色濃く表れ、表の顔と内なる自分の方向性が一致した、ブレの少ない一貫した個性の持ち主です。多様な価値観に触れることがさらなる成長を促します。';
+    kke=myE;
+  } else {
+    var kt=KYU_TEXT[r.keisha.dir]||{name:'',pos:'',keisha:''};
+    kkt='月命星 '+gets.name+' を中宮に置いた月盤で、本命星 '+hon.name+' が<strong style="color:'+TH.cream+';">'+kt.name+'（'+kt.pos+'）</strong>に回座する<strong style="color:'+TH.cream+';">'+r.keisha.name+'</strong>。ここに「与えられた性格・本質」が表れます。'+kt.keisha;
+    kke=BASE_LOSHU[r.keisha.dir]?STAR[BASE_LOSHU[r.keisha.dir]].elem:myE;
+  }
+  var un;
+  if(r.doukai.special){
+    un='<b style="color:'+TH.acc+';">本年（'+vy+'年）の運勢：</b>本命星が年盤の中央に重なる<b style="color:'+TH.cream+';">中宮同会</b>の年。注目が集まり物事が動きやすい反面、消耗しやすい時期です。新たな大勝負より足元を固め体調を整えるのが吉。';
+  } else {
+    var dk=KYU_TEXT[r.doukai.dir]||{name:'',doukai:''};
+    un='<b style="color:'+TH.acc+';">本年（'+vy+'年）の運勢：</b>本命星が年盤で<b style="color:'+TH.cream+';">'+dk.name+'</b>に回座する<b style="color:'+TH.cream+';">'+r.doukai.name+'</b>。'+dk.doukai;
+  }
+  var s5='<div style="width:100%;max-width:860px;margin:0 auto;">'
+    +'<span style="font-size:.68rem;color:'+TH.acc+';letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Core Nature</span>'
+    +'<h2 style="font-family:Noto Serif JP,serif;font-size:1.5rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;">傾斜宮 — あなたに与えられた性格・本質</h2>'
+    +'<div style="background:'+TH.cardBg+';border:1px solid '+TH.bdr+';border-radius:10px;padding:22px 26px;display:grid;grid-template-columns:90px 1fr;gap:20px;margin-bottom:12px;position:relative;overflow:hidden;">'
+    +'<div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,'+TH.acc+',transparent);"></div>'
+    +'<div style="text-align:center;border-right:1px solid '+TH.bdr+';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding-right:14px;">'
+    +'<div style="font-family:Cormorant Garamond,serif;font-size:1.7rem;color:'+ECOL[kke]+';line-height:1;">'+r.keisha.name.slice(0,1)+'</div>'
+    +'<div style="font-family:Noto Serif JP,serif;font-size:.76rem;color:'+TH.cream+';letter-spacing:.04em;line-height:1.6;">'+r.keisha.name+'</div>'
+    +'<div style="font-size:.6rem;border:1px solid '+ECOL[kke]+';color:'+ECOL[kke]+';padding:2px 6px;">性格・本質</div>'
+    +'</div>'
+    +'<div style="font-size:.8rem;color:'+TH.muted+';line-height:2.2;letter-spacing:.04em;">'+kkt+'</div>'
+    +'</div>'
+    +'<div style="font-size:.78rem;color:'+TH.muted+';line-height:2.1;padding:14px 18px;background:rgba(255,255,255,.02);border-left:2px solid '+TH.bdrM+';letter-spacing:.03em;">'+un+'</div>'
+    +'</div>';
+
+  // ── S6: 月命星 / 社会的使命 ──────────────
+  var skt=SHAKAI_TEXT[r.getsumei]||'';
+  var s6='<div style="width:100%;max-width:860px;margin:0 auto;">'
+    +'<span style="font-size:.68rem;color:'+TH.acc+';letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Social Mission</span>'
+    +'<h2 style="font-family:Noto Serif JP,serif;font-size:1.5rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;">月命星 — あなたの社会的使命</h2>'
+    +'<div style="background:'+TH.cardBg+';border:1px solid '+TH.bdr+';border-radius:10px;padding:22px 26px;display:grid;grid-template-columns:100px 1fr;gap:22px;position:relative;overflow:hidden;">'
+    +'<div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,'+TH.acc+',transparent);"></div>'
+    +'<div style="text-align:center;border-right:1px solid '+TH.bdr+';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding-right:18px;">'
+    +'<div style="font-family:Cormorant Garamond,serif;font-size:3rem;color:'+ECOL[gets.elem]+';line-height:1;">'+r.getsumei+'</div>'
+    +'<div style="font-family:Noto Serif JP,serif;font-size:.85rem;color:'+TH.cream+';letter-spacing:.04em;line-height:1.5;">'+gets.name+'</div>'
+    +'<div style="font-size:.64rem;color:'+TH.muted+';">'+gets.yomi+'</div>'
+    +'<div style="font-size:.66rem;border:1px solid '+ECOL[gets.elem]+';color:'+ECOL[gets.elem]+';padding:2px 8px;">'+ELEM_JP[gets.elem]+'性</div>'
+    +'</div>'
+    +'<div style="display:flex;flex-direction:column;gap:14px;">'
+    +'<div style="font-size:.8rem;color:'+TH.muted+';line-height:2.2;letter-spacing:.04em;">'+skt+'</div>'
+    +'<div style="font-size:.76rem;color:'+TH.muted+';padding:12px 18px;background:rgba(255,255,255,.02);border-left:2px solid '+TH.bdrM+';line-height:2.1;"><b style="color:'+TH.acc+';font-weight:400;">幸せのかたち：</b>この社会的使命を全うするとき、あなたは最も満たされ社会の中で本来の輝きを放ちます。月命星は、世の中でどう役立ち何に喜びを見いだすかを示します。</div>'
+    +'</div>'
+    +'</div>'
+    +'</div>';
+
+  // ── S7: 縁と気の流れ ──────────────────────
+  var mStars=starsToNames(ELEM_STARS[mE]);
+  var s7='<div style="width:100%;max-width:860px;margin:0 auto;">'
+    +'<span style="font-size:.68rem;color:'+TH.acc+';letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Relationships</span>'
+    +'<h2 style="font-family:Noto Serif JP,serif;font-size:1.5rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;">縁と気の流れ — 導く人物・ストレス</h2>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">'
+    +'<div style="background:'+TH.cardBg+';border:1px solid '+TH.bdr+';border-radius:10px;padding:20px 22px;position:relative;overflow:hidden;">'
+    +'<div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,'+TH.acc+',transparent);"></div>'
+    +'<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid '+TH.bdr+';">'
+    +'<div style="width:42px;height:42px;border:1px solid '+ECOL[mE]+';border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Cormorant Garamond,serif;font-size:18px;color:'+ECOL[mE]+';flex-shrink:0;">導</div>'
+    +'<div>'
+    +'<div style="font-size:.64rem;letter-spacing:.14em;color:'+TH.acc+';margin-bottom:3px;">あなたを導いてくれる人物</div>'
+    +'<div style="font-family:Noto Serif JP,serif;font-size:.9rem;color:'+TH.cream+';">'+ELEM_JP[mE]+'性の人々</div>'
+    +'<div style="font-size:.66rem;color:'+TH.muted+';">'+mStars+'</div>'
+    +'</div>'
+    +'</div>'
+    +'<div style="font-size:.77rem;color:'+TH.muted+';line-height:2.1;letter-spacing:.03em;">'+ELEM_GUIDE[mE]+'迷ったとき、こうした星を持つ年長者や信頼できる相手に相談すると道がひらけます。</div>'
+    +'</div>'
+    +'<div style="background:'+TH.cardBg+';border:1px solid '+TH.bdr+';border-radius:10px;padding:20px 22px;position:relative;overflow:hidden;">'
+    +'<div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,'+ECOL[cE]+',transparent);"></div>'
+    +'<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid '+TH.bdr+';">'
+    +'<div style="width:42px;height:42px;border:1px solid '+ECOL[cE]+';border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Cormorant Garamond,serif;font-size:18px;color:'+ECOL[cE]+';flex-shrink:0;">圧</div>'
+    +'<div>'
+    +'<div style="font-size:.64rem;letter-spacing:.14em;color:'+TH.acc+';margin-bottom:3px;">感じやすいストレスと解消法</div>'
+    +'<div style="font-family:Noto Serif JP,serif;font-size:.9rem;color:'+TH.cream+';">'+ELEM_JP[cE]+'性からのプレッシャー</div>'
+    +'</div>'
+    +'</div>'
+    +'<div style="font-size:.77rem;color:'+TH.muted+';line-height:2.1;letter-spacing:.03em;">'+ELEM_STRESS[cE]+'</div>'
+    +'<div style="font-size:.74rem;color:'+TH.muted+';line-height:1.9;margin-top:10px;padding:10px 12px;background:rgba(255,255,255,.02);border-left:2px solid '+TH.bdr+';"><b style="color:'+TH.acc+';font-weight:400;">解消法：</b>'+ELEM_RELIEF[myE]+'</div>'
+    +'</div>'
+    +'</div>'
+    +'</div>';
+
+  // ── S8: 結婚縁 ────────────────────────────
+  var mkStars=starsToNames(ms);
+  var s8='<div style="width:100%;max-width:860px;margin:0 auto;">'
+    +'<span style="font-size:.68rem;color:'+TH.acc+';letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Love &amp; Marriage</span>'
+    +'<h2 style="font-family:Noto Serif JP,serif;font-size:1.5rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;">結婚縁 — あなたに与えられているご縁</h2>'
+    +'<div style="background:'+TH.cardBg+';border:1px solid '+TH.bdr+';border-radius:10px;padding:22px 26px;display:grid;grid-template-columns:100px 1fr;gap:22px;position:relative;overflow:hidden;">'
+    +'<div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,'+TH.acc+',transparent);"></div>'
+    +'<div style="text-align:center;border-right:1px solid '+TH.bdr+';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding-right:14px;">'
+    +'<div style="font-family:Cormorant Garamond,serif;font-size:2.2rem;color:'+TH.acc+';line-height:1;">縁</div>'
+    +'<div style="font-family:Noto Serif JP,serif;font-size:.76rem;color:'+TH.cream+';letter-spacing:.04em;line-height:1.6;">恋愛・結婚</div>'
+    +'<div style="font-size:.64rem;color:'+TH.muted+';">'+hon.name+'</div>'
+    +'</div>'
+    +'<div style="display:flex;flex-direction:column;gap:14px;">'
+    +'<div style="font-size:.8rem;color:'+TH.muted+';line-height:2.2;letter-spacing:.04em;">'+MARRY_TEXT[r.honmei]+'</div>'
+    +'<div style="font-size:.76rem;color:'+TH.muted+';padding:12px 18px;background:rgba(255,255,255,.02);border-left:2px solid '+TH.bdrM+';line-height:2.1;">五行でみると相生（育み合う関係）になりやすいのは<b style="color:'+TH.acc2+';">'+ELEM_JP[mE]+'性・'+ELEM_JP[chE]+'性</b>の星——<b style="color:'+TH.cream+';">'+mkStars+'</b>。これらを本命星に持つ相手とは自然に支え合える良縁になりやすいでしょう。</div>'
+    +'</div>'
+    +'</div>'
+    +'</div>';
+
+  // ── S9: 日々の過ごし方 ────────────────────
+  var s9='<div style="width:100%;max-width:700px;margin:0 auto;">'
+    +'<span style="font-size:.68rem;color:'+TH.acc+';letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Daily Life</span>'
+    +'<h2 style="font-family:Noto Serif JP,serif;font-size:1.5rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;">あなたらしく生きるために</h2>'
+    +'<div style="background:'+TH.cardBg+';border:1px solid '+TH.bdr+';border-radius:10px;padding:28px 32px;position:relative;overflow:hidden;">'
+    +'<div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,'+TH.acc+',transparent);"></div>'
+    +'<div style="display:flex;align-items:flex-start;gap:20px;">'
+    +'<div style="flex-shrink:0;width:54px;height:54px;border:1px solid '+TH.bdrM+';border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Cormorant Garamond,serif;font-size:22px;color:'+TH.acc2+';">日</div>'
+    +'<div>'
+    +'<div style="font-size:.66rem;letter-spacing:.16em;color:'+TH.acc+';margin-bottom:10px;">'+hon.name+' の日々の指針</div>'
+    +'<div style="font-size:.86rem;color:'+TH.muted+';line-height:2.4;letter-spacing:.04em;">'+DAILY_TEXT[r.honmei]+'</div>'
+    +'</div>'
+    +'</div>'
+    +'<div style="margin-top:22px;padding-top:18px;border-top:1px solid '+TH.bdr+';font-size:.76rem;color:rgba(245,242,235,.32);line-height:1.9;"><b style="color:'+TH.acc+';font-weight:400;">気を外へ洩らす方法：</b>'+ELEM_VENT[myE]+'</div>'
+    +'</div>'
+    +'</div>';
+
+  // ── S10: まとめ ───────────────────────────
+  var tags=[hon.name, hon.elemJP+'性', r.keisha.name, gets.name+'（社会的使命）', '本年：'+r.doukai.name];
+  var tagsH=tags.map(function(t){return'<span style="font-size:.78rem;border:1px solid '+TH.bdrM+';color:'+TH.acc+';padding:5px 14px;border-radius:16px;">'+t+'</span>';}).join('');
+  var s10='<div style="text-align:center;max-width:680px;margin:0 auto;">'
+    +'<p style="font-family:Cormorant Garamond,serif;font-size:.68rem;letter-spacing:.4em;color:'+TH.gd4+';text-transform:uppercase;margin-bottom:22px;">Summary</p>'
+    +'<h2 style="font-family:Noto Serif JP,serif;font-size:1.65rem;font-weight:300;letter-spacing:.12em;margin-bottom:18px;">'+nameDisp+'様のキーワード</h2>'
+    +'<div style="width:36px;height:1px;background:'+TH.acc+';margin:0 auto 20px;"></div>'
+    +'<div style="display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-bottom:28px;">'+tagsH+'</div>'
+    +'<p style="font-size:.82rem;color:'+TH.muted+';line-height:2.4;margin-bottom:36px;">九星気学は、古代の洛書と陰陽五行思想に基づき、ご自身の本質や可能性を見つめ直すための参考情報です。この鑑定書が、自己理解を深め、これからの選択や行動を考えるきっかけとなれば幸いです。</p>'
+    +'<p style="font-size:.66rem;color:rgba(245,242,235,.18);letter-spacing:.14em;border-top:1px solid rgba(255,255,255,.07);padding-top:20px;display:inline-block;">ASUMIRA 占い　─　現役占い師監修　／　'+todayStr+'</p>'
+    +'</div>';
+
+  // ── HTML組み立て ──────────────────────────
+  var NS=10;
+  var slides=[s1,s2,s3,s4,s5,s6,s7,s8,s9,s10];
+  var deckHtml=slides.map(function(s,i){return'<div class="slide'+(i===0?' active':'')+'" id="sl'+i+'">'+s+'</div>';}).join('\n');
+
+  var html='<!DOCTYPE html>\n'
+    +'<html lang="ja">\n<head>\n'
+    +'<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">\n'
+    +'<title>'+todayFile+'_'+nameDisp+'様</title>\n'
+    +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">\n'
+    +'<style>\n'
+    +'*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}\n'
+    +':root{--bg:'+TH.bg+';--cream:'+TH.cream+';--muted:'+TH.muted+';--gold:'+TH.acc+';--gold2:'+TH.acc2+';--bdr:'+TH.bdr+';--bdr2:'+TH.bdr2+';--bdrM:'+TH.bdrM+';--bdrHi:'+TH.bdrHi+';--gd4:'+TH.gd4+';--border:rgba(255,255,255,.07);--serif:"Noto Serif JP",serif;--sans:"Noto Sans JP",sans-serif;}\n'
+    +'html,body{width:100%;height:100%;background:var(--bg);color:var(--cream);font-family:var(--sans);font-weight:300;overflow:hidden;-webkit-font-smoothing:antialiased;}\n'
+    +'.glow{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:60vw;height:60vw;background:radial-gradient(circle,'+TH.glow+' 0%,transparent 65%);pointer-events:none;z-index:0;}\n'
+    +'.deck{width:100%;height:100%;position:relative;}\n'
+    +'.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:52px 80px 76px;opacity:0;pointer-events:none;transition:opacity .48s ease,transform .48s ease;transform:translateX(40px);z-index:1;}\n'
+    +'.slide>div{position:relative;z-index:1;width:100%;}\n'
+    +'.slide.active{opacity:1;pointer-events:all;transform:translateX(0);}\n'
+    +'.slide.exit{opacity:0;transform:translateX(-40px);pointer-events:none;}\n'
+    +'nav.ctrl{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:16px;z-index:100;}\n'
+    +'.nbtn{background:rgba(18,16,12,.65);border:1px solid rgba(255,255,255,.08);color:rgba(245,242,235,.52);padding:9px 22px;border-radius:24px;font-size:.78rem;letter-spacing:.08em;cursor:pointer;font-family:var(--sans);transition:border-color .28s,color .28s;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}\n'
+    +'.nbtn:hover:not(:disabled){border-color:var(--gold);color:var(--gold);}\n'
+    +'.nbtn:disabled{opacity:.25;cursor:default;}\n'
+    +'.cnt{font-size:.75rem;color:rgba(245,242,235,.38);letter-spacing:.1em;min-width:52px;text-align:center;}\n'
+    +'.sno{position:fixed;top:20px;right:26px;font-size:.64rem;color:rgba(245,242,235,.18);letter-spacing:.14em;z-index:10;font-family:Cormorant Garamond,serif;}\n'
+    +'@media(max-width:800px){.slide{padding:44px 20px 70px;}}\n'
+    +'@page{size:A4 landscape;margin:0;}\n'
+    +'@media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}html,body{width:297mm!important;height:auto!important;overflow:visible!important;background:'+TH.bg+'!important;}.glow,.sno,nav.ctrl{display:none!important;}.deck{position:static!important;height:auto!important;display:block!important;}.slide{position:relative!important;display:flex!important;opacity:1!important;transform:none!important;pointer-events:none!important;inset:auto!important;width:297mm!important;height:210mm!important;page-break-after:always!important;break-after:page!important;overflow:hidden!important;padding:44px 60px 44px!important;}.slide:last-child{page-break-after:avoid!important;break-after:avoid!important;}}\n'
+    +'</style>\n</head>\n<body>\n'
+    +'<div class="glow"></div>\n'
+    +'<span class="sno" id="sno">01 / '+NS+'</span>\n'
+    +'<div class="deck">'+deckHtml+'</div>\n'
+    +'<nav class="ctrl">'
+    +'<button class="nbtn" id="pb" disabled>← 前へ</button>'
+    +'<span class="cnt" id="cnt">1 / '+NS+'</span>'
+    +'<button class="nbtn" id="nb">次へ →</button>'
+    +'</nav>\n'
+    +'<script>\n'
+    +'var ss=document.querySelectorAll(".slide"),pb=document.getElementById("pb"),nb=document.getElementById("nb"),cnt=document.getElementById("cnt"),sno=document.getElementById("sno"),cur=0;\n'
+    +'function pad(n){return(n<10?"0":"")+n;}\n'
+    +'function goTo(i){ss[cur].classList.remove("active");ss[cur].classList.add("exit");var p=cur;setTimeout(function(){ss[p].classList.remove("exit");},500);cur=i;ss[cur].classList.add("active");cnt.textContent=(cur+1)+" / "+ss.length;sno.textContent=pad(cur+1)+" / "+ss.length;pb.disabled=cur===0;nb.disabled=cur===ss.length-1;}\n'
+    +'pb.addEventListener("click",function(){if(cur>0)goTo(cur-1);});\n'
+    +'nb.addEventListener("click",function(){if(cur<ss.length-1)goTo(cur+1);});\n'
+    +'document.addEventListener("keydown",function(e){if(e.key==="ArrowRight"||e.key==="ArrowDown"){if(cur<ss.length-1)goTo(cur+1);}if(e.key==="ArrowLeft"||e.key==="ArrowUp"){if(cur>0)goTo(cur-1);}});\n'
+    +'<\/script>\n</body>\n</html>';
+
+  var w=window.open('','_blank');
+  if(w){w.document.open();w.document.write(html);w.document.close();}
+  else alert('ポップアップがブロックされています。ブラウザの設定でポップアップを許可してください。');
+}
 </script>
 <script src="../../js/btn-effects.js"></script>
 </body>

@@ -254,6 +254,12 @@ nav.scrolled{box-shadow:0 2px 28px rgba(0,0,0,.55);}
 .btn-row .calc-btn{flex:1;}
 .reset-btn{padding:15px 18px;background:transparent;color:var(--muted);border:1px solid var(--border);cursor:pointer;font-size:11px;letter-spacing:.18em;font-family:'Noto Sans JP',sans-serif;font-weight:300;transition:color .2s,border-color .2s;white-space:nowrap;}
 .reset-btn:hover{color:var(--cream);border-color:rgba(196,168,106,.4);}
+/* ── 鑑定書ボタン ── */
+.kantei-btn-wrap{margin:52px 0 0;text-align:center;}
+.kantei-btn{padding:13px 52px;background:transparent;border:1px solid var(--gold);color:var(--gold);cursor:pointer;font-size:11px;letter-spacing:.36em;font-family:'Cormorant Garamond',serif;transition:background .25s,color .25s;text-transform:uppercase;}
+.kantei-btn:hover{background:var(--gold-dim);color:var(--gold2);}
+.kantei-btn-hint{font-size:10px;color:var(--muted2);margin-top:11px;letter-spacing:.06em;}
+@media(max-width:768px){.kantei-btn-wrap{display:none;}}
 /* ===== PINK SAKURA THEME ===== */
 html.theme-sakura {
   --bg: #160810; --bg2: #1a0d14; --bg3: #200f18; --bg4: #261219;
@@ -426,6 +432,10 @@ html.theme-minagi section { position: relative; z-index: 1; }
   <div class="num-details" id="n-details"></div>
   <div class="sec-div"><span>算出根拠</span></div>
   <div id="n-basis"></div>
+  <div class="kantei-btn-wrap" id="sn-kantei-wrap" style="display:none;">
+    <button class="kantei-btn" onclick="openKanteiSN()">鑑定書を作成する</button>
+    <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+  </div>
 </div>
 
 </div>
@@ -747,10 +757,280 @@ function calcKabbalah(){
   }
   document.getElementById('n-basis').innerHTML=`<div class="n-basis">${bHtml}</div>`;
   const ra=document.getElementById('n-result');ra.classList.add('show');ra.scrollIntoView({behavior:'smooth',block:'start'});
+  // 鑑定書データ保存
+  const _exRaw=fullName.length?[...fullName].reduce((a,c)=>a+(LETTER_VAL[c]||0),0):null;
+  const _soRaw=fullName.length?[...fullName].filter(c=>VOWELS.has(c)).reduce((a,c)=>a+(LETTER_VAL[c]||0),0):null;
+  const _peRaw=fullName.length?[...fullName].filter(c=>!VOWELS.has(c)&&LETTER_VAL[c]).reduce((a,c)=>a+(LETTER_VAL[c]||0),0):null;
+  window._snKantei={name:(first||last)?(first+' '+last).trim():'',y,m,d,first,last,fullName,lp,bday,expr,soul,pers,mat,cards,lpStr,lpRaw,exRaw:_exRaw,soRaw:_soRaw,peRaw:_peRaw,maRaw:expr!==null?lp+expr:null};
+  const _kwEl=document.getElementById('sn-kantei-wrap');
+  if(_kwEl)_kwEl.style.display='block';
 }
 
 function toggleNdc(i){document.getElementById('ndc-'+i).classList.toggle('collapsed');}
 function focusNdc(i){const el=document.getElementById('ndc-'+i);if(el){el.classList.remove('collapsed');setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),50);}}
+
+/* ══════════════════════════════════════
+   数秘術 鑑定書出力（横スライド形式）
+══════════════════════════════════════ */
+function openKanteiSN(){
+  const k=window._snKantei;
+  if(!k){alert('先に数秘術を算出してください。');return;}
+  const {name,y,m,d,first,last,fullName,lp,bday,expr,soul,pers,mat,lpStr,lpRaw,exRaw,soRaw,peRaw,maRaw}=k;
+
+  const _th=document.documentElement.classList.contains('theme-sakura')?'sakura'
+    :document.documentElement.classList.contains('theme-shinryoku')?'shinryoku'
+    :document.documentElement.classList.contains('theme-minagi')?'minagi':'gold';
+  const TH={gold:{bg:'#030611',cream:'#f5f2eb',muted:'rgba(245,242,235,.6)',acc:'#c4a86a',acc2:'#e8d09a',glow:'rgba(196,168,106,.055)',bdr:'rgba(196,168,106,.12)',bdr2:'rgba(196,168,106,.14)',bdrM:'rgba(196,168,106,.28)',bdrHi:'rgba(196,168,106,.18)',gd4:'rgba(196,168,106,.4)',hlBg:'rgba(196,168,106,.1)',cardBg:'rgba(15,13,9,.7)',theadBg:'rgba(28,24,12,.96)',tblBg:'rgba(18,16,12,.6)',rlblBg:'rgba(28,24,12,.7)'},sakura:{bg:'#160810',cream:'#fef2f6',muted:'rgba(254,242,246,.6)',acc:'#e891b2',acc2:'#f5c0d5',glow:'rgba(232,145,178,.055)',bdr:'rgba(232,145,178,.12)',bdr2:'rgba(232,145,178,.14)',bdrM:'rgba(232,145,178,.28)',bdrHi:'rgba(232,145,178,.18)',gd4:'rgba(232,145,178,.4)',hlBg:'rgba(232,145,178,.1)',cardBg:'rgba(26,10,18,.7)',theadBg:'rgba(34,12,22,.96)',tblBg:'rgba(30,12,20,.6)',rlblBg:'rgba(34,12,22,.7)'},shinryoku:{bg:'#060e08',cream:'#f0f5ef',muted:'rgba(240,245,239,.6)',acc:'#82c87e',acc2:'#b4e8b0',glow:'rgba(130,200,126,.055)',bdr:'rgba(130,200,126,.12)',bdr2:'rgba(130,200,126,.14)',bdrM:'rgba(130,200,126,.28)',bdrHi:'rgba(130,200,126,.18)',gd4:'rgba(130,200,126,.4)',hlBg:'rgba(130,200,126,.1)',cardBg:'rgba(10,18,12,.7)',theadBg:'rgba(14,26,16,.96)',tblBg:'rgba(12,22,14,.6)',rlblBg:'rgba(14,26,16,.7)'},minagi:{bg:'#04080f',cream:'#eef4fc',muted:'rgba(238,244,252,.6)',acc:'#6ab4e8',acc2:'#a0d4f4',glow:'rgba(106,180,232,.055)',bdr:'rgba(106,180,232,.12)',bdr2:'rgba(106,180,232,.14)',bdrM:'rgba(106,180,232,.28)',bdrHi:'rgba(106,180,232,.18)',gd4:'rgba(106,180,232,.4)',hlBg:'rgba(106,180,232,.1)',cardBg:'rgba(8,12,22,.7)',theadBg:'rgba(10,18,34,.96)',tblBg:'rgba(8,14,26,.6)',rlblBg:'rgba(10,18,34,.7)'}}[_th];
+
+  const s1motif={gold:'<span style="position:absolute;top:8%;left:6%;font-size:9px;color:rgba(196,168,106,.18);">✦</span><span style="position:absolute;top:14%;right:11%;font-size:5px;color:rgba(196,168,106,.12);">✦</span><span style="position:absolute;top:70%;left:8%;font-size:7px;color:rgba(196,168,106,.14);">✦</span><span style="position:absolute;top:82%;right:9%;font-size:10px;color:rgba(196,168,106,.12);">✦</span><span style="position:absolute;top:45%;left:3%;font-size:4px;color:rgba(196,168,106,.1);">✦</span><span style="position:absolute;top:55%;right:4%;font-size:5px;color:rgba(196,168,106,.1);">✦</span><span style="position:absolute;top:90%;left:38%;font-size:4px;color:rgba(196,168,106,.08);">✦</span><span style="position:absolute;top:25%;left:18%;font-size:3px;color:rgba(196,168,106,.08);">✦</span>',sakura:'<span style="position:absolute;top:10%;right:8%;font-size:20px;color:rgba(232,145,178,.14);transform:rotate(-25deg);display:inline-block;">✿</span><span style="position:absolute;top:22%;left:7%;font-size:13px;color:rgba(232,145,178,.1);transform:rotate(15deg);display:inline-block;">✿</span><span style="position:absolute;top:76%;right:11%;font-size:24px;color:rgba(232,145,178,.11);transform:rotate(40deg);display:inline-block;">✿</span><span style="position:absolute;top:65%;left:9%;font-size:15px;color:rgba(232,145,178,.09);transform:rotate(-10deg);display:inline-block;">✿</span><span style="position:absolute;top:88%;right:30%;font-size:11px;color:rgba(232,145,178,.08);transform:rotate(30deg);display:inline-block;">✿</span><span style="position:absolute;top:6%;left:32%;font-size:8px;color:rgba(232,145,178,.08);transform:rotate(-45deg);display:inline-block;">✿</span>',shinryoku:'<div style="position:absolute;top:18%;left:12%;width:5px;height:5px;border-radius:50%;background:rgba(130,200,126,.35);box-shadow:0 0 8px 3px rgba(130,200,126,.18);"></div><div style="position:absolute;top:40%;right:15%;width:4px;height:4px;border-radius:50%;background:rgba(130,200,126,.28);box-shadow:0 0 6px 2px rgba(130,200,126,.14);"></div><div style="position:absolute;top:72%;left:20%;width:6px;height:6px;border-radius:50%;background:rgba(130,200,126,.3);box-shadow:0 0 10px 4px rgba(130,200,126,.14);"></div><div style="position:absolute;top:60%;right:8%;width:3px;height:3px;border-radius:50%;background:rgba(130,200,126,.25);box-shadow:0 0 5px 2px rgba(130,200,126,.12);"></div><div style="position:absolute;top:85%;left:35%;width:4px;height:4px;border-radius:50%;background:rgba(130,200,126,.22);box-shadow:0 0 6px 2px rgba(130,200,126,.12);"></div>',minagi:'<div style="position:absolute;bottom:28%;left:0;right:0;height:1px;background:linear-gradient(to right,transparent 5%,rgba(106,180,232,.1) 30%,rgba(106,180,232,.12) 50%,rgba(106,180,232,.1) 70%,transparent 95%);"></div><div style="position:absolute;bottom:24%;left:0;right:0;height:1px;background:linear-gradient(to right,transparent 10%,rgba(106,180,232,.07) 35%,rgba(106,180,232,.09) 55%,rgba(106,180,232,.07) 75%,transparent 90%);"></div><div style="position:absolute;top:0;right:0;width:120px;height:80px;background:radial-gradient(ellipse at top right,rgba(106,180,232,.06) 0%,transparent 70%);"></div>'}[_th];
+
+  const today=new Date();
+  const todayStr=today.getFullYear()+'年'+(today.getMonth()+1)+'月'+today.getDate()+'日';
+  const todayFile='suuhijutsu_'+today.getFullYear()+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0');
+  const tr=(s,n)=>s&&s.length>n?s.slice(0,n)+'…':s||'—';
+  const getD=n=>NUM_DATA[n]||NUM_DATA[reduceNum(n,false)];
+  const stps=(raw,keep)=>{const s=[];let c=raw;while(c>9){if(keep&&[11,22,33].includes(c))break;const n=[...String(c)].reduce((a,b)=>a+ +b,0);s.push([...String(c)].join(' + ')+' = '+n);c=n;}return s;};
+
+  const lpD=getD(lp);
+  const bdD=getD(bday);
+  const exD=expr!==null?getD(expr):null;
+  const soD=soul!==null?getD(soul):null;
+  const peD=pers!==null?getD(pers):null;
+  const maD=mat!==null?getD(mat):null;
+  const hasName=fullName.length>0;
+  const nameDisp=name||'（名前未入力）';
+
+  // ── S1: 表紙 ──
+  const s1=
+    '<div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0;" aria-hidden="true">'+s1motif+'</div>'
+    +'<div style="text-align:center;max-width:680px;margin:0 auto;">'
+    +'<p style="font-family:var(--serif);font-size:.68rem;letter-spacing:.42em;color:var(--gd4);text-transform:uppercase;margin-bottom:32px;">ASUMIRA 占い　数秘術</p>'
+    +'<h1 style="font-family:var(--serif);font-size:clamp(2.2rem,4vw,3.4rem);font-weight:300;letter-spacing:.14em;color:var(--cream);margin-bottom:6px;">数秘術鑑定書</h1>'
+    +'<div style="width:36px;height:1px;background:var(--gold);margin:22px auto 28px;"></div>'
+    +'<p style="font-family:var(--serif);font-size:1.8rem;font-weight:300;letter-spacing:.12em;color:var(--cream);margin-bottom:14px;">'+nameDisp+'様</p>'
+    +'<p style="font-size:.82rem;color:var(--muted);letter-spacing:.1em;line-height:2.6;">'+y+'年'+m+'月'+d+'日生まれ'+(hasName?'<br>'+first+' '+last:'')+'</p>'
+    +'<p style="margin-top:48px;font-size:.68rem;color:rgba(245,242,235,.2);letter-spacing:.14em;border-top:1px solid rgba(255,255,255,.07);padding-top:22px;display:inline-block;">作成日　'+todayStr+'　／　現役占い師監修　ASUMIRA 占い</p>'
+    +'</div>';
+
+  // ── S2: コアナンバー一覧 ──
+  const allCards2=[
+    {label:'Life Path',ja:'ライフパスナンバー',n:lp,d:lpD},
+    {label:'Birthday',ja:'バースデーナンバー',n:bday,d:bdD},
+    ...(exD?[{label:'Expression',ja:'表現ナンバー',n:expr,d:exD}]:[]),
+    ...(soD?[{label:'Soul Urge',ja:'ソウルナンバー',n:soul,d:soD}]:[]),
+    ...(peD?[{label:'Personality',ja:'パーソナリティ',n:pers,d:peD}]:[]),
+    ...(maD?[{label:'Maturity',ja:'マチュリティ',n:mat,d:maD}]:[]),
+  ];
+  const cols=allCards2.length<=2?2:allCards2.length<=4?2:3;
+  const cardItemsH=allCards2.map(c=>
+    '<div style="background:var(--card-bg);border:1px solid var(--bdr);border-radius:10px;padding:18px 14px;text-align:center;backdrop-filter:blur(12px);">'
+    +'<div style="font-family:var(--serif);font-size:2.8rem;font-weight:300;color:var(--gold);line-height:1;margin-bottom:5px;">'+c.n+'</div>'
+    +'<div style="font-size:.58rem;letter-spacing:.18em;color:var(--gd4);text-transform:uppercase;margin-bottom:3px;">'+c.label+'</div>'
+    +'<div style="font-size:.76rem;color:var(--cream);margin-bottom:5px;letter-spacing:.04em;">'+c.ja+'</div>'
+    +(c.d?'<div style="font-size:.68rem;color:var(--muted);">'+c.d.title+'</div>':'')
+    +(c.d?'<div style="font-size:.62rem;color:var(--gd4);margin-top:4px;letter-spacing:.04em;">'+c.d.keyword+'</div>':'')
+    +(c.d&&c.d.isMaster?'<div style="font-size:.58rem;border:1px solid var(--gold);color:var(--gold);padding:2px 7px;display:inline-block;margin-top:5px;letter-spacing:.1em;">Master</div>':'')
+    +'</div>'
+  ).join('');
+  const s2=
+    '<div style="width:100%;max-width:860px;margin:0 auto;">'
+    +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Core Numbers</span>'
+    +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">コアナンバー一覧</h2>'
+    +'<div style="display:grid;grid-template-columns:repeat('+cols+',1fr);gap:10px;">'+cardItemsH+'</div>'
+    +'</div>';
+
+  // ── S3 / S4: 数字詳細スライド共通ビルダー ──
+  const numSlide=(secLabel,en,n,d2)=>{
+    if(!d2)return'<div style="width:100%;max-width:860px;margin:0 auto;"><div class="card"><p style="color:var(--muted);">データが見つかりません。</p></div></div>';
+    return'<div style="width:100%;max-width:860px;margin:0 auto;">'
+      +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">'+en+'</span>'
+      +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;">'+secLabel+' ─ '+d2.title+(d2.isMaster?' ✦ Master Number':'')+'</h2>'
+      +'<div style="display:grid;grid-template-columns:200px 1fr;gap:14px;">'
+      +'<div class="card" style="text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">'
+      +'<div style="font-family:var(--serif);font-size:5rem;font-weight:300;color:var(--gold);line-height:1;">'+n+'</div>'
+      +'<div style="font-size:.7rem;color:var(--muted);letter-spacing:.06em;">'+d2.en+'</div>'
+      +'<div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:3px;">'
+      +d2.keyword.split('・').map(kw=>'<span style="font-size:.65rem;border:1px solid var(--bdrM);color:var(--gold);padding:3px 9px;border-radius:12px;">'+kw+'</span>').join('')
+      +'</div>'
+      +(d2.isMaster?'<div style="font-size:.58rem;border:1px solid var(--gold);color:var(--gold);padding:2px 8px;letter-spacing:.1em;margin-top:3px;">Master Number</div>':'')
+      +'</div>'
+      +'<div class="card" style="display:flex;flex-direction:column;gap:11px;">'
+      +'<p style="font-size:.77rem;color:var(--muted);line-height:2.1;">'+tr(d2.desc[0],220)+'</p>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">'
+      +'<div style="background:rgba(255,255,255,.03);border-radius:7px;padding:11px 13px;">'
+      +'<p style="font-size:.58rem;letter-spacing:.18em;color:var(--gold);margin-bottom:7px;">強み</p>'
+      +'<p style="font-size:.71rem;color:var(--muted);line-height:1.85;">'+d2.strengths.slice(0,3).join('<br>')+'</p>'
+      +'</div>'
+      +'<div style="background:rgba(255,255,255,.03);border-radius:7px;padding:11px 13px;">'
+      +'<p style="font-size:.58rem;letter-spacing:.18em;color:var(--gold);margin-bottom:7px;">課題</p>'
+      +'<p style="font-size:.71rem;color:var(--muted);line-height:1.85;">'+d2.challenges.slice(0,3).join('<br>')+'</p>'
+      +'</div>'
+      +'</div>'
+      +'<p style="font-family:var(--serif);font-size:.78rem;color:var(--acc2);line-height:2;font-style:italic;border-top:1px solid var(--bdr);padding-top:9px;">'+tr(d2.advice,200)+'</p>'
+      +'</div>'
+      +'</div></div>';
+  };
+  const s3=numSlide('ライフパスナンバー（生命数）','Life Path Number',lp,lpD);
+  const s4=numSlide('バースデーナンバー（誕生数）','Birthday Number',bday,bdD);
+
+  // ── S5n: 表現・マチュリティ（名前あり時） ──
+  const numMini=(label,en,n,d2,sub)=>
+    '<div class="card">'
+    +'<p style="font-size:.58rem;letter-spacing:.2em;color:var(--gold);margin-bottom:7px;">'+en+' — '+label+'</p>'
+    +'<div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">'
+    +'<div style="font-family:var(--serif);font-size:3.2rem;font-weight:300;color:var(--gold);line-height:1;min-width:52px;text-align:center;">'+n+'</div>'
+    +'<div><p style="font-family:var(--serif);font-size:.92rem;color:var(--cream);">'+d2.title+'</p>'
+    +'<p style="font-size:.68rem;color:var(--muted);margin-top:2px;">'+d2.keyword+'</p></div>'
+    +'</div>'
+    +'<p style="font-size:.74rem;color:var(--muted);line-height:1.9;margin-bottom:9px;">'+tr(d2.desc[0],130)+'</p>'
+    +'<p style="font-size:.68rem;color:rgba(245,242,235,.3);font-style:italic;">'+sub+'</p>'
+    +'</div>';
+
+  const s5n=(hasName&&exD&&maD)
+    ?('<div style="width:100%;max-width:860px;margin:0 auto;">'
+      +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Expression &amp; Maturity</span>'
+      +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;">表現ナンバー ｜ マチュリティナンバー</h2>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">'
+      +numMini('表現ナンバー（運命数）','Expression',expr,exD,'名前全文字から算出した潜在的な才能と方向性')
+      +numMini('マチュリティナンバー（成熟数）','Maturity',mat,maD,'中年以降に目覚め、人生後半に開花するテーマ')
+      +'</div></div>')
+    :null;
+
+  // ── S6n: ソウル・パーソナリティ（名前あり時） ──
+  const s6n=(hasName&&soD&&peD)
+    ?('<div style="width:100%;max-width:860px;margin:0 auto;">'
+      +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Soul Urge &amp; Personality</span>'
+      +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;">ソウルナンバー ｜ パーソナリティナンバー</h2>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">'
+      +numMini('ソウルナンバー（魂数）','Soul Urge',soul,soD,'名前の母音から算出した魂が本当に求めるもの')
+      +numMini('パーソナリティナンバー（外面数）','Personality',pers,peD,'名前の子音から算出した他者への第一印象')
+      +'</div></div>')
+    :null;
+
+  // ── S_basis: 算出根拠（2カラムグリッド／スクロールなし） ──
+  const lpY2=String(y).padStart(4,'0'),lpM2=String(m).padStart(2,'0'),lpD2=String(d).padStart(2,'0');
+  const basisItems=[];
+  const lpStps=stps(lpRaw,true);
+  basisItems.push({en:'LIFE PATH',lbl:'ライフパスナンバー（生命数）',n:lp,note:[...lpY2].join('+')+' + '+[...lpM2].join('+')+' + '+[...lpD2].join('+')+' = '+lpRaw,steps:lpStps});
+  const bdStps=stps(d,true);
+  basisItems.push({en:'BIRTHDAY',lbl:'バースデーナンバー（誕生数）',n:bday,note:d+'日',steps:bdStps});
+  if(hasName&&exRaw!==null){
+    const exStps=stps(exRaw,true);
+    const soStps=stps(soRaw,true);
+    const peStps=stps(peRaw,true);
+    const exForm=[...fullName].map(c=>LETTER_VAL[c]||0).join('+');
+    const soForm=[...fullName].filter(c=>VOWELS.has(c)).map(c=>LETTER_VAL[c]||0).join('+');
+    const peForm=[...fullName].filter(c=>!VOWELS.has(c)&&LETTER_VAL[c]).map(c=>LETTER_VAL[c]||0).join('+');
+    basisItems.push({en:'EXPRESSION',lbl:'表現ナンバー（運命数）',n:expr,note:first+' '+last+' → '+exForm+' = '+exRaw,steps:exStps});
+    basisItems.push({en:'SOUL URGE',lbl:'ソウルナンバー（魂数）',n:soul,note:'母音 → '+(soForm||'0')+' = '+soRaw,steps:soStps});
+    basisItems.push({en:'PERSONALITY',lbl:'パーソナリティナンバー（外面数）',n:pers,note:'子音 → '+(peForm||'0')+' = '+peRaw,steps:peStps});
+    if(mat!==null&&maRaw!==null){
+      const maStps=stps(maRaw,true);
+      basisItems.push({en:'MATURITY',lbl:'マチュリティナンバー（成熟数）',n:mat,note:'LP('+lp+') + 表現('+expr+') = '+maRaw,steps:maStps});
+    }
+  }
+  const bCard=item=>
+    '<div style="background:var(--card-bg);border:1px solid var(--bdr);border-radius:8px;padding:11px 15px;backdrop-filter:blur(8px);">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">'
+    +'<div><p style="font-size:.54rem;letter-spacing:.15em;color:var(--gd4);text-transform:uppercase;line-height:1.4;">'+item.en+'</p>'
+    +'<p style="font-size:.65rem;color:var(--muted);margin-top:2px;">'+item.lbl+'</p></div>'
+    +'<div style="font-family:var(--serif);font-size:2.2rem;font-weight:300;color:var(--gold);line-height:1;padding-left:10px;">'+item.n+'</div>'
+    +'</div>'
+    +'<div style="font-size:.64rem;color:var(--muted);line-height:1.7;border-top:1px solid var(--bdr);padding-top:7px;">'+item.note
+    +(item.steps.length?' → '+item.steps.join(' → '):'<span style="color:rgba(245,242,235,.28);"> （還元不要）</span>')
+    +'</div></div>';
+  const gridCols=basisItems.length>2?2:1;
+  const s_basis=
+    '<div style="width:100%;max-width:860px;margin:0 auto;">'
+    +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Calculation Basis</span>'
+    +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:12px;">算出根拠</h2>'
+    +'<div style="display:grid;grid-template-columns:repeat('+gridCols+',1fr);gap:8px;">'+basisItems.map(bCard).join('')+'</div>'
+    +'</div>';
+
+  // ── S_last: まとめ ──
+  const kwTags=[
+    lpD?'LP: '+lpD.title+'（'+lp+'）':'',
+    bdD?'Birthday: '+bdD.title+'（'+bday+'）':'',
+    exD?'Expression: '+exD.title+'（'+expr+'）':'',
+    soD?'Soul: '+soD.title+'（'+soul+'）':'',
+    peD?'Personality: '+peD.title+'（'+pers+'）':'',
+    maD?'Maturity: '+maD.title+'（'+mat+'）':'',
+  ].filter(Boolean);
+  const s_last=
+    '<div style="text-align:center;max-width:680px;margin:0 auto;">'
+    +'<p style="font-family:var(--serif);font-size:.68rem;letter-spacing:.4em;color:var(--gd4);text-transform:uppercase;margin-bottom:26px;">Summary</p>'
+    +'<h2 style="font-family:var(--serif);font-size:1.75rem;font-weight:300;letter-spacing:.12em;margin-bottom:20px;">あなたの数字キーワード</h2>'
+    +'<div style="width:36px;height:1px;background:var(--gold);margin:0 auto 24px;"></div>'
+    +'<div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:26px;">'
+    +kwTags.map(t=>'<span style="font-size:.78rem;border:1px solid var(--bdrM);color:var(--gold);padding:5px 15px;border-radius:20px;">'+t+'</span>').join('')
+    +'</div>'
+    +(lpD?'<p style="font-family:var(--serif);font-size:.88rem;color:var(--acc2);line-height:2.4;margin-bottom:24px;font-style:italic;">'+tr(lpD.advice,200)+'</p>':'')
+    +'<p style="font-size:.8rem;color:var(--muted);line-height:2.4;margin-bottom:36px;">数秘術は、宇宙の数の法則に基づき、あなたの魂の性質や可能性を見つめ直すための参考情報です。この鑑定書が、自己理解を深め、これからの選択や行動を考えるきっかけとなれば幸いです。</p>'
+    +'<p style="font-size:.68rem;color:rgba(245,242,235,.2);letter-spacing:.14em;border-top:1px solid rgba(255,255,255,.07);padding-top:22px;display:inline-block;">ASUMIRA 占い　─　現役占い師監修　／　'+todayStr+'</p>'
+    +'</div>';
+
+  // ── スライド組み立て ──
+  const slides=[s1,s2,s3,s4,...(s5n?[s5n]:[]),...(s6n?[s6n]:[]),s_basis,s_last];
+  const NS=slides.length;
+  const deckHtml=slides.map((s,i)=>'<div class="slide'+(i===0?' active':'')+'" id="sl'+i+'">'+s+'</div>').join('\n');
+
+  const acc=TH.acc;
+  const html='<!DOCTYPE html>\n'
+    +'<html lang="ja">\n<head>\n'
+    +'<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">\n'
+    +'<title>'+todayFile+'_'+nameDisp+'様</title>\n'
+    +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">\n'
+    +'<style>\n'
+    +'*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}\n'
+    +':root{--bg:'+TH.bg+';--cream:'+TH.cream+';--muted:'+TH.muted+';--gold:'+acc+';--acc2:'+TH.acc2+';--bdr:'+TH.bdr+';--bdr2:'+TH.bdr2+';--bdrM:'+TH.bdrM+';--bdrHi:'+TH.bdrHi+';--gd4:'+TH.gd4+';--hl-bg:'+TH.hlBg+';--card-bg:'+TH.cardBg+';--thead-bg:'+TH.theadBg+';--tbl-bg:'+TH.tblBg+';--rlbl-bg:'+TH.rlblBg+';--border:rgba(255,255,255,.07);--serif:"Noto Serif JP",serif;--sans:"Noto Sans JP",sans-serif;}\n'
+    +'html,body{width:100%;height:100%;background:var(--bg);color:var(--cream);font-family:var(--sans);font-weight:300;overflow:hidden;-webkit-font-smoothing:antialiased;}\n'
+    +'.glow{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:60vw;height:60vw;background:radial-gradient(circle,'+TH.glow+' 0%,transparent 65%);pointer-events:none;z-index:0;}\n'
+    +'.deck{width:100%;height:100%;position:relative;}\n'
+    +'.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:52px 80px 76px;opacity:0;pointer-events:none;transition:opacity .48s ease,transform .48s ease;transform:translateX(40px);z-index:1;}\n'
+    +'.slide>div{position:relative;z-index:1;width:100%;}\n'
+    +'.slide.active{opacity:1;pointer-events:all;transform:translateX(0);}\n'
+    +'.slide.exit{opacity:0;transform:translateX(-40px);pointer-events:none;}\n'
+    +'.card{background:var(--card-bg);border:1px solid var(--bdr);border-radius:10px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:22px 26px;}\n'
+    +'nav.ctrl{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:16px;z-index:100;}\n'
+    +'.nbtn{background:rgba(18,16,12,.65);border:1px solid rgba(255,255,255,.08);color:rgba(245,242,235,.52);padding:9px 22px;border-radius:24px;font-size:.78rem;letter-spacing:.08em;cursor:pointer;font-family:var(--sans);transition:border-color .28s,color .28s;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}\n'
+    +'.nbtn:hover:not(:disabled){border-color:var(--gold);color:var(--gold);}\n'
+    +'.nbtn:disabled{opacity:.25;cursor:default;}\n'
+    +'.cnt{font-size:.75rem;color:rgba(245,242,235,.38);letter-spacing:.1em;min-width:52px;text-align:center;}\n'
+    +'.sno{position:fixed;top:20px;right:26px;font-size:.64rem;color:rgba(245,242,235,.18);letter-spacing:.14em;z-index:10;font-family:var(--serif);}\n'
+    +'@media(max-width:800px){.slide{padding:44px 20px 70px;}}\n'
+    +'@media(max-width:640px){.slide{padding:30px 14px 62px!important;}.card{padding:14px 16px!important;}[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important;}[style*="grid-template-columns:200px"]{grid-template-columns:1fr!important;}h2{font-size:1.25rem!important;}}\n'
+    +'@page{size:A4 landscape;margin:0;}\n'
+    +'@media print{\n'
+    +'*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}\n'
+    +'html,body{width:297mm!important;height:auto!important;overflow:visible!important;background:'+TH.bg+'!important;}\n'
+    +'.glow,.sno,nav.ctrl{display:none!important;}\n'
+    +'.deck{position:static!important;height:auto!important;display:block!important;}\n'
+    +'.slide{position:relative!important;display:flex!important;opacity:1!important;transform:none!important;pointer-events:none!important;inset:auto!important;width:297mm!important;height:210mm!important;page-break-after:always!important;break-after:page!important;overflow:hidden!important;padding:44px 60px 44px!important;}\n'
+    +'.slide:last-child{page-break-after:avoid!important;break-after:avoid!important;}\n'
+    +'.card{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(20,17,13,.96)!important;border:1px solid rgba(196,168,106,.3)!important;}\n'
+    +'}\n'
+    +'</style>\n</head>\n<body>\n'
+    +'<div class="glow"></div>\n'
+    +'<span class="sno" id="sno">01 / '+NS+'</span>\n'
+    +'<div class="deck">'+deckHtml+'</div>\n'
+    +'<nav class="ctrl">'
+    +'<button class="nbtn" id="pb" disabled>← 前へ</button>'
+    +'<span class="cnt" id="cnt">1 / '+NS+'</span>'
+    +'<button class="nbtn" id="nb">次へ →</button>'
+    +'</nav>\n'
+    +'<script>\n'
+    +'var ss=document.querySelectorAll(".slide"),pb=document.getElementById("pb"),nb=document.getElementById("nb"),cnt=document.getElementById("cnt"),sno=document.getElementById("sno"),cur=0;\n'
+    +'function pad(n){return(n<10?"0":"")+n;}\n'
+    +'function goTo(i){ss[cur].classList.remove("active");ss[cur].classList.add("exit");var p=cur;setTimeout(function(){ss[p].classList.remove("exit");},500);cur=i;ss[cur].classList.add("active");cnt.textContent=(cur+1)+" / "+ss.length;sno.textContent=pad(cur+1)+" / "+ss.length;pb.disabled=cur===0;nb.disabled=cur===ss.length-1;}\n'
+    +'pb.addEventListener("click",function(){if(cur>0)goTo(cur-1);});\n'
+    +'nb.addEventListener("click",function(){if(cur<ss.length-1)goTo(cur+1);});\n'
+    +'document.addEventListener("keydown",function(e){if(e.key==="ArrowRight"||e.key==="ArrowDown"){if(cur<ss.length-1)goTo(cur+1);}if(e.key==="ArrowLeft"||e.key==="ArrowUp"){if(cur>0)goTo(cur-1);}});\n'
+    +'<\/script>\n</body>\n</html>';
+
+  const w=window.open('','_blank');
+  if(w){w.document.open();w.document.write(html);w.document.close();}
+  else alert('ポップアップがブロックされています。ブラウザの設定でポップアップを許可してください。');
+}
 
 function calcNumAI(){
   const aYV=document.getElementById('nai-a-birth-year').value;
