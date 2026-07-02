@@ -1798,7 +1798,7 @@ function openKanteiHor() {
   var today = new Date();
   var todayStr = today.getFullYear() + '年' + (today.getMonth()+1) + '月' + today.getDate() + '日';
   var fileDate = today.getFullYear() + String(today.getMonth()+1).padStart(2,'0') + String(today.getDate()).padStart(2,'0');
-  var NS = 8;
+  var NS = 9;
   var timeLabel = time || '不明';
   var placeLabel = place || '不明';
 
@@ -2025,59 +2025,36 @@ function openKanteiHor() {
     +'</div>'
     +'</div>';
 
-  // S8 トランジット × ネイタル ＋ 進行の月
+  // S8 Bi-Wheel ＋ Transit × Natal Grid
   var s8 = (function() {
     var tr = data.transits || {};
     var hasTransit = (typeof tr.sun_degree === 'number');
     var bwSvg = hasTransit ? drawBiWheel(data) : '';
 
-    // トランジット読み解き
-    var transitHtml = '';
+    // グリッドHTML
+    var gridHtml = '';
     if (hasTransit) {
-      var tList = computeTransitAspects(data).list;
-      var slowItems = tList.filter(function(x){ return SLOW_PLANETS.indexOf(x.T) !== -1; })
-        .sort(function(a,b){ return a.orb - b.orb; }).slice(0,3);
-      if (slowItems.length) {
-        transitHtml = slowItems.map(function(x) {
-          var cat = (x.asp.angle === 120 || x.asp.angle === 60) ? 'soft' : 'hard';
-          var body = ((TRANSIT_READINGS[x.T] || {})[cat] || '');
-          var bodyShort = body.length > 120 ? body.slice(0,118)+'…' : body;
-          var tCol = PLANET_C[x.T] || '#c4a86a';
-          var nCol = PLANET_C[x.N] || '#c4a86a';
-          return '<div style="border:1px solid rgba(196,168,106,.12);padding:8px 12px;margin-bottom:7px;background:rgba(255,255,255,.015);">'
-            +'<div style="font-size:.6rem;letter-spacing:.06em;margin-bottom:4px;">'
-            +'<span style="color:'+tCol+';">T. '+jpName(x.T)+'</span>'
-            +' <span style="color:rgba(245,242,235,.3);">×</span> '
-            +'<span style="color:'+nCol+';">N. '+jpName(x.N)+'</span>'
-            +' <span style="color:rgba(245,242,235,.25);margin-left:5px;">'+x.asp.name+' '+x.orb.toFixed(1)+'°</span>'
-            +'</div>'
-            +'<p style="font-size:.64rem;color:rgba(245,242,235,.66);line-height:1.8;letter-spacing:.03em;">'+bodyShort+'</p>'
-            +'</div>';
-        }).join('');
-      } else {
-        transitHtml = '<div style="padding:12px;color:rgba(245,242,235,.36);font-size:.65rem;border:1px solid rgba(196,168,106,.1);">現在、外惑星からネイタルへの主要なトランジットは見られません。穏やかに内面を整える時期です。</div>';
-      }
+      var cells8 = computeTransitAspects(data).cells;
+      var jp8 = function(k){ return PLANETS.find(function(x){ return x.key===k; })||{sym:'?',col:'#fff',jp:k}; };
+      var h8 = '<table class="ktg"><thead><tr><th class="ktg-corner"><span class="ktg-out">外(T)</span>＼<span class="ktg-in">内(N)</span></th>';
+      TRANSIT_PLANETS.forEach(function(T){ var p=jp8(T); h8+='<th><span style="color:'+p.col+'">'+p.sym+VS+'</span></th>'; });
+      h8 += '</tr></thead><tbody>';
+      TRANSIT_PLANETS.forEach(function(N){
+        var pn=jp8(N);
+        h8 += '<tr><td class="ktg-row"><span style="color:'+pn.col+'">'+pn.sym+VS+'</span></td>';
+        TRANSIT_PLANETS.forEach(function(T){
+          var c=cells8[T+'_'+N];
+          if(c){ h8+='<td class="ktg-cell'+(c.orb<2?' ktg-tight':'')+'"><span style="color:'+c.asp.col+'">'+c.asp.sym+'</span></td>'; }
+          else h8+='<td class="ktg-cell"></td>';
+        });
+        h8 += '</tr>';
+      });
+      h8 += '</tbody></table>';
+      gridHtml = '<div class="ktg-wrap">'+h8+'</div>';
     } else {
-      transitHtml = '<div style="padding:12px;color:rgba(245,242,235,.28);font-size:.63rem;border:1px solid rgba(196,168,106,.08);">トランジットデータなし</div>';
+      gridHtml = '<div style="padding:16px;color:rgba(245,242,235,.3);font-size:.65rem;border:1px solid rgba(196,168,106,.08);">トランジットデータなし</div>';
     }
 
-    // 進行の月
-    var lunarHtml = '';
-    var rows = data.lunarHouses;
-    if (rows && rows.length) {
-      var cur = rows.find(function(r){ return r.current; }) || rows[0];
-      if (cur) {
-        var theme = LUNAR_THEMES[cur.house] || '';
-        var reading = LUNAR_READINGS[cur.house] || '';
-        var readingShort = reading.length > 120 ? reading.slice(0,118)+'…' : reading;
-        lunarHtml = '<div style="border-top:1px solid rgba(196,168,106,.14);margin-top:10px;padding-top:10px;">'
-          +'<p style="font-size:.58rem;letter-spacing:.14em;color:#c4a86a;margin-bottom:5px;">☽ 進行の月：現在 '+cur.house+'ハウス期　― '+theme+'</p>'
-          +'<p style="font-size:.64rem;color:rgba(245,242,235,.66);line-height:1.8;letter-spacing:.03em;">'+readingShort+'</p>'
-          +'</div>';
-      }
-    }
-
-    // チャートあり: 左チャート＋右読み解き。なし: 読み解きのみ
     if (bwSvg) {
       return '<div style="width:100%;display:flex;gap:14px;align-items:center;max-width:960px;margin:0 auto;">'
         +'<div style="flex:0 0 260px;width:260px;">'
@@ -2087,21 +2064,74 @@ function openKanteiHor() {
         +'</div>'
         +'</div>'
         +'<div style="flex:1;min-width:0;">'
-        +'<p style="font-family:var(--serif);font-size:.54rem;letter-spacing:.22em;color:#c4a86a;text-transform:uppercase;margin-bottom:10px;">今の星の動きと生まれ持つ星の関係 ― 本日時点</p>'
-        +transitHtml
-        +lunarHtml
+        +'<p style="font-family:var(--serif);font-size:.54rem;letter-spacing:.22em;color:#c4a86a;text-transform:uppercase;margin-bottom:10px;">Transit × Natal Grid ― 外（横）＝トランジット ／ 内（縦）＝ネイタル</p>'
+        +gridHtml
         +'</div>'
         +'</div>';
     }
     return '<div style="width:100%;max-width:920px;margin:0 auto;">'
-      +'<p style="font-family:var(--serif);font-size:.54rem;letter-spacing:.22em;color:#c4a86a;text-transform:uppercase;text-align:center;margin-bottom:12px;">Transit × Natal ― 今の星の動きと生まれ持つ星の関係</p>'
+      +'<p style="font-family:var(--serif);font-size:.54rem;letter-spacing:.22em;color:#c4a86a;text-transform:uppercase;text-align:center;margin-bottom:12px;">Transit × Natal Grid</p>'
+      +gridHtml
+      +'</div>';
+  })();
+
+  // S9 トランジット読み解き＋進行の月（フル文章）
+  var s9 = (function() {
+    var tr = data.transits || {};
+    var hasTransit = (typeof tr.sun_degree === 'number');
+
+    var transitHtml = '';
+    if (hasTransit) {
+      var tList = computeTransitAspects(data).list;
+      var slowItems = tList.filter(function(x){ return SLOW_PLANETS.indexOf(x.T) !== -1; })
+        .sort(function(a,b){ return a.orb - b.orb; }).slice(0,3);
+      if (slowItems.length) {
+        transitHtml = slowItems.map(function(x) {
+          var cat = (x.asp.angle === 120 || x.asp.angle === 60) ? 'soft' : 'hard';
+          var body = ((TRANSIT_READINGS[x.T] || {})[cat] || '');
+          var tCol = PLANET_C[x.T] || '#c4a86a';
+          var nCol = PLANET_C[x.N] || '#c4a86a';
+          return '<div style="border:1px solid rgba(196,168,106,.12);padding:9px 14px;margin-bottom:8px;background:rgba(255,255,255,.015);">'
+            +'<div style="font-size:.6rem;letter-spacing:.06em;margin-bottom:5px;">'
+            +'<span style="color:'+tCol+';">トランジット '+jpName(x.T)+'</span>'
+            +' <span style="color:rgba(245,242,235,.3);">×</span> '
+            +'<span style="color:'+nCol+';">ネイタル '+jpName(x.N)+'</span>'
+            +' <span style="color:rgba(245,242,235,.26);margin-left:6px;">― '+x.asp.name+' '+x.orb.toFixed(1)+'°</span>'
+            +'</div>'
+            +'<p style="font-size:.65rem;color:rgba(245,242,235,.7);line-height:1.82;letter-spacing:.03em;">'+body+'</p>'
+            +'</div>';
+        }).join('');
+      } else {
+        transitHtml = '<div style="padding:14px;color:rgba(245,242,235,.36);font-size:.67rem;border:1px solid rgba(196,168,106,.1);">現在、外惑星からネイタルへの主要なトランジットは見られません。穏やかに内面を整える時期です。</div>';
+      }
+    } else {
+      transitHtml = '<div style="padding:14px;color:rgba(245,242,235,.28);font-size:.65rem;">トランジットデータなし</div>';
+    }
+
+    // 進行の月（フル文章）
+    var lunarHtml = '';
+    var lunarRows = data.lunarHouses;
+    if (lunarRows && lunarRows.length) {
+      var cur9 = lunarRows.find(function(r){ return r.current; }) || lunarRows[0];
+      if (cur9) {
+        var theme9 = LUNAR_THEMES[cur9.house] || '';
+        var reading9 = LUNAR_READINGS[cur9.house] || '';
+        lunarHtml = '<div style="border-top:1px solid rgba(196,168,106,.14);margin-top:10px;padding-top:10px;">'
+          +'<p style="font-size:.57rem;letter-spacing:.14em;color:#c4a86a;margin-bottom:5px;">☽ 進行の月：現在 '+cur9.house+'ハウス期　― '+theme9+'</p>'
+          +'<p style="font-size:.65rem;color:rgba(245,242,235,.7);line-height:1.82;letter-spacing:.03em;">'+reading9+'</p>'
+          +'</div>';
+      }
+    }
+
+    return '<div style="width:100%;max-width:920px;margin:0 auto;">'
+      +'<p style="font-family:var(--serif);font-size:.54rem;letter-spacing:.22em;color:#c4a86a;text-transform:uppercase;text-align:center;margin-bottom:10px;">今の星の動きと生まれ持つ星 ― トランジット × ネイタル（本日時点）</p>'
       +transitHtml
       +lunarHtml
       +'</div>';
   })();
 
   // ── デッキ組立 ──────────────────────────────────────────
-  var slideArr = [s1,s2,s3,s4,s5,s6,s7,s8];
+  var slideArr = [s1,s2,s3,s4,s5,s6,s7,s8,s9];
   var deckHtml = slideArr.map(function(s,i){
     return '<div class="slide'+(i===0?' active':'')+'">'+s+'</div>';
   }).join('');
@@ -2129,6 +2159,15 @@ function openKanteiHor() {
     +'#ctrl-prev{left:calc(50% - 60px);}'
     +'#ctrl-next{right:calc(50% - 60px);}'
     +'.sno{position:fixed;bottom:34px;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:.22em;color:rgba(245,242,235,.32);z-index:10;}'
+    +'.ktg-wrap{overflow:hidden;border:1px solid rgba(196,168,106,.14);}'
+    +'.ktg{width:100%;border-collapse:collapse;}'
+    +'.ktg th,.ktg td{padding:5px 4px;text-align:center;border:1px solid rgba(196,168,106,.1);}'
+    +'.ktg thead th{background:rgba(196,168,106,.10);}'
+    +'.ktg-corner{font-size:9px;color:rgba(245,242,235,.45);white-space:nowrap;}'
+    +'.ktg-out{color:#c4a86a;} .ktg-in{color:rgba(245,242,235,.7);}'
+    +'.ktg-row{background:rgba(196,168,106,.06);font-size:14px;}'
+    +'.ktg-cell{font-size:13px;color:#f5f2eb;}'
+    +'.ktg-tight{background:rgba(196,168,106,.22);}'
     +'@media print{@page{size:A4 landscape;margin:0;}html,body{overflow:visible;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.deck{position:static;height:auto;display:block;background:#0d0b08;}.slide{position:relative;display:flex;opacity:1;transform:none;width:297mm;height:210mm;page-break-after:always;overflow:hidden;background:#0d0b08;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.slide:last-child{page-break-after:avoid;}.ctrl,.sno{display:none;}}';
 
   var js = '(function(){'
