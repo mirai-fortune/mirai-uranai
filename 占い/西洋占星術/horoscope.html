@@ -1798,7 +1798,7 @@ function openKanteiHor() {
   var today = new Date();
   var todayStr = today.getFullYear() + '年' + (today.getMonth()+1) + '月' + today.getDate() + '日';
   var fileDate = today.getFullYear() + String(today.getMonth()+1).padStart(2,'0') + String(today.getDate()).padStart(2,'0');
-  var NS = 11;
+  var NS = 7;
   var timeLabel = time || '不明';
   var placeLabel = place || '不明';
 
@@ -1906,31 +1906,46 @@ function openKanteiHor() {
     +'</div>'
     +'</div>';
 
-  // S2 ネイタルチャート
-  var s2 = '<div style="width:100%;max-width:410px;margin:0 auto;">'
-    +'<p style="font-family:var(--serif);font-size:.6rem;letter-spacing:.28em;color:#c4a86a;text-transform:uppercase;text-align:center;margin-bottom:12px;">Natal Chart ― 出生ホロスコープ</p>'
-    +'<div style="background:radial-gradient(ellipse 80% 80% at 50% 50%,rgba(20,16,48,.92),rgba(2,1,8,1));border:1px solid rgba(196,168,106,.22);padding:10px;">'
+  // S2 チャート＋天体配置（統合）
+  var s2 = '<div style="width:100%;display:flex;gap:14px;align-items:center;max-width:960px;margin:0 auto;">'
+    +'<div style="flex:0 0 260px;width:260px;">'
+    +'<p style="font-family:var(--serif);font-size:.54rem;letter-spacing:.24em;color:#c4a86a;text-transform:uppercase;text-align:center;margin-bottom:8px;">Natal Chart ― 出生ホロスコープ</p>'
+    +'<div style="background:radial-gradient(ellipse 80% 80% at 50% 50%,rgba(20,16,48,.92),rgba(2,1,8,1));border:1px solid rgba(196,168,106,.22);padding:6px;">'
     +chartSvg
     +'</div>'
-    +'</div>';
-
-  // S3 天体配置一覧
-  var s3 = '<div style="width:100%;max-width:780px;margin:0 auto;">'
-    +'<p style="font-family:var(--serif);font-size:.6rem;letter-spacing:.28em;color:#c4a86a;text-transform:uppercase;text-align:center;margin-bottom:14px;">Planet Positions ― 天体配置一覧</p>'
+    +'</div>'
+    +'<div style="flex:1;min-width:0;">'
+    +'<p style="font-family:var(--serif);font-size:.54rem;letter-spacing:.24em;color:#c4a86a;text-transform:uppercase;text-align:center;margin-bottom:8px;">Planet Positions ― 天体配置一覧</p>'
     +'<div style="display:flex;gap:2px;border:1px solid rgba(196,168,106,.14);">'
     +colHtml(leftPl)
     +colHtml(rightPl)
     +'</div>'
+    +'</div>'
     +'</div>';
 
-  // S4 太陽星座
-  var s4 = signCard('sun','☉','☉ Sun Sign ― 太陽星座','太陽星座が映し出す、生まれながらのあなたという個性','sun');
+  // S3 太陽星座＋月星座（統合・2カラム）
+  var compactSignCol = function(key, sym, label, textKey) {
+    var pi = pInfo(key);
+    var sn = pi && pi.sign ? pi.sign : null;
+    var ec = sn ? (ELEM_COL[sn.elem]||'#c4a86a') : '#c4a86a';
+    var t = texts[textKey||key] || '';
+    var tShort = t.length > 265 ? t.slice(0,263)+'…' : t;
+    return '<div style="flex:1;border:1px solid rgba(196,168,106,.14);padding:18px 20px;background:rgba(255,255,255,.02);">'
+      +'<p style="font-family:var(--serif);font-size:.54rem;letter-spacing:.24em;color:#c4a86a;text-transform:uppercase;text-align:center;margin-bottom:10px;">'+label+'</p>'
+      +(sn?'<p style="text-align:center;font-family:var(--serif);font-size:1.15rem;font-weight:300;color:#f5f2eb;letter-spacing:.1em;margin-bottom:10px;">'
+          +'<span style="font-size:1rem;color:'+ec+';margin-right:6px;">'+sn.glyph+VS+'</span>'+sn.jp+'</p>':'')
+      +'<p style="font-size:.71rem;color:rgba(245,242,235,.7);line-height:2.0;letter-spacing:.04em;">'+tShort+'</p>'
+      +'</div>';
+  };
+  var s3 = '<div style="width:100%;max-width:920px;margin:0 auto;">'
+    +'<div style="display:flex;gap:12px;">'
+    +compactSignCol('sun','☉','☉ Sun Sign ― 太陽星座','sun')
+    +compactSignCol('moon','☽','☽ Moon Sign ― 月星座','moon')
+    +'</div>'
+    +'</div>';
 
-  // S5 月星座
-  var s5 = signCard('moon','☽','☽ Moon Sign ― 月星座','月星座が照らす、内側に秘められたあなたの才能','moon');
-
-  // S6 ASC・水星・金星
-  var s6 = '<div style="width:100%;">'
+  // S4 ASC・水星・金星
+  var s4 = '<div style="width:100%;">'
     +'<p style="font-family:var(--serif);font-size:.6rem;letter-spacing:.26em;color:#c4a86a;text-transform:uppercase;text-align:center;margin-bottom:14px;">ASC ・ Mercury ・ Venus ― 個人天体</p>'
     +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">'
     +miniCard('asc','ASC',true,'asc','アセンダント')
@@ -1939,8 +1954,8 @@ function openKanteiHor() {
     +'</div>'
     +'</div>';
 
-  // S7 火星・木星・土星
-  var s7 = '<div style="width:100%;">'
+  // S5 火星・木星・土星
+  var s5 = '<div style="width:100%;">'
     +'<p style="font-family:var(--serif);font-size:.6rem;letter-spacing:.26em;color:#c4a86a;text-transform:uppercase;text-align:center;margin-bottom:14px;">Mars ・ Jupiter ・ Saturn ― 社会天体</p>'
     +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">'
     +miniCard('mars','♂',false,'mars','火星')
@@ -1949,60 +1964,68 @@ function openKanteiHor() {
     +'</div>'
     +'</div>';
 
-  // S8 恋愛・対人運
-  var s8 = signCard('venus','♀','♀ Love & Relationship ― 恋愛・対人運','金星星座が物語る、あなたの愛し方と人との結び方','love');
-
-  // S9 総合運・人生テーマ
-  var s9 = '<div style="max-width:700px;margin:0 auto;width:100%;">'
-    +'<div style="text-align:center;margin-bottom:18px;">'
-    +'<p style="font-family:var(--serif);font-size:.6rem;letter-spacing:.26em;color:#c4a86a;text-transform:uppercase;margin-bottom:8px;">✦ Life Theme ― 総合運・人生テーマ</p>'
-    +'<p style="font-size:.68rem;color:rgba(245,242,235,.45);letter-spacing:.1em;margin-bottom:10px;">太陽と月が織りなす、人生に流れる大きなテーマ</p>'
+  // S6 恋愛運＋総合運（統合・2カラム）
+  var loveSign = pos.map['venus'] && pos.map['venus'].sign;
+  var loveEc = loveSign ? (ELEM_COL[loveSign.elem]||'#c4a86a') : '#c4a86a';
+  var loveTxt = (texts.love||'');
+  var loveTxtShort = loveTxt.length > 265 ? loveTxt.slice(0,263)+'…' : loveTxt;
+  var overallTxt = (texts.overall||'');
+  var overallTxtShort = overallTxt.length > 265 ? overallTxt.slice(0,263)+'…' : overallTxt;
+  var s6 = '<div style="width:100%;max-width:920px;margin:0 auto;">'
+    +'<div style="display:flex;gap:12px;">'
+    +'<div style="flex:1;border:1px solid rgba(196,168,106,.14);padding:18px 20px;background:rgba(255,255,255,.02);">'
+    +'<p style="font-family:var(--serif);font-size:.54rem;letter-spacing:.24em;color:#c4a86a;text-transform:uppercase;text-align:center;margin-bottom:10px;">♀ Love & Relationship ― 恋愛運</p>'
+    +(loveSign?'<p style="text-align:center;font-family:var(--serif);font-size:1.15rem;font-weight:300;color:#f5f2eb;letter-spacing:.1em;margin-bottom:10px;">'
+        +'<span style="font-size:1rem;color:'+loveEc+';margin-right:6px;">'+loveSign.glyph+VS+'</span>'+loveSign.jp+'</p>':'')
+    +'<p style="font-size:.71rem;color:rgba(245,242,235,.7);line-height:2.0;letter-spacing:.04em;">'+loveTxtShort+'</p>'
     +'</div>'
-    +'<div style="border:1px solid rgba(196,168,106,.16);padding:20px 26px;background:rgba(255,255,255,.02);">'
-    +'<p style="font-size:.76rem;color:rgba(245,242,235,.73);line-height:2.15;letter-spacing:.04em;">'+(texts.overall||'')+'</p>'
+    +'<div style="flex:1;border:1px solid rgba(196,168,106,.14);padding:18px 20px;background:rgba(255,255,255,.02);">'
+    +'<p style="font-family:var(--serif);font-size:.54rem;letter-spacing:.24em;color:#c4a86a;text-transform:uppercase;text-align:center;margin-bottom:18px;">✦ Life Theme ― 総合運・人生テーマ</p>'
+    +'<p style="font-size:.71rem;color:rgba(245,242,235,.7);line-height:2.0;letter-spacing:.04em;">'+overallTxtShort+'</p>'
+    +'</div>'
     +'</div>'
     +'</div>';
 
-  // S10 アスペクト
-  var aspRows = (aspects||[]).slice(0,8).map(function(item) {
+  // S7 アスペクト＋まとめ（統合）
+  var aspRows7 = (aspects||[]).slice(0,6).map(function(item) {
     var p1=item.p1, p2=item.p2, asp=item.asp, orb=item.orb;
-    return '<div style="display:grid;grid-template-columns:28px 120px 90px 1fr;gap:8px;align-items:center;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.04);">'
-      +'<span style="font-size:1rem;text-align:center;color:'+asp.col+';">'+asp.sym+'</span>'
-      +'<span style="font-size:.72rem;color:'+asp.col+';letter-spacing:.04em;">'+jpName(p1)+' × '+jpName(p2)+'</span>'
-      +'<span style="font-size:.65rem;color:rgba(245,242,235,.36);letter-spacing:.04em;">'+asp.name+' '+orb.toFixed(1)+'°</span>'
-      +'<span style="font-size:.68rem;color:rgba(245,242,235,.58);line-height:1.7;">'+asp.desc+'</span>'
+    return '<div style="display:grid;grid-template-columns:26px 110px 84px 1fr;gap:6px;align-items:center;padding:7px 12px;border-bottom:1px solid rgba(255,255,255,.04);">'
+      +'<span style="font-size:.9rem;text-align:center;color:'+asp.col+';">'+asp.sym+'</span>'
+      +'<span style="font-size:.68rem;color:'+asp.col+';letter-spacing:.04em;">'+jpName(p1)+' × '+jpName(p2)+'</span>'
+      +'<span style="font-size:.62rem;color:rgba(245,242,235,.36);letter-spacing:.04em;">'+asp.name+' '+orb.toFixed(1)+'°</span>'
+      +'<span style="font-size:.65rem;color:rgba(245,242,235,.58);line-height:1.65;">'+asp.desc+'</span>'
       +'</div>';
   }).join('');
-  var s10 = '<div style="width:100%;max-width:820px;margin:0 auto;">'
-    +'<p style="font-family:var(--serif);font-size:.6rem;letter-spacing:.28em;color:#c4a86a;text-transform:uppercase;text-align:center;margin-bottom:14px;">Key Aspects ― 主要アスペクト</p>'
-    +'<div style="border:1px solid rgba(196,168,106,.14);background:rgba(0,0,0,.14);">'
-    +(aspRows||'<div style="padding:20px;text-align:center;color:rgba(245,242,235,.36);font-size:.74rem;">アスペクトデータなし</div>')
-    +'</div>'
-    +'</div>';
-
-  // S11 まとめ
-  var sunSign  = pos.map['sun']  && pos.map['sun'].sign;
-  var moonSign = pos.map['moon'] && pos.map['moon'].sign;
-  var sunKw  = sunSign  ? (SIGN_KEYWORDS[sunSign.key]||[])  : [];
-  var moonKw = moonSign ? (SIGN_KEYWORDS[moonSign.key]||[]) : [];
-  var allKw = (function(){
+  var sunSign7  = pos.map['sun']  && pos.map['sun'].sign;
+  var moonSign7 = pos.map['moon'] && pos.map['moon'].sign;
+  var sunKw7  = sunSign7  ? (SIGN_KEYWORDS[sunSign7.key]||[])  : [];
+  var moonKw7 = moonSign7 ? (SIGN_KEYWORDS[moonSign7.key]||[]) : [];
+  var allKw7 = (function(){
     var seen={}, out=[];
-    sunKw.concat(moonKw).forEach(function(w){ if(!seen[w]){seen[w]=1;out.push(w);} });
+    sunKw7.concat(moonKw7).forEach(function(w){ if(!seen[w]){seen[w]=1;out.push(w);} });
     return out.slice(0,12);
   })();
-  var s11 = '<div style="max-width:680px;margin:0 auto;text-align:center;">'
-    +'<p style="font-family:var(--serif);font-size:.62rem;letter-spacing:.28em;color:#c4a86a;text-transform:uppercase;margin-bottom:20px;">Summary ― あなたのキーワード</p>'
-    +'<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:26px;">'
-    +allKw.map(function(t){return '<span style="font-size:.74rem;border:1px solid rgba(196,168,106,.32);color:#c4a86a;padding:5px 14px;border-radius:20px;">'+t+'</span>';}).join('')
+  var s7 = '<div style="width:100%;max-width:920px;margin:0 auto;display:flex;flex-direction:column;gap:12px;">'
+    +'<div>'
+    +'<p style="font-family:var(--serif);font-size:.54rem;letter-spacing:.26em;color:#c4a86a;text-transform:uppercase;text-align:center;margin-bottom:8px;">Key Aspects ― 主要アスペクト</p>'
+    +'<div style="border:1px solid rgba(196,168,106,.14);background:rgba(0,0,0,.14);">'
+    +(aspRows7||'<div style="padding:14px;text-align:center;color:rgba(245,242,235,.36);font-size:.7rem;">アスペクトデータなし</div>')
     +'</div>'
-    +'<div style="border:1px solid rgba(196,168,106,.1);padding:16px 20px;margin-bottom:20px;">'
-    +'<p style="font-size:.7rem;color:rgba(245,242,235,.42);line-height:2.1;text-align:left;">西洋占星術は、生まれた瞬間の天体配置をもとに、あなたの本質・才能・人生の流れを宇宙の視点から読み解く占術です。この鑑定書が、自己理解を深め、これからの選択や行動を考えるきっかけとなれば幸いです。</p>'
     +'</div>'
-    +'<p style="font-size:.6rem;color:rgba(245,242,235,.18);letter-spacing:.12em;border-top:1px solid rgba(255,255,255,.05);padding-top:16px;">ASUMIRA 占い　―　現役占い師監修　／　'+todayStr+'</p>'
+    +'<div style="text-align:center;">'
+    +'<p style="font-family:var(--serif);font-size:.54rem;letter-spacing:.26em;color:#c4a86a;text-transform:uppercase;margin-bottom:10px;">Summary ― あなたのキーワード</p>'
+    +'<div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:14px;">'
+    +allKw7.map(function(t){return '<span style="font-size:.7rem;border:1px solid rgba(196,168,106,.32);color:#c4a86a;padding:4px 12px;border-radius:20px;">'+t+'</span>';}).join('')
+    +'</div>'
+    +'<div style="border:1px solid rgba(196,168,106,.1);padding:12px 18px;margin-bottom:12px;">'
+    +'<p style="font-size:.66rem;color:rgba(245,242,235,.42);line-height:2.0;text-align:left;">西洋占星術は、生まれた瞬間の天体配置をもとに、あなたの本質・才能・人生の流れを宇宙の視点から読み解く占術です。この鑑定書が、自己理解を深め、これからの選択や行動を考えるきっかけとなれば幸いです。</p>'
+    +'</div>'
+    +'<p style="font-size:.58rem;color:rgba(245,242,235,.18);letter-spacing:.12em;border-top:1px solid rgba(255,255,255,.05);padding-top:10px;">ASUMIRA 占い　―　現役占い師監修　／　'+todayStr+'</p>'
+    +'</div>'
     +'</div>';
 
   // ── デッキ組立 ──────────────────────────────────────────
-  var slideArr = [s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11];
+  var slideArr = [s1,s2,s3,s4,s5,s6,s7];
   var deckHtml = slideArr.map(function(s,i){
     return '<div class="slide'+(i===0?' active':'')+'">'+s+'</div>';
   }).join('');
