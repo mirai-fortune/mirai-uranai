@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ASUMIRA 占い │ モヤモヤを整理する占い</title>
-<meta name="description" content="あすみら（ASUMIRA）占い。モヤモヤを整理する占い。四柱推命・カバラ数秘術・タロット・算命学・西洋占星術・九星気学の6種を無料で体験できます。横浜みなとみらい拠点、現役占い師監修。オンライン電話相談も受付中。">
+<title>ASUMIRA 占い │ 横浜の無料占い・オンライン電話相談｜四柱推命・タロット・数秘術</title>
+<meta name="description" content="あすみら（ASUMIRA）占い。生年月日とカードで今の悩みを整理する、横浜みなとみらい発・現役占い師監修の無料占いサイト。四柱推命・カバラ数秘術・タロット・算命学・西洋占星術・九星気学の6種を完全無料・登録不要で体験できます。オンライン電話相談（¥1,000〜、全国対応）も受付中。">
 <meta name="robots" content="index, follow">
 <meta name="keywords" content="占い,無料占い,四柱推命,タロット,カバラ数秘術,算命学,西洋占星術,九星気学,オンライン占い,電話鑑定,横浜,みなとみらい,ASUMIRA,あすみら,あすみら占い">
 <meta name="author" content="ASUMIRA占い">
@@ -12,7 +12,7 @@
 <link rel="sitemap" type="application/xml" href="https://mirai-fortune.github.io/mirai-uranai/sitemap.xml">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://mirai-fortune.github.io/mirai-uranai/">
-<meta property="og:title" content="ASUMIRA 占い │ モヤモヤを整理する占い">
+<meta property="og:title" content="ASUMIRA 占い │ 横浜の無料占い・オンライン電話相談">
 <meta property="og:description" content="モヤモヤを整理する占い。四柱推命・カバラ数秘術・タロット・算命学・西洋占星術・九星気学の6種を無料で体験できます。横浜みなとみらい拠点、現役占い師監修。">
 <meta property="og:image" content="https://mirai-fortune.github.io/mirai-uranai/images/ogp.png">
 <meta property="og:image:width" content="1200">
@@ -21,7 +21,7 @@
 <meta property="og:site_name" content="ASUMIRA 占い">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="ASUMIRA 占い │ モヤモヤを整理する占い">
+<meta name="twitter:title" content="ASUMIRA 占い │ 横浜の無料占い・オンライン電話相談">
 <meta name="twitter:description" content="モヤモヤを整理する占い。四柱推命・カバラ数秘術・タロット・算命学・西洋占星術・九星気学の6種を無料で体験できます。">
 <meta name="twitter:image" content="https://mirai-fortune.github.io/mirai-uranai/images/ogp.png">
 <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
@@ -221,14 +221,14 @@ nav a:hover::after { width: 100%; }
   transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 .hero-cta-primary {
-  background: rgba(196, 168, 106, 0.1);
-  border: 1px solid var(--gold);
+  background: rgba(196, 168, 106, 0.14);
+  border: 1.5px solid rgba(196, 168, 106, 0.9);
   color: var(--gold);
 }
 .hero-cta-primary:hover {
-  background: rgba(196, 168, 106, 0.22);
+  background: rgba(196, 168, 106, 0.26);
   transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(196, 168, 106, 0.2);
+  box-shadow: 0 6px 24px rgba(196, 168, 106, 0.25);
 }
 .hero-cta-secondary {
   border: 1px solid var(--glass-border);
@@ -913,6 +913,7 @@ footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: var(--m
   .hero-desc { writing-mode: horizontal-tb; height: auto; text-align: center; padding: 0 16px; letter-spacing: 0.05em;}
   .hero-cta { gap: 12px; }
   .hero-cta-btn { font-size: 0.85rem; padding: 12px 24px; }
+  .hero-cta-primary { padding: 14px 32px; }
   .about-flex { flex-direction: column; text-align: left; gap: 32px; padding: 40px 24px !important; }
   .about-img-wrap { width: 100%; max-width: 360px; margin: 0 auto; }
   .partners-grid { grid-template-columns: 1fr; }
@@ -1226,6 +1227,119 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
 .theme-dot-sakura { background: radial-gradient(circle at 35% 35%, #ffb8d0, #e891b2); }
 .theme-dot-shinryoku { background: radial-gradient(circle at 35% 35%, #c0ea9a, #6dbf6a); }
 .theme-dot-minagi { background: radial-gradient(circle at 35% 35%, #b8dff8, #4a9cd4); }
+@media (prefers-reduced-motion: reduce) {
+  .btn, .card, .about-img, .voice-card,
+  .weekly-cta-btn, .theme-option {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --- HERO TAGLINE --- */
+.hero-tagline {
+  font-size: 0.78rem;
+  color: rgba(245,242,235,0.42);
+  letter-spacing: 0.08em;
+  text-align: center;
+  line-height: 2;
+  padding: 0 24px;
+  max-width: 680px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  animation: fadeUpLine 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  animation-delay: 1.1s;
+}
+@media (max-width: 768px) {
+  .hero-tagline { font-size: 0.73rem; line-height: 2.1; }
+}
+
+/* --- TRUST STRIP --- */
+.trust-strip { padding: 0 0 48px; }
+.trust-list {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 28px;
+  padding: 18px 24px;
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.trust-list li {
+  font-size: 0.77rem;
+  color: rgba(245,242,235,0.50);
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.trust-icon { color: var(--gold); font-size: 0.55rem; flex-shrink: 0; }
+@media (max-width: 640px) {
+  .trust-list { flex-direction: column; align-items: flex-start; gap: 10px; padding: 16px 20px; }
+}
+
+/* --- ABOUT CREDENTIALS --- */
+.about-credentials {
+  list-style: none;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.about-credentials li {
+  font-size: 0.84rem;
+  color: var(--muted);
+  padding-left: 18px;
+  position: relative;
+  line-height: 1.7;
+}
+.about-credentials li::before {
+  content: '◆';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+  font-size: 0.52rem;
+  top: 6px;
+}
+
+/* --- BOTTOM CTA SECTION --- */
+.bottom-cta-section { padding: 0 0 80px; }
+.bottom-cta-inner {
+  padding: 52px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.bottom-cta-text h2 { font-size: 1.8rem; margin-bottom: 16px; }
+.bottom-cta-text p { color: var(--muted); font-size: 0.9rem; line-height: 1.9; }
+.bottom-cta-buttons { display: flex; gap: 16px; flex-wrap: wrap; flex-shrink: 0; }
+@media (max-width: 768px) {
+  .bottom-cta-inner { flex-direction: column; text-align: center; padding: 36px 28px; }
+  .bottom-cta-buttons { justify-content: center; }
+  .bottom-cta-text h2 { font-size: 1.5rem; }
+}
+
+/* --- prefers-reduced-motion 拡充 --- */
+@media (prefers-reduced-motion: reduce) {
+  .hero-title, .hero-desc, .hero-cta, .hero-tagline {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .hero::before { animation: none !important; }
+  .weekly-badge { animation: none !important; }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
 </style>
 <script type="application/ld+json">
 {
@@ -1460,6 +1574,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
       <a href="#services" class="hero-cta-btn hero-cta-primary">無料で占ってみる &rarr;</a>
       <a href="#consult" class="hero-cta-btn hero-cta-secondary">オンライン相談を予約する</a>
     </div>
+    <p class="hero-tagline">生年月日とカードで今の悩みを整理。<br>6種の無料占い ＋ オンライン電話相談（全国対応）。<br>横浜みなとみらい発・現役占い師監修。</p>
   </section>
 
   <section class="weekly-tarot-strip">
@@ -1476,20 +1591,32 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
           </div>
           <div class="weekly-tarot-cta">
             <span>メッセージを読む</span>
-            <span>&rarr;</span>
+            <span aria-hidden="true">&rarr;</span>
           </div>
         </div>
       </a>
     </div>
   </section>
 
+  <section class="trust-strip">
+    <div class="container">
+      <ul class="trust-list reveal">
+        <li><span class="trust-icon" aria-hidden="true">✦</span> 現役占い師監修の本格占いコンテンツ</li>
+        <li><span class="trust-icon" aria-hidden="true">✦</span> 6種すべて完全無料・登録不要</li>
+        <li><span class="trust-icon" aria-hidden="true">✦</span> イベント開催10回（2022年〜）横浜みなとみらい拠点</li>
+        <li><span class="trust-icon" aria-hidden="true">✦</span> 強引な勧誘は一切行いません</li>
+      </ul>
+    </div>
+  </section>
+
   <section id="services" class="container">
     <div class="section-title reveal">
       <h2>無料占い</h2>
+      <p class="section-subtitle">6種の占術を、登録不要・完全無料で体験できます</p>
     </div>
     <div class="navigation-grid">
       <a href="占い/四柱推命/shichusuimei.html" class="nav-card glass-card reveal">
-        <div class="img-wrapper"><img src="images/shichusuimei.png?v=2" alt="四柱推命" loading="lazy" class="nav-card-img"></div>
+        <div class="img-wrapper"><img src="images/shichusuimei.png?v=2" alt="四柱推命：生まれ持った性質と人生の流れを読み解く" loading="lazy" class="nav-card-img"></div>
         <div class="nav-card-body">
           <span class="card-tag">生涯のロードマップ・本質</span>
           <h3>四柱推命</h3>
@@ -1498,7 +1625,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         </div>
       </a>
       <a href="占い/数秘術/suuhijutsu.html" class="nav-card glass-card reveal" style="transition-delay: 0.1s;">
-        <div class="img-wrapper"><img src="images/suuhijutsu.png?v=2" alt="カバラ数秘術" loading="lazy" class="nav-card-img"></div>
+        <div class="img-wrapper"><img src="images/suuhijutsu.png?v=2" alt="カバラ数秘術：隠れた才能と人生テーマを数字から読む" loading="lazy" class="nav-card-img"></div>
         <div class="nav-card-body">
           <span class="card-tag">人生のテーマ・才能の数字</span>
           <h3>カバラ数秘術</h3>
@@ -1507,7 +1634,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         </div>
       </a>
       <a href="占い/タロット/tarot.html" class="nav-card glass-card reveal" style="transition-delay: 0.2s;">
-        <div class="img-wrapper"><img src="images/tarot.png?v=2" alt="タロットカード" loading="lazy" class="nav-card-img"></div>
+        <div class="img-wrapper"><img src="images/tarot.png?v=2" alt="タロットカード：今の選択と直近のヒントをカードで引く" loading="lazy" class="nav-card-img"></div>
         <div class="nav-card-body">
           <span class="card-tag">今の選択、直近の未来のヒント</span>
           <h3>タロットカード</h3>
@@ -1516,7 +1643,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         </div>
       </a>
       <a href="占い/算命学/sanmeigaku.html" class="nav-card glass-card reveal" style="transition-delay: 0.3s;">
-        <div class="img-wrapper"><img src="images/sanmeigaku.png?v=2" alt="算命学" loading="lazy" class="nav-card-img"></div>
+        <div class="img-wrapper"><img src="images/sanmeigaku.png?v=2" alt="算命学：干支盤から宿命の星と大運の流れを読み解く" loading="lazy" class="nav-card-img"></div>
         <div class="nav-card-body">
           <span class="card-tag">運命の構造・天中殺・大運</span>
           <h3>算命学</h3>
@@ -1525,7 +1652,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         </div>
       </a>
       <a href="占い/西洋占星術/horoscope.html" class="nav-card glass-card reveal" style="transition-delay: 0.4s;">
-        <div class="img-wrapper"><img src="images/horoscope.png?v=2" alt="西洋占星術" loading="lazy" class="nav-card-img"></div>
+        <div class="img-wrapper"><img src="images/horoscope.png?v=2" alt="西洋占星術：ホロスコープで魂の設計図を読み解く" loading="lazy" class="nav-card-img"></div>
         <div class="nav-card-body">
           <span class="card-tag">魂の設計図・星の配置</span>
           <h3>西洋占星術</h3>
@@ -1534,7 +1661,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         </div>
       </a>
       <a href="占い/九星気学/kyuseikigaku.html" class="nav-card glass-card reveal" style="transition-delay: 0.5s;">
-        <div class="img-wrapper"><img src="images/kyuseikigaku.png?v=2" alt="九星気学" loading="lazy" class="nav-card-img"></div>
+        <div class="img-wrapper"><img src="images/kyuseikigaku.png?v=2" alt="九星気学：生年月日から気の星で本質と運勢を読む" loading="lazy" class="nav-card-img"></div>
         <div class="nav-card-body">
           <span class="card-tag">生まれ持つ気の星・本質と相性</span>
           <h3>九星気学</h3>
@@ -1553,8 +1680,15 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         <img src="images/profile.png" alt="ASUMIRA 占い師 横浜みなとみらい" loading="lazy" class="about-img">
       </div>
       <div class="about-text">
-        <span class="role">Facilitator</span>
+        <span class="role">Facilitator &nbsp;/&nbsp; 現役占い師監修</span>
         <h3>客観的な視点から、現在地を整理する</h3>
+        <ul class="about-credentials">
+          <li>横浜みなとみらい拠点</li>
+          <li>四柱推命・カバラ数秘術・タロット・算命学・西洋占星術・九星気学 全6種専門</li>
+          <li>イベント開催10回（2022年〜）・100名規模の主催実績</li>
+          <li>オンライン電話相談：Google Meet で全国どこからでも対応</li>
+          <li>占い師様向けの鑑定補助ツールとしても活用いただけます</li>
+        </ul>
         <p>
           横浜みなとみらいを拠点に活動している、MIRAIです。<br>
           「どうすればいいんだろう？」「このままでいいのかな？」——そんな気持ち、日常の中でふと湧き上がることはありませんか？<br>
@@ -1587,7 +1721,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
       <div class="voices-grid">
 
         <div class="glass-card voice-card voice-featured reveal">
-          <span class="voice-deco">"</span>
+          <span class="voice-deco" aria-hidden="true">"</span>
           <span class="voice-tag">報告と感謝</span>
           <p class="voice-text">1年前、結婚を迷っていたときにここに来ていました。相性鑑定で「ぶつかるけど補い合う関係」と言われた言葉が頭に残って、その後入籍しました。どうしても報告したくて、また来てしまいました。答えをもらったわけじゃないんです。でも、自分が決めるための整理を一緒にしてもらえた。その時間がいまも大切な記憶です。</p>
           <span class="voice-attr">— 30代・会社員・女性（再来場）</span>
@@ -1595,7 +1729,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         </div>
 
         <div class="glass-card voice-card reveal" style="transition-delay:0.08s;">
-          <span class="voice-deco">"</span>
+          <span class="voice-deco" aria-hidden="true">"</span>
           <span class="voice-tag">初めての占い</span>
           <p class="voice-text">占いって当たるかどうかより、信じていいのかどうかが分からなくて、ずっと遠ざけていました。友人に誘われて半信半疑で行ったら、入りやすい雰囲気でまず安心しました。テーブルを挟んで話しているうちに、気づいたら自分でも整理できていなかった本音をしゃべっていました。心がスッキリしました。</p>
           <span class="voice-attr">— 20代・会社員・女性</span>
@@ -1603,7 +1737,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         </div>
 
         <div class="glass-card voice-card reveal" style="transition-delay:0.12s;">
-          <span class="voice-deco">"</span>
+          <span class="voice-deco" aria-hidden="true">"</span>
           <span class="voice-tag">場所を変えると気持ちが変わる</span>
           <p class="voice-text">横浜で初めて開催と聞いて、地元だから行ってみようと思いました。おしゃれな空間で、占いの場というより、少し特別なカフェみたいな雰囲気でした。引っ越しを迷っていた話をしたら、どこに住むかより何のために動くかを一緒に考えてくれて。結局引っ越しはしませんでしたが、迷いはなくなりました。</p>
           <span class="voice-attr">— 30代・会社員・女性</span>
@@ -1611,7 +1745,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         </div>
 
         <div class="glass-card voice-card reveal" style="transition-delay:0.16s;">
-          <span class="voice-deco">"</span>
+          <span class="voice-deco" aria-hidden="true">"</span>
           <span class="voice-tag">年末の棚卸し</span>
           <p class="voice-text">年末に今年を振り返りたくて行きました。沢山の人がいて、思ったより明るくて温かい場所でした。四柱推命で今年の流れを見てもらったら、しんどかった時期に理由があると分かって。うまくいかなかったことを責め続けていたのが、少し緩んだ気がしました。来年の自分が少し楽しみになって帰りました。</p>
           <span class="voice-attr">— 30代・自営業・女性</span>
@@ -1619,7 +1753,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         </div>
 
         <div class="glass-card voice-card reveal" style="transition-delay:0.2s;">
-          <span class="voice-deco">"</span>
+          <span class="voice-deco" aria-hidden="true">"</span>
           <span class="voice-tag">新生活の不安</span>
           <p class="voice-text">4月から転勤で横浜に来て、知り合いも少なくて落ち着かなかった時期に参加しました。会場は人が多くて賑やかで、それだけで少し気持ちが楽になりました。数秘術で自分の本質を見てもらったら、「環境に慣れるのに時間がかかるタイプ」と言われて、焦っていた自分がやっと腑に落ちました。</p>
           <span class="voice-attr">— 20代・会社員・男性</span>
@@ -1627,7 +1761,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         </div>
 
         <div class="glass-card voice-card reveal" style="transition-delay:0.24s;">
-          <span class="voice-deco">"</span>
+          <span class="voice-deco" aria-hidden="true">"</span>
           <span class="voice-tag">人混みの中の対話</span>
           <p class="voice-text">会場に着いたらすごい人の数で、文化祭みたいで思わず笑いました。順番を待っている間も隣の人と話したりして、来てよかったと思えた気がします。本番では転職の相談をしたら、今の仕事に向いていないわけじゃないと言われて。逃げたいだけだったことに自分で気づいて、少し恥ずかしかったです。それが正直ありがたかったです。</p>
           <span class="voice-attr">— 30代・会社員・女性</span>
@@ -1635,7 +1769,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         </div>
 
         <div class="glass-card voice-card reveal" style="transition-delay:0.28s;">
-          <span class="voice-deco">"</span>
+          <span class="voice-deco" aria-hidden="true">"</span>
           <span class="voice-tag">二度目の正直</span>
           <p class="voice-text">一度目は友人に連れられて来ていたので、今回は自分の意志で予約しました。雰囲気が明るい会場で、前回より落ち着いて話せた気がします。恋愛を諦めかけていた話をしたら、タロットで引いたカードの意味を説明しながらも、最後は私自身がどうしたいかを聞いてくれました。答えをくれる場所じゃなくて、答えを探す場所でした。</p>
           <span class="voice-attr">— 30代・パート・女性</span>
@@ -1643,7 +1777,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         </div>
 
         <div class="glass-card voice-card reveal" style="transition-delay:0.32s;">
-          <span class="voice-deco">"</span>
+          <span class="voice-deco" aria-hidden="true">"</span>
           <span class="voice-tag">親との関係</span>
           <p class="voice-text">母親との関係がずっとうまくいかなくて、でも誰にも話せなかった。友人に話すには重すぎて、カウンセラーに行くほどでもないと思っていて。占いならちょうどいい距離感かなと思って来ました。九星気学で親子の星を見てもらったら、衝突しやすい組み合わせだと教えてもらえて。自分たちのせいじゃないと思えたことが、一番の収穫でした。</p>
           <span class="voice-attr">— 40代・主婦・女性</span>
@@ -1651,7 +1785,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         </div>
 
         <div class="glass-card voice-card reveal" style="transition-delay:0.36s;">
-          <span class="voice-deco">"</span>
+          <span class="voice-deco" aria-hidden="true">"</span>
           <span class="voice-tag">流れに乗る勇気</span>
           <p class="voice-text">会場に入ったら想像より何倍も広くて、たくさんの人が思い思いに話していて驚きました。こんなに人が来るイベントになったんだと、なんだか誇らしい気持ちになりました。算命学で大運の流れを見てもらったら、今がまさに動く時期だと言われて。帰り道、ずっと後回しにしていたことを一つだけ、その日のうちに動かしました。</p>
           <span class="voice-attr">— 40代・会社員・女性</span>
@@ -1659,7 +1793,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
         </div>
 
         <div class="glass-card voice-card reveal" style="transition-delay:0.4s;">
-          <span class="voice-deco">"</span>
+          <span class="voice-deco" aria-hidden="true">"</span>
           <span class="voice-tag">自分を装うこと</span>
           <p class="voice-text">アクセサリーのブースと占いが並ぶ、いつもより少し華やかな会場でした。手に取りながらゆっくり選ぶ時間と、じっくり話せる時間が一緒にあって、不思議と贅沢な気持ちになりました。数秘術で「表現することが人生のテーマ」と言われたとき、ずっと地味にしていた自分がちょっと恥ずかしくなりました。その日、勇気を出してブースのアクセサリーを一つ買って帰りました。今も毎日つけています。自分へのOKサインみたいな感じがして。</p>
           <span class="voice-attr">— 30代・フリーランス・女性</span>
@@ -1989,6 +2123,21 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
       </div>
     </div>
   </section>
+  <section class="bottom-cta-section">
+    <div class="container">
+      <div class="bottom-cta-inner glass-card reveal">
+        <div class="bottom-cta-text">
+          <h2>まずは、無料占いから。</h2>
+          <p>6種の占術を、登録不要・完全無料でお試しいただけます。<br>
+          「もう少し深く整理したい」と感じたら、オンライン電話相談へ。</p>
+        </div>
+        <div class="bottom-cta-buttons">
+          <a href="#services" class="hero-cta-btn hero-cta-primary" aria-label="無料占いセクションへ移動">無料で占ってみる &rarr;</a>
+          <a href="#consult" class="hero-cta-btn hero-cta-secondary" aria-label="オンライン電話相談セクションへ移動">電話相談を予約する</a>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer>
@@ -2072,7 +2221,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
     const isLatest = data.id === 10;
     const html = `
       <div class="event-item reveal" style="transition-delay: ${delay}s">
-        <img src="images/event_${data.id}.png" alt="${data.title}" class="event-img" loading="lazy">
+        <img src="images/event_${data.id}.png" alt="${data.season} ${data.title} Vol.${data.id}" class="event-img" loading="lazy">
         <span class="event-vol">Vol.${data.id}</span>
         ${isLatest ? '<span class="event-latest-badge">LATEST</span>' : ''}
         <div class="event-caption">
