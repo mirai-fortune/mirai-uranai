@@ -1258,11 +1258,10 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
 .trust-strip { padding: 0 0 48px; }
 .trust-list {
   list-style: none;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 6px 28px;
-  padding: 18px 24px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px 48px;
+  padding: 28px 40px;
   border: 1px solid var(--glass-border);
   border-radius: 8px;
   background: var(--glass-bg);
@@ -1279,7 +1278,7 @@ html.theme-minagi .faq-item:hover { border-color: rgba(106,180,232,0.3); }
 }
 .trust-icon { color: var(--gold); font-size: 0.55rem; flex-shrink: 0; }
 @media (max-width: 640px) {
-  .trust-list { flex-direction: column; align-items: flex-start; gap: 10px; padding: 16px 20px; }
+  .trust-list { grid-template-columns: 1fr; gap: 10px; padding: 16px 20px; }
 }
 
 /* --- ABOUT CREDENTIALS --- */
