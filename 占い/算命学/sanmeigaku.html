@@ -117,6 +117,12 @@ body{background:var(--bg);color:var(--cream);font-family:'Noto Sans JP',sans-ser
 .cmd-table .cs{font-family:'Noto Serif JP',serif;font-size:26px;font-weight:300;color:var(--gold);line-height:1.2;}
 .cmd-table .czt{font-family:'Noto Serif JP',serif;font-size:26px;font-weight:300;color:var(--muted);line-height:1.2;}
 
+/* ── 算命学 宇宙盤（三柱の位相図） ── */
+.uchuban-box{background:var(--bg3);border:1px solid var(--border);margin-bottom:56px;}
+.uchuban-inner{padding:32px 32px 36px;text-align:center;}
+.uchuban-title{font-size:clamp(12px,3.6vw,14px);color:var(--cream);font-weight:300;letter-spacing:.06em;margin-bottom:22px;font-family:'Noto Serif JP',serif;word-break:keep-all;overflow-wrap:normal;line-height:1.6;}
+.uchuban-note{font-size:12px;color:var(--muted);line-height:2.1;letter-spacing:.03em;max-width:560px;margin:22px auto 0;}
+
 /* ── 算命学 陽占（個人鑑定用） ── */
 .sm-chart-wrap{margin-bottom:64px;}
 .sm-chart{
@@ -502,6 +508,9 @@ html.theme-minagi section { position: relative; z-index: 1; }
   <div class="meishiki-wrap">
     <div id="si-cmd"></div>
   </div>
+
+  <div class="sec-div"><span>算命学・宇宙盤（三柱の位相図）</span></div>
+  <div class="uchuban-box"><div class="uchuban-inner" id="si-uchuban"></div></div>
 
   <div class="sec-div"><span>算命学・陽占（人体星図）</span></div>
   <div id="si-sanmei-chart-area"></div>
@@ -992,6 +1001,67 @@ function generateSanmeiChart(yp, mp, dp, days, daySi, y, m, d){
   return {headStar, abdoStar, rightStar, chestStar, leftStar, topRight, btmRight, btmLeft};
 }
 
+/* ── 宇宙盤（六十干支の円周上に年干支・月干支・日干支を配置し、線で結ぶ位相図） ── */
+function sanmeiKanshiIndex(si, bi){
+  for(let i=0;i<60;i++){ if(i%10===si && i%12===bi) return i; }
+  return 0;
+}
+function uchubanCoord(idx, cx, cy, r){
+  // 干支番号1（甲子）を上（12時・北）に置き、時計回りに6°ずつ配置
+  const rad = (270 + 6*idx) * Math.PI/180;
+  return { x: cx + r*Math.cos(rad), y: cy + r*Math.sin(rad) };
+}
+function buildUchubanSVG(yp, mp, dp){
+  const cx=260, cy=260, R=175;
+  const defs = [
+    {role:'年干支', si:yp.si, bi:yp.bi},
+    {role:'月干支', si:mp.si, bi:mp.bi},
+    {role:'日干支', si:dp.si, bi:dp.bi}
+  ];
+  const pts = defs.map(d=>{
+    const idx = sanmeiKanshiIndex(d.si, d.bi);
+    const c = uchubanCoord(idx, cx, cy, R);
+    const lc = uchubanCoord(idx, cx, cy, R+48);
+    return { role:d.role, label:STEMS[d.si]+BRANCHES[d.bi], x:c.x, y:c.y, lx:lc.x, ly:lc.y };
+  });
+
+  let ticks = '';
+  for(let i=0;i<60;i++){
+    const p1 = uchubanCoord(i,cx,cy,R), p2 = uchubanCoord(i,cx,cy,R+8);
+    ticks += '<line x1="'+p1.x.toFixed(1)+'" y1="'+p1.y.toFixed(1)+'" x2="'+p2.x.toFixed(1)+'" y2="'+p2.y.toFixed(1)+'" stroke="var(--gold)" stroke-opacity=".3" stroke-width="1"/>';
+    if(i%5===0){
+      const pl = uchubanCoord(i,cx,cy,R+16);
+      ticks += '<text x="'+pl.x.toFixed(1)+'" y="'+pl.y.toFixed(1)+'" font-size="7" fill="var(--muted)" text-anchor="middle" dominant-baseline="middle">'+(i+1)+'</text>';
+    }
+  }
+
+  // 十二支を等間隔（30°ごと）でリング表示。子＝北、午＝南のみ方位を添える。
+  const branchRing = [];
+  for(let b=0;b<12;b++){
+    const rad = (270 + 30*b) * Math.PI/180;
+    const lx = cx+(R+30)*Math.cos(rad), ly = cy+(R+30)*Math.sin(rad);
+    const dir = b===0 ? '・北' : b===6 ? '・南' : '';
+    branchRing.push('<text x="'+lx.toFixed(1)+'" y="'+ly.toFixed(1)+'" font-size="12" font-weight="500" fill="var(--gold)" text-anchor="middle" dominant-baseline="middle">'+BRANCHES[b]+dir+'</text>');
+  }
+  const cardHTML = branchRing.join('');
+
+  const axisHTML = '<line x1="'+(cx-R)+'" y1="'+cy+'" x2="'+(cx+R)+'" y2="'+cy+'" stroke="var(--gold)" stroke-opacity=".35" stroke-width="1"/>'
+    +'<line x1="'+cx+'" y1="'+(cy-R)+'" x2="'+cx+'" y2="'+(cy+R)+'" stroke="var(--gold)" stroke-opacity=".35" stroke-width="1"/>';
+
+  const triHTML = '<polygon points="'+pts.map(p=>p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ')+'" fill="var(--gold)" fill-opacity=".08" stroke="var(--gold)" stroke-width="1.6"/>';
+
+  const dotHTML = pts.map(p=>
+    '<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="5.5" fill="var(--gold)" stroke="var(--cream)" stroke-width="1.5"/>'
+    +'<text x="'+p.lx.toFixed(1)+'" y="'+(p.ly-6).toFixed(1)+'" font-size="10.5" font-weight="500" fill="var(--cream)" text-anchor="middle" dominant-baseline="middle">'+p.role+'</text>'
+    +'<text x="'+p.lx.toFixed(1)+'" y="'+(p.ly+8).toFixed(1)+'" font-size="11" fill="var(--gold)" text-anchor="middle" dominant-baseline="middle">'+p.label+'</text>'
+  ).join('');
+
+  return '<svg viewBox="0 0 520 520" style="width:100%;max-width:420px;display:block;margin:0 auto;overflow:visible;">'
+    +'<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="none" stroke="var(--gold)" stroke-opacity=".5" stroke-width="1.2"/>'
+    +axisHTML+ticks+cardHTML+triHTML+dotHTML
+    +'</svg>';
+}
+
 function buildSanmeiSection(yp, mp, dp, days, daySi, y, m, d){
   const ch = generateSanmeiChart(yp, mp, dp, days, daySi, y, m, d);
 
@@ -1105,6 +1175,12 @@ function calcIndividual(){
       </tbody>
     </table></div></div>`;
   document.getElementById('si-cmd').innerHTML = insenHTML;
+
+  // 宇宙盤（三柱の位相図） 描画
+  document.getElementById('si-uchuban').innerHTML =
+      '<p class="uchuban-title">宇宙盤 ― 三柱の位相図</p>'
+    + buildUchubanSVG(yp, mp, dp)
+    + '<p class="uchuban-note">3つの干支を六十干支の円周上に配置し、線で結んだ三角形です。形・大きさ・重なりから、得意なこと／苦手なこと、人付き合いの幅、人との相性の傾向を読み解きます。</p>';
 
   // 人体星図 描画
   document.getElementById('si-sanmei-chart-area').innerHTML = buildSanmeiSection(yp, mp, dp, days, daySi, y, m, d);
@@ -1519,6 +1595,14 @@ function openKanteiSM(){
     +'<p style="font-size:.72rem;color:var(--muted);margin-top:20px;line-height:2;padding:14px 18px;border-left:2px solid var(--bdr);">天中殺：<span style="color:var(--gold);">'+voidLabel+'</span>　ー　この二支が大運・年運に重なる時期は努力が空回りしやすく、大きな決断は慎重に。内側を充実させることに専念してください。</p>'
     +'</div>';
 
+  // ── SUB: 宇宙盤（三柱の位相図） ──
+  const sUB = '<div style="width:100%;max-width:640px;margin:0 auto;text-align:center;">'
+    +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Uchuban — Cosmic Phase Chart</span>'
+    +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:18px;">宇宙盤（三柱の位相図）</h2>'
+    +buildUchubanSVG(yp,mp,dp)
+    +'<p style="font-size:.72rem;color:var(--muted);margin-top:18px;line-height:2.1;letter-spacing:.03em;">年干支・月干支・日干支の3点を六十干支の円周上に配置し、線で結ぶことで見えてくる三角形。この形・大きさ・重なりから、得意分野と苦手分野、人付き合いの幅広さ、人との相性の傾向を読み解きます。</p>'
+    +'</div>';
+
   // ── S3: 人体星図（陽占） ──
   const smCell = (role,theme,starName,yomi,isJuni,isCenter) => {
     const bg = isCenter ? 'rgba(196,168,106,.1)' : 'var(--card-bg)';
@@ -1751,7 +1835,7 @@ function openKanteiSM(){
     +'</div>';
 
   // ── スライド組み立て ──
-  const slides = [s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12];
+  const slides = [s1,s2,sUB,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12];
   const NS = slides.length;
   const deckHtml = slides.map((s,i)=>'<div class="slide'+(i===0?' active':'')+'" id="sl'+i+'">'+s+'</div>').join('\n');
 
