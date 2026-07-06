@@ -721,6 +721,7 @@ def _first_sentence(text, max_len=40):
 def build_caption(data):
     card_jp   = data["card"]["nameJp"]
     card_en   = data["card"]["nameEn"]
+    theme     = data["theme"].replace("\n", "")
     greeting  = generate_greeting()                 # 季節・時期の挨拶（動的）
     hook_line = greeting.split("\n")[0]             # 1行目のみフック用に使用
     over_pt   = _first_sentence(data["focus"]["overall"])
@@ -741,7 +742,8 @@ def build_caption(data):
 
     return (
         f"{hook_line}\n"
-        f"今週のタロットは、そのぜんぶを手放すためのカードでした。\n\n"
+        f"今週引いたカードは、あなたにこう問いかけていました。\n"
+        f"「{theme}」と。\n\n"
         f"─────────────────\n\n"
         f"今週引いたのは「{card_jp}（{card_en}）」。\n\n"
         f"▷ 今週のポイント\n\n"
