@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="../../js/theme-init.js"></script>
 <title>九星気学（個人鑑定・相性鑑定）｜ASUMIRA 占い</title>
 <meta name="description" content="生年月日から導かれる九つの星で、あなたの本質・運勢・相性を無料で鑑定。人間関係から未来の選択まで丁寧に読み解きます。現役占い師監修・ASUMIRA 占い。">
 <meta name="robots" content="index, follow">
@@ -34,38 +35,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/themes.css">
+<link rel="stylesheet" href="../../css/common.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0d0b08;--bg2:#131009;--bg3:#1a1710;--bg4:#1f1c12;--cream:#f5f2eb;--muted:rgba(245,242,235,.55);--muted2:rgba(245,242,235,.28);--gold:#c4a86a;--gold2:#e8d4a0;--gold-dim:rgba(196,168,106,.18);--border:rgba(196,168,106,.14);--border2:rgba(255,255,255,.07);--wood:#6db87a;--fire:#c97878;--earth:#c9b464;--metal:#a8b4c4;--water:#6888c4;--wood-bg:rgba(109,184,122,.1);--fire-bg:rgba(201,120,120,.1);--earth-bg:rgba(201,180,100,.1);--metal-bg:rgba(168,180,196,.1);--water-bg:rgba(104,136,196,.1);--nav-text:rgba(245,242,235,.82)}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--cream);font-family:'Noto Sans JP',sans-serif;font-weight:300;line-height:1.8;-webkit-font-smoothing:antialiased}
-nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 40px;display:flex;justify-content:space-between;align-items:center;background:rgba(13,11,8,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
-.nav-logo{font-family:'Cormorant Garamond',serif;font-size:20px;letter-spacing:.18em;color:var(--cream);text-decoration:none}
-.nav-logo span{color:var(--gold);margin-left:8px;font-size:11px;letter-spacing:.22em}
-.nav-back{font-size:11px;letter-spacing:.16em;color:var(--nav-text);text-decoration:none;text-transform:uppercase;display:flex;align-items:center;gap:8px;transition:color .2s}
-.nav-back:hover{color:var(--gold)}
-.nav-menu{position:relative;}
-.nav-menu-btn{font-size:11px;letter-spacing:.16em;color:var(--nav-text);background:none;border:none;cursor:pointer;text-transform:uppercase;display:flex;align-items:center;gap:5px;transition:color .2s;font-family:'Noto Sans JP',sans-serif;font-weight:300;padding:0;}
-.nav-menu-btn::after{content:'▾';font-size:9px;transition:transform .2s;}
-.nav-menu.open .nav-menu-btn{color:var(--gold);}
-.nav-menu.open .nav-menu-btn::after{transform:rotate(180deg);}
-.nav-menu-btn:hover{color:var(--gold);}
-.nav-dropdown{position:absolute;top:calc(100% + 14px);right:0;background:rgba(13,11,8,.98);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);min-width:160px;opacity:0;pointer-events:none;transform:translateY(-6px);transition:opacity .2s,transform .2s;z-index:300;}
-.nav-menu.open .nav-dropdown{opacity:1;pointer-events:auto;transform:translateY(0);}
-.nav-dropdown a{display:block;padding:11px 18px;font-size:11px;letter-spacing:.14em;color:var(--muted);text-decoration:none;border-bottom:1px solid var(--border);transition:color .2s,background .2s;white-space:nowrap;}
-.nav-dropdown a:last-child{border-bottom:none;}
-.nav-dropdown a:hover{color:var(--gold);background:rgba(196,168,106,.06);}
-.nav-right{display:flex;align-items:center;gap:16px;}
-@media(max-width:640px){
-  nav{padding:12px 16px;}
-  .nav-logo{font-size:15px;white-space:nowrap;}
-  .nav-logo span{display:none;}
-  .nav-right{gap:12px;}
-  .nav-back{font-size:12px;letter-spacing:.08em;padding:10px 2px;}
-  .nav-menu-btn{font-size:12px;letter-spacing:.08em;padding:10px 0;}
-  .nav-back-label{display:none;}
-}
-nav.scrolled{box-shadow:0 2px 28px rgba(0,0,0,.55)}
+/* ── NAV → css/common.css で管理 ── */
 .hero{min-height:48vh;display:flex;flex-direction:column;justify-content:flex-end;padding:110px 40px 56px;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
 .hero-orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none}
 .orb1{width:520px;height:520px;background:rgba(196,168,106,.06);top:-140px;right:-60px;animation:orbFloat 14s ease-in-out infinite}
