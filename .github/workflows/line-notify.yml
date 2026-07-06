@@ -38,6 +38,10 @@ jobs:
               print(f"今週（{monday_key}）のコンテンツが見つかりません")
               exit(1)
 
+          # バッファ（今週を含め、今後何週分のエントリが用意済みか）をチェック
+          all_keys = sorted(set(re.findall(r'"(\d{4}-\d{2}-\d{2})":\s*\{', content)))
+          buffer_weeks = sum(1 for k in all_keys if k >= monday_key)
+
           text = (
               f"✦ 今週のタロット｜{card_jp}「{theme}」\n\n"
               "今週あなたへのメッセージが届いています。\n\n"
@@ -45,6 +49,12 @@ jobs:
               "https://mirai-fortune.github.io/mirai-uranai/占い/weekly/\n\n"
               "※ 20:00 にブロードキャスト配信してください"
           )
+
+          if buffer_weeks <= 2:
+              text += (
+                  f"\n\n⚠️ タロットの追加が必要です（残り{buffer_weeks}週分）\n"
+                  "Claudeに「タロット追加して」と伝えてください。"
+              )
 
           body = json.dumps({
               "to": os.environ["LINE_USER_ID"],
