@@ -587,7 +587,7 @@ function calcNatal(){
   cards.push(cardGen('⑦ あなたらしく生きるために','日々の過ごし方','日',myE,DAILY_TEXT[r.honmei]));
   document.getElementById('nt-readings').innerHTML=cards.join('');
   window._kgKantei={name:name,y:y,m:m,d:d,gender:gender,vy:vy,r:r};
-  var kwEl=document.getElementById('kg-kantei-wrap');if(kwEl)kwEl.style.display='block';
+  var kwEl=document.getElementById('kg-kantei-wrap');if(kwEl)kwEl.style.display='';
   var a=document.getElementById('natal-result');a.classList.add('show');setTimeout(function(){a.scrollIntoView({behavior:'smooth',block:'start'})},60);
 }
 function card(type,star,text,kw,note){var h='<div class="kg-card"><div class="kg-card-head"><div class="kg-card-badge">'+star+'</div><div class="kg-card-meta"><div class="kg-card-type">'+type+'</div><div class="kg-card-name">'+STAR[star].name+'<span class="kg-card-elem '+elemClassOf(star)+'">'+STAR[star].elemJP+'</span></div><div class="kg-card-sub">'+STAR[star].yomi+'</div></div></div><div class="kg-card-text">'+text+'</div>';if(kw)h+='<div class="kg-kw">'+kw.map(function(x){return'<span class="kg-kw-item">'+x+'</span>'}).join('')+'</div>';if(note)h+='<div class="kg-note">'+note+'</div>';return h+'</div>'}

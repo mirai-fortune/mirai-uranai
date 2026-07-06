@@ -771,7 +771,7 @@ function calcKabbalah(){
   const _peRaw=fullName.length?[...fullName].filter(c=>!VOWELS.has(c)&&LETTER_VAL[c]).reduce((a,c)=>a+(LETTER_VAL[c]||0),0):null;
   window._snKantei={name:(first||last)?(first+' '+last).trim():'',y,m,d,first,last,fullName,lp,bday,expr,soul,pers,mat,cards,lpStr,lpRaw,exRaw:_exRaw,soRaw:_soRaw,peRaw:_peRaw,maRaw:expr!==null?lp+expr:null};
   const _kwEl=document.getElementById('sn-kantei-wrap');
-  if(_kwEl)_kwEl.style.display='block';
+  if(_kwEl)_kwEl.style.display='';
 }
 
 function toggleNdc(i){document.getElementById('ndc-'+i).classList.toggle('collapsed');}
