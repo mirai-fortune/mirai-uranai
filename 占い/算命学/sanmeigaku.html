@@ -122,6 +122,14 @@ body{background:var(--bg);color:var(--cream);font-family:'Noto Sans JP',sans-ser
 .uchuban-inner{padding:32px 32px 36px;text-align:center;}
 .uchuban-title{font-size:clamp(12px,3.6vw,14px);color:var(--cream);font-weight:300;letter-spacing:.06em;margin-bottom:22px;font-family:'Noto Serif JP',serif;word-break:keep-all;overflow-wrap:normal;line-height:1.6;}
 .uchuban-note{font-size:12px;color:var(--muted);line-height:2.1;letter-spacing:.03em;max-width:560px;margin:22px auto 0;}
+.uchuban-type-badge{display:inline-block;margin:26px auto 0;padding:7px 20px;border:1px solid var(--gold);border-radius:999px;color:var(--gold);font-size:12px;letter-spacing:.08em;font-family:'Noto Serif JP',serif;}
+.uchuban-note.uchuban-personal{color:var(--cream);}
+.uchuban-quad-badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:18px auto 0;max-width:560px;}
+.uchuban-quad-badge{padding:5px 14px;border:1px solid var(--border);border-radius:999px;font-size:11px;letter-spacing:.04em;color:var(--gold);background:var(--gold-dim);}
+.uchuban-compat-legend{display:flex;gap:20px;justify-content:center;margin:22px auto 0;font-size:12px;color:var(--muted);}
+.uchuban-compat-legend span{display:inline-flex;align-items:center;gap:6px;}
+.uchuban-compat-legend i{width:10px;height:10px;border-radius:50%;display:inline-block;}
+.uchuban-overlap-badge{padding:5px 14px;border:1px solid var(--border);border-radius:999px;font-size:11px;letter-spacing:.04em;color:var(--cream);background:rgba(255,255,255,.06);}
 
 /* ── 算命学 陽占（個人鑑定用） ── */
 .sm-chart-wrap{margin-bottom:64px;}
@@ -505,12 +513,12 @@ html.theme-minagi section { position: relative; z-index: 1; }
     <p class="result-meta" id="si-r-meta"></p>
   </div>
 
+  <div class="sec-div"><span>算命学・宇宙盤（三柱の位相図）</span></div>
+  <div class="uchuban-box"><div class="uchuban-inner" id="si-uchuban"></div></div>
+
   <div class="meishiki-wrap">
     <div id="si-cmd"></div>
   </div>
-
-  <div class="sec-div"><span>算命学・宇宙盤（三柱の位相図）</span></div>
-  <div class="uchuban-box"><div class="uchuban-inner" id="si-uchuban"></div></div>
 
   <div class="sec-div"><span>算命学・陽占（人体星図）</span></div>
   <div id="si-sanmei-chart-area"></div>
@@ -581,6 +589,9 @@ html.theme-minagi section { position: relative; z-index: 1; }
   </div>
 
   <div class="compat-charts" id="ai-charts"></div>
+
+  <div class="sec-div"><span>宇宙盤の重なり</span></div>
+  <div class="compat-charts" id="ai-uchuban"></div>
 
   <div class="sec-div"><span>相性スコア</span></div>
   <div class="compat-score-section" id="ai-score"></div>
@@ -1062,6 +1073,159 @@ function buildUchubanSVG(yp, mp, dp){
     +'</svg>';
 }
 
+/* ── 宇宙盤の判定：三角形の大きさ・形（面積比）── */
+const UCHUBAN_TYPE_TEXT = {
+  generalist: {
+    label:'ゼネラリスト型（広い三角形）',
+    text:'三柱の干支が六十干支の円周上に大きく広がっており、行動範囲の広い「ゼネラリスト」の形です。ひとつの分野に絞り込むよりも、複数のジャンルに関心を広げるほうが力を発揮しやすく、人間関係も特定の輪にとどまらず広範囲に広がっていく傾向があります。'
+  },
+  specialist: {
+    label:'スペシャリスト型（狭い三角形）',
+    text:'三柱の干支が六十干支の円周上の限られた範囲に集まっており、対象を絞り込む「スペシャリスト」の形です。手を広げるよりも範囲を絞ったほうが力を発揮しやすいタイプで、特定の分野への特化度が高い傾向があります。'
+  },
+  daisangoukyoku: {
+    label:'大三合会局（理想の均整形）',
+    text:'三柱の干支がほぼ等間隔に並び、算命学で「大三合会局」と呼ばれる理想的な均整形に近づいています。広さと均整の両方を兼ね備え、多方面での活躍と、それを支える安定したバランス感覚をあわせ持つ形です。'
+  }
+};
+function classifyUchuban(yIdx, mIdx, dIdx){
+  const idxs = [yIdx, mIdx, dIdx];
+  if(new Set(idxs).size < 3) return { type:'specialist', ratio:0 };
+  const angles = idxs.map(i => (i*6) % 360).sort((a,b)=>a-b);
+  const gaps = [angles[1]-angles[0], angles[2]-angles[1], 360-(angles[2]-angles[0])];
+  const rad = deg => deg*Math.PI/180;
+  const area = 0.5*(Math.sin(rad(gaps[0]))+Math.sin(rad(gaps[1]))+Math.sin(rad(gaps[2])));
+  const maxArea = 1.5*Math.sin(rad(120));
+  const ratio = Math.max(0, area/maxArea);
+  const type = ratio >= 0.85 ? 'daisangoukyoku' : ratio >= 0.4 ? 'generalist' : 'specialist';
+  return { type, ratio };
+}
+
+/* ── 宇宙盤の判定：三角形の位置（象限）──
+   注意：象限は「地支」ではなく、buildUchubanSVGの点の描画と同じ「干支番号(idx)による実際の角度」で判定する。
+   同じ地支でも組み合わさる干支番号によって実際の描画位置は72°ずつ5通りに散らばる（例：庚午と丙午は別の位置）ため、
+   地支だけで象限を決めると実際の三角形の見た目と食い違う（2026-07-07に発覚・修正）。 */
+const UCHUBAN_QUADRANTS = {
+  ne:{name:'北東', honnou:'守備本能', keywords:'安定・継続・保守的'},
+  se:{name:'南東', honnou:'伝達本能（表現本能）', keywords:'自己主張・発信・創造'},
+  sw:{name:'南西', honnou:'攻撃本能', keywords:'積極性・行動力・挑戦'},
+  nw:{name:'北西', honnou:'習得本能', keywords:'知識欲・分析・内省'}
+};
+const UCHUBAN_QUAD_ORDER = ['ne','se','sw','nw'];
+function idxPoint(idx){
+  const rad = (270 + 6*idx) * Math.PI/180;
+  return { x: Math.cos(rad), y: Math.sin(rad) };
+}
+function xyQuadrantSingle(x,y){
+  // 区間の「中点」だけをサンプリングするため、軸ちょうど（x=0またはy=0）に当たることは実質発生しない
+  if(x > 0) return y < 0 ? 'ne' : (y > 0 ? 'se' : null);
+  if(x < 0) return y < 0 ? 'nw' : (y > 0 ? 'sw' : null);
+  return null;
+}
+function edgeQuadrants(p1, p2){
+  // 2頂点を結ぶ直線（辺）が実際にどの象限を通過するかを、x軸・y軸との交点で区間([0,1]をbreaksで分割)に分け、
+  // 各区間の「中点」をサンプリングして判定する。頂点そのものではなく区間の中点で判定するのがポイント：
+  // 頂点が軸ちょうど（例：午＝6時の点）に来ても、そこから伸びる辺が実際にどちら側へ進むかで自然に1象限に決まり、
+  // 「頂点が境界だから両隣2象限にまたがる」という誤判定（2026-07-07発覚）を避けられる。
+  const qs = new Set();
+  const breaks = [0, 1];
+  if((p1.x>0) !== (p2.x>0)){ const t = p1.x/(p1.x-p2.x); if(t>0 && t<1) breaks.push(t); }
+  if((p1.y>0) !== (p2.y>0)){ const t = p1.y/(p1.y-p2.y); if(t>0 && t<1) breaks.push(t); }
+  breaks.sort((a,b)=>a-b);
+  for(let i=0;i<breaks.length-1;i++){
+    const tm = (breaks[i]+breaks[i+1])/2;
+    const mx = p1.x + tm*(p2.x-p1.x), my = p1.y + tm*(p2.y-p1.y);
+    const q = xyQuadrantSingle(mx,my);
+    if(q) qs.add(q);
+  }
+  return qs;
+}
+function uchubanTouchedQuadrants(yp, mp, dp){
+  const idxs = [sanmeiKanshiIndex(yp.si,yp.bi), sanmeiKanshiIndex(mp.si,mp.bi), sanmeiKanshiIndex(dp.si,dp.bi)];
+  const pts = idxs.map(idxPoint);
+  const touched = new Set();
+  [[0,1],[1,2],[2,0]].forEach(([i,j]) => edgeQuadrants(pts[i],pts[j]).forEach(q=>touched.add(q)));
+  return UCHUBAN_QUAD_ORDER.filter(q => touched.has(q));
+}
+function getUchubanQuadrantReading(yp, mp, dp){
+  const touchedList = uchubanTouchedQuadrants(yp, mp, dp);
+  const q = k => UCHUBAN_QUADRANTS[k];
+  let text;
+  if(touchedList.length === 1){
+    const a = q(touchedList[0]);
+    text = '年干支・月干支・日干支のすべてが「'+a.name+'（'+a.honnou+'）」の一領域に集中しており、'+a.keywords+'といった資質が一貫して強く現れやすい形です。';
+  } else if(touchedList.length === 2){
+    const [a,b] = touchedList.map(q);
+    text = '三角形は「'+a.name+'（'+a.honnou+'）」と「'+b.name+'（'+b.honnou+'）」の2領域にまたがっており、'+a.keywords+'と'+b.keywords+'を状況に応じて使い分けるバランス型です。';
+  } else {
+    const names = touchedList.map(k=>q(k).name+'（'+q(k).honnou+'／'+q(k).keywords+'）').join('・');
+    const scope = touchedList.length === 4 ? 'すべての領域' : touchedList.length+'領域';
+    text = '三角形は'+names+'の'+scope+'にまたがっており、複数の本能をあわせ持つ多面的な形です。状況に応じてそれぞれの資質を柔軟に使い分けられるタイプといえます。';
+  }
+  return { touchedList, text };
+}
+
+function getUchubanReading(yp, mp, dp){
+  const yIdx = sanmeiKanshiIndex(yp.si, yp.bi);
+  const mIdx = sanmeiKanshiIndex(mp.si, mp.bi);
+  const dIdx = sanmeiKanshiIndex(dp.si, dp.bi);
+  const cls = classifyUchuban(yIdx, mIdx, dIdx);
+  const t = UCHUBAN_TYPE_TEXT[cls.type];
+  let sizeText = t.text;
+  if(cls.type === 'specialist' && cls.ratio < 0.08) sizeText += '中でもこの三角形はほぼ一本の線に近く、際立って特化した資質の持ち主といえます。';
+  const quad = getUchubanQuadrantReading(yp, mp, dp);
+  return { sizeLabel: t.label, sizeText, quadTags: quad.touchedList.map(k=>UCHUBAN_QUADRANTS[k].name+'／'+UCHUBAN_QUADRANTS[k].honnou), quadText: quad.text };
+}
+
+/* ── 宇宙盤の判定：応用（二人分を重ねて相性を見る）── */
+const UCHUBAN_OVERLAP_TEXT = [
+  { label:'重なりなし', text:'二人の宇宙盤には重なる領域がなく、互いの個性を尊重し合う関係です。生きる範囲が異なるぶん摩擦は少ない一方、意識して接点を作らないと関わりが薄くなりやすい面もあります。' },
+  { label:'1領域が重なる', text:'二人の宇宙盤は1領域で重なっており、ほどよい自由度を保ちながら付き合える組み合わせです。共通の基盤を持ちつつも、それぞれの生きる範囲を尊重できるバランスの良い関係といえます。' },
+  { label:'2領域が重なる', text:'二人の宇宙盤は2領域で重なっており、算命学で結婚に最も適したバランスとされる重なり方です。適度な共通点と適度な違いが両立し、長く安定した関係を築きやすい組み合わせです。' },
+  { label:'3〜4領域が重なる', text:'二人の宇宙盤は3領域以上で重なっており、共通点が多く「くっつきすぎ」になりやすい組み合わせです。似た者同士で意気投合しやすい反面、互いに一人の時間や距離感を意識的に作ることが長続きのコツです。' }
+];
+function getUchubanOverlapReading(A, B){
+  const aTouched = uchubanTouchedQuadrants(A.yp, A.mp, A.dp);
+  const bTouched = uchubanTouchedQuadrants(B.yp, B.mp, B.dp);
+  const bSet = new Set(bTouched);
+  const overlapList = UCHUBAN_QUAD_ORDER.filter(q => aTouched.includes(q) && bSet.has(q));
+  const tier = UCHUBAN_OVERLAP_TEXT[Math.min(overlapList.length, 3)];
+  return { overlapList, aTouched, bTouched, label: tier.label, text: tier.text };
+}
+function buildUchubanCompatSVG(A, B){
+  const cx=260, cy=260, R=175;
+  const triPts = p => {
+    const defs = [ {si:p.yp.si,bi:p.yp.bi}, {si:p.mp.si,bi:p.mp.bi}, {si:p.dp.si,bi:p.dp.bi} ];
+    return defs.map(d => uchubanCoord(sanmeiKanshiIndex(d.si,d.bi), cx, cy, R));
+  };
+  const aPts = triPts(A), bPts = triPts(B);
+
+  let ticks = '';
+  for(let i=0;i<60;i++){
+    const p1 = uchubanCoord(i,cx,cy,R), p2 = uchubanCoord(i,cx,cy,R+8);
+    ticks += '<line x1="'+p1.x.toFixed(1)+'" y1="'+p1.y.toFixed(1)+'" x2="'+p2.x.toFixed(1)+'" y2="'+p2.y.toFixed(1)+'" stroke="var(--gold)" stroke-opacity=".3" stroke-width="1"/>';
+  }
+  const branchRing = [];
+  for(let b=0;b<12;b++){
+    const rad = (270 + 30*b) * Math.PI/180;
+    const lx = cx+(R+22)*Math.cos(rad), ly = cy+(R+22)*Math.sin(rad);
+    branchRing.push('<text x="'+lx.toFixed(1)+'" y="'+ly.toFixed(1)+'" font-size="11" font-weight="500" fill="var(--gold)" text-anchor="middle" dominant-baseline="middle">'+BRANCHES[b]+'</text>');
+  }
+  const axisHTML = '<line x1="'+(cx-R)+'" y1="'+cy+'" x2="'+(cx+R)+'" y2="'+cy+'" stroke="var(--gold)" stroke-opacity=".35" stroke-width="1"/>'
+    +'<line x1="'+cx+'" y1="'+(cy-R)+'" x2="'+cx+'" y2="'+(cy+R)+'" stroke="var(--gold)" stroke-opacity=".35" stroke-width="1"/>';
+
+  const polyHTML = (pts, color, label) =>
+    '<polygon points="'+pts.map(p=>p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ')+'" fill="'+color+'" fill-opacity=".14" stroke="'+color+'" stroke-width="1.6"/>'
+    +pts.map(p=>'<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="5" fill="'+color+'" stroke="var(--cream)" stroke-width="1.2"/>').join('');
+
+  return '<svg viewBox="0 0 520 520" style="width:100%;max-width:420px;display:block;margin:0 auto;overflow:visible;">'
+    +'<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="none" stroke="var(--gold)" stroke-opacity=".5" stroke-width="1.2"/>'
+    +axisHTML+ticks+branchRing.join('')
+    +polyHTML(aPts,'var(--gold)','A')
+    +polyHTML(bPts,'var(--water)','B')
+    +'</svg>';
+}
+
 function buildSanmeiSection(yp, mp, dp, days, daySi, y, m, d){
   const ch = generateSanmeiChart(yp, mp, dp, days, daySi, y, m, d);
 
@@ -1177,10 +1341,15 @@ function calcIndividual(){
   document.getElementById('si-cmd').innerHTML = insenHTML;
 
   // 宇宙盤（三柱の位相図） 描画
+  const ubReading = getUchubanReading(yp, mp, dp);
   document.getElementById('si-uchuban').innerHTML =
       '<p class="uchuban-title">宇宙盤 ― 三柱の位相図</p>'
     + buildUchubanSVG(yp, mp, dp)
     + '<p class="uchuban-note">3つの干支を六十干支の円周上に配置し、線で結んだ三角形です。形・大きさ・重なりから、得意なこと／苦手なこと、人付き合いの幅、人との相性の傾向を読み解きます。</p>'
+    + '<div class="uchuban-type-badge">'+ubReading.sizeLabel+'</div>'
+    + '<p class="uchuban-note uchuban-personal">'+ubReading.sizeText+'</p>'
+    + '<div class="uchuban-quad-badges">'+ubReading.quadTags.map(t=>'<span class="uchuban-quad-badge">'+t+'</span>').join('')+'</div>'
+    + '<p class="uchuban-note uchuban-personal">'+ubReading.quadText+'</p>'
     + '<p class="uchuban-note"><a href="uchuban-guide.html" style="color:var(--gold);">→ 宇宙盤の読み方をくわしく見る</a></p>';
 
   // 人体星図 描画
@@ -1527,7 +1696,7 @@ function calcIndividual(){
 }
 
 /* ══════════════════════════════════════
-   算命学 鑑定書出力（横スライド形式・12枚）
+   算命学 鑑定書出力（横スライド形式・14枚）
 ══════════════════════════════════════ */
 function openKanteiSM(){
   const k = window._smKantei;
@@ -1602,6 +1771,25 @@ function openKanteiSM(){
     +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:18px;">宇宙盤（三柱の位相図）</h2>'
     +buildUchubanSVG(yp,mp,dp)
     +'<p style="font-size:.72rem;color:var(--muted);margin-top:18px;line-height:2.1;letter-spacing:.03em;">年干支・月干支・日干支の3点を六十干支の円周上に配置し、線で結ぶことで見えてくる三角形。この形・大きさ・重なりから、得意分野と苦手分野、人付き合いの幅広さ、人との相性の傾向を読み解きます。</p>'
+    +'</div>';
+
+  // ── SUC: 宇宙盤の読み解き（大きさ・形／位置） ──
+  const ubReading = getUchubanReading(yp, mp, dp);
+  const ubBadge = label => '<span style="display:inline-block;padding:6px 16px;border:1px solid var(--gold);border-radius:999px;color:var(--gold);font-size:.62rem;letter-spacing:.06em;font-family:var(--serif);">'+label+'</span>';
+  const ubCard = (eyebrow, title, badgeHTML, text) =>
+    '<div style="background:var(--card-bg);border:1px solid var(--bdr);padding:22px 24px;">'
+    +'<p style="font-size:.56rem;color:var(--gd4);letter-spacing:.14em;margin-bottom:6px;">'+eyebrow+'</p>'
+    +'<h3 style="font-family:var(--serif);font-size:1.1rem;font-weight:400;margin-bottom:14px;">'+title+'</h3>'
+    +'<div style="margin-bottom:14px;display:flex;flex-wrap:wrap;gap:6px;">'+badgeHTML+'</div>'
+    +'<p style="font-size:.72rem;color:var(--muted);line-height:2.15;letter-spacing:.03em;">'+tr(text,210)+'</p>'
+    +'</div>';
+  const sUC = '<div style="width:100%;max-width:860px;margin:0 auto;">'
+    +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Uchuban — Reading</span>'
+    +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;">宇宙盤の読み解き</h2>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">'
+    +ubCard('SIZE &amp; SHAPE','大きさ・形',ubBadge(ubReading.sizeLabel),ubReading.sizeText)
+    +ubCard('POSITION','位置（象限）',ubReading.quadTags.map(ubBadge).join(''),ubReading.quadText)
+    +'</div>'
     +'</div>';
 
   // ── S3: 人体星図（陽占） ──
@@ -1836,7 +2024,7 @@ function openKanteiSM(){
     +'</div>';
 
   // ── スライド組み立て ──
-  const slides = [s1,s2,sUB,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12];
+  const slides = [s1,sUB,sUC,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12];
   const NS = slides.length;
   const deckHtml = slides.map((s,i)=>'<div class="slide'+(i===0?' active':'')+'" id="sl'+i+'">'+s+'</div>').join('\n');
 
@@ -1967,6 +2155,20 @@ function calcCompat(){
   }).join('');
 
   document.getElementById('ai-charts').innerHTML = `<div class="compat-chart" style="max-width: 680px; margin: 0 auto; background: var(--bg3); padding: 40px 24px; border: 1px solid var(--border);"><p class="compat-chart-label" style="font-size: 12px; letter-spacing: .2em; color: var(--gold); text-transform: uppercase; text-align: center; margin-bottom: 24px;">${aName} と ${bName} の統合星図</p><div class="sm-chart" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--border);">${gridHTML}</div></div>`;
+
+  // 1.5. 宇宙盤の重なり（応用ステップ：二人分の宇宙盤を重ねて相性を見る）
+  const ubOverlap = getUchubanOverlapReading(A, B);
+  const overlapBadgesHTML = ubOverlap.overlapList.length
+    ? ubOverlap.overlapList.map(k=>'<span class="uchuban-overlap-badge">'+UCHUBAN_QUADRANTS[k].name+'／'+UCHUBAN_QUADRANTS[k].honnou+'</span>').join('')
+    : '<span class="uchuban-overlap-badge">重なる領域なし</span>';
+  document.getElementById('ai-uchuban').innerHTML = `<div class="compat-chart" style="max-width: 680px; margin: 0 auto; background: var(--bg3); padding: 40px 24px; border: 1px solid var(--border); text-align:center;">
+    <p class="compat-chart-label">${aName} と ${bName} の宇宙盤の重なり</p>
+    ${buildUchubanCompatSVG(A, B)}
+    <div class="uchuban-compat-legend"><span><i style="background:var(--gold);"></i>${aName}</span><span><i style="background:var(--water);"></i>${bName}</span></div>
+    <div class="uchuban-type-badge" style="margin-top:20px;">${ubOverlap.label}</div>
+    <div class="uchuban-quad-badges">${overlapBadgesHTML}</div>
+    <p class="uchuban-note uchuban-personal">${ubOverlap.text}</p>
+  </div>`;
 
   // 2. 相性スコア・鑑定文章算出ロジック（点数非表示、300文字化）
   let score = 40; 
