@@ -491,33 +491,34 @@ def slide_msg_combined(data, fonts):
     draw_hline(draw, y, x0=MARGIN+10, x1=W-MARGIN-10)
     y += 16
 
-    # ── message[0]: コーチング本文（body_sm 34px, cream）── \n改行を優先しつつ、はみ出す行は自動折り返しで保護
+    # ── message[0]: コーチング本文（body_sm 34px, cream）── max_hでフッターとの衝突を防止
     msg0 = data["message"][0] if data["message"] else ""
-    lines0 = smart_wrap(draw, msg0, fonts["body_sm"], body_w)
-    lh0 = int(fonts["body_sm"].size * 1.68)
-    for line in lines0:
-        if line:
-            draw.text((MARGIN+10, y), line, font=fonts["body_sm"], fill=CREAM)
-        y += lh0
+    y = put_block(draw, msg0, fonts["body_sm"], MARGIN+10, y, body_w,
+                   color=CREAM, leading=1.68, max_h=420)
 
     # ── 仕切り線 ──
     y += 14
     draw_hline(draw, y, x0=W//4, x1=W*3//4)
     y += 16
 
-    # ── message[1]: アクションアイテム（cap, gold, インデント付き）──
+    # ── message[1]: アクションアイテム（cap, gold, インデント付き）── 残り高さを動的に確保
     msg1 = data["message"][1] if len(data["message"]) > 1 else ""
     indent_x = MARGIN + 30
     item_w   = W - indent_x - MARGIN
+    msg1_max_h = max(80, (H - 100) - y)
     if "◇" in msg1:
         parts = [p.strip() for p in msg1.split("◇") if p.strip()]
         lh1 = int(fonts["cap"].size * 1.85)
+        y0 = y
         for part in parts:
+            if (y - y0) + lh1 > msg1_max_h:
+                break
             if part:
                 draw.text((indent_x, y), "◇  " + part, font=fonts["cap"], fill=GOLD_DIM)
             y += lh1 + 3
     else:
-        put_block(draw, msg1, fonts["cap"], indent_x, y, item_w, color=GOLD_DIM, leading=1.85)
+        put_block(draw, msg1, fonts["cap"], indent_x, y, item_w,
+                  color=GOLD_DIM, leading=1.85, max_h=msg1_max_h)
 
     draw_footer(draw, fonts, 2)
     return img
@@ -547,11 +548,18 @@ def slide_focus(data, fonts, idx):
     body_w = W - 2*MARGIN - 20
     lines  = smart_wrap(draw, text, fonts["body"], body_w)
     lh     = int(fonts["body"].size * 1.85)
-    text_h = len(lines) * lh
 
     top_reserved = y_hdr + 44
     bot_reserved = 100
     avail = H - top_reserved - bot_reserved
+
+    # フッターと衝突しないよう、収まりきらない場合は末尾を省略して縦中央配置
+    max_lines = max(1, avail // lh)
+    if len(lines) > max_lines:
+        lines = lines[:max_lines]
+        lines[-1] = (lines[-1] or "") + "…"
+
+    text_h = len(lines) * lh
     y_txt = top_reserved + max(30, (avail - text_h) // 2)
 
     for i, line in enumerate(lines):
