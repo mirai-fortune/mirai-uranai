@@ -2,6 +2,9 @@
 占い/タロット/output/
 占い/タロット/*.webm
 
+# Instagram生成物（GitHub Actionsで毎回生成しReleaseで公開するためコミット不要）
+instagram_output/
+
 # Pythonスクリプト・一時ファイル
 占い/タロット/*.py
 占い/タロット/python/

@@ -483,7 +483,7 @@ def slide_msg_combined(data, fonts):
     # ── 挨拶文（動的生成・季節・時期に応じた労いの言葉）──
     greeting = generate_greeting()
     lh_greet = int(fonts["cap"].size * 1.65)
-    for line in explicit_lines(greeting):
+    for line in smart_wrap(draw, greeting, fonts["cap"], body_w):
         if line:
             draw.text((MARGIN+10, y), line, font=fonts["cap"], fill=MUTED)
         y += lh_greet
@@ -491,9 +491,9 @@ def slide_msg_combined(data, fonts):
     draw_hline(draw, y, x0=MARGIN+10, x1=W-MARGIN-10)
     y += 16
 
-    # ── message[0]: コーチング本文（body_sm 34px, cream）── explicit_linesで自動折り返し無効
+    # ── message[0]: コーチング本文（body_sm 34px, cream）── \n改行を優先しつつ、はみ出す行は自動折り返しで保護
     msg0 = data["message"][0] if data["message"] else ""
-    lines0 = explicit_lines(msg0)
+    lines0 = smart_wrap(draw, msg0, fonts["body_sm"], body_w)
     lh0 = int(fonts["body_sm"].size * 1.68)
     for line in lines0:
         if line:
@@ -543,9 +543,9 @@ def slide_focus(data, fonts, idx):
     y_hdr = draw_section_header(draw, fonts, label, y_hdr)
     draw_hline(draw, y_hdr)
 
-    # ── テキストを縦中央に配置 ── explicit_linesで自動折り返し無効
+    # ── テキストを縦中央に配置 ── \n改行を優先しつつ、はみ出す行は自動折り返しで保護
     body_w = W - 2*MARGIN - 20
-    lines  = explicit_lines(text)
+    lines  = smart_wrap(draw, text, fonts["body"], body_w)
     lh     = int(fonts["body"].size * 1.85)
     text_h = len(lines) * lh
 
@@ -587,7 +587,7 @@ def slide_lucky(data, fonts):
     lh_cap  = fonts["cap"].size
 
     def item_height(val):
-        n = len([l for l in explicit_lines(val) if l])  # 空行は高さなし
+        n = len([l for l in smart_wrap(draw, val, fonts["body"], body_w) if l])  # 空行は高さなし
         n = max(n, 1)
         return lh_cap + 16 + n * lh_body  # label + gap + val
 
@@ -606,10 +606,10 @@ def slide_lucky(data, fonts):
         # 罫線
         line_y = y + lh_cap + 6
         draw_hline(draw, line_y, x0=lx, color=(45, 35, 20))
-        # 値（explicit_linesで自動折り返し無効）
+        # 値（\n改行を優先しつつ、はみ出す行は自動折り返しで保護）
         val_y = line_y + 10
         vi = 0
-        for line in explicit_lines(val):
+        for line in smart_wrap(draw, val, fonts["body"], body_w):
             if line:
                 draw.text((lx, val_y + vi*lh_body), line, font=fonts["body"], fill=CREAM)
                 vi += 1
@@ -640,7 +640,7 @@ def slide_cta(data, fonts):
     if data.get("commentCTA"):
         y += 28
         lh_cta = int(fonts["cap"].size * 1.75)
-        for line in explicit_lines(data["commentCTA"]):
+        for line in smart_wrap(draw, data["commentCTA"], fonts["cap"], body_w):
             if line:
                 put_center(draw, line, fonts["cap"], y, GOLD_LT)
             y += lh_cta
