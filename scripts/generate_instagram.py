@@ -24,7 +24,7 @@ BG_BOT   = (7,  3, 30)
 GOLD        = (196, 168, 106)
 GOLD_LT     = (232, 212, 155)
 GOLD_DIM    = (90,  72,  44)
-GOLD_BRIGHT = (245, 200, 30)   # アクションチェック番号用（高コントラスト）
+GOLD_BRIGHT = (224, 180, 90)   # アクションチェック番号用（高コントラストだが安っぽくない上品なゴールド）
 CREAM       = (245, 242, 235)
 MUTED       = (150, 143, 128)
 
@@ -514,11 +514,11 @@ def slide_msg_combined(data, fonts):
             if (y - y0) + lh1 > msg1_max_h:
                 break
             if part:
-                draw.text((indent_x, y), "◇  " + part, font=fonts["cap"], fill=GOLD_DIM)
+                draw.text((indent_x, y), "◇  " + part, font=fonts["cap"], fill=MUTED)
             y += lh1 + 3
     else:
         put_block(draw, msg1, fonts["cap"], indent_x, y, item_w,
-                  color=GOLD_DIM, leading=1.85, max_h=msg1_max_h)
+                  color=MUTED, leading=1.85, max_h=msg1_max_h)
 
     draw_footer(draw, fonts, 2)
     return img
