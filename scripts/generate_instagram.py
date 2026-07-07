@@ -77,6 +77,7 @@ def load_fonts():
         "xs":    _f(p, 20),   # フッター
         "en_wm": _f(s, 280),  # 透かし
         "en_lg": _f(s, 44),   # 英語カード名
+        "en_cta": _f(s, 50),  # CTAアカウント名（disp程は目立たせすぎない）
         "en_md": _f(s, 27),   # 英語ラベル
         "en_xs": _f(s, 20),   # 英語フッター
     }
@@ -660,7 +661,7 @@ def slide_cta(data, fonts):
     # ── 下部: CTA ブロック（残りスペースに縦中央寄せ）──
     cta_font_h = int(fonts["body"].size * 1.6)
     cap_font_h = int(fonts["cap"].size * 1.5)
-    acc_font_h = fonts["disp"].size + 16
+    acc_font_h = fonts["en_cta"].size + 16
     total_cta  = cta_font_h * 2 + cap_font_h + 62 + acc_font_h
 
     avail_below  = H - 100 - (sep_y + 20)
@@ -678,8 +679,8 @@ def slide_cta(data, fonts):
     draw_hline(draw, y, x0=200, x1=W-200)
     y += 24
 
-    # アカウント名（最大フォント・金色）
-    put_center(draw, "@asumira_uranai", fonts["disp"], y, GOLD_LT)
+    # アカウント名（金色・目立たせすぎない控えめなサイズ）
+    put_center(draw, "@asumira_uranai", fonts["en_cta"], y, GOLD_LT)
 
     draw_footer(draw, fonts, TOTAL, swipe=False)
     return img
@@ -772,22 +773,14 @@ def load_card_image(image_path_str):
 # キャプション
 # ─────────────────────────────────────────────────────────────────────
 def _first_sentence(text, max_len=40):
-    """フォーカステキストの最初の一文を取得。句点で自然に区切る"""
+    """フォーカステキストの最初の一文を取得。句点が出るまでセグメントを結合する"""
     segs = [s.strip() for s in text.split("\n") if s.strip()]
-    if not segs:
-        return ""
-    first = segs[0]
-    # 句点（。）で終わっていれば最初のセグメントをそのまま使用
-    if "。" in first:
-        return first[:first.index("。")+1]
-    # 読点（、）で終わっている場合は次のセグメントと結合して文を完成
-    if first and first[-1] in "、，" and len(segs) > 1:
-        combined = first + segs[1]
-        end = combined.find("。")
-        if end != -1:
-            return combined[:end+1]
-        return combined[:max_len] + ("…" if len(combined) > max_len else "")
-    return first[:max_len] + ("…" if len(first) > max_len else "")
+    combined = ""
+    for seg in segs:
+        combined += seg
+        if "。" in combined:
+            return combined[:combined.index("。")+1]
+    return combined[:max_len] + ("…" if len(combined) > max_len else "")
 
 def build_caption(data):
     card_jp   = data["card"]["nameJp"]
@@ -800,15 +793,17 @@ def build_caption(data):
     keyword   = data["lucky"]["keyword"]
     comment   = data.get("commentCTA", "").replace("\n", "\n")
 
-    # キーワードからダイナミックハッシュタグを生成
-    kw_tags = " ".join(f"#{kw.replace(' ','')}" for kw in data.get("keywords", []))
-
     # ベースハッシュタグ（固定）
-    base_tags = (
-        "#タロット占い #週間運勢 #自己分析 #マインドフルネス "
-        "#習慣化 #メンタルケア #タロットリーディング #asumira占い "
-        f"#内省 #コーチング #自己肯定感 #{card_jp}のカード"
-    )
+    base_tag_list = [
+        "#タロット占い", "#週間運勢", "#自己分析", "#マインドフルネス",
+        "#習慣化", "#メンタルケア", "#タロットリーディング", "#asumira占い",
+        "#内省", "#コーチング", "#自己肯定感", f"#{card_jp}のカード",
+    ]
+    # キーワードからダイナミックハッシュタグを生成（ベースと重複するものは除外）
+    kw_tag_list = [f"#{kw.replace(' ','')}" for kw in data.get("keywords", [])]
+    kw_tag_list = [t for t in kw_tag_list if t not in base_tag_list]
+    base_tags = " ".join(base_tag_list)
+    kw_tags = " ".join(kw_tag_list)
 
     return (
         f"{intro}\n"
