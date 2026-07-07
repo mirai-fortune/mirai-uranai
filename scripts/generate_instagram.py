@@ -790,20 +790,13 @@ def build_caption(data):
     over_pt   = _first_sentence(data["focus"]["overall"])
     work_pt   = _first_sentence(data["focus"]["work"])
     love_pt   = _first_sentence(data["focus"]["love"])
-    keyword   = data["lucky"]["keyword"]
     comment   = data.get("commentCTA", "").replace("\n", "\n")
 
-    # ベースハッシュタグ（固定）
-    base_tag_list = [
-        "#タロット占い", "#週間運勢", "#自己分析", "#マインドフルネス",
-        "#習慣化", "#メンタルケア", "#タロットリーディング", "#asumira占い",
-        "#内省", "#コーチング", "#自己肯定感", f"#{card_jp}のカード",
-    ]
-    # キーワードからダイナミックハッシュタグを生成（ベースと重複するものは除外）
-    kw_tag_list = [f"#{kw.replace(' ','')}" for kw in data.get("keywords", [])]
-    kw_tag_list = [t for t in kw_tag_list if t not in base_tag_list]
-    base_tags = " ".join(base_tag_list)
-    kw_tags = " ".join(kw_tag_list)
+    # ハッシュタグは5個に厳選（カテゴリ発見／フォーマット訴求／独自ポジショニング／
+    # アカウント固有／今週の高関心層 の5役割で重複なく機能する組み合わせ）
+    tags = " ".join([
+        "#タロット占い", "#週間運勢", "#自己分析", "#asumira占い", f"#{card_jp}のカード",
+    ])
 
     return (
         f"{intro}\n"
@@ -823,7 +816,7 @@ def build_caption(data):
         f"より詳しい鑑定はプロフィールリンクから。\n"
         f"毎週月曜更新中 → フォローしておくと便利です。\n\n"
         f"@asumira_uranai\n\n"
-        f"{base_tags} {kw_tags}\n"
+        f"{tags}\n"
     )
 
 # ─────────────────────────────────────────────────────────────────────
