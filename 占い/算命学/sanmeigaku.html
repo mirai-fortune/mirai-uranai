@@ -1180,7 +1180,8 @@ function calcIndividual(){
   document.getElementById('si-uchuban').innerHTML =
       '<p class="uchuban-title">宇宙盤 ― 三柱の位相図</p>'
     + buildUchubanSVG(yp, mp, dp)
-    + '<p class="uchuban-note">3つの干支を六十干支の円周上に配置し、線で結んだ三角形です。形・大きさ・重なりから、得意なこと／苦手なこと、人付き合いの幅、人との相性の傾向を読み解きます。</p>';
+    + '<p class="uchuban-note">3つの干支を六十干支の円周上に配置し、線で結んだ三角形です。形・大きさ・重なりから、得意なこと／苦手なこと、人付き合いの幅、人との相性の傾向を読み解きます。</p>'
+    + '<p class="uchuban-note"><a href="uchuban-guide.html" style="color:var(--gold);">→ 宇宙盤の読み方をくわしく見る</a></p>';
 
   // 人体星図 描画
   document.getElementById('si-sanmei-chart-area').innerHTML = buildSanmeiSection(yp, mp, dp, days, daySi, y, m, d);
