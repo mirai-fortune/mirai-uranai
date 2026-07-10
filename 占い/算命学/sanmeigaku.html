@@ -1777,7 +1777,7 @@ function openKanteiSM(){
   const ubReading = getUchubanReading(yp, mp, dp);
   const ubBadge = label => '<span style="display:inline-block;padding:6px 16px;border:1px solid var(--gold);border-radius:999px;color:var(--gold);font-size:.62rem;letter-spacing:.06em;font-family:var(--serif);">'+label+'</span>';
   const ubCard = (eyebrow, title, badgeHTML, text) =>
-    '<div style="background:var(--card-bg);border:1px solid var(--bdr);padding:22px 24px;">'
+    '<div class="card" style="background:var(--card-bg);border:1px solid var(--bdr);padding:22px 24px;">'
     +'<p style="font-size:.56rem;color:var(--gd4);letter-spacing:.14em;margin-bottom:6px;">'+eyebrow+'</p>'
     +'<h3 style="font-family:var(--serif);font-size:1.1rem;font-weight:400;margin-bottom:14px;">'+title+'</h3>'
     +'<div style="margin-bottom:14px;display:flex;flex-wrap:wrap;gap:6px;">'+badgeHTML+'</div>'
@@ -1830,7 +1830,7 @@ function openKanteiSM(){
   const s4 = '<div style="width:100%;max-width:860px;margin:0 auto;">'
     +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Core Star</span>'
     +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:18px;">中心星の鑑定 ─ 本質と運命</h2>'
-    +'<div style="background:var(--card-bg);border:1px solid var(--bdrM);padding:30px 34px;">'
+    +'<div class="card" style="background:var(--card-bg);border:1px solid var(--bdrM);padding:30px 34px;">'
     +'<div style="display:flex;align-items:flex-start;gap:28px;">'
     +'<div style="text-align:center;min-width:110px;padding:18px 12px;border:1px solid var(--bdr);background:rgba(196,168,106,.06);flex-shrink:0;">'
     +'<div style="font-size:.55rem;color:var(--gd4);letter-spacing:.16em;margin-bottom:10px;">CHEST STAR</div>'
@@ -1849,7 +1849,7 @@ function openKanteiSM(){
   // ── S5: 命星①（第一・第二命星） ──
   const cmdCard = (label,theme,starName,yomi,key) => {
     const txt = rdg(starName,key);
-    return '<div style="background:var(--card-bg);border:1px solid var(--bdr);padding:22px 24px;">'
+    return '<div class="card" style="background:var(--card-bg);border:1px solid var(--bdr);padding:22px 24px;">'
       +'<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--bdr);">'
       +'<div style="text-align:center;min-width:74px;padding:10px 8px;border:1px solid var(--bdr);background:rgba(196,168,106,.04);flex-shrink:0;">'
       +'<div style="font-size:.52rem;color:var(--gd4);letter-spacing:.1em;margin-bottom:6px;">'+label+'</div>'
@@ -1883,7 +1883,7 @@ function openKanteiSM(){
   // ── S7: 三従星 ──
   const juniCard = (label,theme,starName,yomi,key) => {
     const txt = rdg(starName,key);
-    return '<div style="background:var(--card-bg);border:1px solid var(--bdr);padding:18px 16px;">'
+    return '<div class="card" style="background:var(--card-bg);border:1px solid var(--bdr);padding:18px 16px;">'
       +'<div style="text-align:center;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--bdr);">'
       +'<div style="font-size:.52rem;letter-spacing:.12em;color:var(--gd4);margin-bottom:6px;">'+label+'</div>'
       +'<div style="font-family:var(--serif);font-size:1.3rem;font-weight:400;color:var(--acc2);">'+starName+'</div>'
@@ -1933,7 +1933,7 @@ function openKanteiSM(){
     +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Current Daiun</span>'
     +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;">現在の大運 詳細（'+currentYear+'年・'+curAge+'歳）</h2>'
     +(currDu ? (
-      '<div style="background:var(--card-bg);border:1px solid var(--bdrM);padding:28px 34px;">'
+      '<div class="card" style="background:var(--card-bg);border:1px solid var(--bdrM);padding:28px 34px;">'
       +'<div style="display:flex;align-items:flex-start;gap:24px;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--bdr);">'
       +'<div style="text-align:center;min-width:88px;padding:16px 12px;border:1px solid var(--bdrM);background:rgba(196,168,106,.05);flex-shrink:0;">'
       +'<div style="font-family:var(--serif);font-size:2.6rem;font-weight:300;color:var(--cream);line-height:1.1;">'+currDu.kango.charAt(0)+'</div>'
@@ -1951,7 +1951,7 @@ function openKanteiSM(){
       +'</div>'
       +(currDu.line3?'<div style="border-top:1px solid var(--bdr);padding-top:14px;"><p style="font-size:.56rem;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;margin-bottom:8px;">'+(currDu.rels.length>0?'位相法ノート':'次の大運へ')+'</p><p style="font-size:.76rem;color:var(--muted2);line-height:2.2;letter-spacing:.03em;">'+tr(currDu.line3,360)+'</p></div>':'')
       +'</div>'
-    ) : '<div style="background:var(--card-bg);border:1px solid var(--bdr);padding:22px;"><p style="color:var(--muted);">大運データなし</p></div>')
+    ) : '<div class="card" style="background:var(--card-bg);border:1px solid var(--bdr);padding:22px;"><p style="color:var(--muted);">大運データなし</p></div>')
     +'</div>';
 
   // ── S9B: 次回の大運 詳細 ──
@@ -1964,7 +1964,7 @@ function openKanteiSM(){
     +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Next Daiun</span>'
     +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;">次回の大運 詳細'+(nextDu?('（'+nextDuYear+'年〜・'+nextDuAge+'歳〜）'):'')+'</h2>'
     +(nextDu ? (
-      '<div style="background:var(--card-bg);border:1px solid var(--bdrM);padding:28px 34px;">'
+      '<div class="card" style="background:var(--card-bg);border:1px solid var(--bdrM);padding:28px 34px;">'
       +'<div style="display:flex;align-items:flex-start;gap:24px;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--bdr);">'
       +'<div style="text-align:center;min-width:88px;padding:16px 12px;border:1px solid var(--bdrM);background:rgba(196,168,106,.05);flex-shrink:0;">'
       +'<div style="font-family:var(--serif);font-size:2.6rem;font-weight:300;color:var(--cream);line-height:1.1;">'+nextDu.kango.charAt(0)+'</div>'
@@ -1982,7 +1982,7 @@ function openKanteiSM(){
       +'</div>'
       +(nextDu.line3?'<div style="border-top:1px solid var(--bdr);padding-top:14px;"><p style="font-size:.56rem;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;margin-bottom:8px;">'+(nextDu.rels.length>0?'位相法ノート':'さらに次の大運へ')+'</p><p style="font-size:.76rem;color:var(--muted2);line-height:2.2;letter-spacing:.03em;">'+tr(nextDu.line3,360)+'</p></div>':'')
       +'</div>'
-    ) : '<div style="background:var(--card-bg);border:1px solid var(--bdr);padding:22px;"><p style="color:var(--muted);">次の大運はまだありません（現在が最終期間です）</p></div>')
+    ) : '<div class="card" style="background:var(--card-bg);border:1px solid var(--bdr);padding:22px;"><p style="color:var(--muted);">次の大運はまだありません（現在が最終期間です）</p></div>')
     +'</div>';
 
   // ── S10: 年運一覧 ──
@@ -2011,7 +2011,7 @@ function openKanteiSM(){
     +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Current Nenun</span>'
     +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;">今年の年運 詳細（'+currentYear+'年・'+curAge+'歳）</h2>'
     +(currNen ? (
-      '<div style="background:var(--card-bg);border:1px solid var(--bdrM);padding:28px 34px;">'
+      '<div class="card" style="background:var(--card-bg);border:1px solid var(--bdrM);padding:28px 34px;">'
       +'<div style="display:flex;align-items:flex-start;gap:24px;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--bdr);">'
       +'<div style="text-align:center;min-width:88px;padding:16px 12px;border:1px solid var(--bdrM);background:rgba(196,168,106,.05);flex-shrink:0;">'
       +'<div style="font-family:var(--serif);font-size:2.6rem;font-weight:300;color:var(--cream);line-height:1.1;">'+currNen.kango.charAt(0)+'</div>'
@@ -2029,7 +2029,7 @@ function openKanteiSM(){
       +'</div>'
       +(currNen.line3?'<div style="border-top:1px solid var(--bdr);padding-top:14px;"><p style="font-size:.56rem;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;margin-bottom:8px;">'+(currNen.rels.length>0?'位相法ノート':'来年の予告')+'</p><p style="font-size:.76rem;color:var(--muted2);line-height:2.2;letter-spacing:.03em;">'+tr(currNen.line3,360)+'</p></div>':'')
       +'</div>'
-    ) : '<div style="background:var(--card-bg);border:1px solid var(--bdr);padding:22px;"><p style="color:var(--muted);">年運データなし</p></div>')
+    ) : '<div class="card" style="background:var(--card-bg);border:1px solid var(--bdr);padding:22px;"><p style="color:var(--muted);">年運データなし</p></div>')
     +'</div>';
 
   // ── S11B: 次回の年運 詳細 ──
@@ -2040,7 +2040,7 @@ function openKanteiSM(){
     +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Next Nenun</span>'
     +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;">次回の年運 詳細'+(nextNen?('（'+nextNen.year+'年・'+nextNen.age+'歳）'):'')+'</h2>'
     +(nextNen ? (
-      '<div style="background:var(--card-bg);border:1px solid var(--bdrM);padding:28px 34px;">'
+      '<div class="card" style="background:var(--card-bg);border:1px solid var(--bdrM);padding:28px 34px;">'
       +'<div style="display:flex;align-items:flex-start;gap:24px;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--bdr);">'
       +'<div style="text-align:center;min-width:88px;padding:16px 12px;border:1px solid var(--bdrM);background:rgba(196,168,106,.05);flex-shrink:0;">'
       +'<div style="font-family:var(--serif);font-size:2.6rem;font-weight:300;color:var(--cream);line-height:1.1;">'+nextNen.kango.charAt(0)+'</div>'
@@ -2058,7 +2058,7 @@ function openKanteiSM(){
       +'</div>'
       +(nextNen.line3?'<div style="border-top:1px solid var(--bdr);padding-top:14px;"><p style="font-size:.56rem;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;margin-bottom:8px;">'+(nextNen.rels.length>0?'位相法ノート':'来年の予告')+'</p><p style="font-size:.76rem;color:var(--muted2);line-height:2.2;letter-spacing:.03em;">'+tr(nextNen.line3,360)+'</p></div>':'')
       +'</div>'
-    ) : '<div style="background:var(--card-bg);border:1px solid var(--bdr);padding:22px;"><p style="color:var(--muted);">次の年運データがありません</p></div>')
+    ) : '<div class="card" style="background:var(--card-bg);border:1px solid var(--bdr);padding:22px;"><p style="color:var(--muted);">次の年運データがありません</p></div>')
     +'</div>';
 
   // ── S12: まとめ ──
@@ -2104,6 +2104,7 @@ function openKanteiSM(){
     +'.slide>div{position:relative;z-index:1;width:100%;}\n'
     +'.slide.active{opacity:1;pointer-events:all;transform:translateX(0);}\n'
     +'.slide.exit{opacity:0;transform:translateX(-40px);pointer-events:none;}\n'
+    +'.card{border-radius:10px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}\n'
     +'nav.ctrl{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:16px;z-index:100;}\n'
     +'.nbtn{background:rgba(18,16,12,.65);border:1px solid rgba(255,255,255,.08);color:rgba(245,242,235,.52);padding:9px 22px;border-radius:24px;font-size:.78rem;letter-spacing:.08em;cursor:pointer;font-family:var(--sans);transition:border-color .28s,color .28s;backdrop-filter:blur(8px);}\n'
     +'.nbtn:hover:not(:disabled){border-color:var(--gold);color:var(--gold);}\n'
@@ -2119,6 +2120,7 @@ function openKanteiSM(){
     +'.deck{position:static!important;height:auto!important;display:block!important;}\n'
     +'.slide{position:relative!important;display:flex!important;opacity:1!important;transform:none!important;pointer-events:none!important;inset:auto!important;width:297mm!important;height:210mm!important;page-break-after:always!important;break-after:page!important;overflow:hidden!important;padding:44px 60px 44px!important;}\n'
     +'.slide:last-child{page-break-after:avoid!important;break-after:avoid!important;}\n'
+    +'.card{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(20,17,13,.96)!important;border:1px solid rgba(196,168,106,.3)!important;}\n'
     +'}\n'
     +'</style>\n</head>\n<body>\n'
     +'<div class="glow"></div>\n'

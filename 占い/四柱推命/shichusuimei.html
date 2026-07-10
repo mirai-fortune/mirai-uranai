@@ -2117,6 +2117,7 @@ function openKantei(){
   const currDuIdx=allInterps.findIndex(x=>x.isCurr);
   const currIp=currDuIdx>=0?allInterps[currDuIdx]:null;
   const currDu=currDuIdx>=0?allDu[currDuIdx]:null;
+  const currSaunIdx=saiunInterps.findIndex(x=>x.isCurr);
 
   const yojin=YOJIN_MAP[dayE]||{};
   const{isMikyou,kakkyoku}=calcShinjaku(pillars,daySi,mp,days);
@@ -2357,12 +2358,43 @@ function openKantei(){
       +'<div class="card" style="display:flex;flex-direction:column;gap:14px;">'
       +'<p style="font-size:.64rem;letter-spacing:.2em;color:var(--gold);">この時期のテーマ</p>'
       +'<p style="font-family:var(--serif);font-size:.92rem;color:var(--cream);line-height:1.85;">'+tr(currIp.line1,150)+'</p>'
-      +(currIp.line3?'<div style="padding-top:12px;border-top:1px solid var(--border);font-size:.77rem;color:var(--muted);line-height:2;"><strong style="color:var(--gold);">次の大運について</strong><br>'+tr(currIp.line3,130)+'</div>':'')
+      +(currIp.line3?'<div style="padding-top:12px;border-top:1px solid var(--border);font-size:.77rem;color:var(--muted);line-height:2;"><strong style="color:var(--gold);">'+(currIp.rels&&currIp.rels.length>0?'関係「'+currIp.rels.map(r=>r.t).join('・')+'」について':'次の大運について')+'</strong><br>'+tr(currIp.line3,130)+'</div>':'')
       +'</div></div></div>')
     :('<div style="width:100%;max-width:860px;margin:0 auto;">'
       +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Current Period</span>'
       +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">現在の大運</h2>'
       +'<div class="card"><p style="font-size:.85rem;color:var(--muted);">大運の詳細を特定できませんでした。</p></div></div>');
+
+  // S8b: 次回の大運詳細
+  const nextDuIdx=currDuIdx>=0?currDuIdx+1:-1;
+  const nextIp=nextDuIdx>=0?allInterps[nextDuIdx]:null;
+  const nextDu=nextDuIdx>=0?allDu[nextDuIdx]:null;
+  const s8b=nextIp&&nextDu
+    ?('<div style="width:100%;max-width:860px;margin:0 auto;">'
+      +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Next Period</span>'
+      +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">次回の大運詳細</h2>'
+      +'<div class="g184" style="display:grid;grid-template-columns:184px 1fr;gap:14px;">'
+      +'<div class="card" style="text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">'
+      +'<p style="font-size:.64rem;letter-spacing:.2em;color:var(--gold);">次回の大運</p>'
+      +'<div style="display:flex;gap:14px;justify-content:center;align-items:flex-end;margin:2px 0;">'
+      +'<div style="text-align:center;"><div style="font-size:.5rem;color:rgba(245,242,235,.28);letter-spacing:.04em;margin-bottom:3px;">'+STEMS_YOMI[nextDu.si]+'</div>'
+      +'<div style="font-family:var(--serif);font-size:2.8rem;font-weight:300;color:var(--cream);line-height:1;">'+STEMS[nextDu.si]+'</div></div>'
+      +'<div style="text-align:center;"><div style="font-size:.5rem;color:rgba(245,242,235,.28);letter-spacing:.04em;margin-bottom:3px;">'+BRANCHES_YOMI[nextDu.bi]+'</div>'
+      +'<div style="font-family:var(--serif);font-size:2.8rem;font-weight:300;color:var(--gold);line-height:1;">'+BRANCHES[nextDu.bi]+'</div></div>'
+      +'</div>'
+      +'<p style="font-size:.8rem;color:var(--muted);">'+nextIp.tg+'大運</p>'
+      +'<p style="font-size:.76rem;color:var(--gold);">'+nextIp.period+'</p>'
+      +'<p style="font-size:.62rem;color:rgba(245,242,235,.28);">'+nextDu.age+'歳から（あと'+(nextDu.age-curAge)+'年）</p>'
+      +'</div>'
+      +'<div class="card" style="display:flex;flex-direction:column;gap:14px;">'
+      +'<p style="font-size:.64rem;letter-spacing:.2em;color:var(--gold);">この時期のテーマ</p>'
+      +'<p style="font-family:var(--serif);font-size:.92rem;color:var(--cream);line-height:1.85;">'+tr(nextIp.line1,150)+'</p>'
+      +(nextIp.line3?'<div style="padding-top:12px;border-top:1px solid var(--border);font-size:.77rem;color:var(--muted);line-height:2;"><strong style="color:var(--gold);">'+(nextIp.rels&&nextIp.rels.length>0?'関係「'+nextIp.rels.map(r=>r.t).join('・')+'」について':'さらに次の大運について')+'</strong><br>'+tr(nextIp.line3,130)+'</div>':'')
+      +'</div></div></div>')
+    :('<div style="width:100%;max-width:860px;margin:0 auto;">'
+      +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Next Period</span>'
+      +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">次回の大運詳細</h2>'
+      +'<div class="card"><p style="font-size:.85rem;color:var(--muted);">次回の大運の詳細を特定できませんでした。</p></div></div>');
 
   // S9: 歳運
   const syShow=saiunYears.filter(s=>s.year>=currentYear-2&&s.year<=currentYear+7);
@@ -2399,8 +2431,8 @@ function openKantei(){
   const curSy=saiunYears.find(s=>s.year===currentYear);
   const s9b=currSaunIp&&curSy
     ?('<div style="width:100%;max-width:860px;margin:0 auto;">'
-      +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Annual Luck Detail</span>'
-      +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:12px;">歳運詳細 ─ '+currentYear+'年</h2>'
+      +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Current Annual Luck Detail</span>'
+      +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:12px;">今年の歳運詳細 ─ '+currentYear+'年</h2>'
       +'<div class="g184" style="display:grid;grid-template-columns:184px 1fr;gap:14px;">'
       +'<div class="card" style="text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">'
       +'<p style="font-size:.64rem;letter-spacing:.2em;color:var(--gold);">今年の歳運</p>'
@@ -2414,15 +2446,46 @@ function openKantei(){
       +'<p style="font-size:.76rem;color:var(--gold);">'+currentYear+'年</p>'
       +'<p style="font-size:.62rem;color:rgba(245,242,235,.28);">'+curSy.age+'歳</p>'
       +'</div>'
-      +'<div class="card" style="display:flex;flex-direction:column;gap:14px;overflow-y:auto;">'
+      +'<div class="card" style="display:flex;flex-direction:column;gap:14px;">'
       +'<p style="font-size:.64rem;letter-spacing:.2em;color:var(--gold);">今年のテーマ</p>'
-      +'<p style="font-family:var(--serif);font-size:.88rem;color:var(--cream);line-height:1.9;">'+currSaunIp.line1+'</p>'
-      +(currSaunIp.line3?'<div style="padding-top:12px;border-top:1px solid var(--border);font-size:.77rem;color:var(--muted);line-height:2;"><strong style="color:var(--gold);">'+(currSaunIp.rels&&currSaunIp.rels.length>0?'関係「'+currSaunIp.rels.map(function(r){return r.t;}).join('・')+'」について':'翌年の歳運')+'</strong><br>'+currSaunIp.line3+'</div>':'')
+      +'<p style="font-family:var(--serif);font-size:.88rem;color:var(--cream);line-height:1.9;">'+tr(currSaunIp.line1,150)+'</p>'
+      +(currSaunIp.line3?'<div style="padding-top:12px;border-top:1px solid var(--border);font-size:.77rem;color:var(--muted);line-height:2;"><strong style="color:var(--gold);">'+(currSaunIp.rels&&currSaunIp.rels.length>0?'関係「'+currSaunIp.rels.map(function(r){return r.t;}).join('・')+'」について':'来年の歳運')+'</strong><br>'+tr(currSaunIp.line3,130)+'</div>':'')
       +'</div></div></div>')
     :('<div style="width:100%;max-width:860px;margin:0 auto;">'
-      +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Annual Luck Detail</span>'
-      +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">歳運詳細</h2>'
+      +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Current Annual Luck Detail</span>'
+      +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">今年の歳運詳細</h2>'
       +'<div class="card"><p style="font-size:.85rem;color:var(--muted);">歳運の詳細を特定できませんでした。</p></div></div>');
+
+  // S9c: 来年の歳運詳細
+  const nextSaunIdx=currSaunIdx>=0?currSaunIdx+1:-1;
+  const nextSaunIp=nextSaunIdx>=0?saiunInterps[nextSaunIdx]:null;
+  const nextSy=nextSaunIdx>=0?saiunYears[nextSaunIdx]:null;
+  const s9c=nextSaunIp&&nextSy
+    ?('<div style="width:100%;max-width:860px;margin:0 auto;">'
+      +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Next Annual Luck Detail</span>'
+      +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:12px;">来年の歳運詳細 ─ '+nextSy.year+'年</h2>'
+      +'<div class="g184" style="display:grid;grid-template-columns:184px 1fr;gap:14px;">'
+      +'<div class="card" style="text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">'
+      +'<p style="font-size:.64rem;letter-spacing:.2em;color:var(--gold);">来年の歳運</p>'
+      +'<div style="display:flex;gap:14px;justify-content:center;align-items:flex-end;margin:2px 0;">'
+      +'<div style="text-align:center;"><div style="font-size:.5rem;color:rgba(245,242,235,.28);letter-spacing:.04em;margin-bottom:3px;">'+STEMS_YOMI[nextSy.si]+'</div>'
+      +'<div style="font-family:var(--serif);font-size:2.8rem;font-weight:300;color:var(--cream);line-height:1;">'+STEMS[nextSy.si]+'</div></div>'
+      +'<div style="text-align:center;"><div style="font-size:.5rem;color:rgba(245,242,235,.28);letter-spacing:.04em;margin-bottom:3px;">'+BRANCHES_YOMI[nextSy.bi]+'</div>'
+      +'<div style="font-family:var(--serif);font-size:2.8rem;font-weight:300;color:var(--gold);line-height:1;">'+BRANCHES[nextSy.bi]+'</div></div>'
+      +'</div>'
+      +'<p style="font-size:.8rem;color:var(--muted);">'+nextSaunIp.tg+'年</p>'
+      +'<p style="font-size:.76rem;color:var(--gold);">'+nextSy.year+'年</p>'
+      +'<p style="font-size:.62rem;color:rgba(245,242,235,.28);">'+nextSy.age+'歳</p>'
+      +'</div>'
+      +'<div class="card" style="display:flex;flex-direction:column;gap:14px;">'
+      +'<p style="font-size:.64rem;letter-spacing:.2em;color:var(--gold);">来年のテーマ</p>'
+      +'<p style="font-family:var(--serif);font-size:.88rem;color:var(--cream);line-height:1.9;">'+tr(nextSaunIp.line1,150)+'</p>'
+      +(nextSaunIp.line3?'<div style="padding-top:12px;border-top:1px solid var(--border);font-size:.77rem;color:var(--muted);line-height:2;"><strong style="color:var(--gold);">'+(nextSaunIp.rels&&nextSaunIp.rels.length>0?'関係「'+nextSaunIp.rels.map(function(r){return r.t;}).join('・')+'」について':'再来年の歳運')+'</strong><br>'+tr(nextSaunIp.line3,130)+'</div>':'')
+      +'</div></div></div>')
+    :('<div style="width:100%;max-width:860px;margin:0 auto;">'
+      +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Next Annual Luck Detail</span>'
+      +'<h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;letter-spacing:.08em;margin-bottom:16px;">来年の歳運詳細</h2>'
+      +'<div class="card"><p style="font-size:.85rem;color:var(--muted);">来年の歳運の詳細を特定できませんでした。</p></div></div>');
 
   // S10: 用神（身強・身弱でカテゴリを出し分け、ライブ画面と同じロジック）
   const yCardDefs=isMikyou
@@ -2464,7 +2527,7 @@ function openKantei(){
     +'</div>';
 
   // ── Assemble HTML ────────────────────────────────
-  const slides=[s1,s2,s3,s4,s5,s6,s6b,s6c,s7,s8,s9,s9b,s10,s11];
+  const slides=[s1,s2,s3,s4,s5,s6,s6b,s6c,s7,s8,s8b,s9,s9b,s9c,s10,s11];
   const NS=slides.length;
   const deckHtml=slides.map((s,i)=>'<div class="slide'+(i===0?' active':'')+'" id="sl'+i+'">'+s+'</div>').join('\n');
 
