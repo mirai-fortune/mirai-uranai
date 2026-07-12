@@ -78,6 +78,25 @@ body{background:var(--bg);color:var(--cream);font-family:'Noto Sans JP',sans-ser
    TAROT CELTIC CROSS
 ══════════════════════════════════════ */
 #panel-tarot .panel-body{max-width:1040px;margin:0 auto;}
+
+/* ── モード切替タブ（ケルト十字 / 相性スプレッド） ── */
+.trt-mode-tabs{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;padding:32px 24px 0;}
+.trt-mode-btn{background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-family:'Noto Sans JP',sans-serif;font-size:12px;letter-spacing:.05em;padding:11px 22px;border-radius:24px;cursor:pointer;transition:border-color .2s,color .2s,background .2s;}
+.trt-mode-btn:hover{color:var(--cream);}
+.trt-mode-btn.active{border-color:var(--gold);color:var(--gold2);background:var(--gold-dim);}
+
+/* ── 相性スプレッド：中央アイコン ── */
+.cpt-center-icon{width:64px;height:112px;display:flex;align-items:center;justify-content:center;font-size:22px;color:rgba(196,168,106,.35);}
+
+/* ── ワンオラクル／スリーカード：シンプル横並び ── */
+.trt-simple-row{display:flex;gap:28px;justify-content:center;align-items:center;flex-wrap:wrap;padding:10px 8px;}
+
+/* ── 今年の運勢：年間テーマ＋月別12枚グリッド ── */
+.trt-horo-overall{display:flex;justify-content:center;margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--border2);}
+.trt-horo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 12px;max-width:620px;margin:0 auto;justify-items:center;}
+@media(max-width:700px){.trt-horo-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:460px){.trt-horo-grid{grid-template-columns:repeat(2,1fr);}}
+
 .trt-intro{text-align:center;padding:40px 24px 44px;max-width:520px;margin:0 auto;}
 .trt-intro-title{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.38em;color:rgba(196,168,106,.5);margin-bottom:10px;}
 .trt-intro-jp{font-family:'Noto Serif JP',serif;font-size:22px;font-weight:300;letter-spacing:.22em;color:var(--gold);margin-bottom:18px !important;}
@@ -563,6 +582,15 @@ html.theme-minagi section { position: relative; z-index: 1; }
 <div id="panel-tarot">
 <div class="panel-body">
 
+<div class="trt-mode-tabs" id="trt-mode-tabs">
+  <button class="trt-mode-btn active" data-mode="personal">ケルト十字（一人鑑定）</button>
+  <button class="trt-mode-btn" data-mode="compat">相性スプレッド（二人の関係）</button>
+  <button class="trt-mode-btn" data-mode="one">ワンオラクル（1枚引き）</button>
+  <button class="trt-mode-btn" data-mode="three">スリーカード（3枚引き）</button>
+  <button class="trt-mode-btn" data-mode="horo">今年の運勢（ホロスコープ法）</button>
+</div>
+
+<div id="trt-mode-personal">
 <div class="trt-intro">
   <p class="trt-intro-title">CELTIC CROSS SPREAD</p>
   <p class="trt-intro-jp">ケルト十字法</p>
@@ -705,7 +733,266 @@ html.theme-minagi section { position: relative; z-index: 1; }
   <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
 </div>
 
+<div id="trt-guide-link" style="display:none;text-align:center;margin:22px 0 0;">
+  <a href="tarot-guide.html" style="color:var(--gold2);font-size:13px;letter-spacing:.03em;text-decoration:underline;">タロットの読み方をもっと知る（78枚カード事典・愚者の旅・ケルト十字の読み方）</a>
+</div>
+
 <div class="caution">※ 本ツールは78枚フルデッキ（大アルカナ22枚＋小アルカナ56枚）によるケルト十字法（10枚展開）を採用しています。カードの引き順と正逆位置はランダム関数（Math.random）で決定します。予言や運命の断定を目的とするものではありません。<br><br>※当サイトの占術ロジックは、現役占い師監修のもと本格的な仕様で構築しています。毎日のセルフチェックはもちろん、プロの占い師様の鑑定補助ツールとしてもご自由にお役立てください。</div>
+
+</div><!-- /trt-mode-personal -->
+
+<div id="trt-mode-compat" style="display:none;">
+
+<div class="trt-intro">
+  <p class="trt-intro-title">RELATIONSHIP SPREAD</p>
+  <p class="trt-intro-jp">相性スプレッド</p>
+  <p>4枚のカードが、二人の関係を映し出します。<br>
+  相手の顔を思い浮かべながら、カードを引いてください。</p>
+</div>
+
+<div class="trt-draw-area">
+  <button class="trt-btn-draw" id="cpt-btn-draw"><span>C A R D</span> <span>D R A W</span></button>
+  <br>
+  <button class="trt-btn-reset" id="cpt-btn-reset">もう一度引く</button>
+</div>
+
+<div class="trt-progress" id="cpt-progress"></div>
+
+<div class="trt-cloth" id="cpt-cloth">
+  <span class="trt-corner trt-corner-tl"></span>
+  <span class="trt-corner trt-corner-tr"></span>
+  <span class="trt-corner trt-corner-bl"></span>
+  <span class="trt-corner trt-corner-br"></span>
+<div class="trt-celtic">
+
+  <div class="trt-cross-section">
+
+    <div class="trt-cell trt-cell-crown">
+      <div class="trt-pos-chip">現状</div>
+      <div class="trt-scene"><div class="trt-inner" id="cpt-card-0">
+        <div class="trt-back"><img src="images/CardBacks.jpg" alt=""></div>
+        <div class="trt-face" id="cpt-face-0"></div>
+      </div></div>
+    </div>
+
+    <div class="trt-cell trt-cell-left">
+      <div class="trt-pos-chip">あなたの<br>気持ち</div>
+      <div class="trt-scene"><div class="trt-inner" id="cpt-card-1">
+        <div class="trt-back"><img src="images/CardBacks.jpg" alt=""></div>
+        <div class="trt-face" id="cpt-face-1"></div>
+      </div></div>
+    </div>
+
+    <div class="trt-cell trt-cell-center">
+      <div class="cpt-center-icon">♦</div>
+    </div>
+
+    <div class="trt-cell trt-cell-right">
+      <div class="trt-pos-chip">相手の<br>気持ち</div>
+      <div class="trt-scene"><div class="trt-inner" id="cpt-card-2">
+        <div class="trt-back"><img src="images/CardBacks.jpg" alt=""></div>
+        <div class="trt-face" id="cpt-face-2"></div>
+      </div></div>
+    </div>
+
+    <div class="trt-cell trt-cell-below">
+      <div class="trt-pos-chip">二人の<br>未来</div>
+      <div class="trt-scene"><div class="trt-inner" id="cpt-card-3">
+        <div class="trt-back"><img src="images/CardBacks.jpg" alt=""></div>
+        <div class="trt-face" id="cpt-face-3"></div>
+      </div></div>
+    </div>
+
+  </div><!-- /trt-cross-section -->
+
+</div><!-- /trt-celtic -->
+</div><!-- /trt-cloth -->
+
+<div style="text-align:center;margin:20px 0 0;">
+  <button class="trt-btn-skip" id="cpt-btn-skip">S K I P</button>
+</div>
+
+<div class="sec-div" id="cpt-sec-div" style="display:none"><span>RELATIONSHIP READING</span></div>
+<div class="trt-interp" id="cpt-interp"></div>
+
+<div class="kantei-btn-wrap" id="cpt-kantei-wrap" style="display:none;">
+  <button class="kantei-btn" onclick="openKanteiCPT()">鑑定書を作成する</button>
+  <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+</div>
+
+<div id="cpt-guide-link" style="display:none;text-align:center;margin:22px 0 0;">
+  <a href="tarot-guide.html" style="color:var(--gold2);font-size:13px;letter-spacing:.03em;text-decoration:underline;">タロットの読み方をもっと知る（78枚カード事典・愚者の旅・ケルト十字の読み方）</a>
+</div>
+
+<div class="caution">※ このスプレッドは4枚のカードで二人の関係性を映す「ダイヤモンドクロス法」を採用しています。カードの引き順と正逆位置はランダム関数（Math.random）で決定します。予言や運命の断定を目的とするものではありません。<br><br>※当サイトの占術ロジックは、現役占い師監修のもと本格的な仕様で構築しています。毎日のセルフチェックはもちろん、プロの占い師様の鑑定補助ツールとしてもご自由にお役立てください。</div>
+
+</div><!-- /trt-mode-compat -->
+
+<div id="trt-mode-one" style="display:none;">
+
+<div class="trt-intro">
+  <p class="trt-intro-title">ONE ORACLE</p>
+  <p class="trt-intro-jp">ワンオラクル</p>
+  <p>1枚のカードが、今のあなたへのメッセージを映し出します。<br>
+  心を静めて、カードを引いてください。</p>
+</div>
+
+<div class="trt-draw-area">
+  <button class="trt-btn-draw" id="one-btn-draw"><span>C A R D</span> <span>D R A W</span></button>
+  <br>
+  <button class="trt-btn-reset" id="one-btn-reset">もう一度引く</button>
+</div>
+
+<div class="trt-progress" id="one-progress"></div>
+
+<div class="trt-cloth" id="one-cloth">
+  <span class="trt-corner trt-corner-tl"></span>
+  <span class="trt-corner trt-corner-tr"></span>
+  <span class="trt-corner trt-corner-bl"></span>
+  <span class="trt-corner trt-corner-br"></span>
+<div class="trt-simple-row">
+  <div class="trt-cell">
+    <div class="trt-pos-chip">MESSAGE</div>
+    <div class="trt-scene"><div class="trt-inner" id="one-card-0">
+      <div class="trt-back"><img src="images/CardBacks.jpg" alt=""></div>
+      <div class="trt-face" id="one-face-0"></div>
+    </div></div>
+  </div>
+</div>
+</div><!-- /trt-cloth -->
+
+<div style="text-align:center;margin:20px 0 0;">
+  <button class="trt-btn-skip" id="one-btn-skip">S K I P</button>
+</div>
+
+<div class="sec-div" id="one-sec-div" style="display:none"><span>ONE ORACLE READING</span></div>
+<div class="trt-interp" id="one-interp"></div>
+
+<div class="kantei-btn-wrap" id="one-kantei-wrap" style="display:none;">
+  <button class="kantei-btn" onclick="openKanteiSimple('one')">鑑定書を作成する</button>
+  <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+</div>
+
+<div id="one-guide-link" style="display:none;text-align:center;margin:22px 0 0;">
+  <a href="tarot-guide.html" style="color:var(--gold2);font-size:13px;letter-spacing:.03em;text-decoration:underline;">タロットの読み方をもっと知る（78枚カード事典・愚者の旅・ケルト十字の読み方）</a>
+</div>
+
+<div class="caution">※ このスプレッドは1枚のカードでメッセージを受け取る「ワンオラクル」を採用しています。カードの引き順と正逆位置はランダム関数（Math.random）で決定します。予言や運命の断定を目的とするものではありません。<br><br>※当サイトの占術ロジックは、現役占い師監修のもと本格的な仕様で構築しています。毎日のセルフチェックはもちろん、プロの占い師様の鑑定補助ツールとしてもご自由にお役立てください。</div>
+
+</div><!-- /trt-mode-one -->
+
+<div id="trt-mode-three" style="display:none;">
+
+<div class="trt-intro">
+  <p class="trt-intro-title">THREE CARD SPREAD</p>
+  <p class="trt-intro-jp">スリーカード</p>
+  <p>3枚のカードが、過去・現在・未来の流れを映し出します。<br>
+  心の中の問いを抱きながら、カードを引いてください。</p>
+</div>
+
+<div class="trt-draw-area">
+  <button class="trt-btn-draw" id="three-btn-draw"><span>C A R D</span> <span>D R A W</span></button>
+  <br>
+  <button class="trt-btn-reset" id="three-btn-reset">もう一度引く</button>
+</div>
+
+<div class="trt-progress" id="three-progress"></div>
+
+<div class="trt-cloth" id="three-cloth">
+  <span class="trt-corner trt-corner-tl"></span>
+  <span class="trt-corner trt-corner-tr"></span>
+  <span class="trt-corner trt-corner-bl"></span>
+  <span class="trt-corner trt-corner-br"></span>
+<div class="trt-simple-row">
+  <div class="trt-cell">
+    <div class="trt-pos-chip">過去</div>
+    <div class="trt-scene"><div class="trt-inner" id="three-card-0">
+      <div class="trt-back"><img src="images/CardBacks.jpg" alt=""></div>
+      <div class="trt-face" id="three-face-0"></div>
+    </div></div>
+  </div>
+  <div class="trt-cell">
+    <div class="trt-pos-chip">現在</div>
+    <div class="trt-scene"><div class="trt-inner" id="three-card-1">
+      <div class="trt-back"><img src="images/CardBacks.jpg" alt=""></div>
+      <div class="trt-face" id="three-face-1"></div>
+    </div></div>
+  </div>
+  <div class="trt-cell">
+    <div class="trt-pos-chip">未来</div>
+    <div class="trt-scene"><div class="trt-inner" id="three-card-2">
+      <div class="trt-back"><img src="images/CardBacks.jpg" alt=""></div>
+      <div class="trt-face" id="three-face-2"></div>
+    </div></div>
+  </div>
+</div>
+</div><!-- /trt-cloth -->
+
+<div style="text-align:center;margin:20px 0 0;">
+  <button class="trt-btn-skip" id="three-btn-skip">S K I P</button>
+</div>
+
+<div class="sec-div" id="three-sec-div" style="display:none"><span>THREE CARD READING</span></div>
+<div class="trt-interp" id="three-interp"></div>
+
+<div class="kantei-btn-wrap" id="three-kantei-wrap" style="display:none;">
+  <button class="kantei-btn" onclick="openKanteiSimple('three')">鑑定書を作成する</button>
+  <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+</div>
+
+<div id="three-guide-link" style="display:none;text-align:center;margin:22px 0 0;">
+  <a href="tarot-guide.html" style="color:var(--gold2);font-size:13px;letter-spacing:.03em;text-decoration:underline;">タロットの読み方をもっと知る（78枚カード事典・愚者の旅・ケルト十字の読み方）</a>
+</div>
+
+<div class="caution">※ このスプレッドは3枚のカードで過去・現在・未来を読み解く「スリーカード」を採用しています。カードの引き順と正逆位置はランダム関数（Math.random）で決定します。予言や運命の断定を目的とするものではありません。<br><br>※当サイトの占術ロジックは、現役占い師監修のもと本格的な仕様で構築しています。毎日のセルフチェックはもちろん、プロの占い師様の鑑定補助ツールとしてもご自由にお役立てください。</div>
+
+</div><!-- /trt-mode-three -->
+
+<div id="trt-mode-horo" style="display:none;">
+
+<div class="trt-intro">
+  <p class="trt-intro-title">HOROSCOPE SPREAD</p>
+  <p class="trt-intro-jp">今年の運勢</p>
+  <p>13枚のカードが、これから1年間の月ごとの流れを映し出します。<br>
+  今年をどう過ごしたいか思い描きながら、カードを引いてください。</p>
+</div>
+
+<div class="trt-draw-area">
+  <button class="trt-btn-draw" id="horo-btn-draw"><span>C A R D</span> <span>D R A W</span></button>
+  <br>
+  <button class="trt-btn-reset" id="horo-btn-reset">もう一度引く</button>
+</div>
+
+<div class="trt-progress" id="horo-progress"></div>
+
+<div class="trt-cloth" id="horo-cloth">
+  <span class="trt-corner trt-corner-tl"></span>
+  <span class="trt-corner trt-corner-tr"></span>
+  <span class="trt-corner trt-corner-bl"></span>
+  <span class="trt-corner trt-corner-br"></span>
+  <div class="trt-horo-overall" id="horo-overall"></div>
+  <div class="trt-horo-grid" id="horo-grid"></div>
+</div><!-- /trt-cloth -->
+
+<div style="text-align:center;margin:20px 0 0;">
+  <button class="trt-btn-skip" id="horo-btn-skip">S K I P</button>
+</div>
+
+<div class="sec-div" id="horo-sec-div" style="display:none"><span>YEARLY READING</span></div>
+<div class="trt-interp" id="horo-interp"></div>
+
+<div class="kantei-btn-wrap" id="horo-kantei-wrap" style="display:none;">
+  <button class="kantei-btn" onclick="openKanteiSimple('horo')">鑑定書を作成する</button>
+  <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+</div>
+
+<div id="horo-guide-link" style="display:none;text-align:center;margin:22px 0 0;">
+  <a href="tarot-guide.html" style="color:var(--gold2);font-size:13px;letter-spacing:.03em;text-decoration:underline;">タロットの読み方をもっと知る（78枚カード事典・愚者の旅・ケルト十字の読み方）</a>
+</div>
+
+<div class="caution">※ このスプレッドは13枚のカードで1年間の流れを読み解く「ホロスコープ法」を採用しています。生年月日ではなく、鑑定を行った時点から先の1年間の運気の流れを占うものです。カードの引き順と正逆位置はランダム関数（Math.random）で決定します。予言や運命の断定を目的とするものではありません。<br><br>※当サイトの占術ロジックは、現役占い師監修のもと本格的な仕様で構築しています。毎日のセルフチェックはもちろん、プロの占い師様の鑑定補助ツールとしてもご自由にお役立てください。</div>
+
+</div><!-- /trt-mode-horo -->
 
 </div>
 </div><!-- /panel-tarot -->
@@ -799,6 +1086,16 @@ let trtDrawn = [];
 let trtCategory = null;
 let trtGen = 0;
 
+/* ── 相性スプレッド（ダイヤモンドクロス）用の状態・ポジション定義 ── */
+const CPT_POSITIONS = [
+  {en:'I',   label:'現状',       desc:'二人の関係が、今どんな段階にあるかを映すカード'},
+  {en:'II',  label:'あなたの気持ち', desc:'あなたが相手に対して、今抱いている気持ち'},
+  {en:'III', label:'相手の気持ち',   desc:'相手があなたに対して、今抱いている気持ち'},
+  {en:'IV',  label:'二人の未来',   desc:'この関係がこれから向かっていく方向性'},
+];
+let cptDrawn = [];
+let cptGen = 0;
+
 /* ── init progress pips ── */
 (function(){
   const c = document.getElementById('trt-progress');
@@ -808,6 +1105,28 @@ let trtGen = 0;
     p.className = 'trt-pip';
     c.appendChild(p);
   }
+})();
+
+(function(){
+  const c = document.getElementById('cpt-progress');
+  if(!c) return;
+  for(let i = 0; i < 4; i++){
+    const p = document.createElement('div');
+    p.className = 'trt-pip';
+    c.appendChild(p);
+  }
+})();
+
+(function(){
+  [['one-progress',1],['three-progress',3],['horo-progress',13]].forEach(([id,n])=>{
+    const c = document.getElementById(id);
+    if(!c) return;
+    for(let i = 0; i < n; i++){
+      const p = document.createElement('div');
+      p.className = 'trt-pip';
+      c.appendChild(p);
+    }
+  });
 })();
 
 /* ════════════════════════════════════════
@@ -980,7 +1299,10 @@ function trtBuildInterp(){
    SHUFFLE OVERLAY ANIMATION
 ════════════════════════════════════════ */
 function trtShowShuffle(onComplete){
-  const cloth=document.querySelector('.trt-cloth');
+  trtShowShuffleOn(document.querySelector('#trt-mode-personal .trt-cloth'), 10, onComplete);
+}
+
+function trtShowShuffleOn(cloth, cardCount, onComplete){
   const ov=document.createElement('div');
   ov.id='trt-shuf-overlay';
 
@@ -991,7 +1313,7 @@ function trtShowShuffle(onComplete){
   aura.className='shuf-aura';
   deck.appendChild(aura);
 
-  for(let i=0;i<10;i++){
+  for(let i=0;i<cardCount;i++){
     const c=document.createElement('div');
     c.className='shuf-card';
     c.style.setProperty('--ci',i);
@@ -1060,6 +1382,7 @@ function trtFlip(idx, delay, gen){
           document.getElementById('trt-btn-reset').classList.add('trt-vis');
           document.getElementById('trt-btn-skip').classList.remove('trt-vis');
           document.getElementById('trt-kantei-wrap').style.display = '';
+          document.getElementById('trt-guide-link').style.display = '';
           setTimeout(()=>{
             const sd=document.getElementById('trt-sec-div');
             if(sd){ const y=sd.getBoundingClientRect().top+window.pageYOffset-80; window.scrollTo({top:y,behavior:'smooth'}); }
@@ -1116,6 +1439,7 @@ function trtReset(){
   document.getElementById('trt-btn-reset').classList.remove('trt-vis');
   document.getElementById('trt-btn-skip').classList.remove('trt-vis');
   document.getElementById('trt-kantei-wrap').style.display = 'none';
+  document.getElementById('trt-guide-link').style.display = 'none';
   document.querySelectorAll('.trt-cat-btn').forEach(b => { b.classList.remove('trt-cat-active'); b.disabled = false; });
   trtCategory = null;
   document.getElementById('trt-btn-draw').disabled = true;
@@ -1355,6 +1679,422 @@ function openKanteiTRT(){
 }
 
 /* ════════════════════════════════════════
+   相性スプレッド 鑑定書PDF（ダイヤモンドクロス・4枚）
+   openKanteiTRTと同じ構造・テーマカラーロジックを踏襲。
+   カード解説はTRT_CARD_MEANING（正位置/逆位置/恋愛）を再利用。
+════════════════════════════════════════ */
+function openKanteiCPT(){
+  var k = window._cptKantei;
+  if(!k){ alert('先に鑑定してください。'); return; }
+
+  var drawn = k.drawn;
+  var imageDir = k.imageDir;
+
+  var _th = document.documentElement.classList.contains('theme-sakura') ? 'sakura'
+    : document.documentElement.classList.contains('theme-shinryoku') ? 'shinryoku'
+    : document.documentElement.classList.contains('theme-minagi') ? 'minagi' : 'gold';
+  var TH = {
+    gold:      {bg:'#030611',cream:'#f5f2eb',muted:'rgba(245,242,235,.6)',acc:'#c4a86a',acc2:'#e8d09a',bdr:'rgba(196,168,106,.12)',bdrM:'rgba(196,168,106,.28)',gd4:'rgba(196,168,106,.4)',cardBg:'rgba(15,13,9,.9)',theadBg:'rgba(28,24,12,.96)',tblBg:'rgba(18,16,12,.6)'},
+    sakura:    {bg:'#160810',cream:'#fef2f6',muted:'rgba(254,242,246,.6)',acc:'#e891b2',acc2:'#f5c0d5',bdr:'rgba(232,145,178,.12)',bdrM:'rgba(232,145,178,.28)',gd4:'rgba(232,145,178,.4)',cardBg:'rgba(26,10,18,.9)',theadBg:'rgba(34,12,22,.96)',tblBg:'rgba(30,12,20,.6)'},
+    shinryoku: {bg:'#060e08',cream:'#f0f5ef',muted:'rgba(240,245,239,.6)',acc:'#82c87e',acc2:'#b4e8b0',bdr:'rgba(130,200,126,.12)',bdrM:'rgba(130,200,126,.28)',gd4:'rgba(130,200,126,.4)',cardBg:'rgba(10,18,12,.9)',theadBg:'rgba(14,26,16,.96)',tblBg:'rgba(12,22,14,.6)'},
+    minagi:    {bg:'#04080f',cream:'#eef4fc',muted:'rgba(238,244,252,.6)',acc:'#6ab4e8',acc2:'#a0d4f4',bdr:'rgba(106,180,232,.12)',bdrM:'rgba(106,180,232,.28)',gd4:'rgba(106,180,232,.4)',cardBg:'rgba(8,12,22,.9)',theadBg:'rgba(10,18,34,.96)',tblBg:'rgba(8,14,26,.6)'}
+  }[_th];
+
+  var today = new Date();
+  var todayStr = today.getFullYear()+'年'+(today.getMonth()+1)+'月'+today.getDate()+'日';
+  var todayFile = 'タロット相性_'+today.getFullYear()+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0');
+
+  function getImgSrc(id){ var rel = TRT_IMAGE_MAP[id]; return rel ? imageDir + rel : ''; }
+
+  // ── S1: 表紙 ──
+  var s1 = '<div style="text-align:center;max-width:680px;margin:0 auto;">'
+    +'<p style="font-family:var(--serif);font-size:.65rem;letter-spacing:.42em;color:var(--gd4);text-transform:uppercase;margin-bottom:28px;">ASUMIRA 占い  ─  タロット</p>'
+    +'<h1 style="font-family:var(--serif);font-size:clamp(2rem,4vw,3.2rem);font-weight:300;letter-spacing:.14em;color:var(--cream);margin-bottom:6px;">タロット相性鑑定書</h1>'
+    +'<div style="width:36px;height:1px;background:var(--gold);margin:22px auto 26px;"></div>'
+    +'<p style="font-family:var(--serif);font-size:1.55rem;font-weight:300;letter-spacing:.14em;color:var(--gold);margin-bottom:10px;">【 二人の関係 】</p>'
+    +'<p style="font-size:.8rem;color:var(--muted);letter-spacing:.14em;">ダイヤモンドクロス法　4枚展開</p>'
+    +'<p style="margin-top:48px;font-size:.65rem;color:rgba(245,242,235,.18);letter-spacing:.14em;border-top:1px solid rgba(255,255,255,.07);padding-top:20px;display:inline-block;">鑑定日　'+todayStr+'　／　現役占い師監修　ASUMIRA 占い</p>'
+    +'</div>';
+
+  // ── S2: ダイヤモンド配置図 + カード一覧 ──
+  var tblRows = '';
+  for(var ri = 0; ri < drawn.length; ri++){
+    var rc = drawn[ri];
+    var rp = CPT_POSITIONS[ri];
+    var rOri = rc.isInv ? '▽ 逆' : '△ 正';
+    var rOriCol = rc.isInv ? TH.muted : TH.acc2;
+    var rBg = ri % 2 !== 0 ? 'background:rgba(255,255,255,.018);' : '';
+    tblRows += '<tr style="border-bottom:1px solid '+TH.bdr+';'+rBg+'">'
+      +'<td style="padding:7px 10px;text-align:center;font-family:var(--serif);font-size:.9rem;font-weight:300;color:'+TH.gd4+';">'+rp.en+'</td>'
+      +'<td style="padding:7px 10px;font-size:.64rem;color:'+TH.muted+';letter-spacing:.03em;white-space:nowrap;">'+rp.label+'</td>'
+      +'<td style="padding:7px 10px;">'
+      +'<span style="font-family:var(--serif);font-size:.86rem;color:'+TH.cream+';">'+rc.data.nameEn+'</span>'
+      +'<span style="font-size:.6rem;color:'+TH.muted+';margin-left:6px;">'+rc.data.name+'</span>'
+      +'</td>'
+      +'<td style="padding:7px 10px;text-align:center;font-size:.64rem;color:'+rOriCol+';white-space:nowrap;">'+rOri+'</td>'
+      +'</tr>';
+  }
+
+  var cw=40,ch=70;
+  function mkCImg(card){
+    var src=getImgSrc(card.id);
+    var inv=card.isInv?'transform:rotate(180deg);':'';
+    return src
+      ?'<img src="'+src+'" alt="" style="width:100%;height:100%;object-fit:cover;display:block;'+inv+'">'
+      :'<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:3px;">'
+        +'<div style="font-size:6px;color:'+TH.gd4+';font-family:var(--serif);">'+card.data.number+'</div>'
+        +'<div style="font-size:5.5px;color:rgba(255,255,255,.35);text-align:center;">'+card.data.name+'</div>'
+        +'</div>';
+  }
+  function mkCBox(card,label){
+    return '<div style="display:flex;flex-direction:column;align-items:center;gap:3px;">'
+      +'<div style="font-size:7px;letter-spacing:.1em;color:'+TH.gd4+';font-family:var(--serif);">'+label+'</div>'
+      +'<div style="width:'+cw+'px;height:'+ch+'px;border:1px solid '+TH.bdrM+';border-radius:2px;overflow:hidden;background:'+TH.cardBg+';">'+mkCImg(card)+'</div>'
+      +'</div>';
+  }
+  var s2Diamond='<div style="display:grid;grid-template-columns:repeat(3,auto);gap:6px;align-items:center;justify-items:center;">'
+    +'<div></div>'+mkCBox(drawn[0],'現状')+'<div></div>'
+    +mkCBox(drawn[1],'あなた')+'<div style="width:'+cw+'px;text-align:center;font-size:16px;color:'+TH.gd4+';">♦</div>'+mkCBox(drawn[2],'相手')
+    +'<div></div>'+mkCBox(drawn[3],'未来')+'<div></div>'
+    +'</div>';
+
+  var s2 = '<div style="width:100%;max-width:960px;margin:0 auto;display:flex;gap:44px;align-items:flex-start;">'
+    +'<div style="flex-shrink:0;">'
+    +'<div style="font-size:.6rem;color:'+TH.acc+';letter-spacing:.22em;text-transform:uppercase;margin-bottom:8px;">Diamond Cross Layout</div>'
+    +'<h2 style="font-family:var(--serif);font-size:1.2rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;color:'+TH.cream+';">ダイヤモンドクロス配置</h2>'
+    +s2Diamond
+    +'</div>'
+    +'<div style="flex:1;min-width:0;">'
+    +'<div style="font-size:.6rem;color:'+TH.acc+';letter-spacing:.22em;text-transform:uppercase;margin-bottom:8px;">Card Reference</div>'
+    +'<h2 style="font-family:var(--serif);font-size:1.2rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;color:'+TH.cream+';">カード一覧</h2>'
+    +'<table style="width:100%;border-collapse:collapse;border:1px solid '+TH.bdr+';background:'+TH.tblBg+';">'
+    +'<thead><tr style="border-bottom:1px solid '+TH.bdrM+';">'
+    +'<th style="padding:6px 10px;background:'+TH.theadBg+';font-family:var(--serif);font-size:.52rem;letter-spacing:.14em;color:'+TH.gd4+';font-weight:300;text-align:center;width:36px;">#</th>'
+    +'<th style="padding:6px 10px;background:'+TH.theadBg+';font-family:var(--serif);font-size:.52rem;letter-spacing:.14em;color:'+TH.gd4+';font-weight:300;text-align:left;">ポジション</th>'
+    +'<th style="padding:6px 10px;background:'+TH.theadBg+';font-family:var(--serif);font-size:.52rem;letter-spacing:.14em;color:'+TH.gd4+';font-weight:300;text-align:left;">カード</th>'
+    +'<th style="padding:6px 10px;background:'+TH.theadBg+';font-family:var(--serif);font-size:.52rem;letter-spacing:.14em;color:'+TH.gd4+';font-weight:300;text-align:center;width:60px;">正逆</th>'
+    +'</tr></thead>'
+    +'<tbody>'+tblRows+'</tbody></table>'
+    +'</div>'
+    +'</div>';
+
+  // ── S3-S6: 各カード詳細 ──
+  var cardSlides = [];
+  for(var ci = 0; ci < drawn.length; ci++){
+    var card = drawn[ci];
+    var pos = CPT_POSITIONS[ci];
+    var m = TRT_CARD_MEANING[card.id];
+    var mainText = card.isInv ? m.reversed : m.upright;
+    var imgSrc = getImgSrc(card.id);
+    var imgStyle = card.isInv ? 'transform:rotate(180deg);' : '';
+    var oriLabel = card.isInv ? '▽ 逆位置' : '△ 正位置';
+    var oriColor = card.isInv ? TH.muted : TH.acc2;
+
+    var imgHtml = imgSrc
+      ? '<img src="'+imgSrc+'" alt="" style="width:100%;height:100%;object-fit:cover;display:block;'+imgStyle+'">'
+      : '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:16px;text-align:center;">'
+        +'<div style="font-family:var(--serif);font-size:.75rem;color:'+TH.gd4+';margin-bottom:8px;">'+card.data.number+'</div>'
+        +'<div style="font-family:var(--serif);font-size:1.1rem;color:'+TH.cream+';">'+card.data.name+'</div>'
+        +'<div style="font-size:.65rem;color:'+TH.muted+';margin-top:4px;font-style:italic;">'+card.data.nameEn+'</div>'
+        +'</div>';
+
+    cardSlides.push(
+      '<div style="display:flex;gap:56px;align-items:center;width:100%;max-width:960px;margin:0 auto;">'
+      +'<div style="flex-shrink:0;width:152px;">'
+      +'<div style="font-family:var(--serif);font-size:2.6rem;font-weight:300;color:'+TH.gd4+';line-height:1;margin-bottom:10px;text-align:center;">'+pos.en+'</div>'
+      +'<div style="width:152px;height:266px;border:1px solid '+TH.bdrM+';border-radius:3px;overflow:hidden;background:'+TH.cardBg+';">'
+      +imgHtml
+      +'</div>'
+      +'<div style="text-align:center;margin-top:9px;">'
+      +'<span style="font-size:.62rem;letter-spacing:.14em;color:'+oriColor+';">'+oriLabel+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div style="flex:1;min-width:0;">'
+      +'<div style="font-size:.6rem;letter-spacing:.3em;color:'+TH.gd4+';text-transform:uppercase;margin-bottom:5px;">Position '+pos.en+'</div>'
+      +'<div style="font-size:.75rem;letter-spacing:.1em;color:'+TH.muted+';margin-bottom:14px;">'+pos.label+'</div>'
+      +'<div style="width:24px;height:1px;background:'+TH.bdr+';margin-bottom:14px;"></div>'
+      +'<div style="font-family:var(--serif);font-size:1.85rem;font-weight:300;color:'+TH.cream+';line-height:1.2;margin-bottom:4px;">'+card.data.nameEn+'</div>'
+      +'<div style="font-size:.72rem;color:'+TH.muted+';letter-spacing:.12em;margin-bottom:14px;">'+card.data.number+'　'+card.data.name+'</div>'
+      +'<div style="width:24px;height:1px;background:'+TH.bdr+';margin-bottom:14px;"></div>'
+      +'<div style="font-size:.72rem;letter-spacing:.06em;color:'+TH.gd4+';margin-bottom:12px;line-height:1.8;">'+pos.desc+'</div>'
+      +'<div style="font-size:.82rem;line-height:2.05;letter-spacing:.04em;color:'+TH.cream+';margin-bottom:14px;">'+mainText+'</div>'
+      +'<div style="font-size:.76rem;line-height:1.9;letter-spacing:.04em;color:'+TH.acc+';padding-top:12px;border-top:1px solid '+TH.bdr+';">恋愛面では、'+m.love+'</div>'
+      +'<div style="font-size:.72rem;line-height:1.8;letter-spacing:.03em;color:'+TH.muted+';margin-top:10px;">💡 '+m.advice+'</div>'
+      +'</div>'
+      +'</div>'
+    );
+  }
+
+  var allSlides = [s1, s2].concat(cardSlides);
+  var NS = allSlides.length;
+
+  var deckHtml = '';
+  for(var si = 0; si < allSlides.length; si++){
+    deckHtml += '<div class="slide'+(si===0?' active':'')+'">'+ allSlides[si] +'</div>';
+  }
+
+  var css = '*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact;}'
+    +':root{'
+    +'--bg:'+TH.bg+';--cream:'+TH.cream+';--muted:'+TH.muted+';--gold:'+TH.acc+';'
+    +'--gd4:'+TH.gd4+';--bdr:'+TH.bdr+';--bdrM:'+TH.bdrM+';'
+    +'--tbl-bg:'+TH.tblBg+';--thead-bg:'+TH.theadBg+';--card-bg:'+TH.cardBg+';'
+    +'--serif:"Cormorant Garamond","Noto Serif JP",serif;'
+    +'}'
+    +'html,body{width:100%;height:100%;background:var(--bg);color:var(--cream);font-family:"Noto Sans JP",sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;}'
+    +'.deck{position:relative;width:100%;height:100vh;overflow:hidden;}'
+    +'.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:52px 80px 76px;opacity:0;transform:translateX(60px);transition:all .5s ease;pointer-events:none;}'
+    +'.slide.active{opacity:1;transform:translateX(0);pointer-events:auto;}'
+    +'.ctrl{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);display:flex;gap:12px;z-index:99;}'
+    +'.ctrl button{padding:9px 26px;background:transparent;border:1px solid '+TH.bdr+';color:'+TH.muted+';cursor:pointer;font-family:"Cormorant Garamond",serif;font-size:15px;letter-spacing:.18em;transition:color .2s,border-color .2s;}'
+    +'.ctrl button:hover{border-color:'+TH.acc+';color:'+TH.cream+';}'
+    +'.sno{position:fixed;bottom:30px;right:36px;font-size:.62rem;letter-spacing:.2em;color:'+TH.gd4+';z-index:99;}'
+    +'@page{size:A4 landscape;margin:0;}'
+    +'@media print{'
+    +'.deck{position:static;height:auto;display:block;}'
+    +'.slide{position:relative;display:flex;opacity:1;transform:none;width:297mm;height:210mm;page-break-after:always;overflow:hidden;}'
+    +'.slide:last-child{page-break-after:avoid;}'
+    +'.ctrl,.sno{display:none;}'
+    +'}';
+
+  var html = '<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8">'
+    +'<title>'+todayFile+'</title>'
+    +'<link rel="preconnect" href="https://fonts.googleapis.com">'
+    +'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+    +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">'
+    +'<style>'+css+'</style>'
+    +'</head><body>'
+    +'<div class="deck" id="dk">'+deckHtml+'</div>'
+    +'<div class="ctrl"><button onclick="go(-1)">◂ PREV</button><button onclick="go(1)">NEXT ▸</button></div>'
+    +'<div class="sno" id="sno">1 / '+NS+'</div>'
+    +'<script>'
+    +'var cur=0,NS='+NS+';'
+    +'function go(d){'
+    +'var ss=document.querySelectorAll(".slide");'
+    +'ss[cur].classList.remove("active");'
+    +'cur=Math.max(0,Math.min(NS-1,cur+d));'
+    +'ss[cur].classList.add("active");'
+    +'document.getElementById("sno").textContent=(cur+1)+" / "+NS;'
+    +'}'
+    +'document.addEventListener("keydown",function(e){'
+    +'if(e.key==="ArrowRight"||e.key==="ArrowDown")go(1);'
+    +'if(e.key==="ArrowLeft"||e.key==="ArrowUp")go(-1);'
+    +'});'
+    +'<\/script>'
+    +'</body></html>';
+
+  var w = window.open('','_blank');
+  if(!w){ alert('ポップアップがブロックされました。ブラウザの設定でポップアップを許可してください。'); return; }
+  w.document.write(html);
+  w.document.close();
+}
+
+/* ════════════════════════════════════════
+   ワンオラクル／スリーカード／今年の運勢 共通 鑑定書PDF
+   openKanteiTRT/openKanteiCPTと同一構造。カード枚数・ポジションの違いは
+   SIMPLE_SPREADS[key]から取得し、1枚〜13枚まで同じ関数で対応する。
+════════════════════════════════════════ */
+const SIMPLE_KANTEI_META = {
+  one:   { title:'ワンオラクル鑑定書', sub:'ワンオラクル法　1枚展開' },
+  three: { title:'スリーカード鑑定書', sub:'スリーカード法　3枚展開（過去・現在・未来）' },
+  horo:  { title:'今年の運勢鑑定書',   sub:'ホロスコープ法　13枚展開' },
+};
+
+function openKanteiSimple(key){
+  var k = window._simpleKantei && window._simpleKantei[key];
+  if(!k){ alert('先に鑑定してください。'); return; }
+
+  var drawn = k.drawn;
+  var imageDir = k.imageDir;
+  var positions = SIMPLE_SPREADS[key].positions;
+  var meta = SIMPLE_KANTEI_META[key];
+
+  var _th = document.documentElement.classList.contains('theme-sakura') ? 'sakura'
+    : document.documentElement.classList.contains('theme-shinryoku') ? 'shinryoku'
+    : document.documentElement.classList.contains('theme-minagi') ? 'minagi' : 'gold';
+  var TH = {
+    gold:      {bg:'#030611',cream:'#f5f2eb',muted:'rgba(245,242,235,.6)',acc:'#c4a86a',acc2:'#e8d09a',bdr:'rgba(196,168,106,.12)',bdrM:'rgba(196,168,106,.28)',gd4:'rgba(196,168,106,.4)',cardBg:'rgba(15,13,9,.9)',theadBg:'rgba(28,24,12,.96)',tblBg:'rgba(18,16,12,.6)'},
+    sakura:    {bg:'#160810',cream:'#fef2f6',muted:'rgba(254,242,246,.6)',acc:'#e891b2',acc2:'#f5c0d5',bdr:'rgba(232,145,178,.12)',bdrM:'rgba(232,145,178,.28)',gd4:'rgba(232,145,178,.4)',cardBg:'rgba(26,10,18,.9)',theadBg:'rgba(34,12,22,.96)',tblBg:'rgba(30,12,20,.6)'},
+    shinryoku: {bg:'#060e08',cream:'#f0f5ef',muted:'rgba(240,245,239,.6)',acc:'#82c87e',acc2:'#b4e8b0',bdr:'rgba(130,200,126,.12)',bdrM:'rgba(130,200,126,.28)',gd4:'rgba(130,200,126,.4)',cardBg:'rgba(10,18,12,.9)',theadBg:'rgba(14,26,16,.96)',tblBg:'rgba(12,22,14,.6)'},
+    minagi:    {bg:'#04080f',cream:'#eef4fc',muted:'rgba(238,244,252,.6)',acc:'#6ab4e8',acc2:'#a0d4f4',bdr:'rgba(106,180,232,.12)',bdrM:'rgba(106,180,232,.28)',gd4:'rgba(106,180,232,.4)',cardBg:'rgba(8,12,22,.9)',theadBg:'rgba(10,18,34,.96)',tblBg:'rgba(8,14,26,.6)'}
+  }[_th];
+
+  var today = new Date();
+  var todayStr = today.getFullYear()+'年'+(today.getMonth()+1)+'月'+today.getDate()+'日';
+  var todayFile = 'タロット'+meta.title.replace('鑑定書','')+'_'+today.getFullYear()+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0');
+
+  function getImgSrc(id){ var rel = TRT_IMAGE_MAP[id]; return rel ? imageDir + rel : ''; }
+
+  // ── S1: 表紙 ──
+  var s1 = '<div style="text-align:center;max-width:680px;margin:0 auto;">'
+    +'<p style="font-family:var(--serif);font-size:.65rem;letter-spacing:.42em;color:var(--gd4);text-transform:uppercase;margin-bottom:28px;">ASUMIRA 占い  ─  タロット</p>'
+    +'<h1 style="font-family:var(--serif);font-size:clamp(2rem,4vw,3.2rem);font-weight:300;letter-spacing:.14em;color:var(--cream);margin-bottom:6px;">'+meta.title+'</h1>'
+    +'<div style="width:36px;height:1px;background:var(--gold);margin:22px auto 26px;"></div>'
+    +'<p style="font-size:.8rem;color:var(--muted);letter-spacing:.14em;">'+meta.sub+'</p>'
+    +'<p style="margin-top:48px;font-size:.65rem;color:rgba(245,242,235,.18);letter-spacing:.14em;border-top:1px solid rgba(255,255,255,.07);padding-top:20px;display:inline-block;">鑑定日　'+todayStr+'　／　現役占い師監修　ASUMIRA 占い</p>'
+    +'</div>';
+
+  // ── S2: カード一覧（枚数に依らず横並び＋テーブルの汎用レイアウト） ──
+  var cw=40,ch=70;
+  function mkCImg(card){
+    var src=getImgSrc(card.id);
+    var inv=card.isInv?'transform:rotate(180deg);':'';
+    return src
+      ?'<img src="'+src+'" alt="" style="width:100%;height:100%;object-fit:cover;display:block;'+inv+'">'
+      :'<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:3px;">'
+        +'<div style="font-size:6px;color:'+TH.gd4+';font-family:var(--serif);">'+card.data.number+'</div>'
+        +'<div style="font-size:5.5px;color:rgba(255,255,255,.35);text-align:center;">'+card.data.name+'</div>'
+        +'</div>';
+  }
+  var overviewCards = '<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:520px;">'
+    + drawn.map(function(card,i){
+        var label = positions[i].en ? positions[i].en+' '+positions[i].label : positions[i].label;
+        return '<div style="display:flex;flex-direction:column;align-items:center;gap:3px;">'
+          +'<div style="font-size:7px;letter-spacing:.06em;color:'+TH.gd4+';font-family:var(--serif);">'+label+'</div>'
+          +'<div style="width:'+cw+'px;height:'+ch+'px;border:1px solid '+TH.bdrM+';border-radius:2px;overflow:hidden;background:'+TH.cardBg+';">'+mkCImg(card)+'</div>'
+          +'</div>';
+      }).join('')
+    + '</div>';
+
+  var tblRows = drawn.map(function(card,ri){
+    var rp = positions[ri];
+    var rOri = card.isInv ? '▽ 逆' : '△ 正';
+    var rOriCol = card.isInv ? TH.muted : TH.acc2;
+    var rBg = ri % 2 !== 0 ? 'background:rgba(255,255,255,.018);' : '';
+    return '<tr style="border-bottom:1px solid '+TH.bdr+';'+rBg+'">'
+      +'<td style="padding:6px 10px;font-size:.64rem;color:'+TH.muted+';letter-spacing:.03em;white-space:nowrap;">'+rp.label+'</td>'
+      +'<td style="padding:6px 10px;">'
+      +'<span style="font-family:var(--serif);font-size:.86rem;color:'+TH.cream+';">'+card.data.nameEn+'</span>'
+      +'<span style="font-size:.6rem;color:'+TH.muted+';margin-left:6px;">'+card.data.name+'</span>'
+      +'</td>'
+      +'<td style="padding:6px 10px;text-align:center;font-size:.64rem;color:'+rOriCol+';white-space:nowrap;">'+rOri+'</td>'
+      +'</tr>';
+  }).join('');
+
+  var s2 = '<div style="width:100%;max-width:960px;margin:0 auto;display:flex;gap:44px;align-items:flex-start;flex-wrap:wrap;justify-content:center;">'
+    +'<div style="flex-shrink:0;">'
+    +'<div style="font-size:.6rem;color:'+TH.acc+';letter-spacing:.22em;text-transform:uppercase;margin-bottom:8px;">Spread Layout</div>'
+    +'<h2 style="font-family:var(--serif);font-size:1.2rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;color:'+TH.cream+';">カード配置</h2>'
+    +overviewCards
+    +'</div>'
+    +'<div style="flex:1;min-width:280px;max-width:420px;">'
+    +'<div style="font-size:.6rem;color:'+TH.acc+';letter-spacing:.22em;text-transform:uppercase;margin-bottom:8px;">Card Reference</div>'
+    +'<h2 style="font-family:var(--serif);font-size:1.2rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;color:'+TH.cream+';">カード一覧</h2>'
+    +'<table style="width:100%;border-collapse:collapse;border:1px solid '+TH.bdr+';background:'+TH.tblBg+';">'
+    +'<thead><tr style="border-bottom:1px solid '+TH.bdrM+';">'
+    +'<th style="padding:6px 10px;background:'+TH.theadBg+';font-family:var(--serif);font-size:.52rem;letter-spacing:.14em;color:'+TH.gd4+';font-weight:300;text-align:left;">ポジション</th>'
+    +'<th style="padding:6px 10px;background:'+TH.theadBg+';font-family:var(--serif);font-size:.52rem;letter-spacing:.14em;color:'+TH.gd4+';font-weight:300;text-align:left;">カード</th>'
+    +'<th style="padding:6px 10px;background:'+TH.theadBg+';font-family:var(--serif);font-size:.52rem;letter-spacing:.14em;color:'+TH.gd4+';font-weight:300;text-align:center;width:60px;">正逆</th>'
+    +'</tr></thead>'
+    +'<tbody>'+tblRows+'</tbody></table>'
+    +'</div>'
+    +'</div>';
+
+  // ── S3以降: 各カード詳細 ──
+  var cardSlides = drawn.map(function(card,ci){
+    var pos = positions[ci];
+    var m = TRT_CARD_MEANING[card.id];
+    var mainText = card.isInv ? m.reversed : m.upright;
+    var imgSrc = getImgSrc(card.id);
+    var imgStyle = card.isInv ? 'transform:rotate(180deg);' : '';
+    var oriLabel = card.isInv ? '▽ 逆位置' : '△ 正位置';
+    var oriColor = card.isInv ? TH.muted : TH.acc2;
+    var posLine = pos.en ? pos.en+' — '+pos.label : pos.label;
+
+    var imgHtml = imgSrc
+      ? '<img src="'+imgSrc+'" alt="" style="width:100%;height:100%;object-fit:cover;display:block;'+imgStyle+'">'
+      : '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:16px;text-align:center;">'
+        +'<div style="font-family:var(--serif);font-size:.75rem;color:'+TH.gd4+';margin-bottom:8px;">'+card.data.number+'</div>'
+        +'<div style="font-family:var(--serif);font-size:1.1rem;color:'+TH.cream+';">'+card.data.name+'</div>'
+        +'<div style="font-size:.65rem;color:'+TH.muted+';margin-top:4px;font-style:italic;">'+card.data.nameEn+'</div>'
+        +'</div>';
+
+    return '<div style="display:flex;gap:56px;align-items:center;width:100%;max-width:960px;margin:0 auto;">'
+      +'<div style="flex-shrink:0;width:152px;">'
+      +'<div style="font-family:var(--serif);font-size:1.5rem;font-weight:300;color:'+TH.gd4+';line-height:1.3;margin-bottom:10px;text-align:center;">'+pos.label+'</div>'
+      +'<div style="width:152px;height:266px;border:1px solid '+TH.bdrM+';border-radius:3px;overflow:hidden;background:'+TH.cardBg+';">'
+      +imgHtml
+      +'</div>'
+      +'<div style="text-align:center;margin-top:9px;">'
+      +'<span style="font-size:.62rem;letter-spacing:.14em;color:'+oriColor+';">'+oriLabel+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div style="flex:1;min-width:0;">'
+      +'<div style="font-size:.6rem;letter-spacing:.3em;color:'+TH.gd4+';text-transform:uppercase;margin-bottom:5px;">'+posLine+'</div>'
+      +'<div style="width:24px;height:1px;background:'+TH.bdr+';margin-bottom:14px;"></div>'
+      +'<div style="font-family:var(--serif);font-size:1.85rem;font-weight:300;color:'+TH.cream+';line-height:1.2;margin-bottom:4px;">'+card.data.nameEn+'</div>'
+      +'<div style="font-size:.72rem;color:'+TH.muted+';letter-spacing:.12em;margin-bottom:14px;">'+card.data.number+'　'+card.data.name+'</div>'
+      +'<div style="width:24px;height:1px;background:'+TH.bdr+';margin-bottom:14px;"></div>'
+      +'<div style="font-size:.72rem;letter-spacing:.06em;color:'+TH.gd4+';margin-bottom:12px;line-height:1.8;">'+pos.desc+'</div>'
+      +'<div style="font-size:.82rem;line-height:2.05;letter-spacing:.04em;color:'+TH.cream+';margin-bottom:14px;">'+mainText+'</div>'
+      +'<div style="font-size:.72rem;line-height:1.8;letter-spacing:.03em;color:'+TH.acc+';padding-top:12px;border-top:1px solid '+TH.bdr+';">💡 '+m.advice+'</div>'
+      +'</div>'
+      +'</div>';
+  });
+
+  var allSlides = [s1, s2].concat(cardSlides);
+  var NS = allSlides.length;
+
+  var deckHtml = '';
+  for(var si = 0; si < allSlides.length; si++){
+    deckHtml += '<div class="slide'+(si===0?' active':'')+'">'+ allSlides[si] +'</div>';
+  }
+
+  var css = '*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact;}'
+    +':root{'
+    +'--bg:'+TH.bg+';--cream:'+TH.cream+';--muted:'+TH.muted+';--gold:'+TH.acc+';'
+    +'--gd4:'+TH.gd4+';--bdr:'+TH.bdr+';--bdrM:'+TH.bdrM+';'
+    +'--tbl-bg:'+TH.tblBg+';--thead-bg:'+TH.theadBg+';--card-bg:'+TH.cardBg+';'
+    +'--serif:"Cormorant Garamond","Noto Serif JP",serif;'
+    +'}'
+    +'html,body{width:100%;height:100%;background:var(--bg);color:var(--cream);font-family:"Noto Sans JP",sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;}'
+    +'.deck{position:relative;width:100%;height:100vh;overflow:hidden;}'
+    +'.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:52px 80px 76px;opacity:0;transform:translateX(60px);transition:all .5s ease;pointer-events:none;}'
+    +'.slide.active{opacity:1;transform:translateX(0);pointer-events:auto;}'
+    +'.ctrl{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);display:flex;gap:12px;z-index:99;}'
+    +'.ctrl button{padding:9px 26px;background:transparent;border:1px solid '+TH.bdr+';color:'+TH.muted+';cursor:pointer;font-family:"Cormorant Garamond",serif;font-size:15px;letter-spacing:.18em;transition:color .2s,border-color .2s;}'
+    +'.ctrl button:hover{border-color:'+TH.acc+';color:'+TH.cream+';}'
+    +'.sno{position:fixed;bottom:30px;right:36px;font-size:.62rem;letter-spacing:.2em;color:'+TH.gd4+';z-index:99;}'
+    +'@page{size:A4 landscape;margin:0;}'
+    +'@media print{'
+    +'.deck{position:static;height:auto;display:block;}'
+    +'.slide{position:relative;display:flex;opacity:1;transform:none;width:297mm;height:210mm;page-break-after:always;overflow:hidden;}'
+    +'.slide:last-child{page-break-after:avoid;}'
+    +'.ctrl,.sno{display:none;}'
+    +'}';
+
+  var html = '<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8">'
+    +'<title>'+todayFile+'</title>'
+    +'<link rel="preconnect" href="https://fonts.googleapis.com">'
+    +'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+    +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">'
+    +'<style>'+css+'</style>'
+    +'</head><body>'
+    +'<div class="deck" id="dk">'+deckHtml+'</div>'
+    +'<div class="ctrl"><button onclick="go(-1)">◂ PREV</button><button onclick="go(1)">NEXT ▸</button></div>'
+    +'<div class="sno" id="sno">1 / '+NS+'</div>'
+    +'<script>'
+    +'var cur=0,NS='+NS+';'
+    +'function go(d){'
+    +'var ss=document.querySelectorAll(".slide");'
+    +'ss[cur].classList.remove("active");'
+    +'cur=Math.max(0,Math.min(NS-1,cur+d));'
+    +'ss[cur].classList.add("active");'
+    +'document.getElementById("sno").textContent=(cur+1)+" / "+NS;'
+    +'}'
+    +'document.addEventListener("keydown",function(e){'
+    +'if(e.key==="ArrowRight"||e.key==="ArrowDown")go(1);'
+    +'if(e.key==="ArrowLeft"||e.key==="ArrowUp")go(-1);'
+    +'});'
+    +'<\/script>'
+    +'</body></html>';
+
+  var w = window.open('','_blank');
+  if(!w){ alert('ポップアップがブロックされました。ブラウザの設定でポップアップを許可してください。'); return; }
+  w.document.write(html);
+  w.document.close();
+}
+
+/* ════════════════════════════════════════
    EVENT LISTENERS
 ════════════════════════════════════════ */
 function trtSkip(){
@@ -1375,6 +2115,7 @@ function trtSkip(){
   document.getElementById('trt-btn-reset').classList.add('trt-vis');
   document.getElementById('trt-btn-skip').classList.remove('trt-vis');
   document.getElementById('trt-kantei-wrap').style.display='';
+  document.getElementById('trt-guide-link').style.display='';
   setTimeout(()=>{
     const sd=document.getElementById('trt-sec-div');
     if(sd){ const y=sd.getBoundingClientRect().top+window.pageYOffset-80; window.scrollTo({top:y,behavior:'smooth'}); }
@@ -1397,6 +2138,418 @@ document.querySelectorAll('.trt-cat-btn').forEach(btn => {
     document.getElementById('trt-btn-draw').disabled = false;
   });
 });
+
+/* ════════════════════════════════════════
+   相性スプレッド（ダイヤモンドクロス・4枚）
+   TRT_DATA / TRT_IMAGE_MAP / TRT_CARD_MEANING を再利用し、
+   カード単体の汎用解説（正位置・逆位置）にポジションの文脈を添えて表示する。
+════════════════════════════════════════ */
+function cptUpdatePips(count){
+  const pips = document.querySelectorAll('#cpt-progress .trt-pip');
+  pips.forEach((p, i) => i < count ? p.classList.add('done') : p.classList.remove('done'));
+}
+
+function cptBuildFace(card, idx){
+  const face = document.getElementById('cpt-face-' + idx);
+  if(!face) return;
+  face.innerHTML = '';
+  const path = TRT_IMAGE_MAP[card.id];
+  const fallback = () => {
+    face.innerHTML = '';
+    const d = document.createElement('div');
+    d.className = 'trt-noimg' + (card.isInv ? ' trt-inv' : '');
+    d.innerHTML = `<div class="trt-ni-num">${card.data.number}</div><div class="trt-ni-name">${card.data.name}</div><div class="trt-ni-en">${card.data.nameEn}</div>${card.isInv ? '<div class="trt-ni-inv">▽ INV</div>' : ''}`;
+    face.appendChild(d);
+  };
+  if(!path){ fallback(); return; }
+  const img = document.createElement('img');
+  if(card.isInv) img.classList.add('trt-inv');
+  img.onerror = fallback;
+  img.onload = () => { face.innerHTML = ''; face.appendChild(img); };
+  img.src = path;
+}
+
+function cptBuildInterp(){
+  const sec = document.getElementById('cpt-interp');
+  sec.innerHTML = '';
+  window._cptKantei = { drawn: cptDrawn, imageDir: window.location.href.replace(/[^/]*$/, '') };
+  cptDrawn.forEach((card, i) => {
+    const pos = CPT_POSITIONS[i];
+    const m = TRT_CARD_MEANING[card.id];
+    const text = card.isInv ? m.reversed : m.upright;
+    const b = document.createElement('div');
+    b.className = 'trt-iblock';
+    const bodyDiv = document.createElement('div');
+    bodyDiv.className = 'trt-iblock-body';
+    bodyDiv.innerHTML = `<div class="trt-ib-num">${pos.en} &nbsp;—&nbsp; ${pos.label}</div>
+<div class="trt-ib-pos">${pos.desc}</div>
+<div class="trt-ib-name">${card.data.nameEn}</div>
+<div class="trt-ib-jp">${card.data.number} &nbsp; ${card.data.name}</div>
+<div class="trt-ib-ori">${card.isInv ? '▽ 逆位置' : '△ 正位置'}</div>
+<div class="trt-ib-body"><div class="trt-line">${text}</div></div>
+<div class="trt-ib-cat-msg">💡 ${m.advice}</div>`;
+    b.appendChild(trtMakeThumb(card));
+    b.appendChild(bodyDiv);
+    sec.appendChild(b);
+  });
+}
+
+function cptPlace(idx, delay, gen){
+  setTimeout(() => {
+    if(cptGen !== gen) return;
+    const el = document.getElementById('cpt-card-' + idx);
+    if(el) el.classList.add('trt-placed');
+  }, delay);
+}
+
+function cptFlip(idx, delay, gen){
+  setTimeout(() => {
+    if(cptGen !== gen) return;
+    const inner = document.getElementById('cpt-card-' + idx);
+    if(!inner) return;
+    inner.classList.remove('trt-placed');
+    inner.classList.add('trt-flipped');
+    setTimeout(() => {
+      if(cptGen !== gen) return;
+      cptUpdatePips(idx + 1);
+      if(idx === 3){
+        setTimeout(() => {
+          if(cptGen !== gen) return;
+          document.getElementById('cpt-sec-div').style.display = '';
+          document.getElementById('cpt-interp').classList.add('trt-vis');
+          document.getElementById('cpt-btn-reset').classList.add('trt-vis');
+          document.getElementById('cpt-btn-skip').classList.remove('trt-vis');
+          document.getElementById('cpt-kantei-wrap').style.display = '';
+          document.getElementById('cpt-guide-link').style.display = '';
+          setTimeout(()=>{
+            const sd=document.getElementById('cpt-sec-div');
+            if(sd){ const y=sd.getBoundingClientRect().top+window.pageYOffset-80; window.scrollTo({top:y,behavior:'smooth'}); }
+          },600);
+        }, 700);
+      }
+    }, 850);
+  }, delay);
+}
+
+function cptDraw(){
+  cptGen++;
+  const gen = cptGen;
+  document.getElementById('cpt-btn-draw').disabled = true;
+  const ids = trtShuffle(Object.keys(TRT_DATA).map(Number));
+  cptDrawn = ids.slice(0,4).map(id=>({id, data:TRT_DATA[id], isInv:Math.random()<.5}));
+  cptDrawn.forEach((card,i)=>cptBuildFace(card,i));
+  cptBuildInterp();
+  setTimeout(()=>{
+    const cloth = document.getElementById('cpt-cloth');
+    if(cloth){ const y=cloth.getBoundingClientRect().top+window.pageYOffset-80; window.scrollTo({top:y,behavior:'smooth'}); }
+  }, 900);
+  trtShowShuffleOn(document.getElementById('cpt-cloth'), 4, ()=>{
+    if(cptGen!==gen)return;
+    const placeGap=150,flipStart=1500,flipGap=650;
+    for(let i=0;i<4;i++)cptPlace(i,80+i*placeGap,gen);
+    for(let i=0;i<4;i++)cptFlip(i,flipStart+i*flipGap,gen);
+    document.getElementById('cpt-btn-skip').classList.add('trt-vis');
+  });
+}
+
+function cptSkip(){
+  cptGen++;
+  for(let i=0;i<4;i++){
+    const inner=document.getElementById('cpt-card-'+i);
+    if(inner){
+      inner.style.transition='none';
+      inner.classList.remove('trt-placed');
+      inner.classList.add('trt-flipped');
+      void inner.offsetWidth;
+      inner.style.transition='';
+    }
+  }
+  cptUpdatePips(4);
+  document.getElementById('cpt-sec-div').style.display='';
+  document.getElementById('cpt-interp').classList.add('trt-vis');
+  document.getElementById('cpt-btn-reset').classList.add('trt-vis');
+  document.getElementById('cpt-btn-skip').classList.remove('trt-vis');
+  document.getElementById('cpt-kantei-wrap').style.display='';
+  document.getElementById('cpt-guide-link').style.display='';
+  setTimeout(()=>{
+    const sd=document.getElementById('cpt-sec-div');
+    if(sd){ const y=sd.getBoundingClientRect().top+window.pageYOffset-80; window.scrollTo({top:y,behavior:'smooth'}); }
+  },400);
+}
+
+function cptReset(){
+  cptGen++;
+  const shufOv=document.getElementById('trt-shuf-overlay');
+  if(shufOv)shufOv.remove();
+  for(let i=0;i<4;i++){
+    const inner = document.getElementById('cpt-card-' + i);
+    if(inner){
+      inner.style.transition = 'none';
+      inner.classList.remove('trt-flipped', 'trt-placed');
+      void inner.offsetWidth;
+      inner.style.transition = '';
+    }
+    const face = document.getElementById('cpt-face-' + i);
+    if(face) face.innerHTML = '';
+  }
+  const interp = document.getElementById('cpt-interp');
+  interp.innerHTML = '';
+  interp.classList.remove('trt-vis');
+  document.getElementById('cpt-sec-div').style.display = 'none';
+  document.getElementById('cpt-btn-reset').classList.remove('trt-vis');
+  document.getElementById('cpt-btn-skip').classList.remove('trt-vis');
+  document.getElementById('cpt-kantei-wrap').style.display = 'none';
+  document.getElementById('cpt-guide-link').style.display = 'none';
+  document.getElementById('cpt-btn-draw').disabled = false;
+  cptDrawn = [];
+  cptUpdatePips(0);
+}
+
+document.getElementById('cpt-btn-draw').addEventListener('click', cptDraw);
+document.getElementById('cpt-btn-reset').addEventListener('click', cptReset);
+document.getElementById('cpt-btn-skip').addEventListener('click', cptSkip);
+
+/* ════════════════════════════════════════
+   ワンオラクル／スリーカード（汎用シンプルスプレッド）
+   TRT_DATA / TRT_IMAGE_MAP / TRT_CARD_MEANING / trtShuffle /
+   trtShowShuffleOn / trtMakeThumb を再利用し、キー(one/three)ごとに
+   カード枚数・ポジションだけが異なる汎用実装で対応する。
+════════════════════════════════════════ */
+const SIMPLE_SPREADS = {
+  one: {
+    positions: [
+      {en:'', label:'メッセージ', desc:'今のあなたへのメッセージ'},
+    ],
+  },
+  three: {
+    positions: [
+      {en:'I',   label:'過去', desc:'これまでの経緯や、状況の背景'},
+      {en:'II',  label:'現在', desc:'今の状況、現在地'},
+      {en:'III', label:'未来', desc:'この先の展開、向かう方向性'},
+    ],
+  },
+  horo: {
+    positions: [
+      {en:'', label:'年間テーマ', desc:'この1年を通じて意識したい、全体の流れ'},
+      ...Array.from({length:12}, (_,i)=>({en:'', label:(i+1)+'月', desc:(i+1)+'月に意識するとよいテーマ'})),
+    ],
+  },
+};
+const simpleState = {
+  one:   { drawn: [], gen: 0 },
+  three: { drawn: [], gen: 0 },
+  horo:  { drawn: [], gen: 0 },
+};
+
+/* horoモードのみカードスロットをJSで動的生成（13枚を手書きHTMLにしない） */
+(function(){
+  const positions = SIMPLE_SPREADS.horo.positions;
+  const overallEl = document.getElementById('horo-overall');
+  const gridEl = document.getElementById('horo-grid');
+  if(!overallEl || !gridEl) return;
+  positions.forEach((pos, i)=>{
+    const cell = document.createElement('div');
+    cell.className = 'trt-cell';
+    cell.innerHTML = `<div class="trt-pos-chip">${pos.label}</div>
+<div class="trt-scene"><div class="trt-inner" id="horo-card-${i}">
+  <div class="trt-back"><img src="images/CardBacks.jpg" alt=""></div>
+  <div class="trt-face" id="horo-face-${i}"></div>
+</div></div>`;
+    (i === 0 ? overallEl : gridEl).appendChild(cell);
+  });
+})();
+
+function simpleUpdatePips(key, count){
+  const pips = document.querySelectorAll('#'+key+'-progress .trt-pip');
+  pips.forEach((p, i) => i < count ? p.classList.add('done') : p.classList.remove('done'));
+}
+
+function simpleBuildFace(key, card, idx){
+  const face = document.getElementById(key+'-face-'+idx);
+  if(!face) return;
+  face.innerHTML = '';
+  const path = TRT_IMAGE_MAP[card.id];
+  const fallback = () => {
+    face.innerHTML = '';
+    const d = document.createElement('div');
+    d.className = 'trt-noimg' + (card.isInv ? ' trt-inv' : '');
+    d.innerHTML = `<div class="trt-ni-num">${card.data.number}</div><div class="trt-ni-name">${card.data.name}</div><div class="trt-ni-en">${card.data.nameEn}</div>${card.isInv ? '<div class="trt-ni-inv">▽ INV</div>' : ''}`;
+    face.appendChild(d);
+  };
+  if(!path){ fallback(); return; }
+  const img = document.createElement('img');
+  if(card.isInv) img.classList.add('trt-inv');
+  img.onerror = fallback;
+  img.onload = () => { face.innerHTML = ''; face.appendChild(img); };
+  img.src = path;
+}
+
+function simpleBuildInterp(key){
+  const st = simpleState[key];
+  const positions = SIMPLE_SPREADS[key].positions;
+  const sec = document.getElementById(key+'-interp');
+  sec.innerHTML = '';
+  window._simpleKantei = window._simpleKantei || {};
+  window._simpleKantei[key] = { drawn: st.drawn, imageDir: window.location.href.replace(/[^/]*$/, '') };
+  st.drawn.forEach((card, i) => {
+    const pos = positions[i];
+    const m = TRT_CARD_MEANING[card.id];
+    const text = card.isInv ? m.reversed : m.upright;
+    const b = document.createElement('div');
+    b.className = 'trt-iblock';
+    const bodyDiv = document.createElement('div');
+    bodyDiv.className = 'trt-iblock-body';
+    const numLine = pos.en ? `${pos.en} &nbsp;—&nbsp; ${pos.label}` : pos.label;
+    bodyDiv.innerHTML = `<div class="trt-ib-num">${numLine}</div>
+<div class="trt-ib-pos">${pos.desc}</div>
+<div class="trt-ib-name">${card.data.nameEn}</div>
+<div class="trt-ib-jp">${card.data.number} &nbsp; ${card.data.name}</div>
+<div class="trt-ib-ori">${card.isInv ? '▽ 逆位置' : '△ 正位置'}</div>
+<div class="trt-ib-body"><div class="trt-line">${text}</div></div>
+<div class="trt-ib-cat-msg">💡 ${m.advice}</div>`;
+    b.appendChild(trtMakeThumb(card));
+    b.appendChild(bodyDiv);
+    sec.appendChild(b);
+  });
+}
+
+function simplePlace(key, idx, delay, gen){
+  setTimeout(() => {
+    if(simpleState[key].gen !== gen) return;
+    const el = document.getElementById(key+'-card-'+idx);
+    if(el) el.classList.add('trt-placed');
+  }, delay);
+}
+
+function simpleFlip(key, idx, delay, gen, total){
+  setTimeout(() => {
+    if(simpleState[key].gen !== gen) return;
+    const inner = document.getElementById(key+'-card-'+idx);
+    if(!inner) return;
+    inner.classList.remove('trt-placed');
+    inner.classList.add('trt-flipped');
+    setTimeout(() => {
+      if(simpleState[key].gen !== gen) return;
+      simpleUpdatePips(key, idx + 1);
+      if(idx === total - 1){
+        setTimeout(() => {
+          if(simpleState[key].gen !== gen) return;
+          document.getElementById(key+'-sec-div').style.display = '';
+          document.getElementById(key+'-interp').classList.add('trt-vis');
+          document.getElementById(key+'-btn-reset').classList.add('trt-vis');
+          document.getElementById(key+'-btn-skip').classList.remove('trt-vis');
+          document.getElementById(key+'-kantei-wrap').style.display = '';
+          document.getElementById(key+'-guide-link').style.display = '';
+          setTimeout(()=>{
+            const sd=document.getElementById(key+'-sec-div');
+            if(sd){ const y=sd.getBoundingClientRect().top+window.pageYOffset-80; window.scrollTo({top:y,behavior:'smooth'}); }
+          },600);
+        }, 700);
+      }
+    }, 850);
+  }, delay);
+}
+
+function simpleDraw(key){
+  const st = simpleState[key];
+  st.gen++;
+  const gen = st.gen;
+  const total = SIMPLE_SPREADS[key].positions.length;
+  document.getElementById(key+'-btn-draw').disabled = true;
+  const ids = trtShuffle(Object.keys(TRT_DATA).map(Number));
+  st.drawn = ids.slice(0,total).map(id=>({id, data:TRT_DATA[id], isInv:Math.random()<.5}));
+  st.drawn.forEach((card,i)=>simpleBuildFace(key,card,i));
+  simpleBuildInterp(key);
+  setTimeout(()=>{
+    const cloth = document.getElementById(key+'-cloth');
+    if(cloth){ const y=cloth.getBoundingClientRect().top+window.pageYOffset-80; window.scrollTo({top:y,behavior:'smooth'}); }
+  }, 900);
+  trtShowShuffleOn(document.getElementById(key+'-cloth'), Math.max(total,4), ()=>{
+    if(simpleState[key].gen!==gen)return;
+    const placeGap = total>6?90:150, flipStart=1500, flipGap = total>6?260:650;
+    for(let i=0;i<total;i++)simplePlace(key,i,80+i*placeGap,gen);
+    for(let i=0;i<total;i++)simpleFlip(key,i,flipStart+i*flipGap,gen,total);
+    document.getElementById(key+'-btn-skip').classList.add('trt-vis');
+  });
+}
+
+function simpleSkip(key){
+  const st = simpleState[key];
+  st.gen++;
+  const total = SIMPLE_SPREADS[key].positions.length;
+  for(let i=0;i<total;i++){
+    const inner=document.getElementById(key+'-card-'+i);
+    if(inner){
+      inner.style.transition='none';
+      inner.classList.remove('trt-placed');
+      inner.classList.add('trt-flipped');
+      void inner.offsetWidth;
+      inner.style.transition='';
+    }
+  }
+  simpleUpdatePips(key, total);
+  document.getElementById(key+'-sec-div').style.display='';
+  document.getElementById(key+'-interp').classList.add('trt-vis');
+  document.getElementById(key+'-btn-reset').classList.add('trt-vis');
+  document.getElementById(key+'-btn-skip').classList.remove('trt-vis');
+  document.getElementById(key+'-kantei-wrap').style.display='';
+  document.getElementById(key+'-guide-link').style.display='';
+  setTimeout(()=>{
+    const sd=document.getElementById(key+'-sec-div');
+    if(sd){ const y=sd.getBoundingClientRect().top+window.pageYOffset-80; window.scrollTo({top:y,behavior:'smooth'}); }
+  },400);
+}
+
+function simpleReset(key){
+  const st = simpleState[key];
+  st.gen++;
+  const total = SIMPLE_SPREADS[key].positions.length;
+  const shufOv=document.getElementById('trt-shuf-overlay');
+  if(shufOv)shufOv.remove();
+  for(let i=0;i<total;i++){
+    const inner = document.getElementById(key+'-card-'+i);
+    if(inner){
+      inner.style.transition = 'none';
+      inner.classList.remove('trt-flipped', 'trt-placed');
+      void inner.offsetWidth;
+      inner.style.transition = '';
+    }
+    const face = document.getElementById(key+'-face-'+i);
+    if(face) face.innerHTML = '';
+  }
+  const interp = document.getElementById(key+'-interp');
+  interp.innerHTML = '';
+  interp.classList.remove('trt-vis');
+  document.getElementById(key+'-sec-div').style.display = 'none';
+  document.getElementById(key+'-btn-reset').classList.remove('trt-vis');
+  document.getElementById(key+'-btn-skip').classList.remove('trt-vis');
+  document.getElementById(key+'-kantei-wrap').style.display = 'none';
+  document.getElementById(key+'-guide-link').style.display = 'none';
+  document.getElementById(key+'-btn-draw').disabled = false;
+  st.drawn = [];
+  simpleUpdatePips(key, 0);
+}
+
+Object.keys(SIMPLE_SPREADS).forEach(key=>{
+  document.getElementById(key+'-btn-draw').addEventListener('click', ()=>simpleDraw(key));
+  document.getElementById(key+'-btn-reset').addEventListener('click', ()=>simpleReset(key));
+  document.getElementById(key+'-btn-skip').addEventListener('click', ()=>simpleSkip(key));
+});
+
+/* ── モード切替（ケルト十字 / 相性スプレッド / ワンオラクル / スリーカード） ── */
+document.querySelectorAll('.trt-mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.trt-mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const mode = btn.dataset.mode;
+    document.getElementById('trt-mode-personal').style.display = mode === 'personal' ? '' : 'none';
+    document.getElementById('trt-mode-compat').style.display = mode === 'compat' ? '' : 'none';
+    document.getElementById('trt-mode-one').style.display = mode === 'one' ? '' : 'none';
+    document.getElementById('trt-mode-three').style.display = mode === 'three' ? '' : 'none';
+    document.getElementById('trt-mode-horo').style.display = mode === 'horo' ? '' : 'none';
+  });
+});
+
 </script>
 
 <script>
