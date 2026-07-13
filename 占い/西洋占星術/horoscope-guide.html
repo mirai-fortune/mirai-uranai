@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="../../js/theme-init.js"></script>
+<title>西洋占星術（ホロスコープ）の仕組みと読み方｜ASUMIRA 占い</title>
+<meta name="description" content="西洋占星術のホロスコープに出てくる「天体」「星座」「ハウス」「アスペクト」の意味と、太陽〜冥王星の10天体・12ハウス・5大アスペクトの読み方を初学者向けに解説します。現役占い師監修・ASUMIRA 占い。">
+<meta name="robots" content="index, follow">
+<link rel="icon" type="image/png" href="../../images/favicon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../../images/apple-touch-icon.png">
+<link rel="canonical" href="https://mirai-fortune.github.io/mirai-uranai/%E5%8D%A0%E3%81%84/%E8%A5%BF%E6%B4%8B%E5%8D%A0%E6%98%9F%E8%A1%93/horoscope-guide.html">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mirai-fortune.github.io/mirai-uranai/%E5%8D%A0%E3%81%84/%E8%A5%BF%E6%B4%8B%E5%8D%A0%E6%98%9F%E8%A1%93/horoscope-guide.html">
+<meta property="og:title" content="西洋占星術（ホロスコープ）の仕組みと読み方｜ASUMIRA 占い">
+<meta property="og:description" content="天体・星座・ハウス・アスペクトの4要素と、太陽〜冥王星の10天体・12ハウス・5大アスペクトの意味を初学者向けにやさしく解説します。">
+<meta property="og:image" content="https://mirai-fortune.github.io/mirai-uranai/images/ogp.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ASUMIRA 占い │ モヤモヤを整理する占い">
+<meta property="og:site_name" content="ASUMIRA 占い">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="西洋占星術（ホロスコープ）の仕組みと読み方｜ASUMIRA 占い">
+<meta name="twitter:description" content="太陽〜冥王星の10天体・12ハウス・5大アスペクトの意味をやさしく解説します。">
+<meta name="twitter:image" content="https://mirai-fortune.github.io/mirai-uranai/images/ogp.png">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-33DC291LJ9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-33DC291LJ9');
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/themes.css">
+<link rel="stylesheet" href="../../css/common.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "西洋占星術（ホロスコープ）の仕組みと読み方",
+      "description": "天体・星座・ハウス・アスペクトの4要素と、太陽〜冥王星の10天体・12ハウス・5大アスペクトの意味を初学者向けに解説する記事です。",
+      "datePublished": "2026-07-11",
+      "dateModified": "2026-07-11",
+      "inLanguage": "ja",
+      "isPartOf": {"@id": "https://mirai-fortune.github.io/mirai-uranai/#website"},
+      "about": {
+        "@type": "Thing",
+        "name": "西洋占星術",
+        "description": "ネイタルチャート・10天体・12星座・12ハウス・5大アスペクトを読み解く西洋占星術の解説。"
+      }
+    }
+  ]
+}
+</script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+:root{
+  --bg:#030611;--bg2:#0d0b08;--bg3:#131009;--bg4:#1a1710;
+  --cream:#f5f2eb;--muted:rgba(245,242,235,.6);--muted2:rgba(245,242,235,.28);
+  --gold:#c4a86a;--gold2:#e8d4a0;--gold-dim:rgba(196,168,106,.12);--gold-glow:rgba(196,168,106,.18);
+  --border:rgba(196,168,106,.14);--border2:rgba(255,255,255,.07);--glass-bg:rgba(20,18,15,.4);
+  --font-serif:'Noto Serif JP',serif;--font-sans:'Noto Sans JP',sans-serif;--font-deco:'Cormorant Garamond',serif;
+  --nav-text:rgba(245,242,235,.82);
+  --nav-bg:rgba(3,6,17,.92);
+}
+body{background:linear-gradient(135deg,var(--bg) 0%,#060504 100%);background-attachment:fixed;color:var(--cream);font-family:var(--font-sans);font-weight:300;line-height:1.9;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+#stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+h1,h2,h3,h4{font-family:var(--font-serif);font-weight:400;letter-spacing:.05em;}
+.container{max-width:720px;margin:0 auto;padding:0 24px;position:relative;z-index:1;}
+.container.wide{max-width:1080px;}
+main{position:relative;z-index:1;}
+
+/* ── HERO ── */
+.hero{min-height:40vh;display:flex;flex-direction:column;justify-content:flex-end;padding:120px 0 52px;position:relative;overflow:hidden;border-bottom:1px solid var(--border);}
+.hero-orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;}
+.orb1{width:480px;height:480px;background:rgba(196,168,106,.06);top:-120px;right:-80px;}
+.orb2{width:380px;height:380px;background:rgba(104,100,180,.05);bottom:-80px;left:5%;}
+.hero-inner{position:relative;z-index:1;animation:heroIn .9s cubic-bezier(.25,1,.5,1) both;}
+@keyframes heroIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+.hero-tag{font-family:var(--font-deco);font-size:11px;letter-spacing:.34em;color:var(--gold);text-transform:uppercase;margin-bottom:22px;display:flex;align-items:center;gap:14px;}
+.hero-tag::before{content:'';display:block;width:28px;height:1px;background:var(--gold);}
+.hero-title{font-size:clamp(26px,4.5vw,42px);font-weight:300;line-height:1.5;letter-spacing:.06em;margin-bottom:20px;text-wrap:balance;}
+.hero-desc{font-size:13.5px;color:var(--muted);line-height:2.2;max-width:600px;}
+.hero-desc strong{color:var(--gold2);font-weight:500;}
+
+/* ── article body ── */
+article{padding:64px 0 0;}
+.sources-tag{font-size:11px;color:var(--muted2);letter-spacing:.06em;margin:0 0 56px;}
+
+.diagram-card{background:var(--bg3);border:1px solid var(--border);padding:36px 28px 30px;margin-bottom:20px;position:relative;z-index:1;}
+.diagram-caption{font-size:12px;color:var(--muted2);text-align:center;margin-top:22px;letter-spacing:.02em;line-height:1.9;}
+.example-tag{font-size:10.5px;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;text-align:center;margin-bottom:16px;font-family:var(--font-deco);}
+
+.callout{border-left:2px solid var(--gold);background:var(--gold-dim);padding:20px 24px;margin:44px 0;font-size:13px;color:var(--muted);line-height:2;position:relative;z-index:1;}
+.callout-title{font-family:var(--font-serif);color:var(--gold2);font-size:13.5px;letter-spacing:.06em;margin-bottom:8px;}
+
+section.step{margin-top:64px;}
+.sec-num{font-family:var(--font-deco);font-size:11px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;}
+h2{font-size:21px;letter-spacing:.04em;margin-bottom:16px;text-wrap:balance;}
+p{color:var(--muted);font-size:14px;line-height:2;margin-bottom:14px;max-width:640px;}
+h3{font-size:15.5px;color:var(--cream);letter-spacing:.03em;margin:26px 0 10px;}
+
+.tbl-wrap{overflow-x:auto;margin:18px 0 8px;position:relative;z-index:1;}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:12.5px;}
+th,td{border:1px solid var(--border);padding:11px 14px;text-align:left;vertical-align:top;background:var(--bg3);}
+th{background:var(--bg4);color:var(--gold);font-weight:400;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-family:var(--font-deco);}
+td{color:var(--muted);line-height:1.8;}
+td.em{font-family:var(--font-serif);color:var(--cream);font-size:15px;}
+tr td:first-child{white-space:nowrap;}
+@media(max-width:600px){
+  .tbl-wrap table.stack,.tbl-wrap table.stack thead{display:none;}
+  .tbl-wrap table.stack.show-thead{display:table;}
+}
+@media(max-width:600px){
+  table.stack tbody{display:block;}
+  table.stack thead{display:none;}
+  table.stack tr{display:block;border:1px solid var(--border);margin-bottom:10px;}
+  table.stack td{display:block;border:none;border-bottom:1px solid var(--border2);}
+  table.stack td:last-child{border-bottom:none;}
+  table.stack td::before{content:attr(data-label);display:block;font-size:9.5px;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;margin-bottom:4px;}
+}
+
+.recap{background:var(--bg3);border:1px solid var(--border);padding:28px 26px;margin-top:20px;position:relative;z-index:1;}
+.recap ul{margin:0;padding-left:18px;color:var(--muted);font-size:13.5px;line-height:2.1;}
+.recap li{margin-bottom:6px;}
+
+hr.div{border:none;border-top:1px solid var(--border);margin:64px 0 0;}
+.footnote{font-size:11px;color:var(--muted2);line-height:2;margin:20px 0 80px;}
+
+/* ── OTHER READINGS ── */
+.ora-section{padding:64px 0;border-top:1px solid var(--border);}
+.ora-label{font-family:var(--font-deco);font-size:12px;letter-spacing:.32em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:14px;}
+.ora-label::before{content:'';display:block;width:28px;height:1px;background:var(--gold);}
+.ora-title{font-size:18px;font-weight:300;letter-spacing:.1em;margin-bottom:32px;}
+.ora-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;}
+.ora-card{display:flex;flex-direction:column;align-items:center;gap:10px;padding:24px 16px;border:1px solid var(--border);text-decoration:none;color:var(--cream);transition:border-color .25s,background .25s;text-align:center;}
+.ora-card:hover{border-color:var(--gold);background:var(--gold-dim);}
+.ora-icon{font-size:20px;color:var(--gold);}
+.ora-name{font-family:var(--font-serif);font-size:13px;font-weight:300;letter-spacing:.06em;}
+.ora-sub{font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;}
+
+footer{padding:32px 0;text-align:center;font-size:.72rem;color:var(--muted2);letter-spacing:.1em;border-top:1px solid var(--border);}
+
+/* ===== THEME SWITCHER ===== */
+.theme-switcher { position: relative; }
+.theme-btn {
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid var(--border2); background: rgba(255,255,255,0.05);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; transition: border-color 0.3s;
+}
+.theme-btn:hover { border-color: var(--gold); }
+.theme-picker {
+  position: absolute; top: calc(100% + 10px); right: 0;
+  background: rgba(10,5,8,0.95); border: 1px solid var(--border);
+  border-radius: 12px; padding: 10px;
+  display: none; flex-direction: column; gap: 6px;
+  min-width: 150px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); z-index: 300;
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+}
+.theme-picker.open { display: flex; }
+.theme-option {
+  display: flex; align-items: center; gap: 10px; padding: 7px 10px;
+  border-radius: 8px; cursor: pointer; font-size: 0.8rem; color: var(--muted);
+  border: 1px solid transparent; transition: background 0.2s, border-color 0.2s, color 0.2s;
+  background: transparent; width: 100%; text-align: left; font-family: var(--font-sans);
+}
+.theme-option:hover { background: rgba(255,255,255,0.06); color: var(--cream); }
+.theme-option.active { border-color: var(--gold); color: var(--cream); }
+.theme-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+.theme-dot-gold { background: radial-gradient(circle at 35% 35%, #e8d09a, #c4a86a); }
+.theme-dot-sakura { background: radial-gradient(circle at 35% 35%, #ffb8d0, #e891b2); }
+.theme-dot-shinryoku { background: radial-gradient(circle at 35% 35%, #c0ea9a, #6dbf6a); }
+.theme-dot-minagi { background: radial-gradient(circle at 35% 35%, #b8dff8, #4a9cd4); }
+</style>
+</head>
+
+<body>
+<canvas id="stars-canvas"></canvas>
+
+<nav id="nav">
+  <a class="nav-logo" href="../../index.html">ASUMIRA 占い <span>西洋占星術の読み方</span></a>
+  <div class="nav-right">
+    <div class="nav-menu" id="nav-menu">
+      <button class="nav-menu-btn" id="nav-menu-btn">他の占い</button>
+      <div class="nav-dropdown">
+        <a href="../四柱推命/shichusuimei.html">◈ 四柱推命</a>
+        <a href="../タロット/tarot.html">✦ タロット占い</a>
+        <a href="horoscope.html">☽ 西洋占星術</a>
+        <a href="../数秘術/suuhijutsu.html">∞ 数秘術</a>
+        <a href="../算命学/sanmeigaku.html">✧ 算命学</a>
+        <a href="../九星気学/kyuseikigaku.html">✶ 九星気学</a>
+        <a href="../weekly/index.html">◈ 今週のタロット</a>
+      </div>
+    </div>
+    <a class="nav-back" href="horoscope.html">← <span class="nav-back-label">西洋占星術ページへ戻る</span></a>
+    <div class="theme-switcher" id="theme-switcher">
+      <button class="theme-btn" id="theme-btn" aria-label="テーマを変更する" title="テーマ変更">🎨</button>
+      <div class="theme-picker" id="theme-picker">
+        <button class="theme-option active" data-theme="gold"><span class="theme-dot theme-dot-gold"></span>星空</button>
+        <button class="theme-option" data-theme="sakura"><span class="theme-dot theme-dot-sakura"></span>桜花</button>
+        <button class="theme-option" data-theme="shinryoku"><span class="theme-dot theme-dot-shinryoku"></span>蛍火</button>
+        <button class="theme-option" data-theme="minagi"><span class="theme-dot theme-dot-minagi"></span>水凪</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+<section class="hero">
+  <div class="hero-orb orb1"></div>
+  <div class="hero-orb orb2"></div>
+  <div class="container hero-inner">
+    <p class="hero-tag">Horoscope Study Note</p>
+    <h1 class="hero-title">ホロスコープの仕組みと読み方</h1>
+    <p class="hero-desc">ホロスコープ（ネイタルチャート）は、あなたが生まれた瞬間の空を切り取った、いわば「星の記念写真」です。そこには<strong>天体・星座・ハウス・アスペクト</strong>という4つの要素が記録されており、この4要素の組み合わせを読み解くことで、生まれながらの性質や才能を構造的に理解できます。仕組みが分かると、鑑定結果に出てくる「太陽星座」「アセンダント」「〇〇ハウス」「トライン」が何を意味しているのか、すっきり理解できます。</p>
+  </div>
+</section>
+
+<article class="container">
+
+<p class="sources-tag">西洋占星術の伝統的な体系（トロピカル方式・主要10天体）を基に構成</p>
+
+<div class="callout">
+  <div class="callout-title">最初に押さえておきたい4つの要素</div>
+  ホロスコープは「天体（What＝何が）」「星座（How＝どのように）」「ハウス（Where＝どこで）」「アスペクト（天体同士の関係）」という4つの要素の掛け合わせで読み解きます。「太陽が獅子座で5ハウスにあり、金星とトラインを組む」のように、この4要素を組み合わせて一つの物語として理解するのが西洋占星術の基本の考え方です。
+</div>
+
+<section class="step">
+  <div class="sec-num">Step 1</div>
+  <h2>ホロスコープとは何か — 4つの読み解き要素</h2>
+  <p>ホロスコープは、生まれた日時・場所の天体配置を円形の図にしたものです。図の中には性質の異なる4種類の情報が同時に描かれており、それぞれ担当する問いが違います。</p>
+  <div class="tbl-wrap">
+  <table class="stack">
+    <thead><tr><th>要素</th><th>担当する問い</th><th>具体例</th></tr></thead>
+    <tbody>
+      <tr><td data-label="要素" class="em">天体</td><td data-label="担当する問い">何が（What）— 心のどの働きの話か</td><td data-label="具体例">太陽＝本質、月＝感情、金星＝愛し方</td></tr>
+      <tr><td data-label="要素" class="em">星座</td><td data-label="担当する問い">どのように（How）— どんな性質・色合いで表れるか</td><td data-label="具体例">牡羊座なら情熱的に、乙女座なら丁寧に</td></tr>
+      <tr><td data-label="要素" class="em">ハウス</td><td data-label="担当する問い">どこで（Where）— 人生のどの舞台で表れるか</td><td data-label="具体例">5ハウスなら恋愛や趣味の場面で</td></tr>
+      <tr><td data-label="要素" class="em">アスペクト</td><td data-label="担当する問い">天体同士がどう関係し合うか</td><td data-label="具体例">太陽と金星がトラインなら調和的に響き合う</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>この4要素に加えて、生まれた瞬間に東の地平線から昇っていた星座（アセンダント／ASC）が第一印象や外見的な雰囲気を、真上に来ていた点（MC）が社会的な立ち位置を示します。まずは「天体×星座×ハウス」の掛け算で意味を作り、そこにアスペクトで天体同士の関係性を足していくのが読み解きの流れです。</p>
+</section>
+
+<section class="step">
+  <div class="sec-num">Step 2</div>
+  <h2>10天体の意味 — 個人天体・社会天体・世代天体</h2>
+  <p>西洋占星術で扱う天体は10個。動くスピードによって「個人天体」「社会天体」「世代天体」の3つのグループに分かれ、グループごとに読み解く時間のスケールが違います。</p>
+  <div class="tbl-wrap">
+  <table class="stack">
+    <thead><tr><th>グループ</th><th>天体</th><th>意味</th></tr></thead>
+    <tbody>
+      <tr><td data-label="グループ" class="em">個人天体</td><td data-label="天体">太陽</td><td data-label="意味">生まれながらのあなたという個性・本質</td></tr>
+      <tr><td data-label="グループ" class="em">個人天体</td><td data-label="天体">月</td><td data-label="意味">内側に秘められた感情・才能</td></tr>
+      <tr><td data-label="グループ" class="em">個人天体</td><td data-label="天体">水星</td><td data-label="意味">考え方・言葉の紡ぎ方</td></tr>
+      <tr><td data-label="グループ" class="em">個人天体</td><td data-label="天体">金星</td><td data-label="意味">美意識・愛し方・心地よさの感じ方</td></tr>
+      <tr><td data-label="グループ" class="em">個人天体</td><td data-label="天体">火星</td><td data-label="意味">行動力・情熱の向け方</td></tr>
+      <tr><td data-label="グループ" class="em">社会天体</td><td data-label="天体">木星</td><td data-label="意味">幸運や成長を引き寄せる方向</td></tr>
+      <tr><td data-label="グループ" class="em">社会天体</td><td data-label="天体">土星</td><td data-label="意味">向き合い乗り越えていく課題・成熟</td></tr>
+      <tr><td data-label="グループ" class="em">世代天体</td><td data-label="天体">天王星</td><td data-label="意味">世代が共有する個性・革新の力</td></tr>
+      <tr><td data-label="グループ" class="em">世代天体</td><td data-label="天体">海王星</td><td data-label="意味">世代が共有する感受性・理想</td></tr>
+      <tr><td data-label="グループ" class="em">世代天体</td><td data-label="天体">冥王星</td><td data-label="意味">世代が共有する変容の力</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>個人天体は動きが速く、ほぼ一人ひとり違う配置になるため「個性」を強く映します。反対に天王星・海王星・冥王星は動きが非常にゆっくりで、同じ年代に生まれた人はほぼ同じ星座に入るため「個人の性格」というより「世代が共有する時代性」として読みます。なおアセンダント（ASC）は天体ではなく、生まれた瞬間の地平線の位置から算出される感受点ですが、太陽・月と並んで第一印象を示す重要な要素として扱われます。</p>
+</section>
+
+<section class="step">
+  <div class="sec-num">Step 3</div>
+  <h2>12星座 — エレメントとクオリティ</h2>
+  <p>12星座は、性質の近い4つの「エレメント（元素）」と、動き方の近い3つの「クオリティ（宮）」の掛け合わせで整理できます。</p>
+  <div class="tbl-wrap">
+  <table class="stack">
+    <thead><tr><th>星座</th><th>エレメント</th><th>クオリティ</th><th>守護星</th></tr></thead>
+    <tbody>
+      <tr><td data-label="星座" class="em">牡羊座</td><td data-label="エレメント">火（情熱・行動）</td><td data-label="クオリティ">活動宮</td><td data-label="守護星">火星</td></tr>
+      <tr><td data-label="星座" class="em">牡牛座</td><td data-label="エレメント">地（安定・現実）</td><td data-label="クオリティ">不動宮</td><td data-label="守護星">金星</td></tr>
+      <tr><td data-label="星座" class="em">双子座</td><td data-label="エレメント">風（知性・交流）</td><td data-label="クオリティ">柔軟宮</td><td data-label="守護星">水星</td></tr>
+      <tr><td data-label="星座" class="em">蟹座</td><td data-label="エレメント">水（感情・共感）</td><td data-label="クオリティ">活動宮</td><td data-label="守護星">月</td></tr>
+      <tr><td data-label="星座" class="em">獅子座</td><td data-label="エレメント">火（情熱・行動）</td><td data-label="クオリティ">不動宮</td><td data-label="守護星">太陽</td></tr>
+      <tr><td data-label="星座" class="em">乙女座</td><td data-label="エレメント">地（安定・現実）</td><td data-label="クオリティ">柔軟宮</td><td data-label="守護星">水星</td></tr>
+      <tr><td data-label="星座" class="em">天秤座</td><td data-label="エレメント">風（知性・交流）</td><td data-label="クオリティ">活動宮</td><td data-label="守護星">金星</td></tr>
+      <tr><td data-label="星座" class="em">蠍座</td><td data-label="エレメント">水（感情・共感）</td><td data-label="クオリティ">不動宮</td><td data-label="守護星">冥王星</td></tr>
+      <tr><td data-label="星座" class="em">射手座</td><td data-label="エレメント">火（情熱・行動）</td><td data-label="クオリティ">柔軟宮</td><td data-label="守護星">木星</td></tr>
+      <tr><td data-label="星座" class="em">山羊座</td><td data-label="エレメント">地（安定・現実）</td><td data-label="クオリティ">活動宮</td><td data-label="守護星">土星</td></tr>
+      <tr><td data-label="星座" class="em">水瓶座</td><td data-label="エレメント">風（知性・交流）</td><td data-label="クオリティ">不動宮</td><td data-label="守護星">天王星</td></tr>
+      <tr><td data-label="星座" class="em">魚座</td><td data-label="エレメント">水（感情・共感）</td><td data-label="クオリティ">柔軟宮</td><td data-label="守護星">海王星</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>エレメントは「反応の仕方」、クオリティは「動き出し方」を表します。活動宮は物事を始める力、不動宮はじっくり持続させる力、柔軟宮は状況に合わせて変化する力に長けています。太陽星座だけでなく、月星座やアセンダントのエレメント・クオリティも合わせて見ると、その人の多面的な気質が立体的に見えてきます。</p>
+</section>
+
+<section class="step">
+  <div class="sec-num">Step 4</div>
+  <h2>12ハウスの意味 — 人生のどの舞台で表れるか</h2>
+  <p>ハウスは、生まれた場所・時刻から算出される「人生の舞台」を12分割したものです。同じ天体でも、入っているハウスによって発揮される場面が変わります。</p>
+  <div class="tbl-wrap">
+  <table class="stack">
+    <thead><tr><th>ハウス</th><th>テーマ</th><th>意味</th></tr></thead>
+    <tbody>
+      <tr><td data-label="ハウス" class="em">1ハウス</td><td data-label="テーマ">自己・第一印象</td><td data-label="意味">第一印象や外見的な雰囲気、人生に対する基本姿勢</td></tr>
+      <tr><td data-label="ハウス" class="em">2ハウス</td><td data-label="テーマ">金銭・所有・価値観</td><td data-label="意味">お金や持ち物の扱い方、何に価値を置くかという基準</td></tr>
+      <tr><td data-label="ハウス" class="em">3ハウス</td><td data-label="テーマ">コミュニケーション・学び</td><td data-label="意味">日常の会話や学び、きょうだいや近隣との関係</td></tr>
+      <tr><td data-label="ハウス" class="em">4ハウス</td><td data-label="テーマ">家庭・ルーツ・心の基盤</td><td data-label="意味">育った環境やルーツ、安心して帰れる場所への感覚</td></tr>
+      <tr><td data-label="ハウス" class="em">5ハウス</td><td data-label="テーマ">自己表現・恋愛・創造</td><td data-label="意味">恋愛や趣味、創作活動、遊び心といった自分らしさ</td></tr>
+      <tr><td data-label="ハウス" class="em">6ハウス</td><td data-label="テーマ">仕事・健康・日常の習慣</td><td data-label="意味">仕事の進め方や生活習慣、健康管理という積み重ね</td></tr>
+      <tr><td data-label="ハウス" class="em">7ハウス</td><td data-label="テーマ">パートナーシップ</td><td data-label="意味">結婚相手やビジネスパートナーなど対等な関係</td></tr>
+      <tr><td data-label="ハウス" class="em">8ハウス</td><td data-label="テーマ">共有資源・変容</td><td data-label="意味">他者と分かち合う資源、受け継ぐもの、心の深い部分</td></tr>
+      <tr><td data-label="ハウス" class="em">9ハウス</td><td data-label="テーマ">哲学・遠方・学問</td><td data-label="意味">海外や遠方への関心、学問や哲学、人生観の拡大</td></tr>
+      <tr><td data-label="ハウス" class="em">10ハウス</td><td data-label="テーマ">社会的役割・キャリア</td><td data-label="意味">キャリアや肩書き、社会からどう見られたいか</td></tr>
+      <tr><td data-label="ハウス" class="em">11ハウス</td><td data-label="テーマ">仲間・コミュニティ</td><td data-label="意味">志を共にする友人やコミュニティ、未来への理想</td></tr>
+      <tr><td data-label="ハウス" class="em">12ハウス</td><td data-label="テーマ">無意識・内省</td><td data-label="意味">意識の及ばない領域、ひとりで過ごす時間、統合</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>ハウスは出生時刻によって決まるため、時刻が不明な場合は正確な算出ができません。<a href="horoscope.html" style="color:var(--gold2);">個人鑑定ページ</a>では、あなたの天体がどのハウスに入っているかを一覧表と「ネイタルの12ハウス」セクションで確認できます。</p>
+</section>
+
+<section class="step">
+  <div class="sec-num">Step 5</div>
+  <h2>5大アスペクトの読み方 — 天体同士の関係</h2>
+  <p>アスペクトは、2つの天体が黄道上でどれくらいの角度を作っているかを見る技法です。角度の種類によって、天体同士が調和的に響き合うか、摩擦を生みながら成長を促すかが変わります。</p>
+  <div class="tbl-wrap">
+  <table class="stack">
+    <thead><tr><th>アスペクト</th><th>角度</th><th>意味</th></tr></thead>
+    <tbody>
+      <tr><td data-label="アスペクト" class="em">☌ コンジャンクション</td><td data-label="角度">0°</td><td data-label="意味">同じ位置で重なり、二つの力が融合して強い影響力を持ちます。</td></tr>
+      <tr><td data-label="アスペクト" class="em">☍ オポジション</td><td data-label="角度">180°</td><td data-label="意味">対極で引き合い、緊張と補完の関係。統合により大きな成長が生まれます。</td></tr>
+      <tr><td data-label="アスペクト" class="em">△ トライン</td><td data-label="角度">120°</td><td data-label="意味">調和的に流れ、自然な才能と恵みをもたらします。</td></tr>
+      <tr><td data-label="アスペクト" class="em">□ スクエア</td><td data-label="角度">90°</td><td data-label="意味">摩擦と挑戦。乗り越えることで大きな力を獲得します。</td></tr>
+      <tr><td data-label="アスペクト" class="em">⚹ セクスタイル</td><td data-label="角度">60°</td><td data-label="意味">協調的に機会と縁を引き寄せます。活用することで才能が開花します。</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>トラインとセクスタイルは「調和のアスペクト」、オポジションとスクエアは「葛藤のアスペクト」と呼ばれます。葛藤のアスペクトは決して悪いものではなく、むしろ意識的に取り組むことで最も大きな成長をもたらす配置とされています。<a href="horoscope.html" style="color:var(--gold2);">個人鑑定ページ</a>の「主要なアスペクト」欄では、あなたの天体同士に実際にどのアスペクトが成立しているかを確認できます。</p>
+</section>
+
+<hr class="div">
+
+<section class="step">
+  <div class="sec-num">Your Result</div>
+  <h2>鑑定結果はこう見ます</h2>
+  <div class="recap">
+    <ul>
+      <li>ホロスコープは「天体（何が）」「星座（どのように）」「ハウス（どこで）」「アスペクト（天体同士の関係）」の4要素の掛け合わせで読み解きます。</li>
+      <li>10天体は個人天体（太陽〜火星）・社会天体（木星・土星）・世代天体（天王星・海王星・冥王星）の3グループに分かれます。</li>
+      <li>12星座は4エレメント×3クオリティの組み合わせ、12ハウスは人生の舞台を12分割したものです。</li>
+      <li>5大アスペクトのうちトライン・セクスタイルは調和、オポジション・スクエアは葛藤を通じた成長のサインです。</li>
+    </ul>
+  </div>
+</section>
+
+<p class="footnote">
+  本ページの記載内容は、西洋占星術の伝統的な体系（トロピカル方式・主要10天体）に基づいて構成しています。ハウス・アセンダントの算出には正確な出生時刻が必要です。
+</p>
+
+</article>
+
+<section class="ora-section">
+  <div class="container wide">
+    <p class="ora-label">Free Tools</p>
+    <p class="ora-title">実際に自分のホロスコープを見てみる</p>
+    <div class="ora-grid">
+      <a href="horoscope.html" class="ora-card">
+        <span class="ora-icon">☽</span>
+        <span class="ora-name">西洋占星術 個人鑑定</span>
+        <span class="ora-sub">Horoscope</span>
+      </a>
+      <a href="../四柱推命/shichusuimei.html" class="ora-card">
+        <span class="ora-icon">☯</span>
+        <span class="ora-name">四柱推命</span>
+        <span class="ora-sub">Four Pillars</span>
+      </a>
+      <a href="../タロット/tarot.html" class="ora-card">
+        <span class="ora-icon">✦</span>
+        <span class="ora-name">タロット</span>
+        <span class="ora-sub">Celtic Cross</span>
+      </a>
+      <a href="../算命学/sanmeigaku.html" class="ora-card">
+        <span class="ora-icon">✧</span>
+        <span class="ora-name">算命学</span>
+        <span class="ora-sub">Sanmei</span>
+      </a>
+      <a href="../数秘術/suuhijutsu.html" class="ora-card">
+        <span class="ora-icon">∞</span>
+        <span class="ora-name">数秘術</span>
+        <span class="ora-sub">Numerology</span>
+      </a>
+      <a href="../九星気学/kyuseikigaku.html" class="ora-card">
+        <span class="ora-icon">✶</span>
+        <span class="ora-name">九星気学</span>
+        <span class="ora-sub">Nine Stars</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <a href="../../index.html" style="color:var(--gold);text-decoration:none;">ASUMIRA 占い</a> ｜ 西洋占星術ガイド ／ © ASUMIRA 占い All Rights Reserved.
+</footer>
+
+<script>
+/* ══════════════════════════════════════
+   ナビゲーション（scroll）
+══════════════════════════════════════ */
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('nav');
+  nav.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+/* ══════════════════════════════════════
+   星空パーティクル（既存ページと同一実装）
+══════════════════════════════════════ */
+(function () {
+  var c = document.getElementById('stars-canvas');
+  if (!c || !c.getContext) return;
+  var ctx = c.getContext('2d'), S = [];
+  function resize() {
+    c.width = window.innerWidth; c.height = window.innerHeight; S = [];
+    var n = Math.floor(c.width * c.height / 7500);
+    for (var i = 0; i < n; i++) S.push({ x: Math.random() * c.width, y: Math.random() * c.height, r: Math.random() * 1.1 + .2, a: Math.random() * .4 + .08, sp: Math.random() * .0018 + .0006, ph: Math.random() * Math.PI * 2 });
+  }
+  var SS = [], ssLast = 0, ssDelay = 2500 + Math.random() * 4000;
+  function ShootingStar() {
+    this.x = c.width * (0.45 + Math.random() * 0.55); this.y = c.height * (Math.random() * 0.28);
+    var ang = (155 + Math.random() * 15) * Math.PI / 180, spd = 5 + Math.random() * 4;
+    this.vx = Math.cos(ang) * spd; this.vy = Math.sin(ang) * spd;
+    this.len = 90 + Math.random() * 80; this.life = 0; this.maxLife = 60 + Math.random() * 35; this.op = 0;
+    var mag = Math.sqrt(this.vx * this.vx + this.vy * this.vy); this.nx = -this.vx / mag; this.ny = -this.vy / mag;
+  }
+  ShootingStar.prototype.update = function () { this.life++; this.x += this.vx; this.y += this.vy; var p = this.life / this.maxLife; this.op = p < 0.15 ? p / 0.15 : p > 0.65 ? Math.max(0, 1 - (p - 0.65) / 0.35) : 1; };
+  ShootingStar.prototype.draw = function () { var tx = this.x + this.nx * this.len, ty = this.y + this.ny * this.len; var g = ctx.createLinearGradient(this.x, this.y, tx, ty); g.addColorStop(0, 'rgba(255,252,245,' + this.op + ')'); g.addColorStop(0.25, 'rgba(230,210,165,' + (this.op * 0.7) + ')'); g.addColorStop(0.7, 'rgba(196,168,106,' + (this.op * 0.2) + ')'); g.addColorStop(1, 'rgba(196,168,106,0)'); ctx.save(); ctx.beginPath(); ctx.moveTo(this.x, this.y); ctx.lineTo(tx, ty); ctx.strokeStyle = g; ctx.lineWidth = 1.5; ctx.shadowColor = 'rgba(255,245,200,0.55)'; ctx.shadowBlur = 6; ctx.stroke(); var b = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, 9); b.addColorStop(0, 'rgba(255,255,252,' + this.op + ')'); b.addColorStop(0.35, 'rgba(240,225,180,' + (this.op * 0.5) + ')'); b.addColorStop(1, 'rgba(196,168,106,0)'); ctx.shadowBlur = 0; ctx.beginPath(); ctx.arc(this.x, this.y, 9, 0, Math.PI * 2); ctx.fillStyle = b; ctx.fill(); ctx.restore(); };
+  ShootingStar.prototype.isDead = function () { return this.life >= this.maxLife; };
+  var SP = [], spLast = 0;
+  var PC = [[255,182,205],[255,160,185],[240,140,170],[255,205,222]];
+  function SakuraPetal() {
+    this.x = Math.random() * (c.width + 100) - 50; this.y = -15;
+    this.sA = 4 + Math.random() * 5; this.sB = this.sA * 0.55;
+    this.vy = 0.32 + Math.random() * 0.38; this.vx = (Math.random() - 0.45) * 0.4;
+    this.rot = Math.random() * Math.PI * 2; this.rotSp = (Math.random() - 0.5) * 0.022;
+    this.sw = Math.random() * Math.PI * 2; this.swSp = 0.018 + Math.random() * 0.018; this.swR = 0.8 + Math.random() * 1.5;
+    this.al = 0.22 + Math.random() * 0.2; this.col = PC[Math.floor(Math.random() * PC.length)];
+  }
+  SakuraPetal.prototype.update = function () { this.sw += this.swSp; this.x += this.vx + Math.sin(this.sw) * this.swR; this.y += this.vy; this.rot += this.rotSp; };
+  SakuraPetal.prototype.draw = function () { ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rot); ctx.beginPath(); ctx.ellipse(0, 0, this.sA, this.sB, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(' + this.col[0] + ',' + this.col[1] + ',' + this.col[2] + ',' + this.al + ')'; ctx.fill(); ctx.restore(); };
+  SakuraPetal.prototype.isDead = function () { return this.y > c.height + 30 || this.x < -80 || this.x > c.width + 80; };
+  var FF = [];
+  var FFC = [[180,230,80],[150,220,100],[200,235,60]];
+  function Firefly() {
+    this.x = Math.random() * c.width; this.y = Math.random() * c.height;
+    this.r = 1.5 + Math.random() * 2.5;
+    this.vx = (Math.random() - 0.5) * 0.8; this.vy = (Math.random() - 0.5) * 0.8;
+    this.sp = 0.4 + Math.random() * 0.4;
+    this.ph = Math.random() * Math.PI * 2; this.bSp = 0.02 + Math.random() * 0.03;
+    this.bAl = 0.5 + Math.random() * 0.5;
+    this.col = FFC[Math.floor(Math.random() * FFC.length)];
+  }
+  Firefly.prototype.update = function () {
+    this.vx += (Math.random()-0.5)*0.04; this.vy += (Math.random()-0.5)*0.04;
+    var len = Math.sqrt(this.vx*this.vx + this.vy*this.vy);
+    if (len > 0) { this.vx = this.vx/len*this.sp; this.vy = this.vy/len*this.sp; }
+    var mg = 60;
+    if (this.x < mg) this.vx += 0.02; if (this.x > c.width - mg) this.vx -= 0.02;
+    if (this.y < mg) this.vy += 0.02; if (this.y > c.height - mg) this.vy -= 0.02;
+    this.x += this.vx; this.y += this.vy; this.ph += this.bSp;
+  };
+  Firefly.prototype.draw = function () {
+    var br = Math.max(0, Math.sin(this.ph)), al = this.bAl * br;
+    if (al < 0.02) return;
+    var r = this.r, co = this.col;
+    ctx.save();
+    var g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, r*4);
+    g.addColorStop(0, 'rgba('+co[0]+','+co[1]+','+co[2]+','+(al*0.6).toFixed(3)+')');
+    g.addColorStop(0.4, 'rgba('+co[0]+','+co[1]+','+co[2]+','+(al*0.2).toFixed(3)+')');
+    g.addColorStop(1, 'rgba('+co[0]+','+co[1]+','+co[2]+',0)');
+    ctx.beginPath(); ctx.arc(this.x, this.y, r*4, 0, Math.PI*2); ctx.fillStyle = g; ctx.fill();
+    ctx.beginPath(); ctx.arc(this.x, this.y, r, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,255,220,'+(al*0.9).toFixed(3)+')'; ctx.fill();
+    ctx.restore();
+  };
+  var MB = [], mbLast = 0;
+  function MinagiBubble() {
+    this.x = Math.random() * c.width;
+    this.y = c.height + 15;
+    this.r = 2.5 + Math.random() * 9;
+    this.vy = -(0.5 + Math.random() * 0.65);
+    this.vx = (Math.random() - 0.5) * 0.6;
+    this.wb = Math.random() * Math.PI * 2;
+    this.wbSp = 0.018 + Math.random() * 0.022;
+    this.al = 0.08 + Math.random() * 0.08;
+    this.hue = 195 + Math.random() * 45;
+  }
+  MinagiBubble.prototype.update = function () { this.wb += this.wbSp; this.x += this.vx + Math.sin(this.wb) * 0.5; this.y += this.vy; };
+  MinagiBubble.prototype.draw = function () {
+    var r = this.r, al = this.al;
+    ctx.save();
+    var g = ctx.createRadialGradient(this.x - r*0.3, this.y - r*0.3, 0, this.x, this.y, r);
+    g.addColorStop(0, 'rgba(220,245,255,' + (al*0.5).toFixed(3) + ')');
+    g.addColorStop(0.6, 'hsla(' + this.hue + ',80%,68%,' + (al*0.2).toFixed(3) + ')');
+    g.addColorStop(1, 'hsla(' + this.hue + ',90%,58%,' + (al*0.55).toFixed(3) + ')');
+    ctx.beginPath(); ctx.arc(this.x, this.y, r, 0, Math.PI*2);
+    ctx.fillStyle = g; ctx.fill();
+    ctx.strokeStyle = 'hsla(' + this.hue + ',70%,82%,' + Math.min(al*2.0,0.28).toFixed(3) + ')';
+    ctx.lineWidth = 0.8; ctx.stroke();
+    ctx.beginPath(); ctx.arc(this.x - r*0.32, this.y - r*0.35, r*0.18, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,255,255,' + Math.min(al*2.5,0.22).toFixed(3) + ')'; ctx.fill();
+    ctx.restore();
+  };
+  MinagiBubble.prototype.isDead = function () { return this.y < -this.r * 2; };
+  function draw(t) {
+    ctx.clearRect(0, 0, c.width, c.height);
+    var sakura = document.documentElement.classList.contains('theme-sakura');
+    var shinryoku = document.documentElement.classList.contains('theme-shinryoku');
+    var minagi = document.documentElement.classList.contains('theme-minagi');
+    var sc = sakura ? 'rgba(255,195,215,' : shinryoku ? 'rgba(200,235,180,' : minagi ? 'rgba(180,220,245,' : 'rgba(245,242,235,';
+    for (var i = 0; i < S.length; i++) { var s = S[i]; ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, 6.2832); ctx.fillStyle = sc + (s.a * (.55 + .45 * Math.sin(t * s.sp + s.ph))) + ')'; ctx.fill(); }
+    if (sakura) {
+      if (t - spLast > 1680) { SP.push(new SakuraPetal()); if (Math.random() < 0.15) SP.push(new SakuraPetal()); spLast = t; }
+      for (var k = SP.length - 1; k >= 0; k--) { SP[k].update(); SP[k].draw(); if (SP[k].isDead()) SP.splice(k, 1); }
+    } else if (shinryoku) {
+      if (!FF.length) { var n = Math.max(8, Math.floor(c.width/60)); for (var qi=0;qi<n;qi++) FF.push(new Firefly()); }
+      for (var fi=0; fi<FF.length; fi++) { FF[fi].update(); FF[fi].draw(); }
+    } else if (minagi) {
+      if (t - mbLast > 5040) { MB.push(new MinagiBubble()); if (Math.random() < 0.2) MB.push(new MinagiBubble()); mbLast = t; }
+      for (var p = MB.length - 1; p >= 0; p--) { MB[p].update(); MB[p].draw(); if (MB[p].isDead()) MB.splice(p, 1); }
+    } else {
+      if (!ssLast) ssLast = t; if (t - ssLast > ssDelay) { SS.push(new ShootingStar()); ssLast = t; ssDelay = 2500 + Math.random() * 5000; }
+      for (var j = SS.length - 1; j >= 0; j--) { SS[j].update(); SS[j].draw(); if (SS[j].isDead()) SS.splice(j, 1); }
+    }
+    requestAnimationFrame(draw);
+  }
+  resize(); window.addEventListener('resize', resize); requestAnimationFrame(draw);
+})();
+/* ===== テーマ管理 ===== */
+(function() {
+  function setTheme(theme) {
+    var html = document.documentElement;
+    html.classList.remove('theme-sakura', 'theme-shinryoku', 'theme-minagi');
+    if (theme === 'sakura') html.classList.add('theme-sakura');
+    else if (theme === 'shinryoku') html.classList.add('theme-shinryoku');
+    else if (theme === 'minagi') html.classList.add('theme-minagi');
+    localStorage.setItem('asumira-theme', theme);
+    document.querySelectorAll('.theme-option').forEach(function(btn) {
+      btn.classList.toggle('active', btn.dataset.theme === theme);
+    });
+  }
+  var themeBtn = document.getElementById('theme-btn');
+  var themePicker = document.getElementById('theme-picker');
+  if (themeBtn && themePicker) {
+    themeBtn.addEventListener('click', function(e) { e.stopPropagation(); themePicker.classList.toggle('open'); });
+    document.addEventListener('click', function() { themePicker.classList.remove('open'); });
+    themePicker.addEventListener('click', function(e) { e.stopPropagation(); });
+    document.querySelectorAll('.theme-option').forEach(function(btn) {
+      btn.addEventListener('click', function() { setTheme(btn.dataset.theme); themePicker.classList.remove('open'); });
+    });
+  }
+  var navMenu = document.getElementById('nav-menu');
+  var navMenuBtn = document.getElementById('nav-menu-btn');
+  if (navMenu && navMenuBtn) {
+    navMenuBtn.addEventListener('click', function(e) { e.stopPropagation(); navMenu.classList.toggle('open'); if (themePicker) themePicker.classList.remove('open'); });
+    document.addEventListener('click', function() { navMenu.classList.remove('open'); });
+    navMenu.querySelector('.nav-dropdown').addEventListener('click', function(e) { e.stopPropagation(); });
+  }
+  setTheme(localStorage.getItem('asumira-theme') || 'gold');
+})();
+</script>
+
+</body>
+</html>

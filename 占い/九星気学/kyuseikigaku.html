@@ -119,9 +119,35 @@ body{background:var(--bg);color:var(--cream);font-family:'Noto Sans JP',sans-ser
 .cell.elem-earth .cell-num{color:var(--earth)}
 .cell.elem-metal .cell-num{color:var(--metal)}
 .cell.elem-water .cell-num{color:var(--water)}
+.cell.badge-kyo{box-shadow:inset 0 0 0 2px rgba(201,120,120,.6);background:rgba(201,120,120,.08)}
+.cell.badge-kichi{box-shadow:inset 0 0 0 2px rgba(196,168,106,.55);background:rgba(196,168,106,.08)}
+.cell-badge{position:absolute;bottom:4px;left:0;right:0;font-size:7px;letter-spacing:.03em;line-height:1.3;padding:0 3px}
+.cell-badge-kyo{color:#e8a0a0}
+.cell-badge-kichi{color:var(--gold)}
 .board-legend{font-size:11px;color:var(--muted2);line-height:1.9;margin-top:14px;letter-spacing:.03em;padding:12px 16px;border:1px solid var(--border);background:rgba(255,255,255,.015)}
 .board-legend b{color:var(--gold2);font-weight:400}
 @media(max-width:760px){.boards-wrap{grid-template-columns:1fr}}
+.kyo-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0}
+.kyo-chip{border:1px solid var(--border);background:rgba(255,255,255,.015);padding:10px 12px;border-radius:4px}
+.kyo-chip.is-kyo{border-color:rgba(201,120,120,.4);background:rgba(201,120,120,.06)}
+.kyo-chip-name{font-size:10px;letter-spacing:.06em;color:var(--muted2)}
+.kyo-chip.is-kyo .kyo-chip-name{color:#e8a0a0}
+.kyo-chip-dir{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold2);margin-top:3px}
+.kg-tabs{display:flex;gap:8px;margin:28px 0 18px;flex-wrap:wrap}
+.kg-tab-btn{background:transparent;border:1px solid var(--border);color:var(--muted2);font-size:11px;letter-spacing:.08em;padding:8px 18px;cursor:pointer;transition:all .2s;font-family:'Noto Serif JP',serif}
+.kg-tab-btn.active{border-color:rgba(196,168,106,.5);color:var(--gold);background:rgba(196,168,106,.08)}
+.kg-cal-panel{display:none}
+.kg-cal-panel.active{display:block}
+.kg-cal-form{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+.kg-cal-form select,.kg-cal-form input{background:var(--bg3);border:1px solid var(--border);color:var(--cream);padding:7px 10px;font-size:12px;font-family:inherit}
+.kg-cal-note{font-size:10px;color:var(--muted2);letter-spacing:.04em;margin-bottom:14px}
+.dk-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.dk-table th{text-align:left;font-weight:400;letter-spacing:.08em;color:var(--gold);font-size:10px;padding:8px 12px;border-bottom:1px solid rgba(196,168,106,.3)}
+.dk-table td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--cream);letter-spacing:.02em;line-height:1.6}
+.dk-table tr.is-current td{background:rgba(196,168,106,.08);color:var(--gold2)}
+.dk-now{display:inline-block;white-space:nowrap;margin-left:8px;font-size:9px;letter-spacing:.05em;color:var(--gold);border:1px solid rgba(196,168,106,.4);padding:1px 7px;border-radius:10px}
+.dk-table td:first-child{white-space:nowrap}
+@media(max-width:640px){.dk-table{font-size:11px}.dk-table th,.dk-table td{padding:8px 6px}}
 .kg-readings{display:flex;flex-direction:column;gap:30px;margin-bottom:48px}
 .kg-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:40px;box-shadow:0 4px 30px rgba(0,0,0,.38);position:relative;overflow:hidden}
 .kg-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(196,168,106,.55),transparent)}
@@ -386,8 +412,29 @@ html.theme-minagi section { position: relative; z-index: 1; }
     <div class="sec-div"><span>九星盤 — 年盤・月盤</span></div>
     <p style="font-size:12px;color:var(--muted);line-height:2;letter-spacing:.04em;margin-bottom:26px;">伝統の後天定位（南を上・北を下）に従い、中央（中宮）に星を置いた盤です。年盤の中宮は<b style="color:var(--gold2);font-weight:400;">本命星</b>、月盤の中宮は<b style="color:var(--gold2);font-weight:400;">月命星</b>。月盤上で本命星が回座する方位が<b style="color:var(--gold2);font-weight:400;">傾斜宮</b>です。</p>
     <div class="boards-wrap" id="nt-boards"></div>
+    <div class="sec-div"><span>吉方位カレンダー — 凶方位・吉方位</span></div>
+    <p style="font-size:12px;color:var(--muted);line-height:2;letter-spacing:.04em;margin-bottom:18px;">五黄殺・暗剣殺・本命殺・本命的殺・歳破の5つの凶方位と、五行が支え合う吉方位を、年盤・月盤・日盤の3つの盤で確認できます。移動距離の目安は、年盤＝引っ越しや海外・長距離旅行、月盤＝200〜500km程度の中距離、日盤＝日帰り〜近距離の外出です。</p>
+    <div class="kg-tabs">
+      <button class="kg-tab-btn active" onclick="switchKgCal('year',this)">年盤</button>
+      <button class="kg-tab-btn" onclick="switchKgCal('month',this)">月盤</button>
+      <button class="kg-tab-btn" onclick="switchKgCal('day',this)">日盤</button>
+    </div>
+    <div class="kg-cal-panel active" id="kgcal-year"></div>
+    <div class="kg-cal-panel" id="kgcal-month">
+      <div class="kg-cal-form"><label style="font-size:11px;color:var(--muted2);">対象月</label><select id="kgcal-month-sel" onchange="renderKgMonthBoard()"></select></div>
+      <div class="kg-cal-note">月盤は歳破を含まず、五黄殺・暗剣殺・本命殺・本命的殺のみを表示します。</div>
+      <div id="kgcal-month-out"></div>
+    </div>
+    <div class="kg-cal-panel" id="kgcal-day">
+      <div class="kg-cal-form"><label style="font-size:11px;color:var(--muted2);">対象日</label><input type="date" id="kgcal-day-sel" onchange="renderKgDayBoard()"></div>
+      <div class="kg-cal-note">日盤は歳破を含まず、五黄殺・暗剣殺・本命殺・本命的殺のみを表示します。</div>
+      <div id="kgcal-day-out"></div>
+    </div>
     <div class="sec-div"><span>鑑定テキスト</span></div>
     <div class="kg-readings" id="nt-readings"></div>
+    <div class="sec-div"><span>同会年運 — 今後9年のサイクル</span></div>
+    <p style="font-size:12px;color:var(--muted);line-height:2;letter-spacing:.04em;margin-bottom:8px;">同会は、本命星が年ごとの年盤上でどの方位に巡るかを示す運勢の巡り合わせです。9年でひと巡りします。</p>
+    <div id="nt-doukai-table"></div>
     <div class="kantei-btn-wrap" id="kg-kantei-wrap" style="display:none;">
       <button class="kantei-btn" onclick="openKanteiKG()">鑑定書を作成する</button>
       <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
@@ -488,13 +535,13 @@ function findDirOfStar(chart,star){for(var dir in chart)if(chart[dir]===star)ret
 var KYU_NAME={N:'坎宮',NE:'艮宮',E:'震宮',SE:'巽宮',S:'離宮',SW:'坤宮',W:'兌宮',NW:'乾宮',C:'中宮'};
 function keishaKyu(h,g){if(h===g)return{dir:'C',name:'中宮傾斜',special:true};var dir=findDirOfStar(chartWithCenter(g),h);return{dir:dir,name:KYU_NAME[dir]+'傾斜',special:false}}
 function doukaiKyu(h,vy){var yc=honmeiFromYear(vy);if(h===yc)return{dir:'C',name:'中宮同会',doukaiStar:5,special:true};var dir=findDirOfStar(chartWithCenter(yc),h);return{dir:dir,name:KYU_NAME[dir]+'同会',doukaiStar:BASE_LOSHU[dir],special:false}}
-function computeKyusei(y,m,d,vy){var rd=risshunDayJST(y),ky=y;if(m===1)ky=y-1;else if(m===2&&d<rd.d)ky=y-1;var honmei=honmeiFromYear(ky),mi=setsuMonthIdx(y,m,d),getsumei=getsumeiStar(honmei,mi),nichimei=nichimeiStar(y,m,d);return{honmei:honmei,getsumei:getsumei,nichimei:nichimei,keisha:keishaKyu(honmei,getsumei),doukai:doukaiKyu(honmei,vy),kigakuYear:ky,monthIdx:mi,risshun:rd}}
+function computeKyusei(y,m,d,vy){var rd=risshunDayJST(y),ky=kigakuYearFor(y,m,d);var honmei=honmeiFromYear(ky),mi=setsuMonthIdx(y,m,d),getsumei=getsumeiStar(honmei,mi),nichimei=nichimeiStar(y,m,d);return{honmei:honmei,getsumei:getsumei,nichimei:nichimei,keisha:keishaKyu(honmei,getsumei),doukai:doukaiKyu(honmei,vy),kigakuYear:ky,monthIdx:mi,risshun:rd}}
 
 var STAR={1:{name:'一白水星',yomi:'いっぱくすいせい',elem:'water',elemJP:'水'},2:{name:'二黒土星',yomi:'じこくどせい',elem:'earth',elemJP:'土'},3:{name:'三碧木星',yomi:'さんぺきもくせい',elem:'wood',elemJP:'木'},4:{name:'四緑木星',yomi:'しろくもくせい',elem:'wood',elemJP:'木'},5:{name:'五黄土星',yomi:'ごおうどせい',elem:'earth',elemJP:'土'},6:{name:'六白金星',yomi:'ろっぱくきんせい',elem:'metal',elemJP:'金'},7:{name:'七赤金星',yomi:'しちせききんせい',elem:'metal',elemJP:'金'},8:{name:'八白土星',yomi:'はっぱくどせい',elem:'earth',elemJP:'土'},9:{name:'九紫火星',yomi:'きゅうしかせい',elem:'fire',elemJP:'火'}};
 var ELEM_JP={wood:'木',fire:'火',earth:'土',metal:'金',water:'水'};
 var HONMEI_TEXT={
  1:{t:'水のように柔らかく、どんな器にも形を変えて馴染む順応力の持ち主。<strong>内面には深い思索と強い意志</strong>を秘め、表面は穏やかでも芯は折れません。人との交わりを大切にし、相手の気持ちを汲む共感力に優れます。一方で苦労を抱え込みやすい面も。流れに身を任せつつ進む方向を見失わないことが開運の鍵です。',kw:['順応','思考力','共感','忍耐','交際'],job:'適職：水商売・飲食・流通・営業・作家・医療・心理。'},
- 2:{t:'大地のように広く受け止め、人を育てる母性と勤勉さの星。<strong>派手さより着実さ</strong>を旨とし、コツコツ積み上げた努力が必ず実を結びます。縁の下の力持ちとして組織や家庭を支え、深い信頼を集めます。慎重ゆえ決断に時間がかかる面も。焦らず自分のペースを守ることが大きな安定をもたらします。',kw:['育成','勤勉','受容','堅実','補佐'],job:'適職：農業・不動産・事務・介護・サポート職・教育。'},
+ 2:{t:'大地のように広く受け止め、人を育てる母性と勤勉さの星。<strong>派手さより着実さ</strong>を旨とし、コツコツ積み上げた努力が実を結びやすい傾向があります。縁の下の力持ちとして組織や家庭を支え、深い信頼を集めます。慎重ゆえ決断に時間がかかる面も。焦らず自分のペースを守ることが大きな安定をもたらします。',kw:['育成','勤勉','受容','堅実','補佐'],job:'適職：農業・不動産・事務・介護・サポート職・教育。'},
  3:{t:'春の雷のように、若々しいエネルギーで物事を一気に動かす行動派。<strong>発想とスピード</strong>に長け、新しいことへ真っ先に飛び込む勇気があります。明るく音や言葉で周囲を活気づける一方、熱しやすく冷めやすく短気が玉に瑕。最初の情熱を最後までやり遂げる粘りで、才能が一段と開花します。',kw:['行動力','発展','情報','若さ','表現'],job:'適職：IT・音楽・放送・営業・スポーツ・電気・広告。'},
  4:{t:'風のように軽やかに行き渡り、人と人を結ぶ縁の星。<strong>信用と調和</strong>を何より大切にし、社交の場で自然と人望を集めます。物事を丁寧に整え、長期的な信頼関係を築くのが得意。優しさゆえ優柔不断になり抱え込むことも。自分の意思をはっきり示すことで、縁がさらに良い形で巡ります。',kw:['信用','調和','縁','社交','整理'],job:'適職：貿易・運送・旅行・広報・仲介・接客・通信。'},
  5:{t:'九星の中心に座す帝王の星。<strong>強烈な個性と統率力</strong>を備え、良くも悪くも周囲を巻き込む求心力があります。破壊と再生を司り、ゼロから物事を立て直す底力は随一。我が強く頑固になりやすい面もありますが、その芯の強さこそ大成の源。人の意見に耳を傾けるほど器が磨かれます。',kw:['中心','統率','再生','強さ','個性'],job:'適職：経営者・リーダー・金融・リサイクル・葬祭。'},
@@ -511,7 +558,7 @@ var SHAKAI_TEXT={
  6:'高い理想を掲げ、組織や社会を正しく導く使命。統率者・責任者として筋を通し、人々の信頼に応える役割を全うします。',
  7:'人を楽しませ、潤いと喜びを社会にもたらす使命。場を和ませ、交流や経済を活性化させるムードメーカーとして輝きます。',
  8:'変化と継承の橋渡しをする使命。改革者・継承者として古いものを新しくつなぎ、転換期にこそ道を切り拓く役割を持ちます。',
- 9:'知性と美で人を照らし、真価を見極め広める使命。表現者・専門家として価値あるものに光を当て、世に示す役割を担います。'};
+ 9:'知性と美で真価を見極め、広める使命。表現者・専門家として価値あるものを見抜き、世に示す役割を担います。'};
 var DAILY_TEXT={
  1:'静かに自分と向き合う時間を確保し、感情を溜め込まず流すこと。柔軟さを保ちつつ本当の望みを見失わないことが、あなたらしく生きる鍵です。',
  2:'焦らず自分のペースを守り、日々の積み重ねを信じること。人に尽くす一方で自分自身を労わるバランスを忘れなければ、揺るがぬ安定が育ちます。',
@@ -555,7 +602,44 @@ var REL_INFO={sho:{jp:'相生',cls:'rel-sho',u:1},hiwa:{jp:'比和',cls:'rel-hiw
 var GRID_ORDER=['SE','S','SW','E','C','W','NE','N','NW'];
 var DIR_LABEL={N:'N 北',S:'S 南',E:'E 東',W:'W 西',NE:'NE 北東',SE:'SE 南東',SW:'SW 南西',NW:'NW 北西',C:'中宮'};
 function elemClassOf(star){return'elem-'+STAR[star].elem}
-function renderBoard(center,opts){opts=opts||{};var chart=chartWithCenter(center),html='<div class="board">';for(var i=0;i<GRID_ORDER.length;i++){var dir=GRID_ORDER[i],star=chart[dir],isC=dir==='C',cls=['cell',elemClassOf(star)];if(isC)cls.push('center');if(opts.markHonmei&&!isC&&star===opts.markHonmei)cls.push('mark-honmei');html+='<div class="'+cls.join(' ')+'"><span class="cell-dir">'+DIR_LABEL[dir]+'</span><span class="cell-num">'+star+'</span><span class="cell-name">'+STAR[star].name.slice(0,2)+'</span></div>'}return html+'</div>'}
+
+// ── 方位学：凶方位・吉方位 ──────────────────────────
+var OPPOSITE_DIR={N:'S',S:'N',E:'W',W:'E',NE:'SW',SW:'NE',SE:'NW',NW:'SE'};
+var ZODIAC_DIR=['N','NE','NE','E','SE','SE','S','SW','SW','W','NW','NW'];
+var KYO_LABEL={goku:'五黄殺',anken:'暗剣殺',honmei:'本命殺',honmeiteki:'本命的殺',saiha:'歳破'};
+function zodiacDirOfYear(kigakuYear){return ZODIAC_DIR[mod(kigakuYear-4,12)]}
+function kigakuYearFor(y,m,d){var rd=risshunDayJST(y);if(m===1)return y-1;if(m===2&&d<rd.d)return y-1;return y}
+function monthCenterStar(y,m){var d=15,ky=kigakuYearFor(y,m,d),yearStar=honmeiFromYear(ky),mi=setsuMonthIdx(y,m,d);return getsumeiStar(yearStar,mi)}
+function kyoForChart(chart,honmei){
+  var gokuDir=findDirOfStar(chart,5);if(gokuDir==='C')gokuDir=null;
+  var ankenDir=gokuDir?OPPOSITE_DIR[gokuDir]:null;
+  var hmDir=findDirOfStar(chart,honmei),honmeiChuu=(hmDir==='C');if(honmeiChuu)hmDir=null;
+  var htDir=hmDir?OPPOSITE_DIR[hmDir]:null;
+  var map={};
+  function add(dir,type){if(!dir)return;map[dir]=(map[dir]||[]).concat(type)}
+  add(gokuDir,'goku');add(ankenDir,'anken');add(hmDir,'honmei');add(htDir,'honmeiteki');
+  return{chart:chart,gokuDir:gokuDir,ankenDir:ankenDir,hmDir:hmDir,htDir:htDir,honmeiChuu:honmeiChuu,map:map};
+}
+function getKyoDirections(kigakuYear,honmei){
+  var k=kyoForChart(chartWithCenter(honmeiFromYear(kigakuYear)),honmei);
+  var saihaDir=zodiacDirOfYear(kigakuYear);
+  k.map[saihaDir]=(k.map[saihaDir]||[]).concat('saiha');
+  k.saihaDir=saihaDir;
+  return k;
+}
+function getKichiDirections(chart,honmei){
+  var myElem=STAR[honmei].elem,out=[];
+  for(var i=0;i<GRID_ORDER.length;i++){var dir=GRID_ORDER[i];if(dir==='C')continue;var st=chart[dir],rel=relation(myElem,STAR[st].elem);if(rel==='sho'||rel==='hiwa')out.push({dir:dir,rel:rel})}
+  return out;
+}
+function kyoBadgesFor(kyo,kichi){
+  var badges={};
+  for(var dir in kyo.map)badges[dir]={type:'kyo',text:kyo.map[dir].map(function(t){return KYO_LABEL[t]}).join('・')};
+  kichi.forEach(function(k){if(!badges[k.dir])badges[k.dir]={type:'kichi',text:REL_INFO[k.rel].jp+'（吉方位）'}});
+  return badges;
+}
+
+function renderBoard(center,opts){opts=opts||{};var chart=chartWithCenter(center),html='<div class="board">';for(var i=0;i<GRID_ORDER.length;i++){var dir=GRID_ORDER[i],star=chart[dir],isC=dir==='C',cls=['cell',elemClassOf(star)];if(isC)cls.push('center');if(opts.markHonmei&&!isC&&star===opts.markHonmei)cls.push('mark-honmei');var badge='';if(opts.badges&&opts.badges[dir]){var bd=opts.badges[dir];cls.push('badge-'+bd.type);badge='<span class="cell-badge cell-badge-'+bd.type+'">'+bd.text+'</span>'}html+='<div class="'+cls.join(' ')+'"><span class="cell-dir">'+DIR_LABEL[dir]+'</span><span class="cell-num">'+star+'</span><span class="cell-name">'+STAR[star].name.slice(0,2)+'</span>'+badge+'</div>'}return html+'</div>'}
 
 function calcNatal(){
   var y=+document.getElementById('nt-birth-year').value,m=+document.getElementById('nt-birth-month').value,d=+document.getElementById('nt-birth-day').value;
@@ -579,14 +663,24 @@ function calcNatal(){
   if(r.doukai.special){un='<b>本年（'+vy+'）の運勢：</b>本命星が年盤の中央に重なる<b>中宮同会</b>の年。注目が集まり物事が動きやすい反面、消耗しやすい時期です。新たな大勝負より足元を固め体調を整えるのが吉。';}
   else{var dk=KYU_TEXT[r.doukai.dir];un='<b>本年（'+vy+'）の運勢：</b>本命星が年盤で<b>'+dk.name+'</b>に回座する<b>'+r.doukai.name+'</b>。'+dk.doukai;}
   cards.push(cardKyu('② 傾斜宮 ｜ あなたに与えられた性格・本質',r.keisha.name,kt,ke,un));
-  cards.push(card('③ 月命星 ｜ あなたの社会的使命',r.getsumei,SHAKAI_TEXT[r.getsumei],null,'<b>幸せのかたち：</b>この社会的使命を全うするとき、あなたは最も満たされ社会の中で本来の輝きを放ちます。月命星は、世の中でどう役立ち何に喜びを見いだすかを示します。'));
+  cards.push(card('③ 月命星 ｜ あなたの社会的使命',r.getsumei,SHAKAI_TEXT[r.getsumei],null,'<b>幸せのかたち：</b>この社会的使命を全うするとき、あなたは最も満たされ、本来の力を発揮しやすくなります。月命星は、世の中でどう役立ち何に喜びを見いだすかを示します。'));
   cards.push(cardGen('④ あなたを導いてくれる人物','人生を良い方向へ導く縁','導',mE,'五行で、あなたの<strong>'+ELEM_JP[myE]+'性</strong>を育み生み出すのは<strong>'+ELEM_JP[mE]+'性</strong>の気。すなわち<strong>'+starsToNames(ELEM_STARS[mE])+'</strong>を本命星に持つ人々が、あなたを支え人生を良い方向へ導いてくれる縁です。'+ELEM_GUIDE[mE]+'迷ったとき、こうした星を持つ年長者や信頼できる相手に相談すると道がひらけます。'));
   cards.push(cardGen('⑤ 感じやすいストレスと解消方法','心の負担と整え方','圧',cE,'あなたの<strong>'+ELEM_JP[myE]+'性</strong>に圧となりやすいのは、これを剋する<strong>'+ELEM_JP[cE]+'性</strong>の気（'+starsToNames(ELEM_STARS[cE])+'）。'+ELEM_STRESS[cE]+'<br><br><strong>解消法：</strong>'+ELEM_RELIEF[myE]+'また'+ELEM_JP[chE]+'性的に気を外へ「洩らす」——'+ELEM_VENT[myE]+'——ことも、溜まった気を健やかに循環させます。'));
   var ms=ELEM_STARS[mE].concat(ELEM_STARS[chE]);
   cards.push(cardGen('⑥ あなたに与えられている結婚縁','パートナーとのご縁','縁',chE,MARRY_TEXT[r.honmei]+'<br><br>五行でみると相生（育み合う関係）になりやすいのは、'+ELEM_JP[mE]+'性・'+ELEM_JP[chE]+'性の星——<strong>'+starsToNames(ms)+'</strong>。これらを本命星に持つ相手とは自然に支え合える良縁になりやすいでしょう。詳しくは「相性鑑定」へ。'));
   cards.push(cardGen('⑦ あなたらしく生きるために','日々の過ごし方','日',myE,DAILY_TEXT[r.honmei]));
-  document.getElementById('nt-readings').innerHTML=cards.join('');
-  window._kgKantei={name:name,y:y,m:m,d:d,gender:gender,vy:vy,r:r};
+  document.getElementById('nt-readings').innerHTML=cards.join('')+'<div style="text-align:center;padding:12px;"><a href="kyuseigaku-guide.html" style="display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.06em;color:var(--gold2);text-decoration:none;border:1px solid var(--border);padding:10px 22px;border-radius:20px;">✶ 九星気学の仕組みをくわしく見る</a></div>';
+  var doukaiTimeline=getDoukaiTimeline(r.honmei,vy,9);
+  document.getElementById('nt-doukai-table').innerHTML=doukaiTableHtml(doukaiTimeline);
+  window._kgKantei={name:name,y:y,m:m,d:d,gender:gender,vy:vy,r:r,doukaiTimeline:doukaiTimeline,kyo:getKyoDirections(vy,r.honmei),kichi:getKichiDirections(chartWithCenter(honmeiFromYear(vy)),r.honmei)};
+  renderKgYearPanel();
+  document.getElementById('kgcal-month-sel').innerHTML='';
+  document.getElementById('kgcal-month-out').innerHTML='';
+  document.getElementById('kgcal-day-sel').value='';
+  document.getElementById('kgcal-day-out').innerHTML='';
+  var cps=document.querySelectorAll('.kg-cal-panel');for(var ci=0;ci<cps.length;ci++)cps[ci].classList.remove('active');
+  document.getElementById('kgcal-year').classList.add('active');
+  var ctb=document.querySelectorAll('.kg-tab-btn');for(var cj=0;cj<ctb.length;cj++)ctb[cj].classList.toggle('active',cj===0);
   var kwEl=document.getElementById('kg-kantei-wrap');if(kwEl)kwEl.style.display='';
   var a=document.getElementById('natal-result');a.classList.add('show');setTimeout(function(){a.scrollIntoView({behavior:'smooth',block:'start'})},60);
 }
@@ -594,7 +688,55 @@ function card(type,star,text,kw,note){var h='<div class="kg-card"><div class="kg
 function cardGen(type,sub,badge,elem,text,note){var h='<div class="kg-card"><div class="kg-card-head"><div class="kg-card-badge">'+badge+'</div><div class="kg-card-meta"><div class="kg-card-type">'+type+'</div><div class="kg-card-name">'+sub+'<span class="kg-card-elem elem-'+elem+'">'+ELEM_JP[elem]+'</span></div></div></div><div class="kg-card-text">'+text+'</div>';if(note)h+='<div class="kg-note">'+note+'</div>';return h+'</div>'}
 function cardKyu(type,kyuName,text,elem,note){var h='<div class="kg-card"><div class="kg-card-head"><div class="kg-card-badge">'+kyuName.slice(0,1)+'</div><div class="kg-card-meta"><div class="kg-card-type">'+type+'</div><div class="kg-card-name">'+kyuName+'<span class="kg-card-elem elem-'+elem+'">性格・本質</span></div></div></div><div class="kg-card-text">'+text+'</div>';if(note)h+='<div class="kg-note">'+note+'</div>';return h+'</div>'}
 
-function getPerson(who){var y=+document.getElementById('syn-'+who+'-birth-year').value,m=+document.getElementById('syn-'+who+'-birth-month').value,d=+document.getElementById('syn-'+who+'-birth-day').value;if(!y||!m||!d)return null;var name=document.getElementById('syn-'+who+'-name').value.trim();return{y:y,m:m,d:d,name:name||('お相手'+(who==='a'?'A':'B')),r:computeKyusei(y,m,d,new Date().getFullYear())}}
+// ── 吉方位カレンダー（年盤・月盤・日盤） ──────────────────────────
+function switchKgCal(id,btn){var ps=document.querySelectorAll('.kg-cal-panel');for(var i=0;i<ps.length;i++)ps[i].classList.remove('active');var bs=document.querySelectorAll('.kg-tab-btn');for(var j=0;j<bs.length;j++)bs[j].classList.remove('active');document.getElementById('kgcal-'+id).classList.add('active');btn.classList.add('active');if(id==='month'&&!document.getElementById('kgcal-month-sel').options.length)initKgMonthSelect();if(id==='day'&&!document.getElementById('kgcal-day-sel').value)initKgDaySelect()}
+function kyoChipsHtml(kyo,extra){
+  var items=[];
+  if(kyo.honmeiChuu)items.push({name:'本命殺（本命中宮）',dir:'年間を通じて特に慎重に',kyo:true});
+  if(kyo.gokuDir)items.push({name:'五黄殺',dir:DIR_LABEL[kyo.gokuDir],kyo:true});else if(!kyo.honmeiChuu)items.push({name:'五黄殺',dir:'該当なし（五黄中宮の年）',kyo:false});
+  if(kyo.ankenDir)items.push({name:'暗剣殺',dir:DIR_LABEL[kyo.ankenDir],kyo:true});
+  if(kyo.hmDir)items.push({name:'本命殺',dir:DIR_LABEL[kyo.hmDir],kyo:true});
+  if(kyo.htDir)items.push({name:'本命的殺',dir:DIR_LABEL[kyo.htDir],kyo:true});
+  if(extra&&kyo.saihaDir)items.push({name:'歳破',dir:DIR_LABEL[kyo.saihaDir],kyo:true});
+  return'<div class="kyo-cards">'+items.map(function(it){return'<div class="kyo-chip'+(it.kyo?' is-kyo':'')+'"><div class="kyo-chip-name">'+it.name+'</div><div class="kyo-chip-dir">'+it.dir+'</div></div>'}).join('')+'</div>';
+}
+function renderKgYearPanel(){
+  var k=window._kgKantei;if(!k)return;var r=k.r,yearStar=honmeiFromYear(k.vy);
+  var kyo=getKyoDirections(k.vy,r.honmei),kichi=getKichiDirections(chartWithCenter(yearStar),r.honmei),badges=kyoBadgesFor(kyo,kichi);
+  var html='<div class="board-block" style="max-width:420px;"><div class="board-label">年盤 — '+k.vy+'年</div><div class="board-sub">中宮＝'+k.vy+'年の年家星 '+STAR[yearStar].name+'</div>'+renderBoard(yearStar,{markHonmei:r.honmei,badges:badges})+'<div class="board-legend">枠が赤い方位は今年の凶方位、金色は吉方位（五行が支え合う方位）です。</div></div>';
+  html+=kyoChipsHtml(kyo,true);
+  document.getElementById('kgcal-year').innerHTML=html;
+}
+function initKgMonthSelect(){
+  var sel=document.getElementById('kgcal-month-sel'),now=new Date(),opts='';
+  for(var i=0;i<12;i++){var dt=new Date(now.getFullYear(),now.getMonth()+i,1);opts+='<option value="'+dt.getFullYear()+'-'+(dt.getMonth()+1)+'">'+dt.getFullYear()+'年'+(dt.getMonth()+1)+'月</option>'}
+  sel.innerHTML=opts;renderKgMonthBoard();
+}
+function renderKgMonthBoard(){
+  var k=window._kgKantei;if(!k)return;var r=k.r;
+  var val=document.getElementById('kgcal-month-sel').value.split('-'),y=+val[0],m=+val[1];
+  var center=monthCenterStar(y,m),kyo=kyoForChart(chartWithCenter(center),r.honmei),kichi=getKichiDirections(chartWithCenter(center),r.honmei),badges=kyoBadgesFor(kyo,kichi);
+  var html='<div class="board-block" style="max-width:420px;"><div class="board-label">月盤 — '+y+'年'+m+'月</div><div class="board-sub">中宮＝'+STAR[center].name+'</div>'+renderBoard(center,{badges:badges})+'<div class="board-legend">枠が赤い方位はその月の凶方位、金色は吉方位です。</div></div>';
+  html+=kyoChipsHtml(kyo,false);
+  document.getElementById('kgcal-month-out').innerHTML=html;
+}
+function initKgDaySelect(){var inp=document.getElementById('kgcal-day-sel'),t=new Date();inp.value=t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');renderKgDayBoard()}
+function getDoukaiTimeline(honmei,startVy,count){var out=[];for(var i=0;i<count;i++){var vy=startVy+i;out.push({year:vy,doukai:doukaiKyu(honmei,vy)})}return out}
+function doukaiRowText(dk){return dk.special?'本命星が年盤の中央に重なる強運かつ要注意の年。物事が動きやすい反面、消耗しやすい時期です。':KYU_TEXT[dk.dir].doukai}
+function doukaiTableHtml(timeline){
+  var rows=timeline.map(function(t,i){var dk=t.doukai,label=dk.special?'中宮同会':dk.name;return'<tr class="'+(i===0?'is-current':'')+'"><td>'+t.year+'年'+(i===0?'<span class="dk-now">今年</span>':'')+'</td><td>'+label+'</td><td>'+doukaiRowText(dk)+'</td></tr>'}).join('');
+  return'<table class="dk-table"><thead><tr><th>年</th><th>同会</th><th>傾向</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+function renderKgDayBoard(){
+  var k=window._kgKantei;if(!k)return;var r=k.r;
+  var v=document.getElementById('kgcal-day-sel').value;if(!v)return;var p=v.split('-'),y=+p[0],m=+p[1],d=+p[2];
+  var center=nichimeiStar(y,m,d),kyo=kyoForChart(chartWithCenter(center),r.honmei),kichi=getKichiDirections(chartWithCenter(center),r.honmei),badges=kyoBadgesFor(kyo,kichi);
+  var html='<div class="board-block" style="max-width:420px;"><div class="board-label">日盤 — '+y+'年'+m+'月'+d+'日</div><div class="board-sub">中宮＝'+STAR[center].name+'</div>'+renderBoard(center,{badges:badges})+'<div class="board-legend">枠が赤い方位はその日の凶方位、金色は吉方位です。</div></div>';
+  html+=kyoChipsHtml(kyo,false);
+  document.getElementById('kgcal-day-out').innerHTML=html;
+}
+
+function getPerson(who){var y=+document.getElementById('syn-'+who+'-birth-year').value,m=+document.getElementById('syn-'+who+'-birth-month').value,d=+document.getElementById('syn-'+who+'-birth-day').value;if(!y||!m||!d)return null;var name=document.getElementById('syn-'+who+'-name').value.trim();return{y:y,m:m,d:d,name:name||('Person '+(who==='a'?'A':'B')),r:computeKyusei(y,m,d,new Date().getFullYear())}}
 function repeat(ch,n){var s='';for(var i=0;i<n;i++)s+=ch;return s}
 function whoGen(ea,eb){if(GEN[ea]===eb)return'a';if(GEN[eb]===ea)return'b';return null}
 function whoKoku(ea,eb){var K={wood:'earth',earth:'water',water:'fire',fire:'metal',metal:'wood'};if(K[ea]===eb)return'a';if(K[eb]===ea)return'b';return null}
@@ -615,7 +757,7 @@ function calcSynastry(){
   setTimeout(function(){var b=document.getElementById('syn-bar');if(b)b.style.width=score+'%'},120);
   var rows=[['本命星 × 本命星',A.r.honmei,B.r.honmei,hR,'人生の基盤・基本相性'],['月命星 × 月命星',A.r.getsumei,B.r.getsumei,gR,'内面・素の自分どうし'],[A.name+'本命 × '+B.name+'月命',A.r.honmei,B.r.getsumei,x1,'表の顔と内面のクロス'],[B.name+'本命 × '+A.name+'月命',B.r.honmei,A.r.getsumei,x2,'表の顔と内面のクロス']];
   document.getElementById('syn-grid').innerHTML=rows.map(function(row){var p=row[0].split(' × ');return'<div class="syn-rel-row"><div class="syn-rel-star"><small>'+p[0]+'</small>'+STAR[row[1]].name+'<span class="kg-card-elem '+elemClassOf(row[1])+'" style="margin-left:6px;">'+STAR[row[1]].elemJP+'</span></div><div class="syn-rel-conn">—<br>'+row[4]+'</div><div class="syn-rel-star"><small>'+p[1]+'</small>'+STAR[row[2]].name+'<span class="kg-card-elem '+elemClassOf(row[2])+'" style="margin-left:6px;">'+STAR[row[2]].elemJP+'</span></div><div class="syn-rel-badge '+REL_INFO[row[3]].cls+'">'+REL_INFO[row[3]].jp+'</div></div>'}).join('');
-  document.getElementById('syn-reading').innerHTML=[synReadHonmei(A,B,hR),synReadGetsumei(A,B,gR),synReadCross(A,B,x1,x2),synReadAdvice(A,B,score)].join('');
+  document.getElementById('syn-reading').innerHTML=[synReadHonmei(A,B,hR),synReadGetsumei(A,B,gR),synReadCross(A,B,x1,x2),synReadAdvice(A,B,score)].join('')+'<div style="text-align:center;padding:12px;grid-column:1/-1;"><a href="kyuseigaku-guide.html" style="display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.06em;color:var(--gold2);text-decoration:none;border:1px solid var(--border);padding:10px 22px;border-radius:20px;">✶ 九星気学の仕組みをくわしく見る</a></div>';
   var a=document.getElementById('synastry-result');a.classList.add('show');setTimeout(function(){a.scrollIntoView({behavior:'smooth',block:'start'})},60);
 }
 function synReadHonmei(A,B,rel){var ea=STAR[A.r.honmei].elem,eb=STAR[B.r.honmei].elem,t;
@@ -883,6 +1025,22 @@ function openKanteiKG(){
     }
     return out+'</div>';
   }
+  function brdBadged(center,badges){
+    var ch=chartWithCenter(center);
+    var out='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:'+TH.bdr+';padding:2px;border:1px solid '+TH.bdrM+';border-radius:4px;">';
+    for(var i=0;i<GRID_ORDER.length;i++){
+      var dir=GRID_ORDER[i],st=ch[dir],isC=dir==='C',bd=badges&&badges[dir];
+      var nc=ECOL[STAR[st].elem]||TH.acc;
+      var ring=bd?(bd.type==='kyo'?'inset 0 0 0 2px rgba(201,120,120,.75)':'inset 0 0 0 2px '+TH.acc):'';
+      out+='<div style="background:'+(isC?'rgba(196,168,106,.1)':'rgba(12,10,8,.5)')+';height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;'+(ring?'box-shadow:'+ring+';':'')+'">'
+        +'<div style="font-size:7px;color:rgba(245,242,235,.22);font-family:Cormorant Garamond,serif;letter-spacing:.06em;">'+DIR_LABEL[dir]+'</div>'
+        +'<div style="font-family:Cormorant Garamond,serif;font-size:'+(isC?'20':'16')+'px;color:'+nc+';line-height:1.1;">'+st+'</div>'
+        +'<div style="font-size:7px;color:'+TH.cream+';margin-top:2px;letter-spacing:.02em;">'+STAR[st].name.slice(0,2)+'</div>'
+        +(bd?'<div style="position:absolute;bottom:2px;left:2px;right:2px;font-size:6px;color:'+(bd.type==='kyo'?'#e8a0a0':TH.acc)+';line-height:1.2;">'+bd.text+'</div>':'')
+        +'</div>';
+    }
+    return out+'</div>';
+  }
 
   // ── S1: 表紙 ──────────────────────────────
   var s1='<div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0;" aria-hidden="true">'
@@ -966,6 +1124,56 @@ function openKanteiKG(){
     +'</div>'
     +'</div>';
 
+  // ── S3b: 方位学（凶方位・吉方位） ──────────
+  var yearStar=honmeiFromYear(vy);
+  var kyo=getKyoDirections(vy,r.honmei),kichi=getKichiDirections(chartWithCenter(yearStar),r.honmei),kyoBadges=kyoBadgesFor(kyo,kichi);
+  function kyoChipPdf(nm,val,isKyo){
+    return'<div style="background:'+TH.cardBg+';border:1px solid '+(isKyo?'rgba(201,120,120,.4)':TH.bdr)+';border-radius:6px;padding:9px 12px;">'
+      +'<div style="font-size:.6rem;letter-spacing:.06em;color:'+(isKyo?'#e8a0a0':TH.muted)+';">'+nm+'</div>'
+      +'<div style="font-family:Cormorant Garamond,serif;font-size:.96rem;color:'+TH.cream+';margin-top:3px;">'+val+'</div>'
+      +'</div>';
+  }
+  var kyoChips='';
+  if(kyo.honmeiChuu)kyoChips+=kyoChipPdf('本命殺','中宮（年間要注意）',true);
+  if(kyo.gokuDir)kyoChips+=kyoChipPdf('五黄殺',DIR_LABEL[kyo.gokuDir],true);
+  if(kyo.ankenDir)kyoChips+=kyoChipPdf('暗剣殺',DIR_LABEL[kyo.ankenDir],true);
+  if(kyo.hmDir)kyoChips+=kyoChipPdf('本命殺',DIR_LABEL[kyo.hmDir],true);
+  if(kyo.htDir)kyoChips+=kyoChipPdf('本命的殺',DIR_LABEL[kyo.htDir],true);
+  kyoChips+=kyoChipPdf('歳破',DIR_LABEL[kyo.saihaDir],true);
+  var sKyo='<div style="width:100%;max-width:860px;margin:0 auto;">'
+    +'<span style="font-size:.68rem;color:'+TH.acc+';letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Directional Fortune</span>'
+    +'<h2 style="font-family:Noto Serif JP,serif;font-size:1.5rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;">方位学 — '+vy+'年の凶方位・吉方位</h2>'
+    +'<div style="display:grid;grid-template-columns:280px 1fr;gap:24px;align-items:start;">'
+    +'<div>'+brdBadged(yearStar,kyoBadges)+'</div>'
+    +'<div>'
+    +'<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px;">'+kyoChips+'</div>'
+    +'<div style="font-size:.7rem;color:'+TH.muted+';line-height:2;letter-spacing:.03em;padding:10px 14px;border:1px solid '+TH.bdr+';background:rgba(255,255,255,.015);">枠が赤い方位は今年の凶方位、金色は五行が支え合う吉方位です。引っ越しや長距離の移動はこの年盤を目安に。月盤・日盤の吉方位カレンダーはライブページでご確認いただけます。</div>'
+    +'</div>'
+    +'</div>'
+    +'</div>';
+
+  // ── S3c: 同会年運（9年サイクル） ───────────
+  var dkRows=k.doukaiTimeline.map(function(t,i){
+    var dk=t.doukai,label=dk.special?'中宮同会':dk.name;
+    return'<tr>'
+      +'<td style="padding:9px 14px;border-bottom:1px solid '+TH.bdr+';color:'+(i===0?TH.acc2:TH.cream)+';font-size:.76rem;white-space:nowrap;'+(i===0?'background:'+TH.bdr2+';':'')+'">'+t.year+'年'+(i===0?'　<span style="display:inline-block;white-space:nowrap;font-size:.58rem;border:1px solid '+TH.bdrM+';color:'+TH.acc+';padding:1px 7px;border-radius:8px;">今年</span>':'')+'</td>'
+      +'<td style="padding:9px 14px;border-bottom:1px solid '+TH.bdr+';color:'+TH.acc2+';font-size:.76rem;'+(i===0?'background:'+TH.bdr2+';':'')+'">'+label+'</td>'
+      +'<td style="padding:9px 14px;border-bottom:1px solid '+TH.bdr+';color:'+TH.muted+';font-size:.68rem;line-height:1.7;'+(i===0?'background:'+TH.bdr2+';':'')+'">'+doukaiRowText(dk)+'</td>'
+      +'</tr>';
+  }).join('');
+  var sDoukai='<div style="width:100%;max-width:860px;margin:0 auto;">'
+    +'<span style="font-size:.68rem;color:'+TH.acc+';letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:10px;">Doukai Timeline</span>'
+    +'<h2 style="font-family:Noto Serif JP,serif;font-size:1.5rem;font-weight:400;letter-spacing:.08em;margin-bottom:14px;">同会年運 — 今後9年のサイクル</h2>'
+    +'<table style="width:100%;border-collapse:collapse;">'
+    +'<thead><tr>'
+    +'<th style="text-align:left;padding:8px 14px;font-size:.6rem;letter-spacing:.1em;color:'+TH.acc+';border-bottom:1px solid '+TH.bdrM+';">年</th>'
+    +'<th style="text-align:left;padding:8px 14px;font-size:.6rem;letter-spacing:.1em;color:'+TH.acc+';border-bottom:1px solid '+TH.bdrM+';">同会</th>'
+    +'<th style="text-align:left;padding:8px 14px;font-size:.6rem;letter-spacing:.1em;color:'+TH.acc+';border-bottom:1px solid '+TH.bdrM+';">傾向</th>'
+    +'</tr></thead>'
+    +'<tbody>'+dkRows+'</tbody>'
+    +'</table>'
+    +'</div>';
+
   // ── S4: 本命星の詳細 ──────────────────────
   var ht=HONMEI_TEXT[r.honmei];
   var kws=ht.kw.map(function(x){return'<span style="font-size:.76rem;border:1px solid '+TH.bdrM+';color:'+TH.acc2+';padding:4px 12px;">'+x+'</span>';}).join('');
@@ -1035,7 +1243,7 @@ function openKanteiKG(){
     +'</div>'
     +'<div style="display:flex;flex-direction:column;gap:14px;">'
     +'<div style="font-size:.8rem;color:'+TH.muted+';line-height:2.2;letter-spacing:.04em;">'+skt+'</div>'
-    +'<div style="font-size:.76rem;color:'+TH.muted+';padding:12px 18px;background:rgba(255,255,255,.02);border-left:2px solid '+TH.bdrM+';line-height:2.1;"><b style="color:'+TH.acc+';font-weight:400;">幸せのかたち：</b>この社会的使命を全うするとき、あなたは最も満たされ社会の中で本来の輝きを放ちます。月命星は、世の中でどう役立ち何に喜びを見いだすかを示します。</div>'
+    +'<div style="font-size:.76rem;color:'+TH.muted+';padding:12px 18px;background:rgba(255,255,255,.02);border-left:2px solid '+TH.bdrM+';line-height:2.1;"><b style="color:'+TH.acc+';font-weight:400;">幸せのかたち：</b>この社会的使命を全うするとき、あなたは最も満たされ、本来の力を発揮しやすくなります。月命星は、世の中でどう役立ち何に喜びを見いだすかを示します。</div>'
     +'</div>'
     +'</div>'
     +'</div>';
@@ -1122,8 +1330,8 @@ function openKanteiKG(){
     +'</div>';
 
   // ── HTML組み立て ──────────────────────────
-  var NS=10;
-  var slides=[s1,s2,s3,s4,s5,s6,s7,s8,s9,s10];
+  var slides=[s1,s2,s3,sKyo,sDoukai,s4,s5,s6,s7,s8,s9,s10];
+  var NS=slides.length;
   var deckHtml=slides.map(function(s,i){return'<div class="slide'+(i===0?' active':'')+'" id="sl'+i+'">'+s+'</div>';}).join('\n');
 
   var html='<!DOCTYPE html>\n'
