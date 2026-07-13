@@ -764,6 +764,50 @@ function computeAstroData(y, m, d, timeStr) {
   return Object.assign({ degrees: degrees }, signs);
 }
 
+// 進行の月（1日=1年の秒差法）をローカル概算し、進行の月ハウス表の12行を生成
+// computePositions()と同じ「太陽サイン基準の簡易ハウス」で境界を揃える
+function computeLocalLunarHouses(localData, y, m, d) {
+  const degs = localData.degrees || {};
+  const natMoon = degs.moon_degree;
+  if (typeof natMoon !== 'number') return [];
+  const norm = a => ((a % 360) + 360) % 360;
+  let sunIdx = ZODIAC.findIndex(z => z.key === localData.sun); if (sunIdx < 0) sunIdx = 0;
+  const cuspLon = i => norm(sunIdx * 30 + (i - 1) * 30);
+  const MOON_RATE = 13.17639648;      // 月の平均運動[°/日] ＝ 進行法での1年あたりの移動量
+  const cycleYears = 360 / MOON_RATE; // 約27.3年で12ハウスを一周
+  const birth = new Date(y, m - 1, d);
+  const ageNow = (Date.now() - birth.getTime()) / (365.2425 * 24 * 3600 * 1000);
+
+  let h0 = 1;
+  for (let i = 1; i <= 12; i++) {
+    const a = norm(cuspLon(i)), span = norm(cuspLon(i % 12 + 1) - cuspLon(i));
+    if (norm(natMoon - a) < span) { h0 = i; break; }
+  }
+  const fmt = years => {
+    const dt = new Date(birth.getTime() + years * 365.2425 * 24 * 3600 * 1000);
+    return `${dt.getFullYear()}年${dt.getMonth() + 1}月`;
+  };
+
+  // テーブル全体を「現在を含む1つの連続した周期」に揃える（行ごとに周期をずらすと時系列が逆戻りするため）
+  const n = Math.max(0, Math.floor(ageNow / cycleYears));
+  const rows = [];
+  let base = 0;
+  for (let i = 0; i < 12; i++) {
+    const house  = ((h0 - 1 + i) % 12) + 1;
+    const span   = (i === 0) ? norm(cuspLon(h0 % 12 + 1) - natMoon) : 30;
+    const base2  = base + span / MOON_RATE;
+    const s = base + n * cycleYears, e = base2 + n * cycleYears;
+    rows.push({
+      house,
+      ageStart: Math.max(0, Math.floor(s)), ageEnd: Math.floor(e),
+      dateStart: fmt(s), dateEnd: fmt(e),
+      current: ageNow >= s && ageNow < e,
+    });
+    base = base2;
+  }
+  return rows;
+}
+
 // APIが返した有効な値だけをローカル計算へ上書きマージ
 function mergeAstroData(local, api) {
   if (!api || typeof api !== 'object') return local;
@@ -1132,9 +1176,14 @@ function renderBiWheel(data){
   const c=document.getElementById('hor-biwheel');
   const section=document.getElementById('hor-transit-section');
   if(!c||!section) return;
+  /* Bi-Wheelの図はネイタルの正確なハウスカスプ（API由来）が無いと描画できないが、
+     トランジット×ネイタルのグリッド・読み解きはローカル概算のみでも成立するため、
+     図が無い場合もセクション全体は隠さずチャート部分だけ非表示にする */
+  const wrap=c.closest('.horo-chart-wrap');
   const svg=drawBiWheel(data);
-  if(!svg){ section.style.display='none'; return; }
-  section.style.display=''; c.innerHTML=svg;
+  section.style.display='';
+  if(!svg){ if(wrap) wrap.style.display='none'; c.innerHTML=''; return; }
+  if(wrap) wrap.style.display=''; c.innerHTML=svg;
 }
 
 function renderTransitGrid(data){
@@ -1595,21 +1644,31 @@ async function calcHoroscope() {
     birthPlace: place || null,
   };
   const localData = computeAstroData(y, m, d, time);
+  /* 今日時点の天体度数（トランジット）と進行の月ハウスもローカル概算しておく
+     ＝APIが無い/間に合わない場合でも「進行の月のハウス」「トランジット×ネイタル」を空白にしない */
+  const now = new Date();
+  localData.transits = computeAstroData(now.getFullYear(), now.getMonth() + 1, now.getDate()).degrees;
+  localData.lunarHouses = computeLocalLunarHouses(localData, y, m, d);
 
   /* ⑤ Java APIがあれば取得してローカル計算を上書き（無ければローカルのみ使用） */
   let data = localData;
   let apiTexts = {};
   try {
+    /* Renderのコールドスタートで1〜2分待たされないよう、12秒で打ち切ってローカル計算にフォールバックする */
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 12000);
     const res = await fetch(HOROSCOPE_API, {
       method:  'POST',
       headers: { 'Content-Type': 'application/json; charset=utf-8' },
       body:    JSON.stringify(payload),
+      signal:  controller.signal,
     });
+    clearTimeout(timeoutId);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const apiData = await res.json();
     data = mergeAstroData(localData, apiData);
-    data.lunarHouses = apiData.lunarHouses;
-    data.transits = apiData.transits;
+    data.lunarHouses = apiData.lunarHouses || data.lunarHouses;
+    data.transits = apiData.transits || data.transits;
     /* APIキー名は sun_reading / sun_text のどちらも許容 */
     apiTexts = {
       sun:     apiData.sun_reading     || apiData.sun_text,
@@ -2366,6 +2425,10 @@ function populatePrefectures() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+  /* バックエンド（Render無料枠）はアクセスが無いとスリープし、
+     初回リクエストで1〜2分のコールドスタートが発生する。
+     フォーム入力中に事前アクセスして起こしておくことで実質的に解消する。 */
+  fetch(new URL(HOROSCOPE_API).origin, { mode: 'no-cors' }).catch(() => {});
   populateSelectors('hor-birth');
   populateSelectors('syn-a-birth');
   populateSelectors('syn-b-birth');

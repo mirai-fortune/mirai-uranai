@@ -395,6 +395,8 @@ html.theme-minagi section { position: relative; z-index: 1; }
 .kantei-btn-wrap{margin:52px 0 0;text-align:center;}
 .kantei-btn{padding:13px 52px;background:transparent;border:1px solid var(--gold);color:var(--gold);cursor:pointer;font-size:11px;letter-spacing:.36em;font-family:'Cormorant Garamond',serif;transition:background .25s,color .25s;text-transform:uppercase;}
 .kantei-btn:hover{background:var(--gold-dim);color:var(--gold2);}
+.kantei-btn-mono{padding:10px 36px;background:transparent;border:1px solid var(--border2);color:var(--muted);cursor:pointer;font-size:10px;letter-spacing:.28em;font-family:'Cormorant Garamond',serif;transition:border-color .25s,color .25s;text-transform:uppercase;margin-top:16px;}
+.kantei-btn-mono:hover{border-color:var(--muted);color:var(--cream);}
 .kantei-btn-hint{font-size:10px;color:var(--muted2);margin-top:11px;letter-spacing:.06em;}
 @media(max-width:768px){.kantei-btn-wrap{display:none;}}
 </style>
@@ -568,6 +570,9 @@ html.theme-minagi section { position: relative; z-index: 1; }
   <div class="kantei-btn-wrap" id="si-kantei-wrap" style="display:none;">
     <button class="kantei-btn" onclick="openKantei()">鑑定書を作成する</button>
     <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+    <br>
+    <button class="kantei-btn-mono" onclick="openKantei(true)">白黒印刷版で作成する</button>
+    <p class="kantei-btn-hint">実物を印刷・コピーする方向け。朱色を一部使用した白黒デザインです。</p>
   </div>
 </div>
 
@@ -2065,7 +2070,7 @@ function calcIndividual(){
 /* ══════════════════════════════════════
    鑑定書出力（横スライド形式）
 ══════════════════════════════════════ */
-function openKantei(){
+function openKantei(mono){
   const k=window._siKantei;
   if(!k){alert('先に命式を鑑定してください。');return;}
   const {name,y,m,d,timeVal,gender,yp,mp,dp,hp,daySi,pillars,daiun,allDu,allInterps,voidBr,curAge}=k;
@@ -2074,11 +2079,26 @@ function openKantei(){
   const currentYear=k.currentYear||(new Date().getFullYear());
   const days=k.days;
 
-  const _th=document.documentElement.classList.contains('theme-sakura')?'sakura'
+  const _th=mono?'mono'
+    :document.documentElement.classList.contains('theme-sakura')?'sakura'
     :document.documentElement.classList.contains('theme-shinryoku')?'shinryoku'
     :document.documentElement.classList.contains('theme-minagi')?'minagi':'gold';
-  const TH={gold:{bg:'#030611',cream:'#f5f2eb',muted:'rgba(245,242,235,.6)',acc:'#c4a86a',acc2:'#e8d09a',glow:'rgba(196,168,106,.055)',bdr:'rgba(196,168,106,.12)',bdr2:'rgba(196,168,106,.14)',bdrM:'rgba(196,168,106,.28)',bdrHi:'rgba(196,168,106,.18)',gd4:'rgba(196,168,106,.4)',hlBg:'rgba(196,168,106,.1)',cardBg:'rgba(15,13,9,.7)',theadBg:'rgba(28,24,12,.96)',tblBg:'rgba(18,16,12,.6)',rlblBg:'rgba(28,24,12,.7)',label:'星空'},sakura:{bg:'#160810',cream:'#fef2f6',muted:'rgba(254,242,246,.6)',acc:'#e891b2',acc2:'#f5c0d5',glow:'rgba(232,145,178,.055)',bdr:'rgba(232,145,178,.12)',bdr2:'rgba(232,145,178,.14)',bdrM:'rgba(232,145,178,.28)',bdrHi:'rgba(232,145,178,.18)',gd4:'rgba(232,145,178,.4)',hlBg:'rgba(232,145,178,.1)',cardBg:'rgba(26,10,18,.7)',theadBg:'rgba(34,12,22,.96)',tblBg:'rgba(30,12,20,.6)',rlblBg:'rgba(34,12,22,.7)',label:'桜花'},shinryoku:{bg:'#060e08',cream:'#f0f5ef',muted:'rgba(240,245,239,.6)',acc:'#82c87e',acc2:'#b4e8b0',glow:'rgba(130,200,126,.055)',bdr:'rgba(130,200,126,.12)',bdr2:'rgba(130,200,126,.14)',bdrM:'rgba(130,200,126,.28)',bdrHi:'rgba(130,200,126,.18)',gd4:'rgba(130,200,126,.4)',hlBg:'rgba(130,200,126,.1)',cardBg:'rgba(10,18,12,.7)',theadBg:'rgba(14,26,16,.96)',tblBg:'rgba(12,22,14,.6)',rlblBg:'rgba(14,26,16,.7)',label:'蛍火'},minagi:{bg:'#04080f',cream:'#eef4fc',muted:'rgba(238,244,252,.6)',acc:'#6ab4e8',acc2:'#a0d4f4',glow:'rgba(106,180,232,.055)',bdr:'rgba(106,180,232,.12)',bdr2:'rgba(106,180,232,.14)',bdrM:'rgba(106,180,232,.28)',bdrHi:'rgba(106,180,232,.18)',gd4:'rgba(106,180,232,.4)',hlBg:'rgba(106,180,232,.1)',cardBg:'rgba(8,12,22,.7)',theadBg:'rgba(10,18,34,.96)',tblBg:'rgba(8,14,26,.6)',rlblBg:'rgba(10,18,34,.7)',label:'水凪'}}[_th];
-  const s1motif={gold:'<span style="position:absolute;top:8%;left:6%;font-size:9px;color:rgba(196,168,106,.18);">✦</span><span style="position:absolute;top:14%;right:11%;font-size:5px;color:rgba(196,168,106,.12);">✦</span><span style="position:absolute;top:70%;left:8%;font-size:7px;color:rgba(196,168,106,.14);">✦</span><span style="position:absolute;top:82%;right:9%;font-size:10px;color:rgba(196,168,106,.12);">✦</span><span style="position:absolute;top:45%;left:3%;font-size:4px;color:rgba(196,168,106,.1);">✦</span><span style="position:absolute;top:55%;right:4%;font-size:5px;color:rgba(196,168,106,.1);">✦</span><span style="position:absolute;top:90%;left:38%;font-size:4px;color:rgba(196,168,106,.08);">✦</span><span style="position:absolute;top:25%;left:18%;font-size:3px;color:rgba(196,168,106,.08);">✦</span>',sakura:'<span style="position:absolute;top:10%;right:8%;font-size:20px;color:rgba(232,145,178,.14);transform:rotate(-25deg);display:inline-block;">✿</span><span style="position:absolute;top:22%;left:7%;font-size:13px;color:rgba(232,145,178,.1);transform:rotate(15deg);display:inline-block;">✿</span><span style="position:absolute;top:76%;right:11%;font-size:24px;color:rgba(232,145,178,.11);transform:rotate(40deg);display:inline-block;">✿</span><span style="position:absolute;top:65%;left:9%;font-size:15px;color:rgba(232,145,178,.09);transform:rotate(-10deg);display:inline-block;">✿</span><span style="position:absolute;top:88%;right:30%;font-size:11px;color:rgba(232,145,178,.08);transform:rotate(30deg);display:inline-block;">✿</span><span style="position:absolute;top:6%;left:32%;font-size:8px;color:rgba(232,145,178,.08);transform:rotate(-45deg);display:inline-block;">✿</span><span style="position:absolute;top:42%;right:22%;font-size:6px;color:rgba(232,145,178,.08);transform:rotate(20deg);display:inline-block;">✿</span>',shinryoku:'<div style="position:absolute;top:18%;left:12%;width:5px;height:5px;border-radius:50%;background:rgba(130,200,126,.35);box-shadow:0 0 8px 3px rgba(130,200,126,.18);"></div><div style="position:absolute;top:40%;right:15%;width:4px;height:4px;border-radius:50%;background:rgba(130,200,126,.28);box-shadow:0 0 6px 2px rgba(130,200,126,.14);"></div><div style="position:absolute;top:72%;left:20%;width:6px;height:6px;border-radius:50%;background:rgba(130,200,126,.3);box-shadow:0 0 10px 4px rgba(130,200,126,.14);"></div><div style="position:absolute;top:60%;right:8%;width:3px;height:3px;border-radius:50%;background:rgba(130,200,126,.25);box-shadow:0 0 5px 2px rgba(130,200,126,.12);"></div><div style="position:absolute;top:85%;left:35%;width:4px;height:4px;border-radius:50%;background:rgba(130,200,126,.22);box-shadow:0 0 6px 2px rgba(130,200,126,.12);"></div><div style="position:absolute;top:30%;left:5%;width:3px;height:3px;border-radius:50%;background:rgba(130,200,126,.2);box-shadow:0 0 5px 2px rgba(130,200,126,.1);"></div><div style="position:absolute;top:8%;right:25%;width:4px;height:4px;border-radius:50%;background:rgba(130,200,126,.22);box-shadow:0 0 7px 3px rgba(130,200,126,.12);"></div>',minagi:'<div style="position:absolute;bottom:28%;left:0;right:0;height:1px;background:linear-gradient(to right,transparent 5%,rgba(106,180,232,.1) 30%,rgba(106,180,232,.12) 50%,rgba(106,180,232,.1) 70%,transparent 95%);"></div><div style="position:absolute;bottom:24%;left:0;right:0;height:1px;background:linear-gradient(to right,transparent 10%,rgba(106,180,232,.07) 35%,rgba(106,180,232,.09) 55%,rgba(106,180,232,.07) 75%,transparent 90%);"></div><div style="position:absolute;bottom:20%;left:0;right:0;height:1px;background:linear-gradient(to right,transparent 15%,rgba(106,180,232,.05) 40%,rgba(106,180,232,.07) 60%,rgba(106,180,232,.05) 80%,transparent 85%);"></div><div style="position:absolute;top:0;right:0;width:120px;height:80px;background:radial-gradient(ellipse at top right,rgba(106,180,232,.06) 0%,transparent 70%);"></div><div style="position:absolute;bottom:0;left:0;width:100px;height:60px;background:radial-gradient(ellipse at bottom left,rgba(106,180,232,.05) 0%,transparent 70%);"></div>'}[_th];
+  const TH={gold:{bg:'#030611',cream:'#f5f2eb',muted:'rgba(245,242,235,.6)',acc:'#c4a86a',acc2:'#e8d09a',glow:'rgba(196,168,106,.055)',bdr:'rgba(196,168,106,.12)',bdr2:'rgba(196,168,106,.14)',bdrM:'rgba(196,168,106,.28)',bdrHi:'rgba(196,168,106,.18)',gd4:'rgba(196,168,106,.4)',hlBg:'rgba(196,168,106,.1)',cardBg:'rgba(15,13,9,.7)',theadBg:'rgba(28,24,12,.96)',tblBg:'rgba(18,16,12,.6)',rlblBg:'rgba(28,24,12,.7)',label:'星空'},sakura:{bg:'#160810',cream:'#fef2f6',muted:'rgba(254,242,246,.6)',acc:'#e891b2',acc2:'#f5c0d5',glow:'rgba(232,145,178,.055)',bdr:'rgba(232,145,178,.12)',bdr2:'rgba(232,145,178,.14)',bdrM:'rgba(232,145,178,.28)',bdrHi:'rgba(232,145,178,.18)',gd4:'rgba(232,145,178,.4)',hlBg:'rgba(232,145,178,.1)',cardBg:'rgba(26,10,18,.7)',theadBg:'rgba(34,12,22,.96)',tblBg:'rgba(30,12,20,.6)',rlblBg:'rgba(34,12,22,.7)',label:'桜花'},shinryoku:{bg:'#060e08',cream:'#f0f5ef',muted:'rgba(240,245,239,.6)',acc:'#82c87e',acc2:'#b4e8b0',glow:'rgba(130,200,126,.055)',bdr:'rgba(130,200,126,.12)',bdr2:'rgba(130,200,126,.14)',bdrM:'rgba(130,200,126,.28)',bdrHi:'rgba(130,200,126,.18)',gd4:'rgba(130,200,126,.4)',hlBg:'rgba(130,200,126,.1)',cardBg:'rgba(10,18,12,.7)',theadBg:'rgba(14,26,16,.96)',tblBg:'rgba(12,22,14,.6)',rlblBg:'rgba(14,26,16,.7)',label:'蛍火'},minagi:{bg:'#04080f',cream:'#eef4fc',muted:'rgba(238,244,252,.6)',acc:'#6ab4e8',acc2:'#a0d4f4',glow:'rgba(106,180,232,.055)',bdr:'rgba(106,180,232,.12)',bdr2:'rgba(106,180,232,.14)',bdrM:'rgba(106,180,232,.28)',bdrHi:'rgba(106,180,232,.18)',gd4:'rgba(106,180,232,.4)',hlBg:'rgba(106,180,232,.1)',cardBg:'rgba(8,12,22,.7)',theadBg:'rgba(10,18,34,.96)',tblBg:'rgba(8,14,26,.6)',rlblBg:'rgba(10,18,34,.7)',label:'水凪'},mono:{bg:'#fdfcf8',cream:'#1a1a1a',muted:'rgba(26,26,26,.62)',acc:'#b8341f',acc2:'#c96a4e',glow:'rgba(26,26,26,.015)',bdr:'rgba(26,26,26,.2)',bdr2:'rgba(26,26,26,.15)',bdrM:'rgba(26,26,26,.42)',bdrHi:'rgba(184,52,31,.35)',gd4:'rgba(26,26,26,.5)',hlBg:'rgba(184,52,31,.07)',cardBg:'rgba(26,26,26,.02)',theadBg:'rgba(26,26,26,.05)',tblBg:'rgba(26,26,26,.015)',rlblBg:'rgba(26,26,26,.04)',label:'墨白'}}[_th];
+  const isMono=_th==='mono';
+  const s1motif={gold:'<span style="position:absolute;top:8%;left:6%;font-size:9px;color:rgba(196,168,106,.18);">✦</span><span style="position:absolute;top:14%;right:11%;font-size:5px;color:rgba(196,168,106,.12);">✦</span><span style="position:absolute;top:70%;left:8%;font-size:7px;color:rgba(196,168,106,.14);">✦</span><span style="position:absolute;top:82%;right:9%;font-size:10px;color:rgba(196,168,106,.12);">✦</span><span style="position:absolute;top:45%;left:3%;font-size:4px;color:rgba(196,168,106,.1);">✦</span><span style="position:absolute;top:55%;right:4%;font-size:5px;color:rgba(196,168,106,.1);">✦</span><span style="position:absolute;top:90%;left:38%;font-size:4px;color:rgba(196,168,106,.08);">✦</span><span style="position:absolute;top:25%;left:18%;font-size:3px;color:rgba(196,168,106,.08);">✦</span>',sakura:'<span style="position:absolute;top:10%;right:8%;font-size:20px;color:rgba(232,145,178,.14);transform:rotate(-25deg);display:inline-block;">✿</span><span style="position:absolute;top:22%;left:7%;font-size:13px;color:rgba(232,145,178,.1);transform:rotate(15deg);display:inline-block;">✿</span><span style="position:absolute;top:76%;right:11%;font-size:24px;color:rgba(232,145,178,.11);transform:rotate(40deg);display:inline-block;">✿</span><span style="position:absolute;top:65%;left:9%;font-size:15px;color:rgba(232,145,178,.09);transform:rotate(-10deg);display:inline-block;">✿</span><span style="position:absolute;top:88%;right:30%;font-size:11px;color:rgba(232,145,178,.08);transform:rotate(30deg);display:inline-block;">✿</span><span style="position:absolute;top:6%;left:32%;font-size:8px;color:rgba(232,145,178,.08);transform:rotate(-45deg);display:inline-block;">✿</span><span style="position:absolute;top:42%;right:22%;font-size:6px;color:rgba(232,145,178,.08);transform:rotate(20deg);display:inline-block;">✿</span>',shinryoku:'<div style="position:absolute;top:18%;left:12%;width:5px;height:5px;border-radius:50%;background:rgba(130,200,126,.35);box-shadow:0 0 8px 3px rgba(130,200,126,.18);"></div><div style="position:absolute;top:40%;right:15%;width:4px;height:4px;border-radius:50%;background:rgba(130,200,126,.28);box-shadow:0 0 6px 2px rgba(130,200,126,.14);"></div><div style="position:absolute;top:72%;left:20%;width:6px;height:6px;border-radius:50%;background:rgba(130,200,126,.3);box-shadow:0 0 10px 4px rgba(130,200,126,.14);"></div><div style="position:absolute;top:60%;right:8%;width:3px;height:3px;border-radius:50%;background:rgba(130,200,126,.25);box-shadow:0 0 5px 2px rgba(130,200,126,.12);"></div><div style="position:absolute;top:85%;left:35%;width:4px;height:4px;border-radius:50%;background:rgba(130,200,126,.22);box-shadow:0 0 6px 2px rgba(130,200,126,.12);"></div><div style="position:absolute;top:30%;left:5%;width:3px;height:3px;border-radius:50%;background:rgba(130,200,126,.2);box-shadow:0 0 5px 2px rgba(130,200,126,.1);"></div><div style="position:absolute;top:8%;right:25%;width:4px;height:4px;border-radius:50%;background:rgba(130,200,126,.22);box-shadow:0 0 7px 3px rgba(130,200,126,.12);"></div>',minagi:'<div style="position:absolute;bottom:28%;left:0;right:0;height:1px;background:linear-gradient(to right,transparent 5%,rgba(106,180,232,.1) 30%,rgba(106,180,232,.12) 50%,rgba(106,180,232,.1) 70%,transparent 95%);"></div><div style="position:absolute;bottom:24%;left:0;right:0;height:1px;background:linear-gradient(to right,transparent 10%,rgba(106,180,232,.07) 35%,rgba(106,180,232,.09) 55%,rgba(106,180,232,.07) 75%,transparent 90%);"></div><div style="position:absolute;bottom:20%;left:0;right:0;height:1px;background:linear-gradient(to right,transparent 15%,rgba(106,180,232,.05) 40%,rgba(106,180,232,.07) 60%,rgba(106,180,232,.05) 80%,transparent 85%);"></div><div style="position:absolute;top:0;right:0;width:120px;height:80px;background:radial-gradient(ellipse at top right,rgba(106,180,232,.06) 0%,transparent 70%);"></div><div style="position:absolute;bottom:0;left:0;width:100px;height:60px;background:radial-gradient(ellipse at bottom left,rgba(106,180,232,.05) 0%,transparent 70%);"></div>',mono:'<div style="position:absolute;top:6%;left:5%;width:34px;height:34px;border-top:1px solid rgba(26,26,26,.3);border-left:1px solid rgba(26,26,26,.3);"></div><div style="position:absolute;top:6%;right:5%;width:34px;height:34px;border-top:1px solid rgba(26,26,26,.3);border-right:1px solid rgba(26,26,26,.3);"></div><div style="position:absolute;bottom:6%;left:5%;width:34px;height:34px;border-bottom:1px solid rgba(26,26,26,.3);border-left:1px solid rgba(26,26,26,.3);"></div><div style="position:absolute;bottom:6%;right:5%;width:34px;height:34px;border-bottom:1px solid rgba(26,26,26,.3);border-right:1px solid rgba(26,26,26,.3);"></div><span style="position:absolute;top:22%;left:10%;font-size:7px;color:rgba(26,26,26,.12);">✦</span><span style="position:absolute;bottom:26%;right:11%;font-size:5px;color:rgba(26,26,26,.1);">✦</span>'}[_th];
+
+  // 白黒印刷モード：五行を色でなく伝統紋様で表す小スウォッチ、朱印（落款）
+  const EPAT={
+    木:'background-image:repeating-linear-gradient(45deg,#1a1a1a,#1a1a1a 1px,transparent 1px,transparent 4px);',
+    火:'background-image:repeating-linear-gradient(-45deg,#1a1a1a,#1a1a1a 1px,transparent 1px,transparent 4px);',
+    土:'background-image:radial-gradient(#1a1a1a 1.2px,transparent 1.3px);background-size:4px 4px;',
+    金:'background-image:repeating-linear-gradient(0deg,#1a1a1a,#1a1a1a 1px,transparent 1px,transparent 4px),repeating-linear-gradient(90deg,#1a1a1a,#1a1a1a 1px,transparent 1px,transparent 4px);',
+    水:'background-image:repeating-linear-gradient(0deg,#1a1a1a,#1a1a1a 1px,transparent 1px,transparent 5px);'
+  };
+  const swatch=e=>'<span style="display:inline-block;width:12px;height:12px;vertical-align:middle;margin-right:7px;border:1px solid rgba(26,26,26,.4);'+(EPAT[e]||'')+'"></span>';
+  const hankoHTML=isMono?('<div style="width:60px;height:60px;border:2px solid '+TH.acc+';border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:.9;transform:rotate(-8deg);">'
+    +'<div style="width:48px;height:48px;border:1px solid '+TH.acc+';border-radius:50%;display:flex;align-items:center;justify-content:center;">'
+    +'<span style="font-family:var(--serif);font-size:20px;color:'+TH.acc+';letter-spacing:.04em;">鑑</span></div></div>'):'';
 
   const dayE=STEM_ELEM[daySi];
   const dayStemDetail=STEM_DETAIL[STEMS[daySi]]||ELEM_DESC[dayE]||{};
@@ -2128,6 +2148,7 @@ function openKantei(){
 
   // S1: 表紙
   const s1='<div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0;" aria-hidden="true">'+s1motif+'</div>'
+    +(isMono?'<div style="position:absolute;width:60px;height:60px;bottom:9%;right:8%;z-index:2;" aria-hidden="true">'+hankoHTML+'</div>':'')
     +'<div style="text-align:center;max-width:680px;margin:0 auto;">'
     +'<p style="font-family:var(--serif);font-size:.68rem;letter-spacing:.42em;color:var(--gd4);text-transform:uppercase;margin-bottom:32px;">ASUMIRA 占い　四柱推命</p>'
     +'<h1 style="font-family:var(--serif);font-size:clamp(2.2rem,4vw,3.4rem);font-weight:300;letter-spacing:.14em;color:var(--cream);margin-bottom:6px;">四柱推命鑑定書</h1>'
@@ -2139,7 +2160,7 @@ function openKantei(){
 
   // S2: 命式表
   const kdDays=k.days!=null?k.days:0;
-  const rclr={'cr-kuu':'#c97878','cr-go':'#c4a86a','cr-chuu':'#e08080'};
+  const rclr=isMono?{'cr-kuu':'var(--gold)','cr-go':'var(--gold)','cr-chuu':'var(--gold)'}:{'cr-kuu':'#c97878','cr-go':'#c4a86a','cr-chuu':'#e08080'};
   const thH=pLabels.map(l=>'<th style="background:var(--thead-bg);padding:8px 12px;font-family:var(--serif);font-size:.66rem;letter-spacing:.2em;color:var(--gold);border-bottom:1px solid var(--bdr2);text-align:center;">'+l+'</th>').join('');
   const kanH=pillarsK.map(p=>'<td style="padding:10px 12px;text-align:center;border:1px solid rgba(255,255,255,.04);"><div style="font-family:var(--serif);font-size:1.5rem;font-weight:300;line-height:1;color:var(--cream);">'+STEMS[p.si]+'</div><div style="font-size:.54rem;color:rgba(245,242,235,.28);margin-top:3px;">'+STEMS_YOMI[p.si]+'</div></td>').join('');
   const shiH=pillarsK.map(p=>{const iv=voidBr.includes(p.bi);return'<td style="padding:10px 12px;text-align:center;border:1px solid rgba(255,255,255,.04);"><div style="font-family:var(--serif);font-size:1.5rem;font-weight:300;line-height:1;color:'+(iv?'#c97878':'var(--gold)')+';">'+BRANCHES[p.bi]+'</div><div style="font-size:.54rem;color:rgba(245,242,235,.28);margin-top:3px;">'+BRANCHES_YOMI[p.bi]+'</div></td>';}).join('');
@@ -2173,10 +2194,12 @@ function openKantei(){
 
   // S3: 五行バランス
   const barsH=elems.map(e=>{const n=cnt[e]||0;const pct=total>0?Math.round(n/total*100):0;const col=eHex[e];
+    const numCol=isMono?'var(--gold)':col;
+    const fillStyle=isMono?(EPAT[e]||''):'background:'+col+';';
     return'<div style="display:grid;grid-template-columns:96px 1fr 26px;gap:12px;align-items:center;margin-bottom:14px;">'
-      +'<span style="font-size:.78rem;color:rgba(245,242,235,.5);">'+eJp[e]+'</span>'
-      +'<div style="height:4px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;"><div style="height:100%;width:'+pct+'%;background:'+col+';border-radius:2px;"></div></div>'
-      +'<span style="font-family:var(--serif);font-size:.95rem;color:'+col+';text-align:right;">'+n+'</span>'
+      +'<span style="font-size:.78rem;color:rgba(245,242,235,.5);">'+(isMono?swatch(e):'')+eJp[e]+'</span>'
+      +'<div style="height:4px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;"><div style="height:100%;width:'+pct+'%;'+fillStyle+'border-radius:2px;"></div></div>'
+      +'<span style="font-family:var(--serif);font-size:.95rem;color:'+numCol+';text-align:right;">'+n+'</span>'
       +'</div>';}).join('');
   const s3='<div style="width:100%;max-width:860px;margin:0 auto;">'
     +'<span style="font-size:.68rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:block;margin-bottom:12px;">Five Elements</span>'
@@ -2401,7 +2424,7 @@ function openKantei(){
   const syRows=syShow.map(sy=>{
     const isCurr=sy.year===currentYear;
     const tg=getTenGod(daySi,sy.si);
-    const col=eHex[STEM_ELEM[sy.si]]||'var(--muted)';
+    const col=isMono?'var(--cream)':(eHex[STEM_ELEM[sy.si]]||'var(--muted)');
     return'<tr style="'+(isCurr?'background:var(--hl-bg);border-left:3px solid var(--gold);':'')+'">'
       +'<td style="padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.04);font-size:.74rem;'+(isCurr?'color:var(--cream);':'color:var(--muted);')+'">'
       +(isCurr?'<span style="font-size:.54rem;background:var(--gold);color:#0d0b08;padding:1px 5px;margin-right:5px;display:inline-block;">今年</span>':'')+sy.year+'年</td>'
@@ -2492,10 +2515,10 @@ function openKantei(){
     ?[{label:'食傷',elem:yojin.shokusho},{label:'財',elem:yojin.zai},{label:'官',elem:yojin.kan}]
     :[{label:'比劫',elem:dayE},{label:'印',elem:yojin.in_el}];
   const yCards=yCardDefs
-    .map(v=>{const adv=YOJIN_ADVICE[v.elem]||{};const col=eHex[v.elem]||'var(--gold)';
+    .map(v=>{const adv=YOJIN_ADVICE[v.elem]||{};const col=isMono?'var(--gold)':(eHex[v.elem]||'var(--gold)');
       return'<div class="card" style="border-left:3px solid '+col+';">'
         +'<p style="font-size:.6rem;letter-spacing:.18em;color:var(--gold);margin-bottom:6px;">'+v.label+'</p>'
-        +'<p style="font-family:var(--serif);font-size:1.2rem;color:var(--cream);margin-bottom:6px;">'+v.elem+'（'+eYomi[v.elem]+'）</p>'
+        +'<p style="font-family:var(--serif);font-size:1.2rem;color:var(--cream);margin-bottom:6px;">'+(isMono?swatch(v.elem):'')+v.elem+'（'+eYomi[v.elem]+'）</p>'
         +'<p style="font-size:.73rem;color:var(--muted);line-height:1.8;margin-bottom:5px;">'+tr(adv.effect,30)+'</p>'
         +'<p style="font-size:.67rem;color:rgba(245,242,235,.32);line-height:1.8;margin-bottom:5px;">'+tr(adv.env,42)+'</p>'
         +'<p style="font-size:.63rem;color:rgba(245,242,235,.28);line-height:1.7;">'+tr(adv.stone,36)+'</p>'
@@ -2524,6 +2547,7 @@ function openKantei(){
     +'</div>'
     +'<p style="font-size:.84rem;color:var(--muted);line-height:2.4;margin-bottom:40px;">四柱推命は、東洋命理学の考え方に基づき、ご自身の性質や可能性を見つめ直すための参考情報です。この鑑定書が、自己理解を深め、これからの選択や行動を考えるきっかけとなれば幸いです。</p>'
     +'<p style="font-size:.68rem;color:rgba(245,242,235,.2);letter-spacing:.14em;border-top:1px solid rgba(255,255,255,.07);padding-top:22px;display:inline-block;">ASUMIRA 占い　─　現役占い師監修　／　'+todayStr+'</p>'
+    +(isMono?'<div style="margin:30px auto 0;display:flex;justify-content:center;" aria-hidden="true">'+hankoHTML+'</div>':'')
     +'</div>';
 
   // ── Assemble HTML ────────────────────────────────
@@ -2531,14 +2555,14 @@ function openKantei(){
   const NS=slides.length;
   const deckHtml=slides.map((s,i)=>'<div class="slide'+(i===0?' active':'')+'" id="sl'+i+'">'+s+'</div>').join('\n');
 
-  const html='<!DOCTYPE html>\n'
+  let html='<!DOCTYPE html>\n'
     +'<html lang="ja">\n<head>\n'
     +'<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">\n'
-    +'<title>'+todayFile+'_'+name+'様</title>\n'
+    +'<title>'+todayFile+'_'+name+'様'+(isMono?'［白黒印刷版］':'')+'</title>\n'
     +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">\n'
     +'<style>\n'
     +'*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}\n'
-    +':root{--bg:'+TH.bg+';--cream:'+TH.cream+';--muted:'+TH.muted+';--gold:'+TH.acc+';--gold2:'+TH.acc2+';--bdr:'+TH.bdr+';--bdr2:'+TH.bdr2+';--bdrM:'+TH.bdrM+';--bdrHi:'+TH.bdrHi+';--gd4:'+TH.gd4+';--hl-bg:'+TH.hlBg+';--card-bg:'+TH.cardBg+';--thead-bg:'+TH.theadBg+';--tbl-bg:'+TH.tblBg+';--rlbl-bg:'+TH.rlblBg+';--border:rgba(255,255,255,.07);--serif:"Noto Serif JP",serif;--sans:"Noto Sans JP",sans-serif;}\n'
+    +':root{--bg:'+TH.bg+';--cream:'+TH.cream+';--muted:'+TH.muted+';--gold:'+TH.acc+';--gold2:'+TH.acc2+';--bdr:'+TH.bdr+';--bdr2:'+TH.bdr2+';--bdrM:'+TH.bdrM+';--bdrHi:'+TH.bdrHi+';--gd4:'+TH.gd4+';--hl-bg:'+TH.hlBg+';--card-bg:'+TH.cardBg+';--thead-bg:'+TH.theadBg+';--tbl-bg:'+TH.tblBg+';--rlbl-bg:'+TH.rlblBg+';--border:'+TH.bdr2+';--serif:"Noto Serif JP",serif;--sans:"Noto Sans JP",sans-serif;}\n'
     +'html,body{width:100%;height:100%;background:var(--bg);color:var(--cream);font-family:var(--sans);font-weight:300;overflow:hidden;-webkit-font-smoothing:antialiased;}\n'
     +'.glow{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:60vw;height:60vw;background:radial-gradient(circle,'+TH.glow+' 0%,transparent 65%);pointer-events:none;z-index:0;}\n'
     +'.deck{width:100%;height:100%;position:relative;}\n'
@@ -2563,7 +2587,7 @@ function openKantei(){
     +'.deck{position:static!important;height:auto!important;display:block!important;}\n'
     +'.slide{position:relative!important;display:flex!important;opacity:1!important;transform:none!important;pointer-events:none!important;inset:auto!important;width:297mm!important;height:210mm!important;page-break-after:always!important;break-after:page!important;overflow:hidden!important;padding:44px 60px 44px!important;}\n'
     +'.slide:last-child{page-break-after:avoid!important;break-after:avoid!important;}\n'
-    +'.card{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(20,17,13,.96)!important;border:1px solid rgba(196,168,106,.3)!important;}\n'
+    +'.card{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:var(--card-bg)!important;border:1px solid var(--bdrM)!important;}\n'
     +'}\n'
     +'</style>\n</head>\n<body>\n'
     +'<div class="glow"></div>\n'
@@ -2582,6 +2606,14 @@ function openKantei(){
     +'nb.addEventListener("click",function(){if(cur<ss.length-1)goTo(cur+1);});\n'
     +'document.addEventListener("keydown",function(e){if(e.key==="ArrowRight"||e.key==="ArrowDown"){if(cur<ss.length-1)goTo(cur+1);}if(e.key==="ArrowLeft"||e.key==="ArrowUp"){if(cur>0)goTo(cur-1);}});\n'
     +'<\/script>\n</body>\n</html>';
+
+  if(isMono){
+    html=html
+      .replace(/rgba\(255,255,255,(\.\d+)\)/g,function(_,a){return'rgba(26,26,26,'+Math.min(.4,parseFloat(a)*3.5).toFixed(2)+')';})
+      .replace(/rgba\(245,242,235,(\.\d+)\)/g,function(_,a){return'rgba(26,26,26,'+Math.max(.45,Math.min(.85,parseFloat(a)*1.8)).toFixed(2)+')';})
+      .replace(/#c97878/g,TH.acc)
+      .replace(/#0d0b08/g,'#fdfcf8');
+  }
 
   const w=window.open('','_blank');
   if(w){w.document.open();w.document.write(html);w.document.close();}

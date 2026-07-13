@@ -51,8 +51,15 @@
   </url>
 
   <url>
+    <loc>https://mirai-fortune.github.io/mirai-uranai/%E5%8D%A0%E3%81%84/%E7%AE%97%E5%91%BD%E5%AD%A6/sanmeigaku-guide.html</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
     <loc>https://mirai-fortune.github.io/mirai-uranai/%E5%8D%A0%E3%81%84/%E8%A5%BF%E6%B4%8B%E5%8D%A0%E6%98%9F%E8%A1%93/horoscope.html</loc>
-    <lastmod>2026-06-01</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

@@ -1338,7 +1338,8 @@ function calcIndividual(){
         <tr><td class="rh">二十四節気蔵干</td><td class="czt">${STEMS[yZokkan]}</td><td class="czt">${STEMS[mZokkan]}</td><td class="czt">${STEMS[dZokkan]}</td></tr>
       </tbody>
     </table></div></div>`;
-  document.getElementById('si-cmd').innerHTML = insenHTML;
+  document.getElementById('si-cmd').innerHTML = insenHTML
+    + '<p class="uchuban-note"><a href="sanmeigaku-guide.html" style="color:var(--gold);">→ 算命学の仕組み・十大主星の読み方をくわしく見る</a></p>';
 
   // 宇宙盤（三柱の位相図） 描画
   const ubReading = getUchubanReading(yp, mp, dp);
@@ -2316,7 +2317,8 @@ function calcCompat(){
     <div class="compat-verdict" style="font-family:'Noto Serif JP',serif;font-size:22px;font-weight:300;color:var(--cream);margin-top:20px;letter-spacing:.08em;">${verdict}</div>`;
     
   // 鑑定結果リストの出力と不要項目の非表示化
-  document.getElementById('ai-gousho').innerHTML = `<div style="display:flex;flex-direction:column;gap:2px;background:var(--border);margin-bottom:48px;">${goushoHTML}</div>`;
+  document.getElementById('ai-gousho').innerHTML = `<div style="display:flex;flex-direction:column;gap:2px;background:var(--border);margin-bottom:48px;">${goushoHTML}</div>
+    <p class="uchuban-note"><a href="sanmeigaku-guide.html" style="color:var(--gold);">→ 算命学の仕組み・十大主星の読み方をくわしく見る</a></p>`;
   
   // 不要な「五行バランス」や「詳細」をHTMLから削除（非表示）
   const analysisElement = document.getElementById('ai-analysis');
