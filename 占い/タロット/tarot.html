@@ -430,6 +430,8 @@ html.theme-minagi section { position: relative; z-index: 1; }
 .kantei-btn-wrap{margin:52px 0 0;text-align:center;}
 .kantei-btn{padding:13px 52px;background:transparent;border:1px solid var(--gold);color:var(--gold);cursor:pointer;font-size:11px;letter-spacing:.36em;font-family:'Cormorant Garamond',serif;transition:background .25s,color .25s;text-transform:uppercase;}
 .kantei-btn:hover{background:var(--gold-dim);color:var(--gold2);}
+.kantei-btn-mono{padding:10px 36px;background:transparent;border:1px solid var(--border2);color:var(--muted);cursor:pointer;font-size:10px;letter-spacing:.28em;font-family:'Cormorant Garamond',serif;transition:border-color .25s,color .25s;text-transform:uppercase;margin-top:16px;}
+.kantei-btn-mono:hover{border-color:var(--muted);color:var(--cream);}
 .kantei-btn-hint{font-size:10px;color:var(--muted2);margin-top:11px;letter-spacing:.06em;}
 @media(max-width:768px){.kantei-btn-wrap{display:none;}}
 
@@ -731,6 +733,8 @@ html.theme-minagi section { position: relative; z-index: 1; }
 <div class="kantei-btn-wrap" id="trt-kantei-wrap" style="display:none;">
   <button class="kantei-btn" onclick="openKanteiTRT()">鑑定書を作成する</button>
   <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+  <button class="kantei-btn-mono" onclick="openKanteiTRT(true)">白黒印刷版で作成する</button>
+  <p class="kantei-btn-hint">実物を印刷・コピーする方向け。朱色を一部使用した白黒デザインです。</p>
 </div>
 
 <div id="trt-guide-link" style="display:none;text-align:center;margin:22px 0 0;">
@@ -818,6 +822,8 @@ html.theme-minagi section { position: relative; z-index: 1; }
 <div class="kantei-btn-wrap" id="cpt-kantei-wrap" style="display:none;">
   <button class="kantei-btn" onclick="openKanteiCPT()">鑑定書を作成する</button>
   <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+  <button class="kantei-btn-mono" onclick="openKanteiCPT(true)">白黒印刷版で作成する</button>
+  <p class="kantei-btn-hint">実物を印刷・コピーする方向け。朱色を一部使用した白黒デザインです。</p>
 </div>
 
 <div id="cpt-guide-link" style="display:none;text-align:center;margin:22px 0 0;">
@@ -871,6 +877,8 @@ html.theme-minagi section { position: relative; z-index: 1; }
 <div class="kantei-btn-wrap" id="one-kantei-wrap" style="display:none;">
   <button class="kantei-btn" onclick="openKanteiSimple('one')">鑑定書を作成する</button>
   <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+  <button class="kantei-btn-mono" onclick="openKanteiSimple('one',true)">白黒印刷版で作成する</button>
+  <p class="kantei-btn-hint">実物を印刷・コピーする方向け。朱色を一部使用した白黒デザインです。</p>
 </div>
 
 <div id="one-guide-link" style="display:none;text-align:center;margin:22px 0 0;">
@@ -938,6 +946,8 @@ html.theme-minagi section { position: relative; z-index: 1; }
 <div class="kantei-btn-wrap" id="three-kantei-wrap" style="display:none;">
   <button class="kantei-btn" onclick="openKanteiSimple('three')">鑑定書を作成する</button>
   <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+  <button class="kantei-btn-mono" onclick="openKanteiSimple('three',true)">白黒印刷版で作成する</button>
+  <p class="kantei-btn-hint">実物を印刷・コピーする方向け。朱色を一部使用した白黒デザインです。</p>
 </div>
 
 <div id="three-guide-link" style="display:none;text-align:center;margin:22px 0 0;">
@@ -984,6 +994,8 @@ html.theme-minagi section { position: relative; z-index: 1; }
 <div class="kantei-btn-wrap" id="horo-kantei-wrap" style="display:none;">
   <button class="kantei-btn" onclick="openKanteiSimple('horo')">鑑定書を作成する</button>
   <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+  <button class="kantei-btn-mono" onclick="openKanteiSimple('horo',true)">白黒印刷版で作成する</button>
+  <p class="kantei-btn-hint">実物を印刷・コピーする方向け。朱色を一部使用した白黒デザインです。</p>
 </div>
 
 <div id="horo-guide-link" style="display:none;text-align:center;margin:22px 0 0;">
@@ -1450,7 +1462,7 @@ function trtReset(){
 /* ════════════════════════════════════════
    タロット 鑑定書出力（横スライド形式・12枚）
 ════════════════════════════════════════ */
-function openKanteiTRT(){
+function openKanteiTRT(mono){
   var k = window._trtKantei;
   if(!k){ alert('先に鑑定してください。'); return; }
 
@@ -1458,15 +1470,22 @@ function openKanteiTRT(){
   var category = k.category;
   var imageDir = k.imageDir;
 
-  var _th = document.documentElement.classList.contains('theme-sakura') ? 'sakura'
+  var _th = mono ? 'mono'
+    : document.documentElement.classList.contains('theme-sakura') ? 'sakura'
     : document.documentElement.classList.contains('theme-shinryoku') ? 'shinryoku'
     : document.documentElement.classList.contains('theme-minagi') ? 'minagi' : 'gold';
   var TH = {
     gold:      {bg:'#030611',cream:'#f5f2eb',muted:'rgba(245,242,235,.6)',acc:'#c4a86a',acc2:'#e8d09a',bdr:'rgba(196,168,106,.12)',bdrM:'rgba(196,168,106,.28)',gd4:'rgba(196,168,106,.4)',cardBg:'rgba(15,13,9,.9)',theadBg:'rgba(28,24,12,.96)',tblBg:'rgba(18,16,12,.6)'},
     sakura:    {bg:'#160810',cream:'#fef2f6',muted:'rgba(254,242,246,.6)',acc:'#e891b2',acc2:'#f5c0d5',bdr:'rgba(232,145,178,.12)',bdrM:'rgba(232,145,178,.28)',gd4:'rgba(232,145,178,.4)',cardBg:'rgba(26,10,18,.9)',theadBg:'rgba(34,12,22,.96)',tblBg:'rgba(30,12,20,.6)'},
     shinryoku: {bg:'#060e08',cream:'#f0f5ef',muted:'rgba(240,245,239,.6)',acc:'#82c87e',acc2:'#b4e8b0',bdr:'rgba(130,200,126,.12)',bdrM:'rgba(130,200,126,.28)',gd4:'rgba(130,200,126,.4)',cardBg:'rgba(10,18,12,.9)',theadBg:'rgba(14,26,16,.96)',tblBg:'rgba(12,22,14,.6)'},
-    minagi:    {bg:'#04080f',cream:'#eef4fc',muted:'rgba(238,244,252,.6)',acc:'#6ab4e8',acc2:'#a0d4f4',bdr:'rgba(106,180,232,.12)',bdrM:'rgba(106,180,232,.28)',gd4:'rgba(106,180,232,.4)',cardBg:'rgba(8,12,22,.9)',theadBg:'rgba(10,18,34,.96)',tblBg:'rgba(8,14,26,.6)'}
+    minagi:    {bg:'#04080f',cream:'#eef4fc',muted:'rgba(238,244,252,.6)',acc:'#6ab4e8',acc2:'#a0d4f4',bdr:'rgba(106,180,232,.12)',bdrM:'rgba(106,180,232,.28)',gd4:'rgba(106,180,232,.4)',cardBg:'rgba(8,12,22,.9)',theadBg:'rgba(10,18,34,.96)',tblBg:'rgba(8,14,26,.6)'},
+    mono:      {bg:'#fdfcf8',cream:'#1a1a1a',muted:'rgba(26,26,26,.62)',acc:'#b8341f',acc2:'#c96a4e',bdr:'rgba(26,26,26,.2)',bdrM:'rgba(26,26,26,.42)',gd4:'rgba(26,26,26,.5)',cardBg:'rgba(26,26,26,.02)',theadBg:'rgba(26,26,26,.05)',tblBg:'rgba(26,26,26,.015)'}
   }[_th];
+  var isMono = _th === 'mono';
+  var _pageDir = window.location.href.replace(/[^/]*$/,'');
+  var hankoImgSrc = _pageDir + '../../images/mirai_sign.png';
+  var hankoHTML = isMono ? ('<img src="'+hankoImgSrc+'" alt="印" style="width:68px;height:68px;mix-blend-mode:multiply;">') : '';
+  var monoFrame = '<div style="position:absolute;top:6%;left:5%;width:34px;height:34px;border-top:1px solid rgba(26,26,26,.3);border-left:1px solid rgba(26,26,26,.3);"></div><div style="position:absolute;top:6%;right:5%;width:34px;height:34px;border-top:1px solid rgba(26,26,26,.3);border-right:1px solid rgba(26,26,26,.3);"></div><div style="position:absolute;bottom:6%;left:5%;width:34px;height:34px;border-bottom:1px solid rgba(26,26,26,.3);border-left:1px solid rgba(26,26,26,.3);"></div><div style="position:absolute;bottom:6%;right:5%;width:34px;height:34px;border-bottom:1px solid rgba(26,26,26,.3);border-right:1px solid rgba(26,26,26,.3);"></div><span style="position:absolute;top:22%;left:10%;font-size:7px;color:rgba(26,26,26,.12);">✦</span><span style="position:absolute;bottom:26%;right:11%;font-size:5px;color:rgba(26,26,26,.1);">✦</span>';
 
   var today = new Date();
   var todayStr = today.getFullYear()+'年'+(today.getMonth()+1)+'月'+today.getDate()+'日';
@@ -1478,7 +1497,8 @@ function openKanteiTRT(){
   function getImgSrc(id){ var rel = TRT_IMAGE_MAP[id]; return rel ? imageDir + rel : ''; }
 
   // ── S1: 表紙 ──
-  var s1 = '<div style="text-align:center;max-width:680px;margin:0 auto;">'
+  var s1 = (isMono ? '<div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0;" aria-hidden="true">'+monoFrame+'</div><div style="position:absolute;width:68px;height:68px;bottom:9%;right:8%;z-index:2;" aria-hidden="true">'+hankoHTML+'</div>' : '')
+    +'<div style="text-align:center;max-width:680px;margin:0 auto;">'
     +'<p style="font-family:var(--serif);font-size:.65rem;letter-spacing:.42em;color:var(--gd4);text-transform:uppercase;margin-bottom:28px;">ASUMIRA 占い  ─  タロット</p>'
     +'<h1 style="font-family:var(--serif);font-size:clamp(2rem,4vw,3.2rem);font-weight:300;letter-spacing:.14em;color:var(--cream);margin-bottom:6px;">タロット鑑定書</h1>'
     +'<div style="width:36px;height:1px;background:var(--gold);margin:22px auto 26px;"></div>'
@@ -1529,7 +1549,7 @@ function openKanteiTRT(){
     +'<div style="position:relative;width:'+cw+'px;height:'+ch+'px;">'
     +'<div style="position:absolute;inset:0;border:1px solid '+TH.bdrM+';border-radius:2px;overflow:hidden;background:'+TH.cardBg+';">'+mkCImg(drawn[0])+'</div>'
     +'<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">'
-    +'<div style="width:'+cw+'px;height:'+ch+'px;transform:rotate(90deg);border:1px solid rgba(196,168,106,.65);border-radius:2px;overflow:hidden;background:'+TH.cardBg+';">'+mkCImg(drawn[1])+'</div>'
+    +'<div style="width:'+cw+'px;height:'+ch+'px;transform:rotate(90deg);border:1px solid '+TH.bdrM+';border-radius:2px;overflow:hidden;background:'+TH.cardBg+';">'+mkCImg(drawn[1])+'</div>'
     +'</div>'
     +'</div>'
     +'<div style="font-size:7px;letter-spacing:.1em;color:'+TH.gd4+';font-family:var(--serif);">II</div>'
@@ -1587,8 +1607,7 @@ function openKanteiTRT(){
         +'<div style="font-size:.65rem;color:'+TH.muted+';margin-top:4px;font-style:italic;">'+card.data.nameEn+'</div>'
         +'</div>';
 
-    cardSlides.push(
-      '<div style="display:flex;gap:56px;align-items:center;width:100%;max-width:960px;margin:0 auto;">'
+    var cardSlideHtml = '<div style="display:flex;gap:56px;align-items:center;width:100%;max-width:960px;margin:0 auto;">'
       // ─ 左: カード画像
       +'<div style="flex-shrink:0;width:152px;">'
       +'<div style="font-family:var(--serif);font-size:2.6rem;font-weight:300;color:'+TH.gd4+';line-height:1;margin-bottom:10px;text-align:center;">'+pos.en+'</div>'
@@ -1611,8 +1630,14 @@ function openKanteiTRT(){
       +'<div style="font-size:.82rem;line-height:2.05;letter-spacing:.04em;color:'+TH.cream+';margin-bottom:14px;">'+rawText+'</div>'
       +'<div style="font-size:.76rem;line-height:1.9;letter-spacing:.04em;color:'+TH.acc+';padding-top:12px;border-top:1px solid '+TH.bdr+';">'+catMsg+'</div>'
       +'</div>'
-      +'</div>'
-    );
+      +'</div>';
+    if(isMono && ci === drawn.length-1){
+      cardSlideHtml = '<div style="display:flex;flex-direction:column;align-items:center;width:100%;">'
+        + cardSlideHtml
+        + '<div style="margin:30px auto 0;display:flex;justify-content:center;" aria-hidden="true">'+hankoHTML+'</div>'
+        + '</div>';
+    }
+    cardSlides.push(cardSlideHtml);
   }
 
   var allSlides = [s1, s2].concat(cardSlides);
@@ -1647,7 +1672,7 @@ function openKanteiTRT(){
     +'}';
 
   var html = '<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8">'
-    +'<title>'+todayFile+'</title>'
+    +'<title>'+todayFile+(isMono?'［白黒印刷版］':'')+'</title>'
     +'<link rel="preconnect" href="https://fonts.googleapis.com">'
     +'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
     +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">'
@@ -1672,6 +1697,12 @@ function openKanteiTRT(){
     +'<\/script>'
     +'</body></html>';
 
+  if(isMono){
+    html = html
+      .replace(/rgba\(255,255,255,(\.\d+)\)/g,function(_,a){return'rgba(26,26,26,'+Math.min(.4,parseFloat(a)*3.5).toFixed(2)+')';})
+      .replace(/rgba\(245,242,235,(\.\d+)\)/g,function(_,a){return'rgba(26,26,26,'+Math.max(.45,Math.min(.85,parseFloat(a)*1.8)).toFixed(2)+')';});
+  }
+
   var w = window.open('','_blank');
   if(!w){ alert('ポップアップがブロックされました。ブラウザの設定でポップアップを許可してください。'); return; }
   w.document.write(html);
@@ -1683,22 +1714,29 @@ function openKanteiTRT(){
    openKanteiTRTと同じ構造・テーマカラーロジックを踏襲。
    カード解説はTRT_CARD_MEANING（正位置/逆位置/恋愛）を再利用。
 ════════════════════════════════════════ */
-function openKanteiCPT(){
+function openKanteiCPT(mono){
   var k = window._cptKantei;
   if(!k){ alert('先に鑑定してください。'); return; }
 
   var drawn = k.drawn;
   var imageDir = k.imageDir;
 
-  var _th = document.documentElement.classList.contains('theme-sakura') ? 'sakura'
+  var _th = mono ? 'mono'
+    : document.documentElement.classList.contains('theme-sakura') ? 'sakura'
     : document.documentElement.classList.contains('theme-shinryoku') ? 'shinryoku'
     : document.documentElement.classList.contains('theme-minagi') ? 'minagi' : 'gold';
   var TH = {
     gold:      {bg:'#030611',cream:'#f5f2eb',muted:'rgba(245,242,235,.6)',acc:'#c4a86a',acc2:'#e8d09a',bdr:'rgba(196,168,106,.12)',bdrM:'rgba(196,168,106,.28)',gd4:'rgba(196,168,106,.4)',cardBg:'rgba(15,13,9,.9)',theadBg:'rgba(28,24,12,.96)',tblBg:'rgba(18,16,12,.6)'},
     sakura:    {bg:'#160810',cream:'#fef2f6',muted:'rgba(254,242,246,.6)',acc:'#e891b2',acc2:'#f5c0d5',bdr:'rgba(232,145,178,.12)',bdrM:'rgba(232,145,178,.28)',gd4:'rgba(232,145,178,.4)',cardBg:'rgba(26,10,18,.9)',theadBg:'rgba(34,12,22,.96)',tblBg:'rgba(30,12,20,.6)'},
     shinryoku: {bg:'#060e08',cream:'#f0f5ef',muted:'rgba(240,245,239,.6)',acc:'#82c87e',acc2:'#b4e8b0',bdr:'rgba(130,200,126,.12)',bdrM:'rgba(130,200,126,.28)',gd4:'rgba(130,200,126,.4)',cardBg:'rgba(10,18,12,.9)',theadBg:'rgba(14,26,16,.96)',tblBg:'rgba(12,22,14,.6)'},
-    minagi:    {bg:'#04080f',cream:'#eef4fc',muted:'rgba(238,244,252,.6)',acc:'#6ab4e8',acc2:'#a0d4f4',bdr:'rgba(106,180,232,.12)',bdrM:'rgba(106,180,232,.28)',gd4:'rgba(106,180,232,.4)',cardBg:'rgba(8,12,22,.9)',theadBg:'rgba(10,18,34,.96)',tblBg:'rgba(8,14,26,.6)'}
+    minagi:    {bg:'#04080f',cream:'#eef4fc',muted:'rgba(238,244,252,.6)',acc:'#6ab4e8',acc2:'#a0d4f4',bdr:'rgba(106,180,232,.12)',bdrM:'rgba(106,180,232,.28)',gd4:'rgba(106,180,232,.4)',cardBg:'rgba(8,12,22,.9)',theadBg:'rgba(10,18,34,.96)',tblBg:'rgba(8,14,26,.6)'},
+    mono:      {bg:'#fdfcf8',cream:'#1a1a1a',muted:'rgba(26,26,26,.62)',acc:'#b8341f',acc2:'#c96a4e',bdr:'rgba(26,26,26,.2)',bdrM:'rgba(26,26,26,.42)',gd4:'rgba(26,26,26,.5)',cardBg:'rgba(26,26,26,.02)',theadBg:'rgba(26,26,26,.05)',tblBg:'rgba(26,26,26,.015)'}
   }[_th];
+  var isMono = _th === 'mono';
+  var _pageDir = window.location.href.replace(/[^/]*$/,'');
+  var hankoImgSrc = _pageDir + '../../images/mirai_sign.png';
+  var hankoHTML = isMono ? ('<img src="'+hankoImgSrc+'" alt="印" style="width:68px;height:68px;mix-blend-mode:multiply;">') : '';
+  var monoFrame = '<div style="position:absolute;top:6%;left:5%;width:34px;height:34px;border-top:1px solid rgba(26,26,26,.3);border-left:1px solid rgba(26,26,26,.3);"></div><div style="position:absolute;top:6%;right:5%;width:34px;height:34px;border-top:1px solid rgba(26,26,26,.3);border-right:1px solid rgba(26,26,26,.3);"></div><div style="position:absolute;bottom:6%;left:5%;width:34px;height:34px;border-bottom:1px solid rgba(26,26,26,.3);border-left:1px solid rgba(26,26,26,.3);"></div><div style="position:absolute;bottom:6%;right:5%;width:34px;height:34px;border-bottom:1px solid rgba(26,26,26,.3);border-right:1px solid rgba(26,26,26,.3);"></div><span style="position:absolute;top:22%;left:10%;font-size:7px;color:rgba(26,26,26,.12);">✦</span><span style="position:absolute;bottom:26%;right:11%;font-size:5px;color:rgba(26,26,26,.1);">✦</span>';
 
   var today = new Date();
   var todayStr = today.getFullYear()+'年'+(today.getMonth()+1)+'月'+today.getDate()+'日';
@@ -1707,7 +1745,8 @@ function openKanteiCPT(){
   function getImgSrc(id){ var rel = TRT_IMAGE_MAP[id]; return rel ? imageDir + rel : ''; }
 
   // ── S1: 表紙 ──
-  var s1 = '<div style="text-align:center;max-width:680px;margin:0 auto;">'
+  var s1 = (isMono ? '<div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0;" aria-hidden="true">'+monoFrame+'</div><div style="position:absolute;width:68px;height:68px;bottom:9%;right:8%;z-index:2;" aria-hidden="true">'+hankoHTML+'</div>' : '')
+    +'<div style="text-align:center;max-width:680px;margin:0 auto;">'
     +'<p style="font-family:var(--serif);font-size:.65rem;letter-spacing:.42em;color:var(--gd4);text-transform:uppercase;margin-bottom:28px;">ASUMIRA 占い  ─  タロット</p>'
     +'<h1 style="font-family:var(--serif);font-size:clamp(2rem,4vw,3.2rem);font-weight:300;letter-spacing:.14em;color:var(--cream);margin-bottom:6px;">タロット相性鑑定書</h1>'
     +'<div style="width:36px;height:1px;background:var(--gold);margin:22px auto 26px;"></div>'
@@ -1798,8 +1837,7 @@ function openKanteiCPT(){
         +'<div style="font-size:.65rem;color:'+TH.muted+';margin-top:4px;font-style:italic;">'+card.data.nameEn+'</div>'
         +'</div>';
 
-    cardSlides.push(
-      '<div style="display:flex;gap:56px;align-items:center;width:100%;max-width:960px;margin:0 auto;">'
+    var cardSlideHtml = '<div style="display:flex;gap:56px;align-items:center;width:100%;max-width:960px;margin:0 auto;">'
       +'<div style="flex-shrink:0;width:152px;">'
       +'<div style="font-family:var(--serif);font-size:2.6rem;font-weight:300;color:'+TH.gd4+';line-height:1;margin-bottom:10px;text-align:center;">'+pos.en+'</div>'
       +'<div style="width:152px;height:266px;border:1px solid '+TH.bdrM+';border-radius:3px;overflow:hidden;background:'+TH.cardBg+';">'
@@ -1821,8 +1859,14 @@ function openKanteiCPT(){
       +'<div style="font-size:.76rem;line-height:1.9;letter-spacing:.04em;color:'+TH.acc+';padding-top:12px;border-top:1px solid '+TH.bdr+';">恋愛面では、'+m.love+'</div>'
       +'<div style="font-size:.72rem;line-height:1.8;letter-spacing:.03em;color:'+TH.muted+';margin-top:10px;">💡 '+m.advice+'</div>'
       +'</div>'
-      +'</div>'
-    );
+      +'</div>';
+    if(isMono && ci === drawn.length-1){
+      cardSlideHtml = '<div style="display:flex;flex-direction:column;align-items:center;width:100%;">'
+        + cardSlideHtml
+        + '<div style="margin:30px auto 0;display:flex;justify-content:center;" aria-hidden="true">'+hankoHTML+'</div>'
+        + '</div>';
+    }
+    cardSlides.push(cardSlideHtml);
   }
 
   var allSlides = [s1, s2].concat(cardSlides);
@@ -1857,7 +1901,7 @@ function openKanteiCPT(){
     +'}';
 
   var html = '<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8">'
-    +'<title>'+todayFile+'</title>'
+    +'<title>'+todayFile+(isMono?'［白黒印刷版］':'')+'</title>'
     +'<link rel="preconnect" href="https://fonts.googleapis.com">'
     +'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
     +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">'
@@ -1882,6 +1926,12 @@ function openKanteiCPT(){
     +'<\/script>'
     +'</body></html>';
 
+  if(isMono){
+    html = html
+      .replace(/rgba\(255,255,255,(\.\d+)\)/g,function(_,a){return'rgba(26,26,26,'+Math.min(.4,parseFloat(a)*3.5).toFixed(2)+')';})
+      .replace(/rgba\(245,242,235,(\.\d+)\)/g,function(_,a){return'rgba(26,26,26,'+Math.max(.45,Math.min(.85,parseFloat(a)*1.8)).toFixed(2)+')';});
+  }
+
   var w = window.open('','_blank');
   if(!w){ alert('ポップアップがブロックされました。ブラウザの設定でポップアップを許可してください。'); return; }
   w.document.write(html);
@@ -1899,7 +1949,7 @@ const SIMPLE_KANTEI_META = {
   horo:  { title:'今年の運勢鑑定書',   sub:'ホロスコープ法　13枚展開' },
 };
 
-function openKanteiSimple(key){
+function openKanteiSimple(key, mono){
   var k = window._simpleKantei && window._simpleKantei[key];
   if(!k){ alert('先に鑑定してください。'); return; }
 
@@ -1908,15 +1958,22 @@ function openKanteiSimple(key){
   var positions = SIMPLE_SPREADS[key].positions;
   var meta = SIMPLE_KANTEI_META[key];
 
-  var _th = document.documentElement.classList.contains('theme-sakura') ? 'sakura'
+  var _th = mono ? 'mono'
+    : document.documentElement.classList.contains('theme-sakura') ? 'sakura'
     : document.documentElement.classList.contains('theme-shinryoku') ? 'shinryoku'
     : document.documentElement.classList.contains('theme-minagi') ? 'minagi' : 'gold';
   var TH = {
     gold:      {bg:'#030611',cream:'#f5f2eb',muted:'rgba(245,242,235,.6)',acc:'#c4a86a',acc2:'#e8d09a',bdr:'rgba(196,168,106,.12)',bdrM:'rgba(196,168,106,.28)',gd4:'rgba(196,168,106,.4)',cardBg:'rgba(15,13,9,.9)',theadBg:'rgba(28,24,12,.96)',tblBg:'rgba(18,16,12,.6)'},
     sakura:    {bg:'#160810',cream:'#fef2f6',muted:'rgba(254,242,246,.6)',acc:'#e891b2',acc2:'#f5c0d5',bdr:'rgba(232,145,178,.12)',bdrM:'rgba(232,145,178,.28)',gd4:'rgba(232,145,178,.4)',cardBg:'rgba(26,10,18,.9)',theadBg:'rgba(34,12,22,.96)',tblBg:'rgba(30,12,20,.6)'},
     shinryoku: {bg:'#060e08',cream:'#f0f5ef',muted:'rgba(240,245,239,.6)',acc:'#82c87e',acc2:'#b4e8b0',bdr:'rgba(130,200,126,.12)',bdrM:'rgba(130,200,126,.28)',gd4:'rgba(130,200,126,.4)',cardBg:'rgba(10,18,12,.9)',theadBg:'rgba(14,26,16,.96)',tblBg:'rgba(12,22,14,.6)'},
-    minagi:    {bg:'#04080f',cream:'#eef4fc',muted:'rgba(238,244,252,.6)',acc:'#6ab4e8',acc2:'#a0d4f4',bdr:'rgba(106,180,232,.12)',bdrM:'rgba(106,180,232,.28)',gd4:'rgba(106,180,232,.4)',cardBg:'rgba(8,12,22,.9)',theadBg:'rgba(10,18,34,.96)',tblBg:'rgba(8,14,26,.6)'}
+    minagi:    {bg:'#04080f',cream:'#eef4fc',muted:'rgba(238,244,252,.6)',acc:'#6ab4e8',acc2:'#a0d4f4',bdr:'rgba(106,180,232,.12)',bdrM:'rgba(106,180,232,.28)',gd4:'rgba(106,180,232,.4)',cardBg:'rgba(8,12,22,.9)',theadBg:'rgba(10,18,34,.96)',tblBg:'rgba(8,14,26,.6)'},
+    mono:      {bg:'#fdfcf8',cream:'#1a1a1a',muted:'rgba(26,26,26,.62)',acc:'#b8341f',acc2:'#c96a4e',bdr:'rgba(26,26,26,.2)',bdrM:'rgba(26,26,26,.42)',gd4:'rgba(26,26,26,.5)',cardBg:'rgba(26,26,26,.02)',theadBg:'rgba(26,26,26,.05)',tblBg:'rgba(26,26,26,.015)'}
   }[_th];
+  var isMono = _th === 'mono';
+  var _pageDir = window.location.href.replace(/[^/]*$/,'');
+  var hankoImgSrc = _pageDir + '../../images/mirai_sign.png';
+  var hankoHTML = isMono ? ('<img src="'+hankoImgSrc+'" alt="印" style="width:68px;height:68px;mix-blend-mode:multiply;">') : '';
+  var monoFrame = '<div style="position:absolute;top:6%;left:5%;width:34px;height:34px;border-top:1px solid rgba(26,26,26,.3);border-left:1px solid rgba(26,26,26,.3);"></div><div style="position:absolute;top:6%;right:5%;width:34px;height:34px;border-top:1px solid rgba(26,26,26,.3);border-right:1px solid rgba(26,26,26,.3);"></div><div style="position:absolute;bottom:6%;left:5%;width:34px;height:34px;border-bottom:1px solid rgba(26,26,26,.3);border-left:1px solid rgba(26,26,26,.3);"></div><div style="position:absolute;bottom:6%;right:5%;width:34px;height:34px;border-bottom:1px solid rgba(26,26,26,.3);border-right:1px solid rgba(26,26,26,.3);"></div><span style="position:absolute;top:22%;left:10%;font-size:7px;color:rgba(26,26,26,.12);">✦</span><span style="position:absolute;bottom:26%;right:11%;font-size:5px;color:rgba(26,26,26,.1);">✦</span>';
 
   var today = new Date();
   var todayStr = today.getFullYear()+'年'+(today.getMonth()+1)+'月'+today.getDate()+'日';
@@ -1925,7 +1982,8 @@ function openKanteiSimple(key){
   function getImgSrc(id){ var rel = TRT_IMAGE_MAP[id]; return rel ? imageDir + rel : ''; }
 
   // ── S1: 表紙 ──
-  var s1 = '<div style="text-align:center;max-width:680px;margin:0 auto;">'
+  var s1 = (isMono ? '<div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0;" aria-hidden="true">'+monoFrame+'</div><div style="position:absolute;width:68px;height:68px;bottom:9%;right:8%;z-index:2;" aria-hidden="true">'+hankoHTML+'</div>' : '')
+    +'<div style="text-align:center;max-width:680px;margin:0 auto;">'
     +'<p style="font-family:var(--serif);font-size:.65rem;letter-spacing:.42em;color:var(--gd4);text-transform:uppercase;margin-bottom:28px;">ASUMIRA 占い  ─  タロット</p>'
     +'<h1 style="font-family:var(--serif);font-size:clamp(2rem,4vw,3.2rem);font-weight:300;letter-spacing:.14em;color:var(--cream);margin-bottom:6px;">'+meta.title+'</h1>'
     +'<div style="width:36px;height:1px;background:var(--gold);margin:22px auto 26px;"></div>'
@@ -2008,7 +2066,7 @@ function openKanteiSimple(key){
         +'<div style="font-size:.65rem;color:'+TH.muted+';margin-top:4px;font-style:italic;">'+card.data.nameEn+'</div>'
         +'</div>';
 
-    return '<div style="display:flex;gap:56px;align-items:center;width:100%;max-width:960px;margin:0 auto;">'
+    var cardSlideHtml = '<div style="display:flex;gap:56px;align-items:center;width:100%;max-width:960px;margin:0 auto;">'
       +'<div style="flex-shrink:0;width:152px;">'
       +'<div style="font-family:var(--serif);font-size:1.5rem;font-weight:300;color:'+TH.gd4+';line-height:1.3;margin-bottom:10px;text-align:center;">'+pos.label+'</div>'
       +'<div style="width:152px;height:266px;border:1px solid '+TH.bdrM+';border-radius:3px;overflow:hidden;background:'+TH.cardBg+';">'
@@ -2029,6 +2087,13 @@ function openKanteiSimple(key){
       +'<div style="font-size:.72rem;line-height:1.8;letter-spacing:.03em;color:'+TH.acc+';padding-top:12px;border-top:1px solid '+TH.bdr+';">💡 '+m.advice+'</div>'
       +'</div>'
       +'</div>';
+    if(isMono && ci === drawn.length-1){
+      cardSlideHtml = '<div style="display:flex;flex-direction:column;align-items:center;width:100%;">'
+        + cardSlideHtml
+        + '<div style="margin:30px auto 0;display:flex;justify-content:center;" aria-hidden="true">'+hankoHTML+'</div>'
+        + '</div>';
+    }
+    return cardSlideHtml;
   });
 
   var allSlides = [s1, s2].concat(cardSlides);
@@ -2063,7 +2128,7 @@ function openKanteiSimple(key){
     +'}';
 
   var html = '<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8">'
-    +'<title>'+todayFile+'</title>'
+    +'<title>'+todayFile+(isMono?'［白黒印刷版］':'')+'</title>'
     +'<link rel="preconnect" href="https://fonts.googleapis.com">'
     +'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
     +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">'
@@ -2087,6 +2152,12 @@ function openKanteiSimple(key){
     +'});'
     +'<\/script>'
     +'</body></html>';
+
+  if(isMono){
+    html = html
+      .replace(/rgba\(255,255,255,(\.\d+)\)/g,function(_,a){return'rgba(26,26,26,'+Math.min(.4,parseFloat(a)*3.5).toFixed(2)+')';})
+      .replace(/rgba\(245,242,235,(\.\d+)\)/g,function(_,a){return'rgba(26,26,26,'+Math.max(.45,Math.min(.85,parseFloat(a)*1.8)).toFixed(2)+')';});
+  }
 
   var w = window.open('','_blank');
   if(!w){ alert('ポップアップがブロックされました。ブラウザの設定でポップアップを許可してください。'); return; }

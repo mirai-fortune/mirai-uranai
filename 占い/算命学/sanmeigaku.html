@@ -307,6 +307,8 @@ body{background:var(--bg);color:var(--cream);font-family:'Noto Sans JP',sans-ser
 .kantei-btn{padding:13px 52px;background:transparent;border:1px solid var(--gold);color:var(--gold);cursor:pointer;font-size:11px;letter-spacing:.36em;font-family:'Cormorant Garamond',serif;transition:background .25s,color .25s;text-transform:uppercase;}
 .kantei-btn:hover{background:var(--gold-dim);color:var(--gold2);}
 .kantei-btn-hint{font-size:10px;color:var(--muted2);margin-top:11px;letter-spacing:.06em;}
+.kantei-btn-mono{padding:10px 36px;background:transparent;border:1px solid var(--border2);color:var(--muted);cursor:pointer;font-size:10px;letter-spacing:.28em;font-family:'Cormorant Garamond',serif;transition:border-color .25s,color .25s;text-transform:uppercase;margin-top:16px;}
+.kantei-btn-mono:hover{border-color:var(--muted);color:var(--cream);}
 @media(max-width:768px){.kantei-btn-wrap{display:none;}}
 /* ===== PINK SAKURA THEME ===== */
 html.theme-sakura {
@@ -534,6 +536,9 @@ html.theme-minagi section { position: relative; z-index: 1; }
   <div class="kantei-btn-wrap" id="sm-kantei-wrap" style="display:none;">
     <button class="kantei-btn" onclick="openKanteiSM()">鑑定書を作成する</button>
     <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+    <br>
+    <button class="kantei-btn-mono" onclick="openKanteiSM(true)">白黒印刷版で作成する</button>
+    <p class="kantei-btn-hint">実物を印刷・コピーする方向け。朱色を一部使用した白黒デザインです。</p>
   </div>
 </div>
 
@@ -1699,26 +1704,31 @@ function calcIndividual(){
 /* ══════════════════════════════════════
    算命学 鑑定書出力（横スライド形式・14枚）
 ══════════════════════════════════════ */
-function openKanteiSM(){
+function openKanteiSM(mono){
   const k = window._smKantei;
   if(!k){ alert('先に鑑定してください。'); return; }
 
   // 人体星図画像：ページの絶対パスから組み立て（file://環境でも動作）
   const _pageDir = window.location.href.replace(/[^/]*$/, '');
   const zintaizuSrc = _pageDir + 'images/sanmeigaku_zintaizu.png';
+  const hankoImgSrc = _pageDir + '../../images/mirai_sign.png';
 
   const {name,y,m,d,gender,voidLabel,yp,mp,dp,yZokkan,mZokkan,dZokkan,
     chartData,allInterps,currDuIdx,daiun,nenunInterps,currNenunIdx,currentYear,curAge} = k;
 
-  const _th = document.documentElement.classList.contains('theme-sakura')?'sakura'
+  const _th = mono?'mono'
+    :document.documentElement.classList.contains('theme-sakura')?'sakura'
     :document.documentElement.classList.contains('theme-shinryoku')?'shinryoku'
     :document.documentElement.classList.contains('theme-minagi')?'minagi':'gold';
   const TH = {
     gold:{bg:'#030611',cream:'#f5f2eb',muted:'rgba(245,242,235,.6)',acc:'#c4a86a',acc2:'#e8d09a',glow:'rgba(196,168,106,.055)',bdr:'rgba(196,168,106,.12)',bdr2:'rgba(196,168,106,.14)',bdrM:'rgba(196,168,106,.28)',bdrHi:'rgba(196,168,106,.18)',gd4:'rgba(196,168,106,.4)',hlBg:'rgba(196,168,106,.1)',cardBg:'rgba(15,13,9,.7)',theadBg:'rgba(28,24,12,.96)',tblBg:'rgba(18,16,12,.6)',rlblBg:'rgba(28,24,12,.7)'},
     sakura:{bg:'#160810',cream:'#fef2f6',muted:'rgba(254,242,246,.6)',acc:'#e891b2',acc2:'#f5c0d5',glow:'rgba(232,145,178,.055)',bdr:'rgba(232,145,178,.12)',bdr2:'rgba(232,145,178,.14)',bdrM:'rgba(232,145,178,.28)',bdrHi:'rgba(232,145,178,.18)',gd4:'rgba(232,145,178,.4)',hlBg:'rgba(232,145,178,.1)',cardBg:'rgba(26,10,18,.7)',theadBg:'rgba(34,12,22,.96)',tblBg:'rgba(30,12,20,.6)',rlblBg:'rgba(34,12,22,.7)'},
     shinryoku:{bg:'#060e08',cream:'#f0f5ef',muted:'rgba(240,245,239,.6)',acc:'#82c87e',acc2:'#b4e8b0',glow:'rgba(130,200,126,.055)',bdr:'rgba(130,200,126,.12)',bdr2:'rgba(130,200,126,.14)',bdrM:'rgba(130,200,126,.28)',bdrHi:'rgba(130,200,126,.18)',gd4:'rgba(130,200,126,.4)',hlBg:'rgba(130,200,126,.1)',cardBg:'rgba(10,18,12,.7)',theadBg:'rgba(14,26,16,.96)',tblBg:'rgba(12,22,14,.6)',rlblBg:'rgba(14,26,16,.7)'},
-    minagi:{bg:'#04080f',cream:'#eef4fc',muted:'rgba(238,244,252,.6)',acc:'#6ab4e8',acc2:'#a0d4f4',glow:'rgba(106,180,232,.055)',bdr:'rgba(106,180,232,.12)',bdr2:'rgba(106,180,232,.14)',bdrM:'rgba(106,180,232,.28)',bdrHi:'rgba(106,180,232,.18)',gd4:'rgba(106,180,232,.4)',hlBg:'rgba(106,180,232,.1)',cardBg:'rgba(8,12,22,.7)',theadBg:'rgba(10,18,34,.96)',tblBg:'rgba(8,14,26,.6)',rlblBg:'rgba(10,18,34,.7)'}
+    minagi:{bg:'#04080f',cream:'#eef4fc',muted:'rgba(238,244,252,.6)',acc:'#6ab4e8',acc2:'#a0d4f4',glow:'rgba(106,180,232,.055)',bdr:'rgba(106,180,232,.12)',bdr2:'rgba(106,180,232,.14)',bdrM:'rgba(106,180,232,.28)',bdrHi:'rgba(106,180,232,.18)',gd4:'rgba(106,180,232,.4)',hlBg:'rgba(106,180,232,.1)',cardBg:'rgba(8,12,22,.7)',theadBg:'rgba(10,18,34,.96)',tblBg:'rgba(8,14,26,.6)',rlblBg:'rgba(10,18,34,.7)'},
+    mono:{bg:'#fdfcf8',cream:'#1a1a1a',muted:'rgba(26,26,26,.62)',acc:'#b8341f',acc2:'#c96a4e',glow:'rgba(26,26,26,.015)',bdr:'rgba(26,26,26,.2)',bdr2:'rgba(26,26,26,.15)',bdrM:'rgba(26,26,26,.42)',bdrHi:'rgba(184,52,31,.35)',gd4:'rgba(26,26,26,.5)',hlBg:'rgba(184,52,31,.07)',cardBg:'rgba(26,26,26,.02)',theadBg:'rgba(26,26,26,.05)',tblBg:'rgba(26,26,26,.015)',rlblBg:'rgba(26,26,26,.04)'}
   }[_th];
+  const isMono = _th === 'mono';
+  const hankoHTML = isMono ? ('<img src="'+hankoImgSrc+'" alt="印" style="width:68px;height:68px;mix-blend-mode:multiply;">') : '';
 
   const today = new Date();
   const todayStr = today.getFullYear()+'年'+(today.getMonth()+1)+'月'+today.getDate()+'日';
@@ -1735,7 +1745,17 @@ function openKanteiSM(){
   const rubyJuni = star => '<ruby>'+star.name+'<rt style="font-size:.45em;letter-spacing:.04em;">'+star.yomi+'</rt></ruby>';
 
   // ── S1: 表紙 ──
-  const s1 = '<div style="text-align:center;max-width:680px;margin:0 auto;">'
+  const s1MonoMotif = isMono ? ('<div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0;" aria-hidden="true">'
+    +'<div style="position:absolute;top:6%;left:5%;width:34px;height:34px;border-top:1px solid rgba(26,26,26,.3);border-left:1px solid rgba(26,26,26,.3);"></div>'
+    +'<div style="position:absolute;top:6%;right:5%;width:34px;height:34px;border-top:1px solid rgba(26,26,26,.3);border-right:1px solid rgba(26,26,26,.3);"></div>'
+    +'<div style="position:absolute;bottom:6%;left:5%;width:34px;height:34px;border-bottom:1px solid rgba(26,26,26,.3);border-left:1px solid rgba(26,26,26,.3);"></div>'
+    +'<div style="position:absolute;bottom:6%;right:5%;width:34px;height:34px;border-bottom:1px solid rgba(26,26,26,.3);border-right:1px solid rgba(26,26,26,.3);"></div>'
+    +'<span style="position:absolute;top:22%;left:10%;font-size:7px;color:rgba(26,26,26,.12);">✦</span>'
+    +'<span style="position:absolute;bottom:26%;right:11%;font-size:5px;color:rgba(26,26,26,.1);">✦</span>'
+    +'</div>') : '';
+  const s1 = s1MonoMotif
+    +(isMono?'<div style="position:absolute;width:68px;height:68px;bottom:9%;right:8%;z-index:2;" aria-hidden="true">'+hankoHTML+'</div>':'')
+    +'<div style="text-align:center;max-width:680px;margin:0 auto;">'
     +'<p style="font-family:var(--serif);font-size:.68rem;letter-spacing:.42em;color:var(--gd4);text-transform:uppercase;margin-bottom:32px;">ASUMIRA 占い　算命学</p>'
     +'<h1 style="font-family:var(--serif);font-size:clamp(2rem,4vw,3.2rem);font-weight:300;letter-spacing:.14em;color:var(--cream);margin-bottom:6px;">算命学鑑定書</h1>'
     +'<div style="width:36px;height:1px;background:var(--gold);margin:22px auto 28px;"></div>'
@@ -2082,6 +2102,7 @@ function openKanteiSM(){
     +'</div>'
     +'<p style="font-size:.78rem;color:var(--muted);line-height:2.4;margin-bottom:36px;">算命学は東洋の帝王学として体系化された命術です。干支暦に基づく宿命の星図から、本質・人間関係・大運の流れを読み解きます。この鑑定書が、自己理解を深め、これからの人生をより豊かに歩むためのきっかけとなれば幸いです。</p>'
     +'<p style="font-size:.68rem;color:rgba(245,242,235,.2);letter-spacing:.14em;border-top:1px solid rgba(255,255,255,.07);padding-top:22px;display:inline-block;">ASUMIRA 占い　─　現役占い師監修　／　'+todayStr+'</p>'
+    +(isMono?'<div style="margin:30px auto 0;display:flex;justify-content:center;" aria-hidden="true">'+hankoHTML+'</div>':'')
     +'</div>';
 
   // ── スライド組み立て ──
@@ -2090,10 +2111,10 @@ function openKanteiSM(){
   const deckHtml = slides.map((s,i)=>'<div class="slide'+(i===0?' active':'')+'" id="sl'+i+'">'+s+'</div>').join('\n');
 
   const acc = TH.acc;
-  const html = '<!DOCTYPE html>\n'
+  let html = '<!DOCTYPE html>\n'
     +'<html lang="ja">\n<head>\n'
     +'<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">\n'
-    +'<title>'+todayFile+'_'+nameDisp+'様</title>\n'
+    +'<title>'+todayFile+'_'+nameDisp+'様'+(isMono?'［白黒印刷版］':'')+'</title>\n'
     +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">\n'
     +'<style>\n'
     +'*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}\n'
@@ -2121,7 +2142,7 @@ function openKanteiSM(){
     +'.deck{position:static!important;height:auto!important;display:block!important;}\n'
     +'.slide{position:relative!important;display:flex!important;opacity:1!important;transform:none!important;pointer-events:none!important;inset:auto!important;width:297mm!important;height:210mm!important;page-break-after:always!important;break-after:page!important;overflow:hidden!important;padding:44px 60px 44px!important;}\n'
     +'.slide:last-child{page-break-after:avoid!important;break-after:avoid!important;}\n'
-    +'.card{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(20,17,13,.96)!important;border:1px solid rgba(196,168,106,.3)!important;}\n'
+    +'.card{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:var(--card-bg)!important;border:1px solid var(--bdrM)!important;}\n'
     +'}\n'
     +'</style>\n</head>\n<body>\n'
     +'<div class="glow"></div>\n'
@@ -2140,6 +2161,13 @@ function openKanteiSM(){
     +'nb.addEventListener("click",function(){if(cur<ss.length-1)goTo(cur+1);});\n'
     +'document.addEventListener("keydown",function(e){if(e.key==="ArrowRight"||e.key==="ArrowDown"){if(cur<ss.length-1)goTo(cur+1);}if(e.key==="ArrowLeft"||e.key==="ArrowUp"){if(cur>0)goTo(cur-1);}});\n'
     +'<\/script>\n</body>\n</html>';
+
+  if(isMono){
+    html = html
+      .replace(/rgba\(255,255,255,(\.\d+)\)/g,function(_,a){return'rgba(26,26,26,'+Math.min(.4,parseFloat(a)*3.5).toFixed(2)+')';})
+      .replace(/rgba\(245,242,235,(\.\d+)\)/g,function(_,a){return'rgba(26,26,26,'+Math.max(.45,Math.min(.85,parseFloat(a)*1.8)).toFixed(2)+')';})
+      .replace(/rgba\(196,168,106,(\.\d+)\)/g,function(_,a){return'rgba(184,52,31,'+Math.min(.12,parseFloat(a)).toFixed(2)+')';});
+  }
 
   const w = window.open('','_blank');
   if(w){ w.document.open(); w.document.write(html); w.document.close(); }

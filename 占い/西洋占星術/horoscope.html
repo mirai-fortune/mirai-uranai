@@ -370,6 +370,8 @@ html.theme-minagi section { position: relative; z-index: 1; }
 .kantei-btn{padding:13px 52px;background:transparent;border:1px solid var(--gold);color:var(--gold);cursor:pointer;font-size:11px;letter-spacing:.36em;font-family:'Cormorant Garamond',serif;transition:background .25s,color .25s;text-transform:uppercase;}
 .kantei-btn:hover{background:var(--gold-dim);color:var(--gold2);}
 .kantei-btn-hint{font-size:10px;color:var(--muted2);margin-top:11px;letter-spacing:.06em;}
+.kantei-btn-mono{padding:10px 36px;background:transparent;border:1px solid var(--border2);color:var(--muted);cursor:pointer;font-size:10px;letter-spacing:.28em;font-family:'Cormorant Garamond',serif;transition:border-color .25s,color .25s;text-transform:uppercase;margin-top:16px;}
+.kantei-btn-mono:hover{border-color:var(--muted);color:var(--cream);}
 @media(max-width:768px){.kantei-btn-wrap{display:none;}}
 </style>
 <script type="application/ld+json">
@@ -572,6 +574,9 @@ html.theme-minagi section { position: relative; z-index: 1; }
   <div class="kantei-btn-wrap" id="hor-kantei-wrap" style="display:none;">
     <button class="kantei-btn" onclick="openKanteiHor()">鑑定書を作成する</button>
     <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+    <br>
+    <button class="kantei-btn-mono" onclick="openKanteiHor(true)">白黒印刷版で作成する</button>
+    <p class="kantei-btn-hint">実物を印刷・コピーする方向け。朱色を一部使用した白黒デザインです。</p>
   </div>
 </div>
 
@@ -1923,7 +1928,7 @@ function getFallbackTexts(data) {
 /* ══════════════════════════════════════
    鑑定書出力（横スライド形式）
 ══════════════════════════════════════ */
-function openKanteiHor() {
+function openKanteiHor(mono) {
   var k = window._horKantei;
   if (!k) { alert('先にホロスコープを鑑定してください。'); return; }
 
@@ -1932,6 +1937,13 @@ function openKanteiHor() {
 
   var pos = computePositions(data);
   var chartSvg = drawHoroscopeChart(data, aspects);
+
+  // 白黒印刷モード（実物印刷・コピー用。墨色＋朱色1色アクセント）
+  var isMono = !!mono;
+  var TH = isMono ? {bg:'#fdfcf8',cream:'#1a1a1a',muted:'rgba(26,26,26,.62)',acc:'#b8341f',acc2:'#c96a4e',glow:'rgba(26,26,26,.015)',bdr:'rgba(26,26,26,.2)',bdr2:'rgba(26,26,26,.15)',bdrM:'rgba(26,26,26,.42)',bdrHi:'rgba(184,52,31,.35)',gd4:'rgba(26,26,26,.5)',hlBg:'rgba(184,52,31,.07)',cardBg:'rgba(26,26,26,.02)',theadBg:'rgba(26,26,26,.05)',tblBg:'rgba(26,26,26,.015)',rlblBg:'rgba(26,26,26,.04)',label:'墨白'} : null;
+  var _pageDir = window.location.href.replace(/[^/]*$/,'');
+  var hankoImgSrc = _pageDir + '../../images/mirai_sign.png';
+  var hankoHTML = isMono ? ('<img src="'+hankoImgSrc+'" alt="印" style="width:68px;height:68px;mix-blend-mode:multiply;">') : '';
 
   var VS = String.fromCharCode(0xFE0E);
   var today = new Date();
@@ -2030,7 +2042,8 @@ function openKanteiHor() {
   // ── スライド構築 ──────────────────────────────────────
 
   // S1 表紙
-  var s1 = '<div style="text-align:center;max-width:680px;margin:0 auto;">'
+  var s1 = (isMono?'<div style="position:absolute;width:68px;height:68px;bottom:9%;right:8%;z-index:2;" aria-hidden="true">'+hankoHTML+'</div>':'')
+    +'<div style="text-align:center;max-width:680px;margin:0 auto;">'
     +'<p style="font-family:var(--serif);font-size:.65rem;letter-spacing:.42em;color:rgba(196,168,106,.42);text-transform:uppercase;margin-bottom:32px;">ASUMIRA 占い　Western Astrology</p>'
     +'<h1 style="font-family:var(--serif);font-size:clamp(1.9rem,3.5vw,3rem);font-weight:300;letter-spacing:.14em;color:#f5f2eb;margin-bottom:6px;">ホロスコープ鑑定書</h1>'
     +'<div style="width:36px;height:1px;background:#c4a86a;margin:20px auto 24px;"></div>'
@@ -2048,8 +2061,8 @@ function openKanteiHor() {
   var s2 = '<div style="width:100%;display:flex;gap:14px;align-items:center;max-width:960px;margin:0 auto;">'
     +'<div style="flex:0 0 260px;width:260px;">'
     +'<p style="font-family:var(--serif);font-size:.54rem;letter-spacing:.24em;color:#c4a86a;text-transform:uppercase;text-align:center;margin-bottom:8px;">Natal Chart ― 出生ホロスコープ</p>'
-    +'<div style="background:radial-gradient(ellipse 80% 80% at 50% 50%,rgba(20,16,48,.92),rgba(2,1,8,1));border:1px solid rgba(196,168,106,.22);padding:6px;">'
-    +chartSvg
+    +'<div style="background:'+(isMono?'#fdfcf8':'radial-gradient(ellipse 80% 80% at 50% 50%,rgba(20,16,48,.92),rgba(2,1,8,1))')+';border:1px solid rgba(196,168,106,.22);padding:6px;">'
+    +(isMono?'<div style="filter:invert(1) grayscale(1) contrast(1.05);">'+chartSvg+'</div>':chartSvg)
     +'</div>'
     +'</div>'
     +'<div style="flex:1;min-width:0;">'
@@ -2206,8 +2219,8 @@ function openKanteiHor() {
       return '<div style="width:100%;display:flex;gap:14px;align-items:center;max-width:960px;margin:0 auto;">'
         +'<div style="flex:0 0 260px;width:260px;">'
         +'<p style="font-family:var(--serif);font-size:.54rem;letter-spacing:.22em;color:#c4a86a;text-transform:uppercase;text-align:center;margin-bottom:8px;">Transit × Natal Bi-Wheel</p>'
-        +'<div style="background:radial-gradient(ellipse 80% 80% at 50% 50%,rgba(30,24,64,.95),rgba(2,1,8,1));border:1px solid rgba(196,168,106,.22);padding:4px;">'
-        +bwSvg
+        +'<div style="background:'+(isMono?'#fdfcf8':'radial-gradient(ellipse 80% 80% at 50% 50%,rgba(30,24,64,.95),rgba(2,1,8,1))')+';border:1px solid rgba(196,168,106,.22);padding:4px;">'
+        +(isMono?'<div style="filter:invert(1) grayscale(1) contrast(1.05);">'+bwSvg+'</div>':bwSvg)
         +'</div>'
         +'</div>'
         +'<div style="flex:1;min-width:0;">'
@@ -2274,6 +2287,7 @@ function openKanteiHor() {
       +'<p style="font-family:var(--serif);font-size:.54rem;letter-spacing:.22em;color:#c4a86a;text-transform:uppercase;text-align:center;margin-bottom:10px;">今の星の動きと生まれ持つ星 ― トランジット × ネイタル（本日時点）</p>'
       +transitHtml
       +lunarHtml
+      +(isMono?'<div style="margin:30px auto 0;display:flex;justify-content:center;" aria-hidden="true">'+hankoHTML+'</div>':'')
       +'</div>';
   })();
 
@@ -2341,7 +2355,7 @@ function openKanteiHor() {
     +'<html lang="ja"><head>'
     +'<meta charset="UTF-8">'
     +'<meta name="viewport" content="width=device-width,initial-scale=1.0">'
-    +'<title>西洋占星術_'+fileDate+'_'+name+'様</title>'
+    +'<title>西洋占星術_'+fileDate+'_'+name+'様'+(isMono?'［白黒印刷版］':'')+'</title>'
     +'<link rel="preconnect" href="https://fonts.googleapis.com">'
     +'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
     +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400&family=Noto+Sans+JP:wght@300;400&family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet">'
@@ -2356,6 +2370,17 @@ function openKanteiHor() {
     +'<div class="sno">1 / '+NS+'</div>'
     +'<script>'+js+'<\/script>'
     +'</body></html>';
+
+  if (isMono) {
+    html = html
+      .replace(/rgba\(255,255,255,(\.\d+)\)/g, function(_,a){ return 'rgba(26,26,26,'+Math.min(.4,parseFloat(a)*3.5).toFixed(2)+')'; })
+      .replace(/rgba\(245,242,235,(\.\d+)\)/g, function(_,a){ return 'rgba(26,26,26,'+Math.max(.45,Math.min(.85,parseFloat(a)*1.8)).toFixed(2)+')'; })
+      .replace(/rgba\(196,168,106,(\.\d+)\)/g, function(_,a){ return 'rgba(26,26,26,'+Math.min(.42,parseFloat(a)*2.2).toFixed(2)+')'; })
+      .replace(/rgba\(0,0,0,(\.\d+)\)/g, function(_,a){ return 'rgba(26,26,26,'+Math.min(.06,parseFloat(a)*0.4).toFixed(2)+')'; })
+      .replace(/#c4a86a/g, TH.acc)
+      .replace(/#f5f2eb/g, TH.cream)
+      .replace(/#0d0b08/g, TH.bg);
+  }
 
   var w = window.open('', '_blank');
   w.document.write(html);
