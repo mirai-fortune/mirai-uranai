@@ -30,3 +30,6 @@ desktop.ini
 !scripts/*.py
 __pycache__/
 *.ipynb
+
+# Googleサービスアカウント認証キー（秘密鍵、絶対にコミットしない）
+mygeocodeproject-466612-c924218caa36.json
