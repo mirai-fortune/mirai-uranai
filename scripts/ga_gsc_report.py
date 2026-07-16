@@ -77,7 +77,16 @@ def ga4_report(creds, days):
         order_bys=[OrderBy(metric=OrderBy.MetricOrderBy(metric_name="sessions"), desc=True)],
     ))
 
-    return summary, top_pages, channels, devices
+    regions = client.run_report(RunReportRequest(
+        property=f"properties/{GA4_PROPERTY_ID}",
+        date_ranges=[date_range],
+        dimensions=[Dimension(name="region")],
+        metrics=[Metric(name="sessions"), Metric(name="activeUsers")],
+        order_bys=[OrderBy(metric=OrderBy.MetricOrderBy(metric_name="sessions"), desc=True)],
+        limit=50,
+    ))
+
+    return summary, top_pages, channels, devices, regions
 
 
 def gsc_report(creds, days):
@@ -113,7 +122,7 @@ def print_report(days):
     print(f"\n{'='*60}\nGA4 + Search Console レポート（直近{days}日間）\n{'='*60}\n")
 
     print("--- GA4 サマリー ---")
-    summary, top_pages, channels, devices = ga4_report(creds, days)
+    summary, top_pages, channels, devices, regions = ga4_report(creds, days)
     row = summary.rows[0].metric_values
     metric_names = ["セッション数", "アクティブユーザー数", "ページビュー数", "平均セッション時間(秒)", "エンゲージメント率"]
     for name, mv in zip(metric_names, row):
@@ -131,6 +140,11 @@ def print_report(days):
     print("\n--- デバイス別セッション数 ---")
     for r in devices.rows:
         print(f"  {r.dimension_values[0].value}: {r.metric_values[0].value}")
+
+    print("\n--- 地域別（都道府県）セッション数 ---")
+    for r in regions.rows:
+        region_name = r.dimension_values[0].value
+        print(f"  {region_name}: セッション{r.metric_values[0].value} / ユーザー{r.metric_values[1].value}")
 
     print("\n--- Search Console ---")
     totals, queries, pages, start, end = gsc_report(creds, days)
