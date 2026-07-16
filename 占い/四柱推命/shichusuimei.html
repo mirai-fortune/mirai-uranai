@@ -398,7 +398,8 @@ html.theme-minagi section { position: relative; z-index: 1; }
 .kantei-btn-mono{padding:10px 36px;background:transparent;border:1px solid var(--border2);color:var(--muted);cursor:pointer;font-size:10px;letter-spacing:.28em;font-family:'Cormorant Garamond',serif;transition:border-color .25s,color .25s;text-transform:uppercase;margin-top:16px;}
 .kantei-btn-mono:hover{border-color:var(--muted);color:var(--cream);}
 .kantei-btn-hint{font-size:10px;color:var(--muted2);margin-top:11px;letter-spacing:.06em;}
-@media(max-width:768px){.kantei-btn-wrap{display:none;}}
+.kantei-btn-hint-sp{display:none;}
+@media(max-width:768px){.kantei-btn-hint-sp{display:block;}}
 </style>
 <script type="application/ld+json">
 {
@@ -570,6 +571,7 @@ html.theme-minagi section { position: relative; z-index: 1; }
   <div class="kantei-btn-wrap" id="si-kantei-wrap" style="display:none;">
     <button class="kantei-btn" onclick="openKantei()">鑑定書を作成する</button>
     <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+    <p class="kantei-btn-hint kantei-btn-hint-sp">スマホでは全体を縮小して表示します（ピンチ操作で拡大できます）。コンビニ等で印刷される場合は白黒印刷版がおすすめです。</p>
     <br>
     <button class="kantei-btn-mono" onclick="openKantei(true)">白黒印刷版で作成する</button>
     <p class="kantei-btn-hint">実物を印刷・コピーする方向け。朱色を一部使用した白黒デザインです。</p>
@@ -2556,9 +2558,13 @@ function openKantei(mono){
   const NS=slides.length;
   const deckHtml=slides.map((s,i)=>'<div class="slide'+(i===0?' active':'')+'" id="sl'+i+'">'+s+'</div>').join('\n');
 
+  // スマホ判定：狭幅ビューポート、またはタッチ主体端末（横向きスマホ含む）。タッチ対応PCは除外
+  const isMobileK=matchMedia('(max-width:768px)').matches
+    ||(matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<=820);
+
   let html='<!DOCTYPE html>\n'
     +'<html lang="ja">\n<head>\n'
-    +'<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">\n'
+    +'<meta charset="UTF-8"><meta name="viewport" content="'+(isMobileK?'width=1188':'width=device-width,initial-scale=1.0')+'">\n'
     +'<title>'+todayFile+'_'+name+'様'+(isMono?'［白黒印刷版］':'')+'</title>\n'
     +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">\n'
     +'<style>\n'
@@ -2584,12 +2590,22 @@ function openKantei(mono){
     +'@media print{\n'
     +'*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}\n'
     +'html,body{width:297mm!important;height:auto!important;overflow:visible!important;background:'+TH.bg+'!important;}\n'
-    +'.glow,.sno,nav.ctrl{display:none!important;}\n'
-    +'.deck{position:static!important;height:auto!important;display:block!important;}\n'
+    +'.glow,.sno,nav.ctrl,.pdfbar{display:none!important;}\n'
+    +'.deck{position:static!important;width:auto!important;height:auto!important;display:block!important;}\n'
     +'.slide{position:relative!important;display:flex!important;opacity:1!important;transform:none!important;pointer-events:none!important;inset:auto!important;width:297mm!important;height:210mm!important;page-break-after:always!important;break-after:page!important;overflow:hidden!important;padding:44px 60px 44px!important;}\n'
     +'.slide:last-child{page-break-after:avoid!important;break-after:avoid!important;}\n'
     +'.card{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:var(--card-bg)!important;border:1px solid var(--bdrM)!important;}\n'
     +'}\n'
+    +(isMobileK?
+     '@media screen{\n'
+    +'html,body{height:auto;min-height:100%;overflow:visible;overflow-x:hidden;}\n'
+    +'.deck{width:1188px;height:840px;overflow:hidden;}\n'
+    +'nav.ctrl{position:static;transform:none;justify-content:center;margin:20px auto 0;}\n'
+    +'.sno{position:absolute;}\n'
+    +'.pdfbar{text-align:center;margin:24px 0 48px;}\n'
+    +'.pdfbtn{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:13px 46px;border-radius:26px;font-size:.85rem;letter-spacing:.14em;cursor:pointer;font-family:var(--sans);}\n'
+    +'.pdfnote{font-size:.7rem;color:rgba(245,242,235,.38);letter-spacing:.06em;margin-top:11px;line-height:1.8;}\n'
+    +'}\n':'')
     +'</style>\n</head>\n<body>\n'
     +'<div class="glow"></div>\n'
     +'<span class="sno" id="sno">01 / '+NS+'</span>\n'
@@ -2599,6 +2615,12 @@ function openKantei(mono){
     +'<span class="cnt" id="cnt">1 / '+NS+'</span>'
     +'<button class="nbtn" id="nb">次へ →</button>'
     +'</nav>\n'
+    +(isMobileK?
+     '<div class="pdfbar">'
+    +'<button class="pdfbtn" onclick="window.print()">鑑定書をPDFで保存する</button>'
+    +'<p class="pdfnote">印刷画面で用紙サイズ「A4」・向き「横」をご確認ください。'
+    +(isMono?'':'<br>コンビニ等で印刷される場合は白黒印刷版がおすすめです。')
+    +'</p></div>\n':'')
     +'<script>\n'
     +'var ss=document.querySelectorAll(".slide"),pb=document.getElementById("pb"),nb=document.getElementById("nb"),cnt=document.getElementById("cnt"),sno=document.getElementById("sno"),cur=0;\n'
     +'function pad(n){return(n<10?"0":"")+n;}\n'
@@ -2606,6 +2628,9 @@ function openKantei(mono){
     +'pb.addEventListener("click",function(){if(cur>0)goTo(cur-1);});\n'
     +'nb.addEventListener("click",function(){if(cur<ss.length-1)goTo(cur+1);});\n'
     +'document.addEventListener("keydown",function(e){if(e.key==="ArrowRight"||e.key==="ArrowDown"){if(cur<ss.length-1)goTo(cur+1);}if(e.key==="ArrowLeft"||e.key==="ArrowUp"){if(cur>0)goTo(cur-1);}});\n'
+    +'var tx0=null,ty0=null;\n'
+    +'document.addEventListener("touchstart",function(e){if(e.touches.length===1){tx0=e.touches[0].clientX;ty0=e.touches[0].clientY;}else{tx0=null;}},{passive:true});\n'
+    +'document.addEventListener("touchend",function(e){if(tx0===null)return;if(window.visualViewport&&window.visualViewport.scale>1.05)return;var dx=e.changedTouches[0].clientX-tx0,dy=e.changedTouches[0].clientY-ty0;tx0=null;if(Math.abs(dx)<80||Math.abs(dy)>Math.abs(dx))return;if(dx<0){if(cur<ss.length-1)goTo(cur+1);}else if(cur>0){goTo(cur-1);}},{passive:true});\n'
     +'<\/script>\n</body>\n</html>';
 
   if(isMono){
