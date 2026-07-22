@@ -579,6 +579,11 @@ html.theme-minagi section { position: relative; z-index: 1; }
     <br>
     <button class="kantei-btn-mono" onclick="openKanteiHor(true)">白黒印刷版で作成する</button>
     <p class="kantei-btn-hint">実物を印刷・コピーする方向け。朱色を一部使用した白黒デザインです。</p>
+    <div style="margin-top:30px;padding-top:24px;border-top:1px solid var(--border2);">
+      <button class="kantei-btn-mono" onclick="openKanteiOneHor()" style="margin-top:0;">A4一枚版（カラー）</button>
+      <button class="kantei-btn-mono" onclick="openKanteiOneHor(true)" style="margin-top:0;margin-left:10px;">A4一枚版（白黒）</button>
+      <p class="kantei-btn-hint">要点をA4縦1枚にまとめた簡易版。納品・手渡し用におすすめです。</p>
+    </div>
   </div>
 </div>
 
@@ -2409,6 +2414,266 @@ function openKanteiHor(mono) {
   var w = window.open('', '_blank');
   w.document.write(html);
   w.document.close();
+}
+
+/* ══════════════════════════════════════
+   西洋占星術 鑑定書出力（A4縦1枚版）
+══════════════════════════════════════ */
+function openKanteiOneHor(mono){
+  var k = window._horKantei;
+  if(!k){ alert('先にホロスコープを鑑定してください。'); return; }
+  var name=k.name, y=k.y, m=k.m, d=k.d, time=k.time, place=k.place;
+  var data=k.data, aspects=k.aspects, texts=k.texts;
+
+  var _th=mono?'mono'
+    :document.documentElement.classList.contains('theme-sakura')?'sakura'
+    :document.documentElement.classList.contains('theme-shinryoku')?'shinryoku'
+    :document.documentElement.classList.contains('theme-minagi')?'minagi':'gold';
+  // 1枚版はリテラル色を使わず全て変数参照 → monoもテーマ値の差し替えだけで完結
+  var TH={
+    gold:{bg:'#030611',cream:'#f5f2eb',muted:'rgba(245,242,235,.62)',acc:'#c4a86a',acc2:'#e8d09a',bdr:'rgba(196,168,106,.14)',bdrM:'rgba(196,168,106,.3)',gd4:'rgba(196,168,106,.42)',hlBg:'rgba(196,168,106,.1)',cardBg:'rgba(15,13,9,.7)',theadBg:'rgba(28,24,12,.96)',tblBg:'rgba(18,16,12,.6)',rlblBg:'rgba(28,24,12,.7)',faint:'rgba(245,242,235,.32)',soft:'rgba(245,242,235,.55)',line:'rgba(255,255,255,.07)',back:'#000205'},
+    sakura:{bg:'#160810',cream:'#fef2f6',muted:'rgba(254,242,246,.62)',acc:'#e891b2',acc2:'#f5c0d5',bdr:'rgba(232,145,178,.14)',bdrM:'rgba(232,145,178,.3)',gd4:'rgba(232,145,178,.42)',hlBg:'rgba(232,145,178,.1)',cardBg:'rgba(26,10,18,.7)',theadBg:'rgba(34,12,22,.96)',tblBg:'rgba(30,12,20,.6)',rlblBg:'rgba(34,12,22,.7)',faint:'rgba(254,242,246,.32)',soft:'rgba(254,242,246,.55)',line:'rgba(255,255,255,.07)',back:'#0a0308'},
+    shinryoku:{bg:'#060e08',cream:'#f0f5ef',muted:'rgba(240,245,239,.62)',acc:'#82c87e',acc2:'#b4e8b0',bdr:'rgba(130,200,126,.14)',bdrM:'rgba(130,200,126,.3)',gd4:'rgba(130,200,126,.42)',hlBg:'rgba(130,200,126,.1)',cardBg:'rgba(10,18,12,.7)',theadBg:'rgba(14,26,16,.96)',tblBg:'rgba(12,22,14,.6)',rlblBg:'rgba(14,26,16,.7)',faint:'rgba(240,245,239,.32)',soft:'rgba(240,245,239,.55)',line:'rgba(255,255,255,.07)',back:'#020503'},
+    minagi:{bg:'#04080f',cream:'#eef4fc',muted:'rgba(238,244,252,.62)',acc:'#6ab4e8',acc2:'#a0d4f4',bdr:'rgba(106,180,232,.14)',bdrM:'rgba(106,180,232,.3)',gd4:'rgba(106,180,232,.42)',hlBg:'rgba(106,180,232,.1)',cardBg:'rgba(8,12,22,.7)',theadBg:'rgba(10,18,34,.96)',tblBg:'rgba(8,14,26,.6)',rlblBg:'rgba(10,18,34,.7)',faint:'rgba(238,244,252,.32)',soft:'rgba(238,244,252,.55)',line:'rgba(255,255,255,.07)',back:'#010306'},
+    mono:{bg:'#fdfcf8',cream:'#1a1a1a',muted:'rgba(26,26,26,.82)',acc:'#b8341f',acc2:'#c96a4e',bdr:'rgba(26,26,26,.2)',bdrM:'rgba(26,26,26,.42)',gd4:'rgba(26,26,26,.55)',hlBg:'rgba(184,52,31,.07)',cardBg:'rgba(26,26,26,.02)',theadBg:'rgba(26,26,26,.05)',tblBg:'rgba(26,26,26,.015)',rlblBg:'rgba(26,26,26,.04)',faint:'rgba(26,26,26,.58)',soft:'rgba(26,26,26,.72)',line:'rgba(26,26,26,.14)',back:'#e8e6e0'}
+  }[_th];
+  var isMono=_th==='mono';
+
+  var _pageDir=window.location.href.replace(/[^/]*$/,'');
+  var hankoHTML1=isMono?('<img src="'+_pageDir+'../../images/mirai_sign.png" alt="印" style="width:33px;height:33px;mix-blend-mode:multiply;transform:rotate(-4deg) translate(.4mm,-.4mm);">'):'';
+
+  // ── 派生データ ──
+  var pos=computePositions(data);
+  var chartSvg=drawHoroscopeChart(data,aspects);
+  var VS=String.fromCharCode(0xFE0E);
+  var today=new Date();
+  var todayStr=today.getFullYear()+'年'+(today.getMonth()+1)+'月'+today.getDate()+'日';
+  var fileDate=today.getFullYear()+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0');
+  var timeLabel=time||'不明';
+  var placeLabel=place||'不明';
+  var ELEM_COL={fire:'#d87878',earth:'#90b868',air:'#70b8e0',water:'#8878c8'};
+  var PLANET_C={sun:'#e8d070',moon:'#c0c0d8',mercury:'#88b0d0',venus:'#d098b8',mars:'#d07070',jupiter:'#c8a868',saturn:'#9898b0',uranus:'#70b8c0',neptune:'#7878c8',pluto:'#987888',asc:'#c4a86a',mc:'#c4a86a'};
+  var pCol=function(key){return isMono?'var(--gold)':(PLANET_C[key]||'var(--gold)');};
+  var eCol=function(sn){return isMono?'var(--gold)':(sn&&ELEM_COL[sn.elem]?ELEM_COL[sn.elem]:'var(--gold)');};
+  var jpName=function(key){var p=PLANETS.find(function(x){return x.key===key;});return p?p.jp:(key==='asc'?'ASC':key==='mc'?'MC':key);};
+  var stripT=function(s){return s?String(s).replace(/<[^>]*>/g,''):'';};
+  // 文境界トリム：制限内の最後の「。」で切る（「…」で途切れた印象を残さない）
+  var trS=function(s,n){s=stripT(s);if(!s)return'—';if(s.length<=n)return s;var c=s.slice(0,n);var i=c.lastIndexOf('。');return i>=20?c.slice(0,i+1):c+'…';};
+  var signJp=function(key){var pi=pos.map[key];return(pi&&pi.sign)?pi.sign.jp:'—';};
+  var signGl=function(key){var pi=pos.map[key];return(pi&&pi.sign)?('<span style="color:'+eCol(pi.sign)+';margin-right:1.2mm;">'+pi.sign.glyph+'</span>'):'';};
+
+  // ── ヘッダー ──
+  var hd='<div class="hd">'
+    +'<p class="hbrand">ASUMIRA 占い　─　WESTERN ASTROLOGY</p>'
+    +'<h1>ホロスコープ鑑定書</h1>'
+    +'<div class="hmeta"><span class="hname">'+name+'様</span>'
+    +'<span>'+y+'年'+m+'月'+d+'日生まれ　／　生まれ時間：'+timeLabel+'　／　出生地：'+placeLabel+'</span>'
+    +'<span>作成日　'+todayStr+'</span></div>'
+    +'</div>';
+
+  // ── 出生ホロスコープ｜天体配置 ──
+  var MAIN_PL=[
+    {k:'sun',n:'太陽'},{k:'moon',n:'月'},{k:'mercury',n:'水星'},{k:'venus',n:'金星'},
+    {k:'mars',n:'火星'},{k:'jupiter',n:'木星'},{k:'saturn',n:'土星'},{k:'uranus',n:'天王星'},
+    {k:'neptune',n:'海王星'},{k:'pluto',n:'冥王星'},{k:'asc',n:'ASC'},{k:'mc',n:'MC'}
+  ];
+  var pRow1=function(p){
+    var pi=pos.map[p.k];
+    if(!pi||!pi.has)return'';
+    var g=pi.textGlyph?pi.glyph:(pi.glyph+VS);
+    var sn=pi.sign;
+    return'<div class="prow">'
+      +'<span class="pg" style="color:'+pCol(p.k)+';">'+g+'</span>'
+      +'<span class="pn">'+p.n+'</span>'
+      +(sn?'<span class="ps"><span style="color:'+eCol(sn)+';">'+sn.glyph+'</span>'+sn.jp+'</span>':'<span class="ps">—</span>')
+      +'<span class="pd">'+pi.deg.toFixed(1)+'°'+(pi.house?'　'+pi.house+'H':'')+'</span>'
+      +'</div>';
+  };
+  var plHalf=Math.ceil(MAIN_PL.length/2);
+  var plCol=function(list){return'<div class="plcol">'+list.map(pRow1).join('')+'</div>';};
+  var secChart='<div class="sec">'
+    +'<div class="st"><b>出生ホロスコープ</b><span>NATAL CHART &amp; PLANET POSITIONS</span></div>'
+    +'<div class="chgrid">'
+    +'<div class="chbox">'+(isMono?'<div style="filter:invert(1) grayscale(1) contrast(1.05);">'+chartSvg+'</div>':chartSvg)+'</div>'
+    +'<div class="plcols">'+plCol(MAIN_PL.slice(0,plHalf))+plCol(MAIN_PL.slice(plHalf))+'</div>'
+    +'</div></div>';
+
+  // ── 太陽星座｜月星座 ──
+  var secSunMoon='<div class="g2">'
+    +'<div class="sec"><div class="st"><b>太陽星座 ─ 本質</b><span>SUN ─ '+signJp('sun')+'</span></div>'
+    +'<p class="tnat">'+signGl('sun')+signJp('sun')+'</p>'
+    +'<p class="txt">'+trS(texts.sun,210)+'</p></div>'
+    +'<div class="sec"><div class="st"><b>月星座 ─ 内面</b><span>MOON ─ '+signJp('moon')+'</span></div>'
+    +'<p class="tnat">'+signGl('moon')+signJp('moon')+'</p>'
+    +'<p class="txt">'+trS(texts.moon,210)+'</p></div>'
+    +'</div>';
+
+  // ── アセンダント｜恋愛運 ──
+  var secAscLove='<div class="g2">'
+    +'<div class="sec"><div class="st"><b>アセンダント ─ 周囲に映る姿</b><span>ASC ─ '+signJp('asc')+'</span></div>'
+    +'<p class="txt">'+trS(texts.asc,190)+'</p></div>'
+    +'<div class="sec"><div class="st"><b>恋愛・対人運</b><span>LOVE ─ 金星 '+signJp('venus')+'</span></div>'
+    +'<p class="txt">'+trS(texts.love,190)+'</p></div>'
+    +'</div>';
+
+  // ── 総合運 ──
+  var secOverall='<div class="sec">'
+    +'<div class="st"><b>総合運 ─ チャート全体から</b><span>OVERALL</span></div>'
+    +'<p class="txt">'+trS(texts.overall,320)+'</p></div>';
+
+  // ── 主要アスペクト ──
+  var aspRows=(aspects||[]).slice(0,6).map(function(x){
+    return'<div class="arow">'
+      +'<span class="apl">'+jpName(x.p1)+'</span>'
+      +'<span class="asym">'+x.asp.sym+VS+'</span>'
+      +'<span class="apl">'+jpName(x.p2)+'</span>'
+      +'<span class="anm">'+x.asp.name+'</span>'
+      +'<span class="aorb">オーブ '+x.orb.toFixed(1)+'°</span>'
+      +'</div>';
+  }).join('');
+  var secAsp=aspRows
+    ?'<div class="sec"><div class="st"><b>主要アスペクト</b><span>MAJOR ASPECTS ─ 天体同士の角度</span></div>'
+    +'<div class="agrid">'+aspRows+'</div>'
+    +'<p class="fnt" style="margin-top:1mm;">※各アスペクトの詳しい読み解きは完全版の鑑定書をご覧ください</p></div>'
+    :'';
+
+  // ── 今の星の動き（トランジット｜進行の月） ──
+  var trD=data.transits||{};
+  var hasTransit=(typeof trD.sun_degree==='number');
+  var transCard='';
+  if(hasTransit){
+    var tList=computeTransitAspects(data).list;
+    var slowItems=tList.filter(function(x){return SLOW_PLANETS.indexOf(x.T)!==-1;})
+      .sort(function(a,b){return a.orb-b.orb;}).slice(0,1);
+    if(slowItems.length){
+      var x0=slowItems[0];
+      var cat0=(x0.asp.angle===120||x0.asp.angle===60)?'soft':'hard';
+      var body0=((TRANSIT_READINGS[x0.T]||{})[cat0]||'');
+      transCard='<div class="sec"><div class="st"><b>今の星の動き</b><span>TRANSIT ─ 本日時点</span></div>'
+        +'<p class="tnat" style="font-size:8.6px;">T '+jpName(x0.T)+' × N '+jpName(x0.N)+'　─　'+x0.asp.name+'（オーブ '+x0.orb.toFixed(1)+'°）</p>'
+        +'<p class="txt">'+trS(body0,190)+'</p></div>';
+    }else{
+      transCard='<div class="sec"><div class="st"><b>今の星の動き</b><span>TRANSIT ─ 本日時点</span></div>'
+        +'<p class="txt">現在、外惑星からネイタルへの主要なトランジットは見られません。穏やかに内面を整える時期です。</p></div>';
+    }
+  }
+  var lunarCard='';
+  var lunarRows=data.lunarHouses;
+  if(lunarRows&&lunarRows.length){
+    var curL=null;
+    for(var li=0;li<lunarRows.length;li++){if(lunarRows[li].current){curL=lunarRows[li];break;}}
+    if(!curL)curL=lunarRows[0];
+    if(curL&&LUNAR_READINGS[curL.house]){
+      lunarCard='<div class="sec"><div class="st"><b>進行の月</b><span>PROGRESSED MOON ─ '+curL.house+'ハウス期</span></div>'
+        +'<p class="tnat" style="font-size:8.6px;">現在 '+curL.house+'ハウス期　─　'+(LUNAR_THEMES[curL.house]||'')+'</p>'
+        +'<p class="txt">'+trS(LUNAR_READINGS[curL.house],190)+'</p></div>';
+    }
+  }
+  var secNow=(transCard&&lunarCard)?('<div class="g2">'+transCard+lunarCard+'</div>'):(transCard||lunarCard);
+
+  // ── キーワードストリップ ──
+  var sunKey=pos.map.sun&&pos.map.sun.sign?pos.map.sun.sign.key:null;
+  var moonKey=pos.map.moon&&pos.map.moon.sign?pos.map.moon.sign.key:null;
+  var kws=[];
+  (SIGN_KEYWORDS[sunKey]||[]).concat(SIGN_KEYWORDS[moonKey]||[]).forEach(function(t){if(kws.indexOf(t)===-1)kws.push(t);});
+  var secKw=kws.length
+    ?'<div class="sec strip"><span class="kw">あなたのキーワード：</span><strong>'+kws.slice(0,10).join('・')+'</strong></div>'
+    :'';
+
+  // ── フッター（mono時は右端に鑑定印の枠＋押印） ──
+  var ft='<div class="ft">'
+    +(isMono?'<span class="ftsp"></span>':'')
+    +'<div class="ftc">'
+    +'<p class="fnote">本鑑定書は、西洋占星術の考え方に基づきご自身の性質や可能性を見つめ直すための参考情報です。医学的・法律的な判断に代わるものではありません。</p>'
+    +'<p class="fbrand">ASUMIRA 占い　─　現役占い師監修　／　'+todayStr+'</p>'
+    +'</div>'
+    +(isMono?'<div class="hkwrap" aria-hidden="true"><p class="hklbl">鑑定印</p><div class="hkbox">'+hankoHTML1+'</div></div>':'')
+    +'</div>';
+
+  var isMobileK=matchMedia('(max-width:768px)').matches
+    ||(matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<=820);
+
+  var html='<!DOCTYPE html>\n<html lang="ja">\n<head>\n'
+    +'<meta charset="UTF-8"><meta name="viewport" content="'+(isMobileK?'width=820':'width=device-width,initial-scale=1.0')+'">\n'
+    +'<title>西洋占星術_'+fileDate+'_'+name+'様［A4一枚版'+(isMono?'・白黒':'')+'］</title>\n'
+    +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">\n'
+    +'<style>\n'
+    +'*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}\n'
+    +':root{--bg:'+TH.bg+';--cream:'+TH.cream+';--muted:'+TH.muted+';--gold:'+TH.acc+';--gold2:'+TH.acc2+';--bdr:'+TH.bdr+';--bdrM:'+TH.bdrM+';--gd4:'+TH.gd4+';--hl-bg:'+TH.hlBg+';--card-bg:'+TH.cardBg+';--thead-bg:'+TH.theadBg+';--tbl-bg:'+TH.tblBg+';--rlbl-bg:'+TH.rlblBg+';--faint:'+TH.faint+';--soft:'+TH.soft+';--line:'+TH.line+';--serif:"Noto Serif JP",serif;--sans:"Noto Sans JP",sans-serif;}\n'
+    +'body{background:'+TH.back+';font-family:var(--sans);font-weight:'+(isMono?'400':'300')+';-webkit-font-smoothing:antialiased;padding:8mm 0;}\n'
+    +'.sheet{width:210mm;height:296.5mm;margin:0 auto;background:var(--bg);color:var(--cream);overflow:hidden;position:relative;box-shadow:0 6px 36px rgba(0,0,0,.45);}\n'
+    +'.sin{height:100%;padding:9mm 10mm 8mm;display:flex;flex-direction:column;gap:2.4mm;}\n'
+    +'.sec{background:var(--card-bg);border:1px solid var(--bdr);border-radius:6px;padding:2.4mm 3.2mm;}\n'
+    +'.g2{display:grid;grid-template-columns:1fr 1fr;gap:2.4mm;}\n'
+    +'.st{display:flex;align-items:baseline;gap:2.4mm;margin-bottom:1.5mm;}\n'
+    +'.st b{font-family:var(--serif);font-weight:500;font-size:10.5px;letter-spacing:.14em;color:var(--gold);white-space:nowrap;}\n'
+    +'.st span{font-size:6px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;}\n'
+    +'.txt{font-size:8.6px;line-height:1.62;color:var(--muted);}\n'
+    +'.kw{color:var(--gold);}\n'
+    +'.fnt{font-size:7px;color:var(--faint);}\n'
+    +'.hd{text-align:center;padding-bottom:2.4mm;border-bottom:1px solid var(--bdrM);}\n'
+    +'.hbrand{font-family:var(--serif);font-size:6.5px;letter-spacing:.4em;color:var(--gd4);margin-bottom:1.6mm;}\n'
+    +'.hd h1{font-family:var(--serif);font-size:20px;font-weight:300;letter-spacing:.3em;color:var(--cream);margin-bottom:2mm;text-indent:.3em;}\n'
+    +'.hmeta{display:flex;justify-content:center;align-items:baseline;gap:5mm;font-size:8.3px;color:var(--muted);letter-spacing:.04em;}\n'
+    +'.hname{font-family:var(--serif);font-size:12.5px;color:var(--cream);letter-spacing:.12em;}\n'
+    +'.chgrid{display:grid;grid-template-columns:62mm 1fr;gap:3.5mm;align-items:center;}\n'
+    +'.chbox{border:1px solid var(--bdrM);padding:1mm;background:var(--tbl-bg);}\n'
+    +'.plcols{display:grid;grid-template-columns:1fr 1fr;gap:0 3mm;}\n'
+    +'.prow{display:grid;grid-template-columns:5mm 11mm 1fr 17mm;gap:1.5mm;align-items:baseline;padding:1.05mm .5mm;border-bottom:1px solid var(--line);}\n'
+    +'.pg{font-size:9px;text-align:center;}\n'
+    +'.pn{font-size:7.5px;color:var(--soft);}\n'
+    +'.ps{font-size:8px;color:var(--cream);}\n'
+    +'.ps span{margin-right:1mm;}\n'
+    +'.pd{font-size:6.8px;color:var(--faint);text-align:right;font-family:var(--serif);}\n'
+    +'.tnat{font-family:var(--serif);font-size:10.5px;color:var(--cream);margin-bottom:1.2mm;letter-spacing:.04em;}\n'
+    +'.agrid{display:grid;grid-template-columns:1fr 1fr;gap:.8mm 3mm;}\n'
+    +'.arow{display:grid;grid-template-columns:12mm 5mm 12mm 1fr 15mm;gap:1mm;align-items:baseline;padding:.8mm .5mm;border-bottom:1px solid var(--line);font-size:7.6px;}\n'
+    +'.apl{color:var(--cream);}\n'
+    +'.asym{color:var(--gold);text-align:center;}\n'
+    +'.anm{color:var(--muted);}\n'
+    +'.aorb{color:var(--faint);text-align:right;font-size:6.8px;}\n'
+    +'.strip{display:flex;align-items:baseline;gap:2mm;font-size:8.2px;color:var(--muted);}\n'
+    +'.strip strong{color:var(--cream);font-weight:400;letter-spacing:.06em;}\n'
+    +'.ft{margin-top:auto;border-top:1px solid var(--bdrM);padding-top:1.8mm;display:flex;align-items:center;gap:3mm;}\n'
+    +'.ftc{flex:1;text-align:center;}\n'
+    +'.ftsp{width:13mm;flex:none;}\n'
+    +'.fnote{font-size:6.8px;color:var(--faint);line-height:1.7;margin-bottom:.8mm;}\n'
+    +'.fbrand{font-family:var(--serif);font-size:7px;letter-spacing:.22em;color:var(--gd4);}\n'
+    +'.hkwrap{width:13mm;flex:none;text-align:center;}\n'
+    +'.hklbl{font-size:5.5px;letter-spacing:.3em;text-indent:.3em;color:var(--faint);margin-bottom:.6mm;}\n'
+    +'.hkbox{width:11mm;height:11mm;border:1px solid var(--gold);border-radius:1mm;margin:0 auto;display:flex;align-items:center;justify-content:center;overflow:visible;}\n'
+    +'@page{size:A4 portrait;margin:0;}\n'
+    +'@media print{\n'
+    +'*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}\n'
+    +'html,body{width:210mm!important;height:auto!important;padding:0!important;margin:0!important;overflow:visible!important;background:var(--bg)!important;}\n'
+    +'.pdfbar{display:none!important;}\n'
+    +'.sheet{margin:0!important;box-shadow:none!important;}\n'
+    +'}\n'
+    +(isMobileK?
+     '@media screen{.pdfbar{text-align:center;margin:6mm 0 10mm;}'
+    +'.pdfbtn{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:12px 42px;border-radius:26px;font-size:.85rem;letter-spacing:.14em;cursor:pointer;font-family:var(--sans);}'
+    +'.pdfnote{font-size:.68rem;color:var(--faint);letter-spacing:.06em;margin-top:10px;line-height:1.8;}}\n':'')
+    +'</style>\n</head>\n<body>\n'
+    +'<div class="sheet" id="sheet"><div class="sin" id="sin">'
+    +hd+secChart+secSunMoon+secAscLove+secOverall+secAsp+secNow+secKw+ft
+    +'</div></div>\n'
+    +(isMobileK?
+     '<div class="pdfbar"><button class="pdfbtn" onclick="window.print()">鑑定書をPDFで保存する</button>'
+    +'<p class="pdfnote">A4縦のため、印刷設定はそのまま（用紙A4・縦）で保存できます。'
+    +(isMono?'':'<br>コンビニ等で印刷される場合は白黒版がおすすめです。')
+    +'</p></div>\n':'')
+    +'<script>\n'
+    +'var _sh=document.getElementById("sheet"),_si=document.getElementById("sin");\n'
+    +'function fitOne(){var z=1;_si.style.zoom="";var g=0;function ov(){var sb=_sh.getBoundingClientRect().bottom;var fb=_si.lastElementChild.getBoundingClientRect().bottom;return fb>sb-23;}while(ov()&&z>0.8&&g<14){z-=0.015;_si.style.zoom=z;g++;}}\n'
+    +'fitOne();\n'
+    +'window.addEventListener("load",fitOne);\n'
+    +'window.addEventListener("beforeprint",fitOne);\n'
+    +'if(document.fonts&&document.fonts.ready){document.fonts.ready.then(fitOne);}\n'
+    +'<\/script>\n</body>\n</html>';
+
+  var w=window.open('','_blank');
+  if(w){w.document.open();w.document.write(html);w.document.close();}
+  else alert('ポップアップがブロックされています。ブラウザの設定でポップアップを許可してください。');
 }
 
 /* ══════════════════════════════════════
