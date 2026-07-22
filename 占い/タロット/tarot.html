@@ -433,7 +433,8 @@ html.theme-minagi section { position: relative; z-index: 1; }
 .kantei-btn-mono{padding:10px 36px;background:transparent;border:1px solid var(--border2);color:var(--muted);cursor:pointer;font-size:10px;letter-spacing:.28em;font-family:'Cormorant Garamond',serif;transition:border-color .25s,color .25s;text-transform:uppercase;margin-top:16px;}
 .kantei-btn-mono:hover{border-color:var(--muted);color:var(--cream);}
 .kantei-btn-hint{font-size:10px;color:var(--muted2);margin-top:11px;letter-spacing:.06em;}
-@media(max-width:768px){.kantei-btn-wrap{display:none;}}
+.kantei-btn-hint-sp{display:none;}
+@media(max-width:768px){.kantei-btn-hint-sp{display:block;}}
 
 /* ── SCROLL BTN ── */
 .trt-scroll-btn{
@@ -733,6 +734,7 @@ html.theme-minagi section { position: relative; z-index: 1; }
 <div class="kantei-btn-wrap" id="trt-kantei-wrap" style="display:none;">
   <button class="kantei-btn" onclick="openKanteiTRT()">鑑定書を作成する</button>
   <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+  <p class="kantei-btn-hint kantei-btn-hint-sp">スマホでは全体を縮小して表示します（ピンチ操作で拡大できます）。コンビニ等で印刷される場合は白黒印刷版がおすすめです。</p>
   <button class="kantei-btn-mono" onclick="openKanteiTRT(true)">白黒印刷版で作成する</button>
   <p class="kantei-btn-hint">実物を印刷・コピーする方向け。朱色を一部使用した白黒デザインです。</p>
 </div>
@@ -822,6 +824,7 @@ html.theme-minagi section { position: relative; z-index: 1; }
 <div class="kantei-btn-wrap" id="cpt-kantei-wrap" style="display:none;">
   <button class="kantei-btn" onclick="openKanteiCPT()">鑑定書を作成する</button>
   <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+  <p class="kantei-btn-hint kantei-btn-hint-sp">スマホでは全体を縮小して表示します（ピンチ操作で拡大できます）。コンビニ等で印刷される場合は白黒印刷版がおすすめです。</p>
   <button class="kantei-btn-mono" onclick="openKanteiCPT(true)">白黒印刷版で作成する</button>
   <p class="kantei-btn-hint">実物を印刷・コピーする方向け。朱色を一部使用した白黒デザインです。</p>
 </div>
@@ -877,6 +880,7 @@ html.theme-minagi section { position: relative; z-index: 1; }
 <div class="kantei-btn-wrap" id="one-kantei-wrap" style="display:none;">
   <button class="kantei-btn" onclick="openKanteiSimple('one')">鑑定書を作成する</button>
   <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+  <p class="kantei-btn-hint kantei-btn-hint-sp">スマホでは全体を縮小して表示します（ピンチ操作で拡大できます）。コンビニ等で印刷される場合は白黒印刷版がおすすめです。</p>
   <button class="kantei-btn-mono" onclick="openKanteiSimple('one',true)">白黒印刷版で作成する</button>
   <p class="kantei-btn-hint">実物を印刷・コピーする方向け。朱色を一部使用した白黒デザインです。</p>
 </div>
@@ -946,6 +950,7 @@ html.theme-minagi section { position: relative; z-index: 1; }
 <div class="kantei-btn-wrap" id="three-kantei-wrap" style="display:none;">
   <button class="kantei-btn" onclick="openKanteiSimple('three')">鑑定書を作成する</button>
   <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+  <p class="kantei-btn-hint kantei-btn-hint-sp">スマホでは全体を縮小して表示します（ピンチ操作で拡大できます）。コンビニ等で印刷される場合は白黒印刷版がおすすめです。</p>
   <button class="kantei-btn-mono" onclick="openKanteiSimple('three',true)">白黒印刷版で作成する</button>
   <p class="kantei-btn-hint">実物を印刷・コピーする方向け。朱色を一部使用した白黒デザインです。</p>
 </div>
@@ -994,6 +999,7 @@ html.theme-minagi section { position: relative; z-index: 1; }
 <div class="kantei-btn-wrap" id="horo-kantei-wrap" style="display:none;">
   <button class="kantei-btn" onclick="openKanteiSimple('horo')">鑑定書を作成する</button>
   <p class="kantei-btn-hint">新しいタブで開きます。印刷・PDF保存が可能です。</p>
+  <p class="kantei-btn-hint kantei-btn-hint-sp">スマホでは全体を縮小して表示します（ピンチ操作で拡大できます）。コンビニ等で印刷される場合は白黒印刷版がおすすめです。</p>
   <button class="kantei-btn-mono" onclick="openKanteiSimple('horo',true)">白黒印刷版で作成する</button>
   <p class="kantei-btn-hint">実物を印刷・コピーする方向け。朱色を一部使用した白黒デザインです。</p>
 </div>
@@ -1463,6 +1469,8 @@ function trtReset(){
    タロット 鑑定書出力（横スライド形式・12枚）
 ════════════════════════════════════════ */
 function openKanteiTRT(mono){
+  var isMobileK=matchMedia('(max-width:768px)').matches
+    ||(matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<=820);
   var k = window._trtKantei;
   if(!k){ alert('先に鑑定してください。'); return; }
 
@@ -1665,13 +1673,24 @@ function openKanteiTRT(mono){
     +'.sno{position:fixed;bottom:30px;right:36px;font-size:.62rem;letter-spacing:.2em;color:'+TH.gd4+';z-index:99;}'
     +'@page{size:A4 landscape;margin:0;}'
     +'@media print{'
-    +'.deck{position:static;height:auto;display:block;}'
+    +'.deck{position:static;width:auto;height:auto;display:block;}'
     +'.slide{position:relative;display:flex;opacity:1;transform:none;width:297mm;height:210mm;page-break-after:always;overflow:hidden;}'
     +'.slide:last-child{page-break-after:avoid;}'
-    +'.ctrl,.sno{display:none;}'
-    +'}';
+    +'.ctrl,.sno,.pdfbar{display:none;}'
+    +'}'
+    +(isMobileK?
+     '@media screen{'
+    +'html,body{height:auto;min-height:100%;overflow:visible;overflow-x:hidden;}'
+    +'.deck{width:1188px;height:840px;overflow:hidden;}'
+    +'.ctrl{position:static;transform:none;left:auto;margin:20px auto 0;}'
+    +'.sno{position:static;display:block;text-align:center;margin:10px 0 0;}'
+    +'.pdfbar{text-align:center;margin:24px 0 48px;}'
+    +'.pdfbtn{background:transparent;border:1px solid '+TH.acc+';color:'+TH.acc+';padding:13px 46px;border-radius:26px;font-size:.85rem;letter-spacing:.14em;cursor:pointer;font-family:"Noto Sans JP",sans-serif;}'
+    +'.pdfnote{font-size:.7rem;color:'+TH.muted+';letter-spacing:.06em;margin-top:11px;line-height:1.8;}'
+    +'}':'');
 
   var html = '<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8">'
+    +'<meta name="viewport" content="'+(isMobileK?'width=1188':'width=device-width,initial-scale=1.0')+'">'
     +'<title>'+todayFile+(isMono?'［白黒印刷版］':'')+'</title>'
     +'<link rel="preconnect" href="https://fonts.googleapis.com">'
     +'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
@@ -1681,6 +1700,12 @@ function openKanteiTRT(mono){
     +'<div class="deck" id="dk">'+deckHtml+'</div>'
     +'<div class="ctrl"><button onclick="go(-1)">◂ PREV</button><button onclick="go(1)">NEXT ▸</button></div>'
     +'<div class="sno" id="sno">1 / '+NS+'</div>'
+    +(isMobileK?
+     '<div class="pdfbar">'
+    +'<button class="pdfbtn" onclick="window.print()">鑑定書をPDFで保存する</button>'
+    +'<p class="pdfnote">印刷画面上部の「∨」から設定を開き、向きを「横」に変更してから保存してください（用紙サイズはA4）。<br>向きが「縦」のままだとページ下半分が空白になります。'
+    +(isMono?'':'<br>コンビニ等で印刷される場合は白黒印刷版がおすすめです。')
+    +'</p></div>':'')
     +'<script>'
     +'var cur=0,NS='+NS+';'
     +'function go(d){'
@@ -1694,6 +1719,9 @@ function openKanteiTRT(mono){
     +'if(e.key==="ArrowRight"||e.key==="ArrowDown")go(1);'
     +'if(e.key==="ArrowLeft"||e.key==="ArrowUp")go(-1);'
     +'});'
+    +'var tx0=null,ty0=null;'
+    +'document.addEventListener("touchstart",function(e){if(e.touches.length===1){tx0=e.touches[0].clientX;ty0=e.touches[0].clientY;}else{tx0=null;}},{passive:true});'
+    +'document.addEventListener("touchend",function(e){if(tx0===null)return;if(window.visualViewport&&window.visualViewport.scale>1.05)return;var dx=e.changedTouches[0].clientX-tx0,dy=e.changedTouches[0].clientY-ty0;tx0=null;if(Math.abs(dx)<80||Math.abs(dy)>Math.abs(dx))return;if(dx<0)go(1);else go(-1);},{passive:true});'
     +'<\/script>'
     +'</body></html>';
 
@@ -1715,6 +1743,8 @@ function openKanteiTRT(mono){
    カード解説はTRT_CARD_MEANING（正位置/逆位置/恋愛）を再利用。
 ════════════════════════════════════════ */
 function openKanteiCPT(mono){
+  var isMobileK=matchMedia('(max-width:768px)').matches
+    ||(matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<=820);
   var k = window._cptKantei;
   if(!k){ alert('先に鑑定してください。'); return; }
 
@@ -1894,13 +1924,24 @@ function openKanteiCPT(mono){
     +'.sno{position:fixed;bottom:30px;right:36px;font-size:.62rem;letter-spacing:.2em;color:'+TH.gd4+';z-index:99;}'
     +'@page{size:A4 landscape;margin:0;}'
     +'@media print{'
-    +'.deck{position:static;height:auto;display:block;}'
+    +'.deck{position:static;width:auto;height:auto;display:block;}'
     +'.slide{position:relative;display:flex;opacity:1;transform:none;width:297mm;height:210mm;page-break-after:always;overflow:hidden;}'
     +'.slide:last-child{page-break-after:avoid;}'
-    +'.ctrl,.sno{display:none;}'
-    +'}';
+    +'.ctrl,.sno,.pdfbar{display:none;}'
+    +'}'
+    +(isMobileK?
+     '@media screen{'
+    +'html,body{height:auto;min-height:100%;overflow:visible;overflow-x:hidden;}'
+    +'.deck{width:1188px;height:840px;overflow:hidden;}'
+    +'.ctrl{position:static;transform:none;left:auto;margin:20px auto 0;}'
+    +'.sno{position:static;display:block;text-align:center;margin:10px 0 0;}'
+    +'.pdfbar{text-align:center;margin:24px 0 48px;}'
+    +'.pdfbtn{background:transparent;border:1px solid '+TH.acc+';color:'+TH.acc+';padding:13px 46px;border-radius:26px;font-size:.85rem;letter-spacing:.14em;cursor:pointer;font-family:"Noto Sans JP",sans-serif;}'
+    +'.pdfnote{font-size:.7rem;color:'+TH.muted+';letter-spacing:.06em;margin-top:11px;line-height:1.8;}'
+    +'}':'');
 
   var html = '<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8">'
+    +'<meta name="viewport" content="'+(isMobileK?'width=1188':'width=device-width,initial-scale=1.0')+'">'
     +'<title>'+todayFile+(isMono?'［白黒印刷版］':'')+'</title>'
     +'<link rel="preconnect" href="https://fonts.googleapis.com">'
     +'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
@@ -1910,6 +1951,12 @@ function openKanteiCPT(mono){
     +'<div class="deck" id="dk">'+deckHtml+'</div>'
     +'<div class="ctrl"><button onclick="go(-1)">◂ PREV</button><button onclick="go(1)">NEXT ▸</button></div>'
     +'<div class="sno" id="sno">1 / '+NS+'</div>'
+    +(isMobileK?
+     '<div class="pdfbar">'
+    +'<button class="pdfbtn" onclick="window.print()">鑑定書をPDFで保存する</button>'
+    +'<p class="pdfnote">印刷画面上部の「∨」から設定を開き、向きを「横」に変更してから保存してください（用紙サイズはA4）。<br>向きが「縦」のままだとページ下半分が空白になります。'
+    +(isMono?'':'<br>コンビニ等で印刷される場合は白黒印刷版がおすすめです。')
+    +'</p></div>':'')
     +'<script>'
     +'var cur=0,NS='+NS+';'
     +'function go(d){'
@@ -1923,6 +1970,9 @@ function openKanteiCPT(mono){
     +'if(e.key==="ArrowRight"||e.key==="ArrowDown")go(1);'
     +'if(e.key==="ArrowLeft"||e.key==="ArrowUp")go(-1);'
     +'});'
+    +'var tx0=null,ty0=null;'
+    +'document.addEventListener("touchstart",function(e){if(e.touches.length===1){tx0=e.touches[0].clientX;ty0=e.touches[0].clientY;}else{tx0=null;}},{passive:true});'
+    +'document.addEventListener("touchend",function(e){if(tx0===null)return;if(window.visualViewport&&window.visualViewport.scale>1.05)return;var dx=e.changedTouches[0].clientX-tx0,dy=e.changedTouches[0].clientY-ty0;tx0=null;if(Math.abs(dx)<80||Math.abs(dy)>Math.abs(dx))return;if(dx<0)go(1);else go(-1);},{passive:true});'
     +'<\/script>'
     +'</body></html>';
 
@@ -1950,6 +2000,8 @@ const SIMPLE_KANTEI_META = {
 };
 
 function openKanteiSimple(key, mono){
+  var isMobileK=matchMedia('(max-width:768px)').matches
+    ||(matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<=820);
   var k = window._simpleKantei && window._simpleKantei[key];
   if(!k){ alert('先に鑑定してください。'); return; }
 
@@ -2121,13 +2173,24 @@ function openKanteiSimple(key, mono){
     +'.sno{position:fixed;bottom:30px;right:36px;font-size:.62rem;letter-spacing:.2em;color:'+TH.gd4+';z-index:99;}'
     +'@page{size:A4 landscape;margin:0;}'
     +'@media print{'
-    +'.deck{position:static;height:auto;display:block;}'
+    +'.deck{position:static;width:auto;height:auto;display:block;}'
     +'.slide{position:relative;display:flex;opacity:1;transform:none;width:297mm;height:210mm;page-break-after:always;overflow:hidden;}'
     +'.slide:last-child{page-break-after:avoid;}'
-    +'.ctrl,.sno{display:none;}'
-    +'}';
+    +'.ctrl,.sno,.pdfbar{display:none;}'
+    +'}'
+    +(isMobileK?
+     '@media screen{'
+    +'html,body{height:auto;min-height:100%;overflow:visible;overflow-x:hidden;}'
+    +'.deck{width:1188px;height:840px;overflow:hidden;}'
+    +'.ctrl{position:static;transform:none;left:auto;margin:20px auto 0;}'
+    +'.sno{position:static;display:block;text-align:center;margin:10px 0 0;}'
+    +'.pdfbar{text-align:center;margin:24px 0 48px;}'
+    +'.pdfbtn{background:transparent;border:1px solid '+TH.acc+';color:'+TH.acc+';padding:13px 46px;border-radius:26px;font-size:.85rem;letter-spacing:.14em;cursor:pointer;font-family:"Noto Sans JP",sans-serif;}'
+    +'.pdfnote{font-size:.7rem;color:'+TH.muted+';letter-spacing:.06em;margin-top:11px;line-height:1.8;}'
+    +'}':'');
 
   var html = '<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8">'
+    +'<meta name="viewport" content="'+(isMobileK?'width=1188':'width=device-width,initial-scale=1.0')+'">'
     +'<title>'+todayFile+(isMono?'［白黒印刷版］':'')+'</title>'
     +'<link rel="preconnect" href="https://fonts.googleapis.com">'
     +'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
@@ -2137,6 +2200,12 @@ function openKanteiSimple(key, mono){
     +'<div class="deck" id="dk">'+deckHtml+'</div>'
     +'<div class="ctrl"><button onclick="go(-1)">◂ PREV</button><button onclick="go(1)">NEXT ▸</button></div>'
     +'<div class="sno" id="sno">1 / '+NS+'</div>'
+    +(isMobileK?
+     '<div class="pdfbar">'
+    +'<button class="pdfbtn" onclick="window.print()">鑑定書をPDFで保存する</button>'
+    +'<p class="pdfnote">印刷画面上部の「∨」から設定を開き、向きを「横」に変更してから保存してください（用紙サイズはA4）。<br>向きが「縦」のままだとページ下半分が空白になります。'
+    +(isMono?'':'<br>コンビニ等で印刷される場合は白黒印刷版がおすすめです。')
+    +'</p></div>':'')
     +'<script>'
     +'var cur=0,NS='+NS+';'
     +'function go(d){'
@@ -2150,6 +2219,9 @@ function openKanteiSimple(key, mono){
     +'if(e.key==="ArrowRight"||e.key==="ArrowDown")go(1);'
     +'if(e.key==="ArrowLeft"||e.key==="ArrowUp")go(-1);'
     +'});'
+    +'var tx0=null,ty0=null;'
+    +'document.addEventListener("touchstart",function(e){if(e.touches.length===1){tx0=e.touches[0].clientX;ty0=e.touches[0].clientY;}else{tx0=null;}},{passive:true});'
+    +'document.addEventListener("touchend",function(e){if(tx0===null)return;if(window.visualViewport&&window.visualViewport.scale>1.05)return;var dx=e.changedTouches[0].clientX-tx0,dy=e.changedTouches[0].clientY-ty0;tx0=null;if(Math.abs(dx)<80||Math.abs(dy)>Math.abs(dx))return;if(dx<0)go(1);else go(-1);},{passive:true});'
     +'<\/script>'
     +'</body></html>';
 

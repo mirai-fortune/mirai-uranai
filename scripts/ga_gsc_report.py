@@ -5,8 +5,9 @@ GA4 + Search Console レポート取得スクリプト
   pip install google-analytics-data google-api-python-client google-auth
 
 実行:
-  python scripts/ga_gsc_report.py            # 直近28日間
-  python scripts/ga_gsc_report.py 7           # 直近7日間
+  python scripts/ga_gsc_report.py                     # 直近28日間
+  python scripts/ga_gsc_report.py 7                    # 直近7日間
+  python scripts/ga_gsc_report.py 28 sanmeigaku.html   # 指定ページに絞ったクエリ内訳も追加表示
 """
 import sys
 import datetime
@@ -112,11 +113,31 @@ def gsc_report(creds, days):
     return totals, queries, pages, start, end
 
 
+def gsc_page_queries(creds, days, page_filter, row_limit=30):
+    service = build("searchconsole", "v1", credentials=creds)
+    end = datetime.date.today() - datetime.timedelta(days=2)
+    start = end - datetime.timedelta(days=days)
+
+    result = service.searchanalytics().query(
+        siteUrl=GSC_SITE_URL,
+        body={
+            "startDate": str(start),
+            "endDate": str(end),
+            "dimensions": ["query"],
+            "dimensionFilterGroups": [{
+                "filters": [{"dimension": "page", "operator": "contains", "expression": page_filter}]
+            }],
+            "rowLimit": row_limit,
+        },
+    ).execute()
+    return result
+
+
 def fmt_num(v):
     return f"{float(v):,.0f}" if "." not in str(v) or float(v) == int(float(v)) else f"{float(v):,.1f}"
 
 
-def print_report(days):
+def print_report(days, page_filter=None):
     creds = get_credentials()
 
     print(f"\n{'='*60}\nGA4 + Search Console レポート（直近{days}日間）\n{'='*60}\n")
@@ -166,9 +187,21 @@ def print_report(days):
         print(f"  {r['keys'][0]}: クリック{r['clicks']:.0f} / 表示{r['impressions']:.0f} / "
               f"CTR{r['ctr']*100:.1f}% / 順位{r['position']:.1f}")
 
+    if page_filter:
+        print(f"\n--- ページ別クエリ内訳: 「{page_filter}」を含むページ ---")
+        page_result = gsc_page_queries(creds, days, page_filter)
+        rows = page_result.get("rows", [])
+        if rows:
+            for r in rows:
+                print(f"  {r['keys'][0]}: クリック{r['clicks']:.0f} / 表示{r['impressions']:.0f} / "
+                      f"CTR{r['ctr']*100:.1f}% / 順位{r['position']:.1f}")
+        else:
+            print("  データなし（該当ページへの検索流入がこの期間はありません）")
+
     print()
 
 
 if __name__ == "__main__":
     days_arg = int(sys.argv[1]) if len(sys.argv) > 1 else 28
-    print_report(days_arg)
+    page_arg = sys.argv[2] if len(sys.argv) > 2 else None
+    print_report(days_arg, page_arg)
