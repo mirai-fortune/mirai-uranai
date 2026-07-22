@@ -575,6 +575,11 @@ html.theme-minagi section { position: relative; z-index: 1; }
     <br>
     <button class="kantei-btn-mono" onclick="openKantei(true)">白黒印刷版で作成する</button>
     <p class="kantei-btn-hint">実物を印刷・コピーする方向け。朱色を一部使用した白黒デザインです。</p>
+    <div style="margin-top:30px;padding-top:24px;border-top:1px solid var(--border2);">
+      <button class="kantei-btn-mono" onclick="openKanteiOne()" style="margin-top:0;">A4一枚版（カラー）</button>
+      <button class="kantei-btn-mono" onclick="openKanteiOne(true)" style="margin-top:0;margin-left:10px;">A4一枚版（白黒）</button>
+      <p class="kantei-btn-hint">要点をA4縦1枚にまとめた簡易版。納品・手渡し用におすすめです。</p>
+    </div>
   </div>
 </div>
 
@@ -2640,6 +2645,287 @@ function openKantei(mono){
       .replace(/#c97878/g,TH.acc)
       .replace(/#0d0b08/g,'#fdfcf8');
   }
+
+  const w=window.open('','_blank');
+  if(w){w.document.open();w.document.write(html);w.document.close();}
+  else alert('ポップアップがブロックされています。ブラウザの設定でポップアップを許可してください。');
+}
+
+/* ── A4縦1枚版鑑定書（納品・手渡し用の簡易版） ── */
+function openKanteiOne(mono){
+  const k=window._siKantei;
+  if(!k){alert('先に命式を鑑定してください。');return;}
+  const {name,y,m,d,timeVal,gender,yp,mp,dp,hp,daySi,pillars,daiun,allDu,allInterps,voidBr,curAge}=k;
+  const saiunYears=k.saiunYears||[];
+  const saiunInterps=k.saiunInterps||[];
+  const currentYear=k.currentYear||(new Date().getFullYear());
+  const days=k.days;
+
+  const _th=mono?'mono'
+    :document.documentElement.classList.contains('theme-sakura')?'sakura'
+    :document.documentElement.classList.contains('theme-shinryoku')?'shinryoku'
+    :document.documentElement.classList.contains('theme-minagi')?'minagi':'gold';
+  // 1枚版はリテラル色を使わず全て変数参照 → monoもテーマ値の差し替えだけで完結（regex後処理なし）
+  const TH={
+    gold:{bg:'#030611',cream:'#f5f2eb',muted:'rgba(245,242,235,.62)',acc:'#c4a86a',acc2:'#e8d09a',bdr:'rgba(196,168,106,.14)',bdrM:'rgba(196,168,106,.3)',gd4:'rgba(196,168,106,.42)',hlBg:'rgba(196,168,106,.1)',cardBg:'rgba(15,13,9,.7)',theadBg:'rgba(28,24,12,.96)',tblBg:'rgba(18,16,12,.6)',rlblBg:'rgba(28,24,12,.7)',faint:'rgba(245,242,235,.32)',soft:'rgba(245,242,235,.55)',line:'rgba(255,255,255,.07)',back:'#000205'},
+    sakura:{bg:'#160810',cream:'#fef2f6',muted:'rgba(254,242,246,.62)',acc:'#e891b2',acc2:'#f5c0d5',bdr:'rgba(232,145,178,.14)',bdrM:'rgba(232,145,178,.3)',gd4:'rgba(232,145,178,.42)',hlBg:'rgba(232,145,178,.1)',cardBg:'rgba(26,10,18,.7)',theadBg:'rgba(34,12,22,.96)',tblBg:'rgba(30,12,20,.6)',rlblBg:'rgba(34,12,22,.7)',faint:'rgba(254,242,246,.32)',soft:'rgba(254,242,246,.55)',line:'rgba(255,255,255,.07)',back:'#0a0308'},
+    shinryoku:{bg:'#060e08',cream:'#f0f5ef',muted:'rgba(240,245,239,.62)',acc:'#82c87e',acc2:'#b4e8b0',bdr:'rgba(130,200,126,.14)',bdrM:'rgba(130,200,126,.3)',gd4:'rgba(130,200,126,.42)',hlBg:'rgba(130,200,126,.1)',cardBg:'rgba(10,18,12,.7)',theadBg:'rgba(14,26,16,.96)',tblBg:'rgba(12,22,14,.6)',rlblBg:'rgba(14,26,16,.7)',faint:'rgba(240,245,239,.32)',soft:'rgba(240,245,239,.55)',line:'rgba(255,255,255,.07)',back:'#020503'},
+    minagi:{bg:'#04080f',cream:'#eef4fc',muted:'rgba(238,244,252,.62)',acc:'#6ab4e8',acc2:'#a0d4f4',bdr:'rgba(106,180,232,.14)',bdrM:'rgba(106,180,232,.3)',gd4:'rgba(106,180,232,.42)',hlBg:'rgba(106,180,232,.1)',cardBg:'rgba(8,12,22,.7)',theadBg:'rgba(10,18,34,.96)',tblBg:'rgba(8,14,26,.6)',rlblBg:'rgba(10,18,34,.7)',faint:'rgba(238,244,252,.32)',soft:'rgba(238,244,252,.55)',line:'rgba(255,255,255,.07)',back:'#010306'},
+    mono:{bg:'#fdfcf8',cream:'#1a1a1a',muted:'rgba(26,26,26,.82)',acc:'#b8341f',acc2:'#c96a4e',bdr:'rgba(26,26,26,.2)',bdrM:'rgba(26,26,26,.42)',gd4:'rgba(26,26,26,.55)',hlBg:'rgba(184,52,31,.07)',cardBg:'rgba(26,26,26,.02)',theadBg:'rgba(26,26,26,.05)',tblBg:'rgba(26,26,26,.015)',rlblBg:'rgba(26,26,26,.04)',faint:'rgba(26,26,26,.58)',soft:'rgba(26,26,26,.72)',line:'rgba(26,26,26,.14)',back:'#e8e6e0'}
+  }[_th];
+  const isMono=_th==='mono';
+
+  const _pageDir=window.location.href.replace(/[^/]*$/,'');
+  const hankoHTML1=isMono?('<img src="'+_pageDir+'../../images/mirai_sign.png" alt="印" style="width:33px;height:33px;mix-blend-mode:multiply;transform:rotate(-4deg) translate(.4mm,-.4mm);">'):'';
+
+  // ── 派生データ ──
+  const dayE=STEM_ELEM[daySi];
+  const dayEDesc=STEM_DETAIL[STEMS[daySi]]||ELEM_DESC[dayE]||{};
+  const today=new Date();
+  const todayStr=today.getFullYear()+'年'+(today.getMonth()+1)+'月'+today.getDate()+'日';
+  const todayFile='shichusuimei_'+today.getFullYear()+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0');
+  const genderLabel=gender==='male'?'男性':'女性';
+  const timeLabel=timeVal?timeVal+'（'+getJiName(parseInt(timeVal.split(':')[0]))+'）':'時間不明';
+  const cnt={木:0,火:0,土:0,金:0,水:0};
+  pillars.forEach(p=>{cnt[STEM_ELEM[p.si]]++;cnt[BRANCH_ELEM[p.bi]]++;});
+  const total=pillars.length*2;
+  const elems=['木','火','土','金','水'];
+  const eHex={木:'#6db87a',火:'#c97878',土:'#c9b464',金:'#a8b4c4',水:'#6888c4'};
+  const eYomi={木:'もく',火:'か',土:'ど',金:'こん',水:'すい'};
+  const void1=BRANCHES[voidBr[0]],void2=BRANCHES[voidBr[1]];
+  const nayinName=NAYIN[Math.floor(getCycle60(dp.si,dp.bi)/2)].name;
+  const pillarsK=[yp,mp,dp,...(hp?[hp]:[])];
+  const pLabels=['年柱','月柱','日柱',...(hp?['時柱']:[])];
+  const mpTg=getTenGod(daySi,mp.si);
+  const mpDet=TG_DETAIL[mpTg]||{};
+  const currDuIdx=allInterps.findIndex(x=>x.isCurr);
+  const currIp=currDuIdx>=0?allInterps[currDuIdx]:null;
+  const currDu=currDuIdx>=0?allDu[currDuIdx]:null;
+  const currSaunIp=saiunInterps.find(x=>x.isCurr)||null;
+  const curSy=saiunYears.find(s=>s.year===currentYear)||null;
+  const yojin=YOJIN_MAP[dayE]||{};
+  const{isMikyou,kakkyoku}=calcShinjaku(pillars,daySi,mp,days);
+  const shinsatsuFound=getShinsatsu(pillars,dp,daySi);
+  const tr=(s,n)=>s&&s.length>n?s.slice(0,n)+'…':s||'—';
+  // 文境界トリム：制限内の最後の「。」で切る（「…」で途切れた印象を残さない）
+  const trS=(s,n)=>{if(!s)return'—';if(s.length<=n)return s;const c=s.slice(0,n);const i=c.lastIndexOf('。');return i>=20?c.slice(0,i+1):c+'…';};
+  const themeTitle=s=>{const mt=s&&s.match(/「(.+?)」/);return mt?mt[1]:tr(s,16);};
+  const kdDays=days!=null?days:0;
+
+  // ── ヘッダー ──
+  const hd='<div class="hd">'
+    +'<p class="hbrand">ASUMIRA 占い　─　FOUR PILLARS OF DESTINY</p>'
+    +'<h1>四柱推命鑑定書</h1>'
+    +'<div class="hmeta"><span class="hname">'+name+'様</span>'
+    +'<span>'+y+'年'+m+'月'+d+'日生まれ　'+genderLabel+'　／　生まれ時間：'+timeLabel+'</span>'
+    +'<span>作成日　'+todayStr+'</span></div>'
+    +'</div>';
+
+  // ── 命式表 ──
+  const thH=pLabels.map(l=>'<th>'+l+'</th>').join('');
+  const kanH=pillarsK.map(p=>'<td class="big"><div class="bchar cr">'+STEMS[p.si]+'</div><div class="byomi">'+STEMS_YOMI[p.si]+'</div></td>').join('');
+  const shiH=pillarsK.map(p=>{const iv=voidBr.includes(p.bi);return'<td class="big"><div class="bchar '+(iv?'vd':'gd')+'">'+BRANCHES[p.bi]+'</div><div class="byomi">'+BRANCHES_YOMI[p.bi]+'</div></td>';}).join('');
+  const juniH=pillarsK.map(p=>'<td class="sm">'+getJuniUn(daySi,p.bi)+'</td>').join('');
+  const tgH=pillarsK.map((p,i)=>'<td class="sm">'+(pLabels[i]==='日柱'?'日主':getTenGod(daySi,p.si))+'</td>').join('');
+  const zkH=pillarsK.map(p=>'<td class="sm">'+STEMS[getZokkan(p.bi,kdDays)]+'</td>').join('');
+  const zkTgH=pillarsK.map(p=>'<td class="sm">'+getTenGod(daySi,getZokkan(p.bi,kdDays))+'</td>').join('');
+  const secMeishiki='<div class="sec">'
+    +'<div class="st"><b>命式表</b><span>BIRTH CHART</span></div>'
+    +'<table class="mtbl"><thead><tr><th class="rl0"></th>'+thH+'</tr></thead><tbody>'
+    +'<tr><td class="rl">天干</td>'+kanH+'</tr>'
+    +'<tr><td class="rl">地支</td>'+shiH+'</tr>'
+    +'<tr><td class="rl">十二運</td>'+juniH+'</tr>'
+    +'<tr><td class="rl">通変星（天干）</td>'+tgH+'</tr>'
+    +'<tr><td class="rl">蔵干</td>'+zkH+'</tr>'
+    +'<tr><td class="rl">通変星（蔵干）</td>'+zkTgH+'</tr>'
+    +'</tbody></table>'
+    +'<div class="mmeta">'
+    +'<span>日主：<strong>'+STEMS[daySi]+'（'+STEMS_YOMI[daySi]+'）</strong></span>'
+    +'<span>五行：<strong>'+dayE+'</strong></span>'
+    +'<span>空亡：<strong>'+void1+'・'+void2+'</strong></span>'
+    +'<span>立運：<strong>'+daiun.startAge+'歳（'+(daiun.isForward?'順行':'逆行')+'）</strong></span>'
+    +'<span>身の強弱：<strong>'+(isMikyou?'身強':'身弱')+(kakkyoku?'・'+kakkyoku:'')+'</strong></span>'
+    +'</div></div>';
+
+  // ── 五行バランス｜命式の傾向 ──
+  const barsH=elems.map(e=>{const n=cnt[e]||0;const pct=total>0?Math.round(n/total*100):0;
+    const fillStyle=isMono?'background:rgba(26,26,26,.65);':'background:'+eHex[e]+';';
+    return'<div class="brow"><span class="bname">'+e+'（'+eYomi[e]+'）'+(e===dayE?'<span class="dmk">日主</span>':'')+'</span>'
+      +'<span class="btrack"><span class="bfill" style="width:'+pct+'%;'+fillStyle+'"></span></span>'
+      +'<span class="bnum" style="color:'+(isMono?'var(--gold)':eHex[e])+';">'+n+'</span></div>';}).join('');
+  const secGogyo='<div class="g2">'
+    +'<div class="sec"><div class="st"><b>五行バランス</b><span>FIVE ELEMENTS ─ 全'+total+'点</span></div>'+barsH+'</div>'
+    +'<div class="sec"><div class="st"><b>命式の傾向</b><span>TENDENCY</span></div>'
+    +'<p class="tnat">'+STEMS[daySi]+'（'+dayE+'）の人　─　'+(dayEDesc.nature||'')+'</p>'
+    +'<p class="txt">'+trS(dayEDesc.personality,130)+'</p>'
+    +'</div></div>';
+
+  // ── 日主の本質 ──
+  const secHonshitsu='<div class="sec">'
+    +'<div class="st"><b>日主の本質</b><span>CORE NATURE ─ 日干「'+STEMS[daySi]+'」</span></div>'
+    +'<div class="hongrid">'
+    +'<p class="txt">'+trS(dayEDesc.kishitsu||dayEDesc.personality,185)+'</p>'
+    +'<div class="txt kv">'
+    +'<span class="kw">長所：</span>'+(dayEDesc.chosho||dayEDesc.strength||'—')+'<br>'
+    +'<span class="kw">課題：</span>'+(dayEDesc.tansho||dayEDesc.challenge||'—')+'<br>'
+    +'<span class="kw">納音：</span>'+nayinName+'<br>'
+    +'<span class="kw">開運：</span>'+(dayEDesc.lucky||'—')
+    +'</div></div></div>';
+
+  // ── 仕事運・適職｜恋愛運 ──
+  const secUnsei='<div class="g2">'
+    +'<div class="sec"><div class="st"><b>仕事運・適職</b><span>WORK ─ 月柱「'+mpTg+'」</span></div>'
+    +'<p class="txt">'+trS(mpDet.shigoto,125)+'</p>'
+    +'<p class="txt" style="margin-top:1mm;"><span class="kw">適職：</span>'+(mpDet.tekishoku||'—')+'</p></div>'
+    +'<div class="sec"><div class="st"><b>恋愛・対人運</b><span>LOVE</span></div>'
+    +'<p class="txt">'+trS(mpDet.ren_ai,145)+'</p></div>'
+    +'</div>';
+
+  // ── 用神（開運の五行） ──
+  const yCardDefs=isMikyou
+    ?[{label:'食傷',elem:yojin.shokusho},{label:'財',elem:yojin.zai},{label:'官',elem:yojin.kan}]
+    :[{label:'比劫',elem:dayE},{label:'印',elem:yojin.in_el}];
+  const yChips=yCardDefs.map(v=>{const adv=YOJIN_ADVICE[v.elem]||{};const col=isMono?'var(--gold)':(eHex[v.elem]||'var(--gold)');
+    return'<div class="ychip" style="border-left:2px solid '+col+';">'
+      +'<span class="ylbl">'+v.label+'</span>'
+      +'<span class="yel">'+v.elem+'（'+eYomi[v.elem]+'）</span>'
+      +'<span class="yef">'+(adv.effect||'—')+'</span></div>';}).join('');
+  const yAdv=YOJIN_ADVICE[isMikyou?yojin.shokusho:dayE]||{};
+  const secYojin='<div class="sec">'
+    +'<div class="st"><b>用神 ─ 開運の五行</b><span>LUCKY ELEMENTS ─ '+(isMikyou?'身強':'身弱')+(kakkyoku?'・'+kakkyoku:'')+'</span></div>'
+    +'<div class="yrow">'+yChips+'</div>'
+    +'<p class="txt" style="margin-top:1.4mm;">'
+    +(yAdv.act?'<span class="kw">推奨行動：</span>'+yAdv.act+'　':'')
+    +(yAdv.season?'<span class="kw">開運の季節：</span>'+yAdv.season+'　':'')
+    +(yAdv.food?'<span class="kw">食材：</span>'+yAdv.food:'')
+    +'</p></div>';
+
+  // ── 現在の大運｜今年の歳運 ──
+  const duPeriod=currDu?(currDu.isPre?'0〜'+currDu.endAge+'歳':currDu.age+'〜'+currDu.endAge+'歳'):'';
+  const duCard=currDu&&currIp
+    ?'<div class="sec"><div class="st"><b>現在の大運</b><span>MAJOR LUCK ─ '+duPeriod+'（現在'+curAge+'歳）</span></div>'
+    +'<div class="duhead"><span class="dukan">'+STEMS[currDu.si]+BRANCHES[currDu.bi]+'</span><span class="duyomi">'+STEMS_YOMI[currDu.si]+'・'+BRANCHES_YOMI[currDu.bi]+'</span><span class="duinfo">'+(currIp.tg||'')+'</span></div>'
+    +'<p class="dutheme">「'+themeTitle(currIp.line1)+'」</p>'
+    +'<p class="txt">'+trS(currIp.line1,120)+'</p></div>'
+    :'<div class="sec"><div class="st"><b>現在の大運</b><span>MAJOR LUCK</span></div><p class="txt">大運を特定できませんでした。</p></div>';
+  const saiCard=currSaunIp&&curSy
+    ?'<div class="sec"><div class="st"><b>今年の歳運</b><span>ANNUAL LUCK ─ '+currentYear+'年（'+curSy.age+'歳）</span></div>'
+    +'<div class="duhead"><span class="dukan">'+STEMS[curSy.si]+BRANCHES[curSy.bi]+'</span><span class="duyomi">'+STEMS_YOMI[curSy.si]+'・'+BRANCHES_YOMI[curSy.bi]+'</span><span class="duinfo">'+(currSaunIp.tg||'')+'年</span></div>'
+    +'<p class="dutheme">「'+themeTitle(currSaunIp.line1)+'」</p>'
+    +'<p class="txt">'+trS(currSaunIp.line1,120)+'</p></div>'
+    :'<div class="sec"><div class="st"><b>今年の歳運</b><span>ANNUAL LUCK</span></div><p class="txt">歳運を特定できませんでした。</p></div>';
+  const secUn='<div class="g2">'+duCard+saiCard+'</div>';
+
+  // ── 特殊星（該当時のみ） ──
+  const secShin=shinsatsuFound.length>0
+    ?'<div class="sec strip"><span class="kw">特殊星（神殺）：</span><strong>'+shinsatsuFound.map(x=>x.name).join('・')+'</strong>　<span class="fnt">※各星の詳しい読み解きは完全版の鑑定書をご覧ください</span></div>'
+    :'';
+
+  // ── フッター（mono時は右端に鑑定印の枠＋押印） ──
+  const ft='<div class="ft">'
+    +(isMono?'<span class="ftsp"></span>':'')
+    +'<div class="ftc">'
+    +'<p class="fnote">本鑑定書は、東洋命理学の考え方に基づきご自身の性質や可能性を見つめ直すための参考情報です。医学的・法律的な判断に代わるものではありません。</p>'
+    +'<p class="fbrand">ASUMIRA 占い　─　現役占い師監修　／　'+todayStr+'</p>'
+    +'</div>'
+    +(isMono?'<div class="hkwrap" aria-hidden="true"><p class="hklbl">鑑定印</p><div class="hkbox">'+hankoHTML1+'</div></div>':'')
+    +'</div>';
+
+  const isMobileK=matchMedia('(max-width:768px)').matches
+    ||(matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<=820);
+
+  const html='<!DOCTYPE html>\n<html lang="ja">\n<head>\n'
+    +'<meta charset="UTF-8"><meta name="viewport" content="'+(isMobileK?'width=820':'width=device-width,initial-scale=1.0')+'">\n'
+    +'<title>'+todayFile+'_'+name+'様［A4一枚版'+(isMono?'・白黒':'')+'］</title>\n'
+    +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">\n'
+    +'<style>\n'
+    +'*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}\n'
+    +':root{--bg:'+TH.bg+';--cream:'+TH.cream+';--muted:'+TH.muted+';--gold:'+TH.acc+';--gold2:'+TH.acc2+';--bdr:'+TH.bdr+';--bdrM:'+TH.bdrM+';--gd4:'+TH.gd4+';--hl-bg:'+TH.hlBg+';--card-bg:'+TH.cardBg+';--thead-bg:'+TH.theadBg+';--tbl-bg:'+TH.tblBg+';--rlbl-bg:'+TH.rlblBg+';--faint:'+TH.faint+';--soft:'+TH.soft+';--line:'+TH.line+';--serif:"Noto Serif JP",serif;--sans:"Noto Sans JP",sans-serif;}\n'
+    +'body{background:'+TH.back+';font-family:var(--sans);font-weight:'+(isMono?'400':'300')+';-webkit-font-smoothing:antialiased;padding:8mm 0;}\n'
+    +'.sheet{width:210mm;height:296.5mm;margin:0 auto;background:var(--bg);color:var(--cream);overflow:hidden;position:relative;box-shadow:0 6px 36px rgba(0,0,0,.45);}\n'
+    +'.sin{height:100%;padding:9mm 10mm 8mm;display:flex;flex-direction:column;gap:2.4mm;}\n'
+    +'.sec{background:var(--card-bg);border:1px solid var(--bdr);border-radius:6px;padding:2.4mm 3.2mm;}\n'
+    +'.g2{display:grid;grid-template-columns:1fr 1fr;gap:2.4mm;}\n'
+    +'.st{display:flex;align-items:baseline;gap:2.4mm;margin-bottom:1.5mm;}\n'
+    +'.st b{font-family:var(--serif);font-weight:500;font-size:10.5px;letter-spacing:.14em;color:var(--gold);white-space:nowrap;}\n'
+    +'.st span{font-size:6px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;}\n'
+    +'.txt{font-size:8.6px;line-height:1.62;color:var(--muted);}\n'
+    +'.kv{line-height:1.8;}\n'
+    +'.kw{color:var(--gold);}\n'
+    +'.fnt{font-size:7px;color:var(--faint);}\n'
+    +'.hd{text-align:center;padding-bottom:2.4mm;border-bottom:1px solid var(--bdrM);}\n'
+    +'.hbrand{font-family:var(--serif);font-size:6.5px;letter-spacing:.4em;color:var(--gd4);margin-bottom:1.6mm;}\n'
+    +'.hd h1{font-family:var(--serif);font-size:20px;font-weight:300;letter-spacing:.3em;color:var(--cream);margin-bottom:2mm;text-indent:.3em;}\n'
+    +'.hmeta{display:flex;justify-content:center;align-items:baseline;gap:5mm;font-size:8.3px;color:var(--muted);letter-spacing:.04em;}\n'
+    +'.hname{font-family:var(--serif);font-size:12.5px;color:var(--cream);letter-spacing:.12em;}\n'
+    +'.mtbl{width:100%;border-collapse:collapse;background:var(--tbl-bg);table-layout:fixed;}\n'
+    +'.mtbl th{background:var(--thead-bg);padding:1.3mm 2mm;font-family:var(--serif);font-size:8.5px;font-weight:400;letter-spacing:.22em;color:var(--gold);border:1px solid var(--line);border-bottom:1px solid var(--bdrM);text-align:center;}\n'
+    +'.mtbl .rl0{background:var(--thead-bg);border:1px solid var(--line);border-bottom:1px solid var(--bdrM);width:19mm;}\n'
+    +'.mtbl .rl{background:var(--rlbl-bg);padding:1mm 2mm;font-size:7px;letter-spacing:.1em;color:var(--faint);border:1px solid var(--line);white-space:nowrap;}\n'
+    +'.mtbl .big{padding:1.5mm 2mm 1.1mm;text-align:center;border:1px solid var(--line);}\n'
+    +'.bchar{font-family:var(--serif);font-size:16px;font-weight:300;line-height:1;}\n'
+    +'.cr{color:var(--cream);}\n.gd{color:var(--gold);}\n.vd{color:var(--gold2);}\n'
+    +'.byomi{font-size:5.5px;color:var(--faint);margin-top:.7mm;letter-spacing:.14em;text-indent:.14em;}\n'
+    +'.mtbl .sm{padding:1mm 2mm;text-align:center;font-size:8.2px;color:var(--muted);border:1px solid var(--line);}\n'
+    +'.mmeta{display:flex;flex-wrap:wrap;gap:1mm 4mm;font-size:7.8px;color:var(--muted);margin-top:1.6mm;}\n'
+    +'.mmeta strong{color:var(--gold);font-weight:400;}\n'
+    +'.brow{display:grid;grid-template-columns:21mm 1fr 5mm;gap:2mm;align-items:center;margin-bottom:1.3mm;}\n'
+    +'.dmk{font-size:5.5px;color:var(--gold);border:1px solid currentColor;padding:0 .8mm;margin-left:1.2mm;border-radius:2px;vertical-align:.2mm;letter-spacing:.08em;}\n'
+    +'.brow:last-child{margin-bottom:0;}\n'
+    +'.bname{font-size:7.5px;color:var(--soft);white-space:nowrap;}\n'
+    +'.btrack{height:3px;background:var(--line);border-radius:2px;overflow:hidden;display:block;}\n'
+    +'.bfill{height:100%;display:block;border-radius:2px;}\n'
+    +'.bnum{font-family:var(--serif);font-size:9px;text-align:right;}\n'
+    +'.tnat{font-family:var(--serif);font-size:9.5px;color:var(--cream);margin-bottom:1.2mm;letter-spacing:.04em;}\n'
+    +'.hongrid{display:grid;grid-template-columns:1.35fr 1fr;gap:3.5mm;}\n'
+    +'.yrow{display:flex;gap:2.4mm;}\n'
+    +'.ychip{flex:1;background:var(--tbl-bg);padding:1.6mm 2.4mm;display:flex;flex-direction:column;gap:.8mm;}\n'
+    +'.ylbl{font-size:6.5px;letter-spacing:.2em;color:var(--gold);}\n'
+    +'.yel{font-family:var(--serif);font-size:10.5px;color:var(--cream);}\n'
+    +'.yef{font-size:7.4px;color:var(--soft);line-height:1.5;}\n'
+    +'.duhead{display:flex;align-items:baseline;gap:2.4mm;margin-bottom:1.2mm;}\n'
+    +'.dukan{font-family:var(--serif);font-size:17px;font-weight:300;color:var(--cream);letter-spacing:.1em;}\n'
+    +'.duyomi{font-size:6.5px;color:var(--faint);}\n'
+    +'.duinfo{font-size:8px;color:var(--gold);margin-left:auto;}\n'
+    +'.dutheme{font-family:var(--serif);font-size:9.5px;color:var(--gold2);margin-bottom:1mm;letter-spacing:.04em;}\n'
+    +'.strip{display:flex;align-items:baseline;gap:2mm;font-size:8.2px;color:var(--muted);}\n'
+    +'.strip strong{color:var(--cream);font-weight:400;letter-spacing:.06em;}\n'
+    +'.ft{margin-top:auto;border-top:1px solid var(--bdrM);padding-top:1.8mm;display:flex;align-items:center;gap:3mm;}\n'
+    +'.ftc{flex:1;text-align:center;}\n'
+    +'.ftsp{width:13mm;flex:none;}\n'
+    +'.fnote{font-size:6.8px;color:var(--faint);line-height:1.7;margin-bottom:.8mm;}\n'
+    +'.fbrand{font-family:var(--serif);font-size:7px;letter-spacing:.22em;color:var(--gd4);}\n'
+    +'.hkwrap{width:13mm;flex:none;text-align:center;}\n'
+    +'.hklbl{font-size:5.5px;letter-spacing:.3em;text-indent:.3em;color:var(--faint);margin-bottom:.6mm;}\n'
+    +'.hkbox{width:11mm;height:11mm;border:1px solid var(--gold);border-radius:1mm;margin:0 auto;display:flex;align-items:center;justify-content:center;overflow:visible;}\n'
+    +'@page{size:A4 portrait;margin:0;}\n'
+    +'@media print{\n'
+    +'*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}\n'
+    +'html,body{width:210mm!important;height:auto!important;padding:0!important;margin:0!important;overflow:visible!important;background:var(--bg)!important;}\n'
+    +'.pdfbar{display:none!important;}\n'
+    +'.sheet{margin:0!important;box-shadow:none!important;}\n'
+    +'}\n'
+    +(isMobileK?
+     '@media screen{.pdfbar{text-align:center;margin:6mm 0 10mm;}'
+    +'.pdfbtn{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:12px 42px;border-radius:26px;font-size:.85rem;letter-spacing:.14em;cursor:pointer;font-family:var(--sans);}'
+    +'.pdfnote{font-size:.68rem;color:var(--faint);letter-spacing:.06em;margin-top:10px;line-height:1.8;}}\n':'')
+    +'</style>\n</head>\n<body>\n'
+    +'<div class="sheet" id="sheet"><div class="sin" id="sin">'
+    +hd+secMeishiki+secGogyo+secHonshitsu+secUnsei+secYojin+secUn+secShin+ft
+    +'</div></div>\n'
+    +(isMobileK?
+     '<div class="pdfbar"><button class="pdfbtn" onclick="window.print()">鑑定書をPDFで保存する</button>'
+    +'<p class="pdfnote">A4縦のため、印刷設定はそのまま（用紙A4・縦）で保存できます。'
+    +(isMono?'':'<br>コンビニ等で印刷される場合は白黒版がおすすめです。')
+    +'</p></div>\n':'')
+    +'<script>\n'
+    +'var _sh=document.getElementById("sheet"),_si=document.getElementById("sin");\n'
+    +'function fitOne(){var z=1;_si.style.zoom="";var g=0;function ov(){var sb=_sh.getBoundingClientRect().bottom;var fb=_si.lastElementChild.getBoundingClientRect().bottom;return fb>sb-23;}while(ov()&&z>0.8&&g<14){z-=0.015;_si.style.zoom=z;g++;}}\n'
+    +'fitOne();\n'
+    +'window.addEventListener("load",fitOne);\n'
+    +'window.addEventListener("beforeprint",fitOne);\n'
+    +'if(document.fonts&&document.fonts.ready){document.fonts.ready.then(fitOne);}\n'
+    +'<\/script>\n</body>\n</html>';
 
   const w=window.open('','_blank');
   if(w){w.document.open();w.document.write(html);w.document.close();}

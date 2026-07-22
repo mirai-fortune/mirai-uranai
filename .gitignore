@@ -36,3 +36,6 @@ mygeocodeproject-466612-c924218caa36.json
 
 # ココナラ販売用テンプレート（本番サイトに公開しない・別ブランド商品）
 販売テンプレ/
+
+# GitHubアカウントのリカバリーコード（機密、絶対にコミットしない）
+github-recovery-codes.txt
