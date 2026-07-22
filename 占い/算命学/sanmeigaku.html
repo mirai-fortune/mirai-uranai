@@ -2299,16 +2299,20 @@ function openKanteiOneSM(mono){
     +'<p class="fnt" style="margin-top:1.2mm;text-align:center;">命星＝宿命・性格　／　従星＝各時期のエネルギー</p></div>'
     +'</div>';
 
-  // ── 宇宙盤の読み解き ──
+  // ── 宇宙盤（三柱の位相図＋読み解き） ──
   const ubBadge=l=>'<span class="ubj">'+l+'</span>';
-  const secUB='<div class="g2">'
-    +'<div class="sec"><div class="st"><b>宇宙盤 ─ 大きさ・形</b><span>UCHUBAN ─ SIZE &amp; SHAPE</span></div>'
+  const secUB='<div class="sec">'
+    +'<div class="st"><b>宇宙盤 ─ 三柱の位相図</b><span>UCHUBAN ─ COSMIC PHASE CHART</span></div>'
+    +'<div class="ubgrid">'
+    +'<div class="ubsvg">'+buildUchubanSVG(yp,mp,dp)+'</div>'
+    +'<div class="ubcol">'
+    +'<div><p class="ublbl">大きさ・形</p>'
     +'<div class="ubrow">'+ubBadge(ubReading.sizeLabel)+'</div>'
-    +'<p class="txt">'+trS(ubReading.sizeText,200)+'</p></div>'
-    +'<div class="sec"><div class="st"><b>宇宙盤 ─ 位置（象限）</b><span>UCHUBAN ─ POSITION</span></div>'
+    +'<p class="txt">'+trS(ubReading.sizeText,175)+'</p></div>'
+    +'<div><p class="ublbl">位置（象限）</p>'
     +'<div class="ubrow">'+ubReading.quadTags.map(ubBadge).join('')+'</div>'
-    +'<p class="txt">'+trS(ubReading.quadText,200)+'</p></div>'
-    +'</div>';
+    +'<p class="txt">'+trS(ubReading.quadText,175)+'</p></div>'
+    +'</div></div></div>';
 
   // ── 中心星の本質｜命星一覧 ──
   const secCore='<div class="sec">'
@@ -2412,6 +2416,10 @@ function openKanteiOneSM(mono){
     +'.syomi{font-size:5px;color:var(--faint);letter-spacing:.08em;}\n'
     +'.ubrow{display:flex;flex-wrap:wrap;gap:1.2mm;margin-bottom:1.2mm;}\n'
     +'.ubj{display:inline-block;padding:.5mm 2.4mm;border:1px solid var(--gold);border-radius:999px;color:var(--gold);font-size:6.5px;letter-spacing:.06em;font-family:var(--serif);}\n'
+    +'.ubgrid{display:grid;grid-template-columns:50mm 1fr;gap:4mm;align-items:center;}\n'
+    +'.ubsvg{padding:1mm 0;}\n'
+    +'.ubcol{display:flex;flex-direction:column;gap:2.4mm;}\n'
+    +'.ublbl{font-family:var(--serif);font-size:8.5px;font-weight:500;color:var(--gold);letter-spacing:.12em;margin-bottom:.8mm;}\n'
     +'.hongrid{display:grid;grid-template-columns:1.35fr 1fr;gap:3.5mm;}\n'
     +'.yrow{display:flex;gap:2.4mm;}\n'
     +'.ychip{flex:1;background:var(--tbl-bg);padding:1.6mm 2.4mm;display:flex;flex-direction:column;gap:.8mm;}\n'
