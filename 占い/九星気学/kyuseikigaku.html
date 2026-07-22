@@ -1619,10 +1619,15 @@ function openKanteiOneKG(mono){
     +'<div class="dky">'+t.year+'</div>'
     +'<div class="dkn">'+t.doukai.name.replace('同会','')+'</div>'
     +'</div>').join('');
+  const nextDkT=doukaiTimeline.length>1?doukaiTimeline[1]:null;
+  const nextDkLine=nextDkT
+    ?'<p class="txt" style="margin-top:1.6mm;"><span class="kw">来年（'+nextDkT.year+'年・'+nextDkT.doukai.name+'）：</span>'+doukaiRowText(nextDkT.doukai)+'</p>'
+    :'';
   const secDk=doukaiTimeline.length
     ?'<div class="sec"><div class="st"><b>同会9年サイクル</b><span>NINE-YEAR CYCLE ─ 本命星が巡る宮</span></div>'
     +'<div class="dkrow">'+dkChips+'</div>'
-    +'<p class="fnt" style="margin-top:1.4mm;">運気は9年でひと巡りします。各年の詳しい傾向は完全版の鑑定書をご覧ください。</p></div>'
+    +nextDkLine
+    +'<p class="fnt" style="margin-top:1.2mm;">※今年（'+vy+'年）の詳しい傾向は上段「今年の運勢 ─ 同会」に記載しています。運気は9年でひと巡りします。再来年以降の傾向は完全版の鑑定書をご覧ください。</p></div>'
     :'';
 
   // ── 日々の指針（ストリップ） ──
