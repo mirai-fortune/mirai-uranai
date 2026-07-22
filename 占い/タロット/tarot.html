@@ -2069,10 +2069,14 @@ function openKanteiOneCPT(mono){
     +'<span>各カードの詳しい象意・ポジション解説は完全版の鑑定書をご覧ください。カードの向き（正位置・逆位置）は引いた時点の状態を記録しています。</span></div>';
 
   var ft=_koFooter(isMono,'本鑑定書は、タロットの象意に基づきお二人の関係を見つめ直すための参考情報です。医学的・法律的な判断に代わるものではありません。',todayStr);
+  // 4枚構成は情報量が少なめのため、少し大きめのスケールで1枚を使い切る
+  var cptCss='.sin{gap:3mm;}\n.sec{padding:3mm 4mm;}\n.txt{font-size:9.2px;line-height:1.7;}\n'
+    +'.pbimg.lg{width:14mm;height:24.5mm;}\n.pbcard{font-size:10px;}\n.pbcat{font-size:8.2px;line-height:1.7;}\n'
+    +'.pbdesc{font-size:7.2px;}\n.pbjp{font-size:8px;}\n.spc{width:30px;height:52px;}\n.spdia{width:30px;}\n';
   _koShell({TH:TH,isMono:isMono,
     title:todayFile+'［A4一枚版'+(isMono?'・白黒':'')+'］',
     body:hd+secSpread+blocks+secStrip+ft,
-    extraCss:_KO_TAROT_CSS});
+    extraCss:_KO_TAROT_CSS+cptCss});
 }
 
 /* ── A4縦1枚版：シンプルスプレッド（ワンオラクル／スリーカード／ホロスコープ） ── */
@@ -2173,10 +2177,25 @@ function openKanteiOneSimple(key,mono){
     +'<span>各カードの詳しい象意は完全版の鑑定書をご覧ください。カードの向き（正位置・逆位置）は引いた時点の状態を記録しています。</span></div>';
 
   var ft=_koFooter(isMono,_KO_TAROT_FNOTE,todayStr);
+  // 枚数が少ないスプレッドは大きめのスケールで1枚を使い切る（horoは13枚あるので標準のまま）
+  var extraCss=_KO_TAROT_CSS;
+  if(key==='one'){
+    extraCss+='.sin{gap:4mm;}\n.sec{padding:4.5mm 5mm;}\n'
+      +'.og{grid-template-columns:48mm 1fr;gap:7mm;}\n.ogimg{width:44mm;height:77mm;}\n'
+      +'.ogname{font-size:18px;}\n.ognum{font-size:8.5px;}\n.ogori{font-size:8px;}\n'
+      +'.txt{font-size:10px;line-height:1.9;}\n.st b{font-size:12px;}\n'
+      +'.pbdesc{font-size:8px;}\n.strip{font-size:8.6px;}\n';
+  }else if(key==='three'){
+    extraCss+='.sin{gap:3.2mm;}\n.sec{padding:3.5mm 4mm;}\n'
+      +'.txt{font-size:9.6px;line-height:1.8;}\n.st b{font-size:11.5px;}\n'
+      +'.pbimg.lg{width:16mm;height:28mm;}\n.pbcard{font-size:11px;}\n.pben{font-size:11px;}\n'
+      +'.pbjp{font-size:8.4px;}\n.pbcat{font-size:8.6px;line-height:1.7;}\n'
+      +'.spc.lg{width:44px;height:77px;}\n.strip{font-size:8.6px;}\n';
+  }
   _koShell({TH:TH,isMono:isMono,
     title:todayFile+'［A4一枚版'+(isMono?'・白黒':'')+'］',
     body:hd+body+secStrip+ft,
-    extraCss:_KO_TAROT_CSS});
+    extraCss:extraCss});
 }
 
 /* ════════════════════════════════════════
