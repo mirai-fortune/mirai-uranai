@@ -832,6 +832,11 @@ html.theme-minagi section { position: relative; z-index: 1; }
   <p class="kantei-btn-hint kantei-btn-hint-sp">スマホでは全体を縮小して表示します（ピンチ操作で拡大できます）。コンビニ等で印刷される場合は白黒印刷版がおすすめです。</p>
   <button class="kantei-btn-mono" onclick="openKanteiCPT(true)">白黒印刷版で作成する</button>
   <p class="kantei-btn-hint">実物を印刷・コピーする方向け。朱色を一部使用した白黒デザインです。</p>
+  <div style="margin-top:30px;padding-top:24px;border-top:1px solid var(--border2);">
+    <button class="kantei-btn-mono" onclick="openKanteiOneCPT()" style="margin-top:0;">A4一枚版（カラー）</button>
+    <button class="kantei-btn-mono" onclick="openKanteiOneCPT(true)" style="margin-top:0;margin-left:10px;">A4一枚版（白黒）</button>
+    <p class="kantei-btn-hint">要点をA4縦1枚にまとめた簡易版。納品・手渡し用におすすめです。</p>
+  </div>
 </div>
 
 <div id="cpt-guide-link" style="display:none;text-align:center;margin:22px 0 0;">
@@ -888,6 +893,11 @@ html.theme-minagi section { position: relative; z-index: 1; }
   <p class="kantei-btn-hint kantei-btn-hint-sp">スマホでは全体を縮小して表示します（ピンチ操作で拡大できます）。コンビニ等で印刷される場合は白黒印刷版がおすすめです。</p>
   <button class="kantei-btn-mono" onclick="openKanteiSimple('one',true)">白黒印刷版で作成する</button>
   <p class="kantei-btn-hint">実物を印刷・コピーする方向け。朱色を一部使用した白黒デザインです。</p>
+  <div style="margin-top:30px;padding-top:24px;border-top:1px solid var(--border2);">
+    <button class="kantei-btn-mono" onclick="openKanteiOneSimple('one')" style="margin-top:0;">A4一枚版（カラー）</button>
+    <button class="kantei-btn-mono" onclick="openKanteiOneSimple('one',true)" style="margin-top:0;margin-left:10px;">A4一枚版（白黒）</button>
+    <p class="kantei-btn-hint">要点をA4縦1枚にまとめた簡易版。納品・手渡し用におすすめです。</p>
+  </div>
 </div>
 
 <div id="one-guide-link" style="display:none;text-align:center;margin:22px 0 0;">
@@ -958,6 +968,11 @@ html.theme-minagi section { position: relative; z-index: 1; }
   <p class="kantei-btn-hint kantei-btn-hint-sp">スマホでは全体を縮小して表示します（ピンチ操作で拡大できます）。コンビニ等で印刷される場合は白黒印刷版がおすすめです。</p>
   <button class="kantei-btn-mono" onclick="openKanteiSimple('three',true)">白黒印刷版で作成する</button>
   <p class="kantei-btn-hint">実物を印刷・コピーする方向け。朱色を一部使用した白黒デザインです。</p>
+  <div style="margin-top:30px;padding-top:24px;border-top:1px solid var(--border2);">
+    <button class="kantei-btn-mono" onclick="openKanteiOneSimple('three')" style="margin-top:0;">A4一枚版（カラー）</button>
+    <button class="kantei-btn-mono" onclick="openKanteiOneSimple('three',true)" style="margin-top:0;margin-left:10px;">A4一枚版（白黒）</button>
+    <p class="kantei-btn-hint">要点をA4縦1枚にまとめた簡易版。納品・手渡し用におすすめです。</p>
+  </div>
 </div>
 
 <div id="three-guide-link" style="display:none;text-align:center;margin:22px 0 0;">
@@ -1007,6 +1022,11 @@ html.theme-minagi section { position: relative; z-index: 1; }
   <p class="kantei-btn-hint kantei-btn-hint-sp">スマホでは全体を縮小して表示します（ピンチ操作で拡大できます）。コンビニ等で印刷される場合は白黒印刷版がおすすめです。</p>
   <button class="kantei-btn-mono" onclick="openKanteiSimple('horo',true)">白黒印刷版で作成する</button>
   <p class="kantei-btn-hint">実物を印刷・コピーする方向け。朱色を一部使用した白黒デザインです。</p>
+  <div style="margin-top:30px;padding-top:24px;border-top:1px solid var(--border2);">
+    <button class="kantei-btn-mono" onclick="openKanteiOneSimple('horo')" style="margin-top:0;">A4一枚版（カラー）</button>
+    <button class="kantei-btn-mono" onclick="openKanteiOneSimple('horo',true)" style="margin-top:0;margin-left:10px;">A4一枚版（白黒）</button>
+    <p class="kantei-btn-hint">要点をA4縦1枚にまとめた簡易版。納品・手渡し用におすすめです。</p>
+  </div>
 </div>
 
 <div id="horo-guide-link" style="display:none;text-align:center;margin:22px 0 0;">
@@ -1743,15 +1763,12 @@ function openKanteiTRT(mono){
 }
 
 /* ════════════════════════════════════════
-   A4縦1枚版鑑定書（ケルト十字・納品/手渡し用の簡易版）
+   A4縦1枚版鑑定書（納品/手渡し用の簡易版）─ 共通部品
    shichusuimei.html の openKanteiOne と同一スケルトン。
    リテラル色は書かず全てテーマ変数参照（monoのregex後処理なし）。
+   TRT（ケルト十字）/ CPT（相性）/ Simple（ワンオラクル・スリーカード・ホロスコープ）で共用。
 ════════════════════════════════════════ */
-function openKanteiOneTRT(mono){
-  var k=window._trtKantei;
-  if(!k){alert('先に鑑定してください。');return;}
-  var drawn=k.drawn,category=k.category,imageDir=k.imageDir;
-
+function _koTheme(mono){
   var _th=mono?'mono'
     :document.documentElement.classList.contains('theme-sakura')?'sakura'
     :document.documentElement.classList.contains('theme-shinryoku')?'shinryoku'
@@ -1763,10 +1780,151 @@ function openKanteiOneTRT(mono){
     minagi:{bg:'#04080f',cream:'#eef4fc',muted:'rgba(238,244,252,.62)',acc:'#6ab4e8',acc2:'#a0d4f4',bdr:'rgba(106,180,232,.14)',bdrM:'rgba(106,180,232,.3)',gd4:'rgba(106,180,232,.42)',hlBg:'rgba(106,180,232,.1)',cardBg:'rgba(8,12,22,.7)',theadBg:'rgba(10,18,34,.96)',tblBg:'rgba(8,14,26,.6)',rlblBg:'rgba(10,18,34,.7)',faint:'rgba(238,244,252,.32)',soft:'rgba(238,244,252,.55)',line:'rgba(255,255,255,.07)',back:'#010306'},
     mono:{bg:'#fdfcf8',cream:'#1a1a1a',muted:'rgba(26,26,26,.82)',acc:'#b8341f',acc2:'#c96a4e',bdr:'rgba(26,26,26,.2)',bdrM:'rgba(26,26,26,.42)',gd4:'rgba(26,26,26,.55)',hlBg:'rgba(184,52,31,.07)',cardBg:'rgba(26,26,26,.02)',theadBg:'rgba(26,26,26,.05)',tblBg:'rgba(26,26,26,.015)',rlblBg:'rgba(26,26,26,.04)',faint:'rgba(26,26,26,.58)',soft:'rgba(26,26,26,.72)',line:'rgba(26,26,26,.14)',back:'#e8e6e0'}
   }[_th];
-  var isMono=_th==='mono';
-
+  return {TH:TH,isMono:_th==='mono'};
+}
+// 文境界トリム：制限内の最後の「。」で切る（「…」で途切れた印象を残さない）
+function _koTrS(s,n){if(!s)return'—';if(s.length<=n)return s;var c=s.slice(0,n);var i=c.lastIndexOf('。');return i>=20?c.slice(0,i+1):c+'…';}
+function _koImg(card,imageDir){
+  var rel=TRT_IMAGE_MAP[card.id];
+  var src=rel?imageDir+rel:'';
+  var inv=card.isInv?'transform:rotate(180deg);':'';
+  return src?'<img src="'+src+'" alt="" style="width:100%;height:100%;object-fit:cover;display:block;'+inv+'">'
+    :'<span style="display:flex;align-items:center;justify-content:center;height:100%;font-size:5px;color:var(--faint);text-align:center;padding:1px;">'+card.data.name+'</span>';
+}
+function _koBox(card,label,imageDir,sz){
+  return '<div class="spb"><span class="spl">'+label+'</span><span class="spc'+(sz?' '+sz:'')+'">'+_koImg(card,imageDir)+'</span></div>';
+}
+function _koFooter(isMono,fnote,todayStr){
   var _pageDir=window.location.href.replace(/[^/]*$/,'');
-  var hankoHTML1=isMono?('<img src="'+_pageDir+'../../images/mirai_sign.png" alt="印" style="width:33px;height:33px;mix-blend-mode:multiply;transform:rotate(-4deg) translate(.4mm,-.4mm);">'):'';
+  var hanko=isMono?('<img src="'+_pageDir+'../../images/mirai_sign.png" alt="印" style="width:33px;height:33px;mix-blend-mode:multiply;transform:rotate(-4deg) translate(.4mm,-.4mm);">'):'';
+  return '<div class="ft">'
+    +(isMono?'<span class="ftsp"></span>':'')
+    +'<div class="ftc">'
+    +'<p class="fnote">'+fnote+'</p>'
+    +'<p class="fbrand">ASUMIRA 占い　─　現役占い師監修　／　'+todayStr+'</p>'
+    +'</div>'
+    +(isMono?'<div class="hkwrap" aria-hidden="true"><p class="hklbl">鑑定印</p><div class="hkbox">'+hanko+'</div></div>':'')
+    +'</div>';
+}
+var _KO_TAROT_CSS=''
+  +'.spgrid{display:grid;grid-template-columns:auto 1fr;gap:6mm;align-items:center;}\n'
+  +'.spwrap{display:flex;gap:4mm;align-items:center;justify-content:center;padding:1mm 2mm;}\n'
+  +'.sprow{display:flex;gap:2.4mm;align-items:flex-start;justify-content:center;flex-wrap:wrap;padding:1mm 0;}\n'
+  +'.spcross{display:grid;grid-template-columns:repeat(3,auto);gap:4px;align-items:center;justify-items:center;}\n'
+  +'.spstaff{display:flex;flex-direction:column;gap:4px;align-items:center;}\n'
+  +'.spb{display:flex;flex-direction:column;align-items:center;gap:2px;}\n'
+  +'.spl{font-size:5.5px;letter-spacing:.1em;color:var(--faint);font-family:var(--serif);line-height:1;text-align:center;white-space:nowrap;}\n'
+  +'.spc{width:22px;height:38px;border:1px solid var(--bdrM);border-radius:1px;overflow:hidden;background:var(--tbl-bg);display:block;}\n'
+  +'.spc.lg{width:34px;height:59px;}\n'
+  +'.spdia{font-size:12px;color:var(--gd4);width:22px;text-align:center;}\n'
+  +'.ktbl{width:100%;border-collapse:collapse;background:var(--tbl-bg);table-layout:fixed;}\n'
+  +'.ktbl th{background:var(--thead-bg);padding:1mm;font-family:var(--serif);font-size:6.5px;font-weight:400;letter-spacing:.16em;color:var(--gold);border:1px solid var(--line);border-bottom:1px solid var(--bdrM);text-align:center;}\n'
+  +'.ktbl td{border:1px solid var(--line);padding:.9mm 1.6mm;font-size:7.4px;color:var(--muted);}\n'
+  +'.ktbl .ten{font-family:var(--serif);text-align:center;color:var(--gd4);font-size:8px;}\n'
+  +'.ktbl .tjp{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}\n'
+  +'.ktbl .ten2{font-family:var(--serif);color:var(--cream);font-size:8.2px;margin-right:1.6mm;}\n'
+  +'.ktbl .tja{font-size:6.5px;color:var(--soft);}\n'
+  +'.ktbl .tor{text-align:center;font-size:6.8px;color:var(--gold2);white-space:nowrap;}\n'
+  +'.ktbl .tor.inv{color:var(--muted);}\n'
+  +'.pb{padding:2mm 2.8mm;}\n'
+  +'.pbtop{display:flex;align-items:baseline;gap:2mm;margin-bottom:1.1mm;border-bottom:1px solid var(--line);padding-bottom:.9mm;}\n'
+  +'.pben{font-family:var(--serif);font-size:10px;color:var(--gold);min-width:6mm;white-space:nowrap;}\n'
+  +'.pbjp{font-size:7.2px;color:var(--soft);letter-spacing:.04em;}\n'
+  +'.pbori{font-size:6.4px;color:var(--gold2);margin-left:auto;white-space:nowrap;}\n'
+  +'.pbori.inv{color:var(--muted);}\n'
+  +'.pbbody{display:flex;gap:2.4mm;align-items:flex-start;}\n'
+  +'.pbimg{width:9mm;height:15.5mm;flex:none;border:1px solid var(--bdrM);border-radius:1px;overflow:hidden;background:var(--tbl-bg);display:block;}\n'
+  +'.pbimg.lg{width:12mm;height:21mm;}\n'
+  +'.pbcnt{flex:1;min-width:0;}\n'
+  +'.pbcard{font-family:var(--serif);font-size:9px;color:var(--cream);margin-bottom:.7mm;}\n'
+  +'.pbcard span{font-size:6.4px;color:var(--soft);margin-left:1.6mm;font-family:var(--sans);}\n'
+  +'.pbcard .pbkw{color:var(--faint);}\n'
+  +'.pbdesc{font-size:6.4px;color:var(--faint);margin-bottom:.9mm;letter-spacing:.02em;}\n'
+  +'.pbcat{font-size:7.6px;line-height:1.55;color:var(--gold2);margin-top:1mm;padding-top:1mm;border-top:1px solid var(--line);}\n'
+  +'.og{display:grid;grid-template-columns:34mm 1fr;gap:5mm;align-items:center;}\n'
+  +'.ogimg{width:30mm;height:52.5mm;border:1px solid var(--bdrM);border-radius:2px;overflow:hidden;background:var(--tbl-bg);margin:0 auto;}\n'
+  +'.ogori{text-align:center;font-size:6.5px;color:var(--gold2);margin-top:1.2mm;letter-spacing:.1em;}\n'
+  +'.ogori.inv{color:var(--muted);}\n'
+  +'.ogname{font-family:var(--serif);font-size:14px;font-weight:300;color:var(--cream);margin-bottom:.8mm;}\n'
+  +'.ognum{font-size:7px;color:var(--soft);}\n';
+function _koShell(o){
+  var isMobileK=matchMedia('(max-width:768px)').matches
+    ||(matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<=820);
+  var TH=o.TH,isMono=o.isMono;
+  var html='<!DOCTYPE html>\n<html lang="ja">\n<head>\n'
+    +'<meta charset="UTF-8"><meta name="viewport" content="'+(isMobileK?'width=820':'width=device-width,initial-scale=1.0')+'">\n'
+    +'<title>'+o.title+'</title>\n'
+    +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">\n'
+    +'<style>\n'
+    +'*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}\n'
+    +':root{--bg:'+TH.bg+';--cream:'+TH.cream+';--muted:'+TH.muted+';--gold:'+TH.acc+';--gold2:'+TH.acc2+';--bdr:'+TH.bdr+';--bdrM:'+TH.bdrM+';--gd4:'+TH.gd4+';--hl-bg:'+TH.hlBg+';--card-bg:'+TH.cardBg+';--thead-bg:'+TH.theadBg+';--tbl-bg:'+TH.tblBg+';--rlbl-bg:'+TH.rlblBg+';--faint:'+TH.faint+';--soft:'+TH.soft+';--line:'+TH.line+';--serif:"Noto Serif JP",serif;--sans:"Noto Sans JP",sans-serif;}\n'
+    +'body{background:'+TH.back+';font-family:var(--sans);font-weight:'+(isMono?'400':'300')+';-webkit-font-smoothing:antialiased;padding:8mm 0;}\n'
+    +'.sheet{width:210mm;height:296.5mm;margin:0 auto;background:var(--bg);color:var(--cream);overflow:hidden;position:relative;box-shadow:0 6px 36px rgba(0,0,0,.45);}\n'
+    +'.sin{height:100%;padding:9mm 10mm 8mm;display:flex;flex-direction:column;gap:2.4mm;}\n'
+    +'.sec{background:var(--card-bg);border:1px solid var(--bdr);border-radius:6px;padding:2.4mm 3.2mm;}\n'
+    +'.g2{display:grid;grid-template-columns:1fr 1fr;gap:2.4mm;}\n'
+    +'.st{display:flex;align-items:baseline;gap:2.4mm;margin-bottom:1.5mm;}\n'
+    +'.st b{font-family:var(--serif);font-weight:500;font-size:10.5px;letter-spacing:.14em;color:var(--gold);white-space:nowrap;}\n'
+    +'.st span{font-size:6px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;}\n'
+    +'.txt{font-size:8.6px;line-height:1.62;color:var(--muted);}\n'
+    +'.kv{line-height:1.8;}\n'
+    +'.kw{color:var(--gold);}\n'
+    +'.fnt{font-size:7px;color:var(--faint);}\n'
+    +'.hd{text-align:center;padding-bottom:2.4mm;border-bottom:1px solid var(--bdrM);}\n'
+    +'.hbrand{font-family:var(--serif);font-size:6.5px;letter-spacing:.4em;color:var(--gd4);margin-bottom:1.6mm;}\n'
+    +'.hd h1{font-family:var(--serif);font-size:20px;font-weight:300;letter-spacing:.3em;color:var(--cream);margin-bottom:2mm;text-indent:.3em;}\n'
+    +'.hmeta{display:flex;justify-content:center;align-items:baseline;gap:5mm;font-size:8.3px;color:var(--muted);letter-spacing:.04em;}\n'
+    +'.hname{font-family:var(--serif);font-size:12.5px;color:var(--gold2);letter-spacing:.12em;}\n'
+    +'.strip{display:flex;align-items:baseline;gap:2mm;font-size:7.6px;color:var(--muted);}\n'
+    +'.strip .kw{white-space:nowrap;}\n'
+    +'.ft{margin-top:auto;border-top:1px solid var(--bdrM);padding-top:1.8mm;display:flex;align-items:center;gap:3mm;}\n'
+    +'.ftc{flex:1;text-align:center;}\n'
+    +'.ftsp{width:13mm;flex:none;}\n'
+    +'.fnote{font-size:6.8px;color:var(--faint);line-height:1.7;margin-bottom:.8mm;}\n'
+    +'.fbrand{font-family:var(--serif);font-size:7px;letter-spacing:.22em;color:var(--gd4);}\n'
+    +'.hkwrap{width:13mm;flex:none;text-align:center;}\n'
+    +'.hklbl{font-size:5.5px;letter-spacing:.3em;text-indent:.3em;color:var(--faint);margin-bottom:.6mm;}\n'
+    +'.hkbox{width:11mm;height:11mm;border:1px solid var(--gold);border-radius:1mm;margin:0 auto;display:flex;align-items:center;justify-content:center;overflow:visible;}\n'
+    +(o.extraCss||'')
+    +'@page{size:A4 portrait;margin:0;}\n'
+    +'@media print{\n'
+    +'*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}\n'
+    +'html,body{width:210mm!important;height:auto!important;padding:0!important;margin:0!important;overflow:visible!important;background:var(--bg)!important;}\n'
+    +'.pdfbar{display:none!important;}\n'
+    +'.sheet{margin:0!important;box-shadow:none!important;}\n'
+    +'}\n'
+    +(isMobileK?
+     '@media screen{.pdfbar{text-align:center;margin:6mm 0 10mm;}'
+    +'.pdfbtn{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:12px 42px;border-radius:26px;font-size:.85rem;letter-spacing:.14em;cursor:pointer;font-family:var(--sans);}'
+    +'.pdfnote{font-size:.68rem;color:var(--faint);letter-spacing:.06em;margin-top:10px;line-height:1.8;}}\n':'')
+    +'</style>\n</head>\n<body>\n'
+    +'<div class="sheet" id="sheet"><div class="sin" id="sin">'+o.body+'</div></div>\n'
+    +(isMobileK?
+     '<div class="pdfbar"><button class="pdfbtn" onclick="window.print()">鑑定書をPDFで保存する</button>'
+    +'<p class="pdfnote">A4縦のため、印刷設定はそのまま（用紙A4・縦）で保存できます。'
+    +(isMono?'':'<br>コンビニ等で印刷される場合は白黒版がおすすめです。')
+    +'</p></div>\n':'')
+    +'<script>\n'
+    +'var _sh=document.getElementById("sheet"),_si=document.getElementById("sin");\n'
+    +'function fitOne(){var z=1;_si.style.zoom="";var g=0;function ov(){var sb=_sh.getBoundingClientRect().bottom;var fb=_si.lastElementChild.getBoundingClientRect().bottom;return fb>sb-23;}while(ov()&&z>0.8&&g<14){z-=0.015;_si.style.zoom=z;g++;}}\n'
+    +'fitOne();\n'
+    +'window.addEventListener("load",fitOne);\n'
+    +'window.addEventListener("beforeprint",fitOne);\n'
+    +'if(document.fonts&&document.fonts.ready){document.fonts.ready.then(fitOne);}\n'
+    +'<\/script>\n</body>\n</html>';
+  var w=window.open('','_blank');
+  if(!w){ alert('ポップアップがブロックされました。ブラウザの設定でポップアップを許可してください。'); return; }
+  w.document.write(html);
+  w.document.close();
+}
+var _KO_TAROT_FNOTE='本鑑定書は、タロットの象意に基づきご自身の状況や可能性を見つめ直すための参考情報です。医学的・法律的な判断に代わるものではありません。';
+
+/* ── A4縦1枚版：ケルト十字（TRT） ── */
+function openKanteiOneTRT(mono){
+  var k=window._trtKantei;
+  if(!k){alert('先に鑑定してください。');return;}
+  var drawn=k.drawn,category=k.category,imageDir=k.imageDir;
+  var _ko=_koTheme(mono),TH=_ko.TH,isMono=_ko.isMono;
 
   var today=new Date();
   var todayStr=today.getFullYear()+'年'+(today.getMonth()+1)+'月'+today.getDate()+'日';
@@ -1774,9 +1932,6 @@ function openKanteiOneTRT(mono){
   var catLabel=TRT_CAT_LABEL[category]||category;
   var catDescs=TRT_CAT_DESCS[category]||TRT_CAT_DESCS.marriage;
   var catSuffix=TRT_CAT_SUFFIX[category]||TRT_CAT_SUFFIX.marriage;
-  function getImgSrc(id){var rel=TRT_IMAGE_MAP[id];return rel?imageDir+rel:'';}
-  // 文境界トリム：制限内の最後の「。」で切る（「…」で途切れた印象を残さない）
-  function trS(s,n){if(!s)return'—';if(s.length<=n)return s;var c=s.slice(0,n);var i=c.lastIndexOf('。');return i>=20?c.slice(0,i+1):c+'…';}
 
   // ── ヘッダー ──
   var hd='<div class="hd">'
@@ -1789,29 +1944,20 @@ function openKanteiOneTRT(mono){
 
   // ── 展開図（ミニ） ──
   var cw=22,ch=38;
-  function fig(card){
-    var src=getImgSrc(card.id);
-    var inv=card.isInv?'transform:rotate(180deg);':'';
-    return src?'<img src="'+src+'" alt="" style="width:100%;height:100%;object-fit:cover;display:block;'+inv+'">'
-      :'<span style="display:flex;align-items:center;justify-content:center;height:100%;font-size:5px;color:var(--faint);text-align:center;padding:1px;">'+card.data.name+'</span>';
-  }
-  function box(card,label){
-    return '<div class="spb"><span class="spl">'+label+'</span><span class="spc">'+fig(card)+'</span></div>';
-  }
   var center='<div class="spb"><span class="spl">I</span>'
     +'<span class="spc" style="border:none;background:transparent;overflow:visible;position:relative;">'
-    +'<span style="position:absolute;inset:0;border:1px solid var(--bdrM);border-radius:1px;overflow:hidden;background:var(--tbl-bg);display:block;">'+fig(drawn[0])+'</span>'
+    +'<span style="position:absolute;inset:0;border:1px solid var(--bdrM);border-radius:1px;overflow:hidden;background:var(--tbl-bg);display:block;">'+_koImg(drawn[0],imageDir)+'</span>'
     +'<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">'
-    +'<span style="width:'+cw+'px;height:'+ch+'px;transform:rotate(90deg);border:1px solid var(--bdrM);border-radius:1px;overflow:hidden;background:var(--tbl-bg);display:block;flex:none;">'+fig(drawn[1])+'</span>'
+    +'<span style="width:'+cw+'px;height:'+ch+'px;transform:rotate(90deg);border:1px solid var(--bdrM);border-radius:1px;overflow:hidden;background:var(--tbl-bg);display:block;flex:none;">'+_koImg(drawn[1],imageDir)+'</span>'
     +'</span></span>'
     +'<span class="spl">II</span></div>';
   var figH='<div class="spwrap">'
     +'<div class="spcross">'
-    +'<span></span>'+box(drawn[2],'III')+'<span></span>'
-    +box(drawn[4],'V')+center+box(drawn[5],'VI')
-    +'<span></span>'+box(drawn[3],'IV')+'<span></span>'
+    +'<span></span>'+_koBox(drawn[2],'III',imageDir)+'<span></span>'
+    +_koBox(drawn[4],'V',imageDir)+center+_koBox(drawn[5],'VI',imageDir)
+    +'<span></span>'+_koBox(drawn[3],'IV',imageDir)+'<span></span>'
     +'</div>'
-    +'<div class="spstaff">'+box(drawn[9],'X')+box(drawn[8],'IX')+box(drawn[7],'VIII')+box(drawn[6],'VII')+'</div>'
+    +'<div class="spstaff">'+_koBox(drawn[9],'X',imageDir)+_koBox(drawn[8],'IX',imageDir)+_koBox(drawn[7],'VIII',imageDir)+_koBox(drawn[6],'VII',imageDir)+'</div>'
     +'</div>';
 
   // ── カード一覧テーブル ──
@@ -1837,18 +1983,15 @@ function openKanteiOneTRT(mono){
     var raw=bc.data[ori][bp.key]||bc.data[ori][bp.legacyKey]||'';
     var cmsg=(catSuffix[ori]&&catSuffix[ori][bi])||'';
     var cdesc=catDescs[bi]||'';
-    var src=getImgSrc(bc.id);
-    var img=src?'<img src="'+src+'" alt="" style="width:100%;height:100%;object-fit:cover;display:block;'+(bc.isInv?'transform:rotate(180deg);':'')+'">'
-      :'<span style="display:flex;align-items:center;justify-content:center;height:100%;font-size:5.5px;color:var(--faint);text-align:center;padding:1px;">'+bc.data.name+'</span>';
     blocks+='<div class="sec pb">'
       +'<div class="pbtop"><span class="pben">'+bp.en+'</span><span class="pbjp">'+bp.jp+'</span><span class="pbori'+(bc.isInv?' inv':'')+'">'+(bc.isInv?'▽ 逆位置':'△ 正位置')+'</span></div>'
       +'<div class="pbbody">'
-      +'<span class="pbimg">'+img+'</span>'
+      +'<span class="pbimg">'+_koImg(bc,imageDir)+'</span>'
       +'<div class="pbcnt">'
       +'<p class="pbcard">'+bc.data.nameEn+'<span>'+bc.data.number+'　'+bc.data.name+'</span></p>'
       +'<p class="pbdesc">'+cdesc+'</p>'
-      +'<p class="txt">'+trS(raw,110)+'</p>'
-      +'<p class="pbcat">'+trS(cmsg,90)+'</p>'
+      +'<p class="txt">'+_koTrS(raw,110)+'</p>'
+      +'<p class="pbcat">'+_koTrS(cmsg,90)+'</p>'
       +'</div></div></div>';
   }
   var secBlocks='<div class="g2">'+blocks+'</div>';
@@ -1857,114 +2000,183 @@ function openKanteiOneTRT(mono){
   var secStrip='<div class="sec strip"><span class="kw">補足：</span>'
     +'<span>各カードの詳しい象意・ポジション解説は完全版の鑑定書をご覧ください。カードの向き（正位置・逆位置）は引いた時点の状態を記録しています。</span></div>';
 
-  // ── フッター（mono時は右端に鑑定印の枠＋押印） ──
-  var ft='<div class="ft">'
-    +(isMono?'<span class="ftsp"></span>':'')
-    +'<div class="ftc">'
-    +'<p class="fnote">本鑑定書は、タロットの象意に基づきご自身の状況や可能性を見つめ直すための参考情報です。医学的・法律的な判断に代わるものではありません。</p>'
-    +'<p class="fbrand">ASUMIRA 占い　─　現役占い師監修　／　'+todayStr+'</p>'
-    +'</div>'
-    +(isMono?'<div class="hkwrap" aria-hidden="true"><p class="hklbl">鑑定印</p><div class="hkbox">'+hankoHTML1+'</div></div>':'')
+  // ── フッター＆出力（共通シェル） ──
+  var ft=_koFooter(isMono,_KO_TAROT_FNOTE,todayStr);
+  _koShell({TH:TH,isMono:isMono,
+    title:todayFile+'_'+catLabel+'［A4一枚版'+(isMono?'・白黒':'')+'］',
+    body:hd+secSpread+secBlocks+secStrip+ft,
+    extraCss:_KO_TAROT_CSS});
+}
+
+/* ── A4縦1枚版：相性スプレッド（CPT・ダイヤモンドクロス4枚） ── */
+function openKanteiOneCPT(mono){
+  var k=window._cptKantei;
+  if(!k){alert('先に鑑定してください。');return;}
+  var drawn=k.drawn,imageDir=k.imageDir;
+  var _ko=_koTheme(mono),TH=_ko.TH,isMono=_ko.isMono;
+
+  var today=new Date();
+  var todayStr=today.getFullYear()+'年'+(today.getMonth()+1)+'月'+today.getDate()+'日';
+  var todayFile='タロット相性_'+today.getFullYear()+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0');
+
+  var hd='<div class="hd">'
+    +'<p class="hbrand">ASUMIRA 占い　─　TAROT SYNASTRY</p>'
+    +'<h1>タロット相性鑑定書</h1>'
+    +'<div class="hmeta"><span class="hname">【 二人の関係 】</span>'
+    +'<span>ダイヤモンドクロス法　4枚展開</span>'
+    +'<span>鑑定日　'+todayStr+'</span></div>'
     +'</div>';
 
-  var isMobileK=matchMedia('(max-width:768px)').matches
-    ||(matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<=820);
+  // ── ダイヤモンド配置図＋カード一覧 ──
+  var figH='<div class="spcross">'
+    +'<span></span>'+_koBox(drawn[0],'I 現状',imageDir)+'<span></span>'
+    +_koBox(drawn[1],'II あなた',imageDir)+'<span class="spdia">♦</span>'+_koBox(drawn[2],'III 相手',imageDir)
+    +'<span></span>'+_koBox(drawn[3],'IV 未来',imageDir)+'<span></span>'
+    +'</div>';
+  var rows='';
+  for(var ri=0;ri<drawn.length;ri++){
+    var rc=drawn[ri],rp=CPT_POSITIONS[ri];
+    rows+='<tr><td class="ten">'+rp.en+'</td><td class="tjp">'+rp.label+'</td>'
+      +'<td class="tcd"><span class="ten2">'+rc.data.nameEn+'</span><span class="tja">'+rc.data.number+'　'+rc.data.name+'</span></td>'
+      +'<td class="tor'+(rc.isInv?' inv':'')+'">'+(rc.isInv?'▽ 逆':'△ 正')+'</td></tr>';
+  }
+  var secSpread='<div class="sec">'
+    +'<div class="st"><b>ダイヤモンドクロス展開</b><span>DIAMOND CROSS</span></div>'
+    +'<div class="spgrid">'
+    +'<div class="spwrap">'+figH+'</div>'
+    +'<table class="ktbl"><thead><tr><th style="width:7mm;">#</th><th style="width:26mm;">ポジション</th><th>カード</th><th style="width:11mm;">正逆</th></tr></thead><tbody>'+rows+'</tbody></table>'
+    +'</div></div>';
 
-  var html='<!DOCTYPE html>\n<html lang="ja">\n<head>\n'
-    +'<meta charset="UTF-8"><meta name="viewport" content="'+(isMobileK?'width=820':'width=device-width,initial-scale=1.0')+'">\n'
-    +'<title>'+todayFile+'_'+catLabel+'［A4一枚版'+(isMono?'・白黒':'')+'］</title>\n'
-    +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">\n'
-    +'<style>\n'
-    +'*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}\n'
-    +':root{--bg:'+TH.bg+';--cream:'+TH.cream+';--muted:'+TH.muted+';--gold:'+TH.acc+';--gold2:'+TH.acc2+';--bdr:'+TH.bdr+';--bdrM:'+TH.bdrM+';--gd4:'+TH.gd4+';--hl-bg:'+TH.hlBg+';--card-bg:'+TH.cardBg+';--thead-bg:'+TH.theadBg+';--tbl-bg:'+TH.tblBg+';--rlbl-bg:'+TH.rlblBg+';--faint:'+TH.faint+';--soft:'+TH.soft+';--line:'+TH.line+';--serif:"Noto Serif JP",serif;--sans:"Noto Sans JP",sans-serif;}\n'
-    +'body{background:'+TH.back+';font-family:var(--sans);font-weight:'+(isMono?'400':'300')+';-webkit-font-smoothing:antialiased;padding:8mm 0;}\n'
-    +'.sheet{width:210mm;height:296.5mm;margin:0 auto;background:var(--bg);color:var(--cream);overflow:hidden;position:relative;box-shadow:0 6px 36px rgba(0,0,0,.45);}\n'
-    +'.sin{height:100%;padding:9mm 10mm 8mm;display:flex;flex-direction:column;gap:2.4mm;}\n'
-    +'.sec{background:var(--card-bg);border:1px solid var(--bdr);border-radius:6px;padding:2.4mm 3.2mm;}\n'
-    +'.g2{display:grid;grid-template-columns:1fr 1fr;gap:2.4mm;}\n'
-    +'.st{display:flex;align-items:baseline;gap:2.4mm;margin-bottom:1.5mm;}\n'
-    +'.st b{font-family:var(--serif);font-weight:500;font-size:10.5px;letter-spacing:.14em;color:var(--gold);white-space:nowrap;}\n'
-    +'.st span{font-size:6px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;}\n'
-    +'.txt{font-size:8.6px;line-height:1.62;color:var(--muted);}\n'
-    +'.kw{color:var(--gold);}\n'
-    +'.fnt{font-size:7px;color:var(--faint);}\n'
-    +'.hd{text-align:center;padding-bottom:2.4mm;border-bottom:1px solid var(--bdrM);}\n'
-    +'.hbrand{font-family:var(--serif);font-size:6.5px;letter-spacing:.4em;color:var(--gd4);margin-bottom:1.6mm;}\n'
-    +'.hd h1{font-family:var(--serif);font-size:20px;font-weight:300;letter-spacing:.3em;color:var(--cream);margin-bottom:2mm;text-indent:.3em;}\n'
-    +'.hmeta{display:flex;justify-content:center;align-items:baseline;gap:5mm;font-size:8.3px;color:var(--muted);letter-spacing:.04em;}\n'
-    +'.hname{font-family:var(--serif);font-size:12.5px;color:var(--gold2);letter-spacing:.12em;}\n'
-    +'.spgrid{display:grid;grid-template-columns:auto 1fr;gap:6mm;align-items:center;}\n'
-    +'.spwrap{display:flex;gap:4mm;align-items:center;justify-content:center;padding:1mm 2mm;}\n'
-    +'.spcross{display:grid;grid-template-columns:repeat(3,auto);gap:4px;align-items:center;justify-items:center;}\n'
-    +'.spstaff{display:flex;flex-direction:column;gap:4px;align-items:center;}\n'
-    +'.spb{display:flex;flex-direction:column;align-items:center;gap:2px;}\n'
-    +'.spl{font-size:5.5px;letter-spacing:.1em;color:var(--faint);font-family:var(--serif);line-height:1;}\n'
-    +'.spc{width:'+cw+'px;height:'+ch+'px;border:1px solid var(--bdrM);border-radius:1px;overflow:hidden;background:var(--tbl-bg);display:block;}\n'
-    +'.ktbl{width:100%;border-collapse:collapse;background:var(--tbl-bg);table-layout:fixed;}\n'
-    +'.ktbl th{background:var(--thead-bg);padding:1mm;font-family:var(--serif);font-size:6.5px;font-weight:400;letter-spacing:.16em;color:var(--gold);border:1px solid var(--line);border-bottom:1px solid var(--bdrM);text-align:center;}\n'
-    +'.ktbl td{border:1px solid var(--line);padding:.9mm 1.6mm;font-size:7.4px;color:var(--muted);}\n'
-    +'.ktbl .ten{font-family:var(--serif);text-align:center;color:var(--gd4);font-size:8px;}\n'
-    +'.ktbl .tjp{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}\n'
-    +'.ktbl .ten2{font-family:var(--serif);color:var(--cream);font-size:8.2px;margin-right:1.6mm;}\n'
-    +'.ktbl .tja{font-size:6.5px;color:var(--soft);}\n'
-    +'.ktbl .tor{text-align:center;font-size:6.8px;color:var(--gold2);white-space:nowrap;}\n'
-    +'.ktbl .tor.inv{color:var(--muted);}\n'
-    +'.pb{padding:2mm 2.8mm;}\n'
-    +'.pbtop{display:flex;align-items:baseline;gap:2mm;margin-bottom:1.1mm;border-bottom:1px solid var(--line);padding-bottom:.9mm;}\n'
-    +'.pben{font-family:var(--serif);font-size:10px;color:var(--gold);min-width:6mm;}\n'
-    +'.pbjp{font-size:7.2px;color:var(--soft);letter-spacing:.04em;}\n'
-    +'.pbori{font-size:6.4px;color:var(--gold2);margin-left:auto;white-space:nowrap;}\n'
-    +'.pbori.inv{color:var(--muted);}\n'
-    +'.pbbody{display:flex;gap:2.4mm;align-items:flex-start;}\n'
-    +'.pbimg{width:9mm;height:15.5mm;flex:none;border:1px solid var(--bdrM);border-radius:1px;overflow:hidden;background:var(--tbl-bg);display:block;}\n'
-    +'.pbcnt{flex:1;min-width:0;}\n'
-    +'.pbcard{font-family:var(--serif);font-size:9px;color:var(--cream);margin-bottom:.7mm;}\n'
-    +'.pbcard span{font-size:6.4px;color:var(--soft);margin-left:1.6mm;font-family:var(--sans);}\n'
-    +'.pbdesc{font-size:6.4px;color:var(--faint);margin-bottom:.9mm;letter-spacing:.02em;}\n'
-    +'.pbcat{font-size:7.6px;line-height:1.55;color:var(--gold2);margin-top:1mm;padding-top:1mm;border-top:1px solid var(--line);}\n'
-    +'.strip{display:flex;align-items:baseline;gap:2mm;font-size:7.6px;color:var(--muted);}\n'
-    +'.strip .kw{white-space:nowrap;}\n'
-    +'.ft{margin-top:auto;border-top:1px solid var(--bdrM);padding-top:1.8mm;display:flex;align-items:center;gap:3mm;}\n'
-    +'.ftc{flex:1;text-align:center;}\n'
-    +'.ftsp{width:13mm;flex:none;}\n'
-    +'.fnote{font-size:6.8px;color:var(--faint);line-height:1.7;margin-bottom:.8mm;}\n'
-    +'.fbrand{font-family:var(--serif);font-size:7px;letter-spacing:.22em;color:var(--gd4);}\n'
-    +'.hkwrap{width:13mm;flex:none;text-align:center;}\n'
-    +'.hklbl{font-size:5.5px;letter-spacing:.3em;text-indent:.3em;color:var(--faint);margin-bottom:.6mm;}\n'
-    +'.hkbox{width:11mm;height:11mm;border:1px solid var(--gold);border-radius:1mm;margin:0 auto;display:flex;align-items:center;justify-content:center;overflow:visible;}\n'
-    +'@page{size:A4 portrait;margin:0;}\n'
-    +'@media print{\n'
-    +'*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}\n'
-    +'html,body{width:210mm!important;height:auto!important;padding:0!important;margin:0!important;overflow:visible!important;background:var(--bg)!important;}\n'
-    +'.pdfbar{display:none!important;}\n'
-    +'.sheet{margin:0!important;box-shadow:none!important;}\n'
-    +'}\n'
-    +(isMobileK?
-     '@media screen{.pdfbar{text-align:center;margin:6mm 0 10mm;}'
-    +'.pdfbtn{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:12px 42px;border-radius:26px;font-size:.85rem;letter-spacing:.14em;cursor:pointer;font-family:var(--sans);}'
-    +'.pdfnote{font-size:.68rem;color:var(--faint);letter-spacing:.06em;margin-top:10px;line-height:1.8;}}\n':'')
-    +'</style>\n</head>\n<body>\n'
-    +'<div class="sheet" id="sheet"><div class="sin" id="sin">'
-    +hd+secSpread+secBlocks+secStrip+ft
-    +'</div></div>\n'
-    +(isMobileK?
-     '<div class="pdfbar"><button class="pdfbtn" onclick="window.print()">鑑定書をPDFで保存する</button>'
-    +'<p class="pdfnote">A4縦のため、印刷設定はそのまま（用紙A4・縦）で保存できます。'
-    +(isMono?'':'<br>コンビニ等で印刷される場合は白黒版がおすすめです。')
-    +'</p></div>\n':'')
-    +'<script>\n'
-    +'var _sh=document.getElementById("sheet"),_si=document.getElementById("sin");\n'
-    +'function fitOne(){var z=1;_si.style.zoom="";var g=0;function ov(){var sb=_sh.getBoundingClientRect().bottom;var fb=_si.lastElementChild.getBoundingClientRect().bottom;return fb>sb-23;}while(ov()&&z>0.8&&g<14){z-=0.015;_si.style.zoom=z;g++;}}\n'
-    +'fitOne();\n'
-    +'window.addEventListener("load",fitOne);\n'
-    +'window.addEventListener("beforeprint",fitOne);\n'
-    +'if(document.fonts&&document.fonts.ready){document.fonts.ready.then(fitOne);}\n'
-    +'<\/script>\n</body>\n</html>';
+  // ── 4ポジションの読み解きブロック（全幅×4段） ──
+  var blocks='';
+  for(var bi=0;bi<drawn.length;bi++){
+    var bc=drawn[bi],bp=CPT_POSITIONS[bi];
+    var m=TRT_CARD_MEANING[bc.id]||{};
+    var mainText=bc.isInv?m.reversed:m.upright;
+    blocks+='<div class="sec pb">'
+      +'<div class="pbtop"><span class="pben">'+bp.en+'</span><span class="pbjp">'+bp.label+'</span><span class="pbori'+(bc.isInv?' inv':'')+'">'+(bc.isInv?'▽ 逆位置':'△ 正位置')+'</span></div>'
+      +'<div class="pbbody">'
+      +'<span class="pbimg lg">'+_koImg(bc,imageDir)+'</span>'
+      +'<div class="pbcnt">'
+      +'<p class="pbcard">'+bc.data.nameEn+'<span>'+bc.data.number+'　'+bc.data.name+'</span>'+(m.keywords?'<span class="pbkw">'+m.keywords.join('・')+'</span>':'')+'</p>'
+      +'<p class="pbdesc">'+bp.desc+'</p>'
+      +'<p class="txt">'+_koTrS(mainText,200)+'</p>'
+      +'<p class="pbcat"><span class="kw">恋愛・関係性：</span>'+_koTrS(m.love,90)+'　<span class="kw">ヒント：</span>'+_koTrS(m.advice,80)+'</p>'
+      +'</div></div></div>';
+  }
 
-  var w=window.open('','_blank');
-  if(!w){ alert('ポップアップがブロックされました。ブラウザの設定でポップアップを許可してください。'); return; }
-  w.document.write(html);
-  w.document.close();
+  var secStrip='<div class="sec strip"><span class="kw">補足：</span>'
+    +'<span>各カードの詳しい象意・ポジション解説は完全版の鑑定書をご覧ください。カードの向き（正位置・逆位置）は引いた時点の状態を記録しています。</span></div>';
+
+  var ft=_koFooter(isMono,'本鑑定書は、タロットの象意に基づきお二人の関係を見つめ直すための参考情報です。医学的・法律的な判断に代わるものではありません。',todayStr);
+  _koShell({TH:TH,isMono:isMono,
+    title:todayFile+'［A4一枚版'+(isMono?'・白黒':'')+'］',
+    body:hd+secSpread+blocks+secStrip+ft,
+    extraCss:_KO_TAROT_CSS});
+}
+
+/* ── A4縦1枚版：シンプルスプレッド（ワンオラクル／スリーカード／ホロスコープ） ── */
+function openKanteiOneSimple(key,mono){
+  var k=window._simpleKantei&&window._simpleKantei[key];
+  if(!k){alert('先に鑑定してください。');return;}
+  var drawn=k.drawn,imageDir=k.imageDir;
+  var positions=SIMPLE_SPREADS[key].positions;
+  var meta=SIMPLE_KANTEI_META[key];
+  var _ko=_koTheme(mono),TH=_ko.TH,isMono=_ko.isMono;
+
+  var today=new Date();
+  var todayStr=today.getFullYear()+'年'+(today.getMonth()+1)+'月'+today.getDate()+'日';
+  var todayFile='タロット'+meta.title.replace('鑑定書','')+'_'+today.getFullYear()+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0');
+
+  var hd='<div class="hd">'
+    +'<p class="hbrand">ASUMIRA 占い　─　TAROT READING</p>'
+    +'<h1>'+meta.title+'</h1>'
+    +'<div class="hmeta"><span>'+meta.sub+'</span><span>鑑定日　'+todayStr+'</span></div>'
+    +'</div>';
+
+  var body='';
+  if(key==='one'){
+    // ── ワンオラクル：1枚を大きく＋恋愛/仕事/ヒント ──
+    var c=drawn[0],m=TRT_CARD_MEANING[c.id]||{};
+    var mainText=c.isInv?m.reversed:m.upright;
+    body='<div class="sec">'
+      +'<div class="st"><b>あなたへの1枚</b><span>ONE ORACLE</span></div>'
+      +'<div class="og">'
+      +'<div><div class="ogimg">'+_koImg(c,imageDir)+'</div>'
+      +'<p class="ogori'+(c.isInv?' inv':'')+'">'+(c.isInv?'▽ 逆位置':'△ 正位置')+'</p></div>'
+      +'<div>'
+      +'<p class="pbdesc">'+positions[0].desc+'</p>'
+      +'<p class="ogname">'+c.data.nameEn+'</p>'
+      +'<p class="ognum">'+c.data.number+'　'+c.data.name+(m.keywords?'　<span class="pbkw" style="font-size:6px;color:var(--faint);">'+m.keywords.join('・')+'</span>':'')+'</p>'
+      +'<p class="txt" style="margin-top:1.8mm;font-size:9.2px;">'+(mainText||'—')+'</p>'
+      +'</div></div></div>'
+      +'<div class="g2">'
+      +'<div class="sec"><div class="st"><b>恋愛について</b><span>LOVE</span></div><p class="txt">'+(m.love||'—')+'</p></div>'
+      +'<div class="sec"><div class="st"><b>仕事について</b><span>WORK</span></div><p class="txt">'+(m.work||'—')+'</p></div>'
+      +'</div>'
+      +'<div class="sec"><div class="st"><b>今日のヒント</b><span>ADVICE</span></div><p class="txt">'+(m.advice||'—')+'</p></div>';
+  }else if(key==='three'){
+    // ── スリーカード：3枚図＋一覧＋3ブロック ──
+    var figRow='<div class="sprow">'+drawn.map(function(c2,i){return _koBox(c2,positions[i].en+' '+positions[i].label,imageDir,'lg');}).join('')+'</div>';
+    var rows3=drawn.map(function(c2,i){
+      var p2=positions[i];
+      return '<tr><td class="ten">'+p2.en+'</td><td class="tjp">'+p2.label+'</td>'
+        +'<td class="tcd"><span class="ten2">'+c2.data.nameEn+'</span><span class="tja">'+c2.data.number+'　'+c2.data.name+'</span></td>'
+        +'<td class="tor'+(c2.isInv?' inv':'')+'">'+(c2.isInv?'▽ 逆':'△ 正')+'</td></tr>';
+    }).join('');
+    body='<div class="sec">'
+      +'<div class="st"><b>スリーカード展開</b><span>THREE CARDS ─ 過去・現在・未来</span></div>'
+      +'<div class="spgrid">'
+      +'<div class="spwrap">'+figRow+'</div>'
+      +'<table class="ktbl"><thead><tr><th style="width:7mm;">#</th><th style="width:26mm;">ポジション</th><th>カード</th><th style="width:11mm;">正逆</th></tr></thead><tbody>'+rows3+'</tbody></table>'
+      +'</div></div>'
+      +drawn.map(function(c2,i){
+        var p2=positions[i],m2=TRT_CARD_MEANING[c2.id]||{};
+        var t2=c2.isInv?m2.reversed:m2.upright;
+        return '<div class="sec pb">'
+          +'<div class="pbtop"><span class="pben">'+p2.en+'</span><span class="pbjp">'+p2.label+'　─　'+p2.desc+'</span><span class="pbori'+(c2.isInv?' inv':'')+'">'+(c2.isInv?'▽ 逆位置':'△ 正位置')+'</span></div>'
+          +'<div class="pbbody">'
+          +'<span class="pbimg lg">'+_koImg(c2,imageDir)+'</span>'
+          +'<div class="pbcnt">'
+          +'<p class="pbcard">'+c2.data.nameEn+'<span>'+c2.data.number+'　'+c2.data.name+'</span>'+(m2.keywords?'<span class="pbkw">'+m2.keywords.join('・')+'</span>':'')+'</p>'
+          +'<p class="txt">'+_koTrS(t2,200)+'</p>'
+          +'<p class="pbcat"><span class="kw">ヒント：</span>'+_koTrS(m2.advice,90)+'</p>'
+          +'</div></div></div>';
+      }).join('');
+  }else{
+    // ── ホロスコープ：13枚図＋年間テーマ＋12ヶ月（2カラム） ──
+    var cardsRow='<div class="sprow">'+drawn.map(function(c2,i){return _koBox(c2,i===0?'年間':positions[i].label,imageDir);}).join('')+'</div>';
+    var tCard=drawn[0],tM=TRT_CARD_MEANING[tCard.id]||{};
+    var tText=tCard.isInv?tM.reversed:tM.upright;
+    var secTheme='<div class="sec">'
+      +'<div class="st"><b>年間テーマ ─ '+tCard.data.name+'（'+(tCard.isInv?'逆位置':'正位置')+'）</b><span>YEARLY THEME ─ '+tCard.data.nameEn+'</span></div>'
+      +'<p class="pbdesc">'+positions[0].desc+(tM.keywords?'　／　'+tM.keywords.join('・'):'')+'</p>'
+      +'<p class="txt">'+_koTrS(tText,200)+'</p>'
+      +'<p class="pbcat"><span class="kw">ヒント：</span>'+_koTrS(tM.advice,90)+'</p>'
+      +'</div>';
+    var months=drawn.slice(1).map(function(c2,i){
+      var idx=i+1,p2=positions[idx],m2=TRT_CARD_MEANING[c2.id]||{};
+      var t2=c2.isInv?m2.reversed:m2.upright;
+      return '<div class="sec pb">'
+        +'<div class="pbtop"><span class="pben">'+p2.label+'</span><span class="pbjp">'+c2.data.nameEn+'　'+c2.data.name+'</span><span class="pbori'+(c2.isInv?' inv':'')+'">'+(c2.isInv?'▽ 逆':'△ 正')+'</span></div>'
+        +'<p class="txt">'+_koTrS(t2,105)+'</p>'
+        +'</div>';
+    }).join('');
+    body='<div class="sec">'
+      +'<div class="st"><b>13枚の展開</b><span>HOROSCOPE SPREAD</span></div>'
+      +cardsRow+'</div>'
+      +secTheme
+      +'<div class="g2">'+months+'</div>';
+  }
+
+  var secStrip='<div class="sec strip"><span class="kw">補足：</span>'
+    +'<span>各カードの詳しい象意は完全版の鑑定書をご覧ください。カードの向き（正位置・逆位置）は引いた時点の状態を記録しています。</span></div>';
+
+  var ft=_koFooter(isMono,_KO_TAROT_FNOTE,todayStr);
+  _koShell({TH:TH,isMono:isMono,
+    title:todayFile+'［A4一枚版'+(isMono?'・白黒':'')+'］',
+    body:hd+body+secStrip+ft,
+    extraCss:_KO_TAROT_CSS});
 }
 
 /* ════════════════════════════════════════
