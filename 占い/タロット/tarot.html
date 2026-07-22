@@ -1814,9 +1814,9 @@ var _KO_TAROT_CSS=''
   +'.spstaff{display:flex;flex-direction:column;gap:4px;align-items:center;}\n'
   +'.spb{display:flex;flex-direction:column;align-items:center;gap:2px;}\n'
   +'.spl{font-size:5.5px;letter-spacing:.1em;color:var(--faint);font-family:var(--serif);line-height:1;text-align:center;white-space:nowrap;}\n'
-  +'.spc{width:22px;height:38px;border:1px solid var(--bdrM);border-radius:1px;overflow:hidden;background:var(--tbl-bg);display:block;}\n'
-  +'.spc.lg{width:34px;height:59px;}\n'
-  +'.spdia{font-size:12px;color:var(--gd4);width:22px;text-align:center;}\n'
+  +'.spc{width:30px;height:52px;border:1px solid var(--bdrM);border-radius:1px;overflow:hidden;background:var(--tbl-bg);display:block;}\n'
+  +'.spc.lg{width:40px;height:70px;}\n'
+  +'.spdia{font-size:12px;color:var(--gd4);width:30px;text-align:center;}\n'
   +'.ktbl{width:100%;border-collapse:collapse;background:var(--tbl-bg);table-layout:fixed;}\n'
   +'.ktbl th{background:var(--thead-bg);padding:1mm;font-family:var(--serif);font-size:6.5px;font-weight:400;letter-spacing:.16em;color:var(--gold);border:1px solid var(--line);border-bottom:1px solid var(--bdrM);text-align:center;}\n'
   +'.ktbl td{border:1px solid var(--line);padding:.9mm 1.6mm;font-size:7.4px;color:var(--muted);}\n'
@@ -1833,8 +1833,8 @@ var _KO_TAROT_CSS=''
   +'.pbori{font-size:6.4px;color:var(--gold2);margin-left:auto;white-space:nowrap;}\n'
   +'.pbori.inv{color:var(--muted);}\n'
   +'.pbbody{display:flex;gap:2.4mm;align-items:flex-start;}\n'
-  +'.pbimg{width:9mm;height:15.5mm;flex:none;border:1px solid var(--bdrM);border-radius:1px;overflow:hidden;background:var(--tbl-bg);display:block;}\n'
-  +'.pbimg.lg{width:12mm;height:21mm;}\n'
+  +'.pbimg{width:11.5mm;height:20mm;flex:none;border:1px solid var(--bdrM);border-radius:1px;overflow:hidden;background:var(--tbl-bg);display:block;}\n'
+  +'.pbimg.lg{width:15mm;height:26mm;}\n'
   +'.pbcnt{flex:1;min-width:0;}\n'
   +'.pbcard{font-family:var(--serif);font-size:9px;color:var(--cream);margin-bottom:.7mm;}\n'
   +'.pbcard span{font-size:6.4px;color:var(--soft);margin-left:1.6mm;font-family:var(--sans);}\n'
@@ -1943,7 +1943,7 @@ function openKanteiOneTRT(mono){
     +'</div>';
 
   // ── 展開図（ミニ） ──
-  var cw=22,ch=38;
+  var cw=30,ch=52;
   var center='<div class="spb"><span class="spl">I</span>'
     +'<span class="spc" style="border:none;background:transparent;overflow:visible;position:relative;">'
     +'<span style="position:absolute;inset:0;border:1px solid var(--bdrM);border-radius:1px;overflow:hidden;background:var(--tbl-bg);display:block;">'+_koImg(drawn[0],imageDir)+'</span>'
@@ -2071,8 +2071,8 @@ function openKanteiOneCPT(mono){
   var ft=_koFooter(isMono,'本鑑定書は、タロットの象意に基づきお二人の関係を見つめ直すための参考情報です。医学的・法律的な判断に代わるものではありません。',todayStr);
   // 4枚構成は情報量が少なめのため、少し大きめのスケールで1枚を使い切る
   var cptCss='.sin{gap:3mm;}\n.sec{padding:3mm 4mm;}\n.txt{font-size:9.2px;line-height:1.7;}\n'
-    +'.pbimg.lg{width:14mm;height:24.5mm;}\n.pbcard{font-size:10px;}\n.pbcat{font-size:8.2px;line-height:1.7;}\n'
-    +'.pbdesc{font-size:7.2px;}\n.pbjp{font-size:8px;}\n.spc{width:30px;height:52px;}\n.spdia{width:30px;}\n';
+    +'.pbimg.lg{width:16mm;height:28mm;}\n.pbcard{font-size:10px;}\n.pbcat{font-size:8.2px;line-height:1.7;}\n'
+    +'.pbdesc{font-size:7.2px;}\n.pbjp{font-size:8px;}\n.spc{width:36px;height:63px;}\n.spdia{width:36px;}\n';
   _koShell({TH:TH,isMono:isMono,
     title:todayFile+'［A4一枚版'+(isMono?'・白黒':'')+'］',
     body:hd+secSpread+blocks+secStrip+ft,
@@ -2154,10 +2154,13 @@ function openKanteiOneSimple(key,mono){
     var tText=tCard.isInv?tM.reversed:tM.upright;
     var secTheme='<div class="sec">'
       +'<div class="st"><b>年間テーマ ─ '+tCard.data.name+'（'+(tCard.isInv?'逆位置':'正位置')+'）</b><span>YEARLY THEME ─ '+tCard.data.nameEn+'</span></div>'
+      +'<div class="pbbody">'
+      +'<span class="pbimg lg">'+_koImg(tCard,imageDir)+'</span>'
+      +'<div class="pbcnt">'
       +'<p class="pbdesc">'+positions[0].desc+(tM.keywords?'　／　'+tM.keywords.join('・'):'')+'</p>'
       +'<p class="txt">'+_koTrS(tText,200)+'</p>'
       +'<p class="pbcat"><span class="kw">ヒント：</span>'+_koTrS(tM.advice,90)+'</p>'
-      +'</div>';
+      +'</div></div></div>';
     var months=drawn.slice(1).map(function(c2,i){
       var idx=i+1,p2=positions[idx],m2=TRT_CARD_MEANING[c2.id]||{};
       var t2=c2.isInv?m2.reversed:m2.upright;
@@ -2188,9 +2191,11 @@ function openKanteiOneSimple(key,mono){
   }else if(key==='three'){
     extraCss+='.sin{gap:3.2mm;}\n.sec{padding:3.5mm 4mm;}\n'
       +'.txt{font-size:9.6px;line-height:1.8;}\n.st b{font-size:11.5px;}\n'
-      +'.pbimg.lg{width:16mm;height:28mm;}\n.pbcard{font-size:11px;}\n.pben{font-size:11px;}\n'
+      +'.pbimg.lg{width:19mm;height:33mm;}\n.pbcard{font-size:11px;}\n.pben{font-size:11px;}\n'
       +'.pbjp{font-size:8.4px;}\n.pbcat{font-size:8.6px;line-height:1.7;}\n'
-      +'.spc.lg{width:44px;height:77px;}\n.strip{font-size:8.6px;}\n';
+      +'.spc.lg{width:56px;height:98px;}\n.strip{font-size:8.6px;}\n';
+  }else{
+    extraCss+='.spc{width:36px;height:63px;}\n';
   }
   _koShell({TH:TH,isMono:isMono,
     title:todayFile+'［A4一枚版'+(isMono?'・白黒':'')+'］',
