@@ -461,6 +461,11 @@ html.theme-minagi section { position: relative; z-index: 1; }
       <p class="kantei-btn-hint kantei-btn-hint-sp">スマホでは全体を縮小して表示します（ピンチ操作で拡大できます）。コンビニ等で印刷される場合は白黒印刷版がおすすめです。</p>
       <button class="kantei-btn-mono" onclick="openKanteiKG(true)">白黒印刷版で作成する</button>
       <p class="kantei-btn-hint">実物を印刷・コピーする方向け。朱色を一部使用した白黒デザインです。</p>
+      <div style="margin-top:30px;padding-top:24px;border-top:1px solid var(--border2);">
+        <button class="kantei-btn-mono" onclick="openKanteiOneKG()" style="margin-top:0;">A4一枚版（カラー）</button>
+        <button class="kantei-btn-mono" onclick="openKanteiOneKG(true)" style="margin-top:0;margin-left:10px;">A4一枚版（白黒）</button>
+        <p class="kantei-btn-hint">要点をA4縦1枚にまとめた簡易版。納品・手渡し用におすすめです。</p>
+      </div>
     </div>
   </div>
 </div>
@@ -1454,6 +1459,279 @@ function openKanteiKG(mono){
   }
 
   var w=window.open('','_blank');
+  if(w){w.document.open();w.document.write(html);w.document.close();}
+  else alert('ポップアップがブロックされています。ブラウザの設定でポップアップを許可してください。');
+}
+
+/* ── A4縦1枚版鑑定書 ── */
+function openKanteiOneKG(mono){
+  const k=window._kgKantei;
+  if(!k){alert('先に鑑定してください。');return;}
+  const name=k.name,y=k.y,m=k.m,d=k.d,gender=k.gender,vy=k.vy,r=k.r;
+  const doukaiTimeline=k.doukaiTimeline||[];
+  const kyo=k.kyo,kichi=k.kichi||[];
+
+  const _th=mono?'mono'
+    :document.documentElement.classList.contains('theme-sakura')?'sakura'
+    :document.documentElement.classList.contains('theme-shinryoku')?'shinryoku'
+    :document.documentElement.classList.contains('theme-minagi')?'minagi':'gold';
+  // 1枚版はリテラル色を使わず全て変数参照 → monoもテーマ値の差し替えだけで完結（regex後処理なし）
+  const TH={
+    gold:{bg:'#030611',cream:'#f5f2eb',muted:'rgba(245,242,235,.62)',acc:'#c4a86a',acc2:'#e8d09a',bdr:'rgba(196,168,106,.14)',bdrM:'rgba(196,168,106,.3)',gd4:'rgba(196,168,106,.42)',hlBg:'rgba(196,168,106,.1)',cardBg:'rgba(15,13,9,.7)',theadBg:'rgba(28,24,12,.96)',tblBg:'rgba(18,16,12,.6)',rlblBg:'rgba(28,24,12,.7)',faint:'rgba(245,242,235,.32)',soft:'rgba(245,242,235,.55)',line:'rgba(255,255,255,.07)',back:'#000205'},
+    sakura:{bg:'#160810',cream:'#fef2f6',muted:'rgba(254,242,246,.62)',acc:'#e891b2',acc2:'#f5c0d5',bdr:'rgba(232,145,178,.14)',bdrM:'rgba(232,145,178,.3)',gd4:'rgba(232,145,178,.42)',hlBg:'rgba(232,145,178,.1)',cardBg:'rgba(26,10,18,.7)',theadBg:'rgba(34,12,22,.96)',tblBg:'rgba(30,12,20,.6)',rlblBg:'rgba(34,12,22,.7)',faint:'rgba(254,242,246,.32)',soft:'rgba(254,242,246,.55)',line:'rgba(255,255,255,.07)',back:'#0a0308'},
+    shinryoku:{bg:'#060e08',cream:'#f0f5ef',muted:'rgba(240,245,239,.62)',acc:'#82c87e',acc2:'#b4e8b0',bdr:'rgba(130,200,126,.14)',bdrM:'rgba(130,200,126,.3)',gd4:'rgba(130,200,126,.42)',hlBg:'rgba(130,200,126,.1)',cardBg:'rgba(10,18,12,.7)',theadBg:'rgba(14,26,16,.96)',tblBg:'rgba(12,22,14,.6)',rlblBg:'rgba(14,26,16,.7)',faint:'rgba(240,245,239,.32)',soft:'rgba(240,245,239,.55)',line:'rgba(255,255,255,.07)',back:'#020503'},
+    minagi:{bg:'#04080f',cream:'#eef4fc',muted:'rgba(238,244,252,.62)',acc:'#6ab4e8',acc2:'#a0d4f4',bdr:'rgba(106,180,232,.14)',bdrM:'rgba(106,180,232,.3)',gd4:'rgba(106,180,232,.42)',hlBg:'rgba(106,180,232,.1)',cardBg:'rgba(8,12,22,.7)',theadBg:'rgba(10,18,34,.96)',tblBg:'rgba(8,14,26,.6)',rlblBg:'rgba(10,18,34,.7)',faint:'rgba(238,244,252,.32)',soft:'rgba(238,244,252,.55)',line:'rgba(255,255,255,.07)',back:'#010306'},
+    mono:{bg:'#fdfcf8',cream:'#1a1a1a',muted:'rgba(26,26,26,.82)',acc:'#b8341f',acc2:'#c96a4e',bdr:'rgba(26,26,26,.2)',bdrM:'rgba(26,26,26,.42)',gd4:'rgba(26,26,26,.55)',hlBg:'rgba(184,52,31,.07)',cardBg:'rgba(26,26,26,.02)',theadBg:'rgba(26,26,26,.05)',tblBg:'rgba(26,26,26,.015)',rlblBg:'rgba(26,26,26,.04)',faint:'rgba(26,26,26,.58)',soft:'rgba(26,26,26,.72)',line:'rgba(26,26,26,.14)',back:'#e8e6e0'}
+  }[_th];
+  const isMono=_th==='mono';
+
+  const _pageDir=window.location.href.replace(/[^/]*$/,'');
+  const hankoHTML1=isMono?('<img src="'+_pageDir+'../../images/mirai_sign.png" alt="印" style="width:33px;height:33px;mix-blend-mode:multiply;transform:rotate(-4deg) translate(.4mm,-.4mm);">'):'';
+
+  // ── 派生データ ──
+  const today=new Date();
+  const todayStr=today.getFullYear()+'年'+(today.getMonth()+1)+'月'+today.getDate()+'日';
+  const todayFile='kyuseikigaku_'+today.getFullYear()+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0');
+  const genderLabel=gender==='male'?'男性':'女性';
+  const nameDisp=name||'ご自身';
+  const hon=STAR[r.honmei],gets=STAR[r.getsumei],nichi=STAR[r.nichimei];
+  const myE=hon.elem,mE=MOTHER_ELEM[myE],cE=CTRL_ELEM[myE],chE=GEN[myE];
+  const yearStar=honmeiFromYear(vy);
+  const badges=kyoBadgesFor(kyo,kichi);
+  const ht=HONMEI_TEXT[r.honmei];
+  const eHexK={water:'#6888c4',wood:'#6db87a',fire:'#c97878',earth:'#c9b464',metal:'#a8b4c4'};
+  const ecol=e=>isMono?'var(--gold)':(eHexK[e]||'var(--gold)');
+  const stripTags=s=>(s||'').replace(/<[^>]*>/g,'');
+  // 文境界トリム：制限内の最後の「。」で切る（「…」で途切れた印象を残さない）
+  const trS=(s,n)=>{if(!s)return'—';if(s.length<=n)return s;const c=s.slice(0,n);const i=c.lastIndexOf('。');return i>=20?c.slice(0,i+1):c+'…';};
+
+  // ── ヘッダー ──
+  const hd='<div class="hd">'
+    +'<p class="hbrand">ASUMIRA 占い　─　NINE STAR KI ASTROLOGY</p>'
+    +'<h1>九星気学鑑定書</h1>'
+    +'<div class="hmeta"><span class="hname">'+nameDisp+'様</span>'
+    +'<span>'+y+'年'+m+'月'+d+'日生まれ　'+genderLabel+'</span>'
+    +'<span>作成日　'+todayStr+'</span></div>'
+    +'</div>';
+
+  // ── 三星 ──
+  const starChipOne=(lbl,num,st)=>'<div class="schip">'
+    +'<div class="snum" style="color:'+ecol(st.elem)+';">'+num+'</div>'
+    +'<div class="sinfo"><div class="slbl">'+lbl+'</div><div class="snm">'+st.name+'</div><div class="syomi">'+st.yomi+'</div></div>'
+    +'<div class="setag" style="border-color:'+ecol(st.elem)+';color:'+ecol(st.elem)+';">'+ELEM_JP[st.elem]+'性</div>'
+    +'</div>';
+  const secStars='<div class="sec">'
+    +'<div class="st"><b>三星</b><span>CORE STARS ─ 本命・月命・日命</span></div>'
+    +'<div class="trow">'
+    +starChipOne('本命星（生まれ年の星）',r.honmei,hon)
+    +starChipOne('月命星（生まれ月の星）',r.getsumei,gets)
+    +starChipOne('日命星（生まれ日の星）',r.nichimei,nichi)
+    +'</div>'
+    +'<div class="mmeta">'
+    +'<span>傾斜宮：<strong>'+r.keisha.name+'</strong></span>'
+    +'<span>同会（'+vy+'年）：<strong>'+r.doukai.name+'</strong></span>'
+    +'<span>気学上の生まれ年：<strong>'+r.kigakuYear+'年</strong></span>'
+    +'<span>五行：<strong>'+ELEM_JP[myE]+'性</strong></span>'
+    +'</div></div>';
+
+  // ── 本命星の本質｜月命星の使命 ──
+  const secHonmei='<div class="g2">'
+    +'<div class="sec"><div class="st"><b>本命星の本質</b><span>HONMEI ─ '+hon.name+'</span></div>'
+    +'<p class="tnat">'+hon.name+'（'+hon.yomi+'）─ '+ELEM_JP[myE]+'性</p>'
+    +'<p class="txt">'+trS(stripTags(ht.t),190)+'</p>'
+    +'<p class="txt" style="margin-top:1.2mm;"><span class="kw">キーワード：</span>'+ht.kw.join('・')+'<br><span class="kw">適職：</span>'+ht.job.replace('適職：','')+'</p></div>'
+    +'<div class="sec"><div class="st"><b>月命星 ─ 社会的使命</b><span>SOCIAL MISSION ─ '+gets.name+'</span></div>'
+    +'<p class="txt">'+SHAKAI_TEXT[r.getsumei]+'</p>'
+    +'<p class="txt" style="margin-top:1.6mm;"><span class="kw">幸せのかたち：</span>この社会的使命を担う場面で、あなたは最も満たされ、本来の力を発揮しやすくなります。</p>'
+    +'</div></div>';
+
+  // ── 傾斜宮｜今年の運勢 ──
+  let kkt1;
+  if(r.keisha.special){
+    kkt1='本命星と月命星がともに'+hon.name+'で重なる中宮傾斜。本命星の性質がそのまま性格の核として色濃く表れ、表の顔と内なる自分の方向性が一致した、ブレの少ない一貫した個性の持ち主です。';
+  }else{
+    const kt1=KYU_TEXT[r.keisha.dir]||{name:'',pos:'',keisha:''};
+    kkt1='月命星 '+gets.name+' の月盤で、本命星が'+kt1.name+'（'+kt1.pos+'）に回座します。'+kt1.keisha;
+  }
+  let un1;
+  if(r.doukai.special){
+    un1='本命星が年盤の中央に重なる中宮同会の年。注目が集まり物事が動きやすい反面、消耗しやすい時期です。新たな大勝負より、足元を固め体調を整えることが吉となります。';
+  }else{
+    const dk1=KYU_TEXT[r.doukai.dir]||{name:'',doukai:''};
+    un1='本命星が年盤で'+dk1.name+'に回座する'+r.doukai.name+'。'+dk1.doukai;
+  }
+  const secSeikaku='<div class="g2">'
+    +'<div class="sec"><div class="st"><b>傾斜宮 ─ 性格・本質</b><span>CORE NATURE ─ '+r.keisha.name+'</span></div>'
+    +'<p class="txt">'+kkt1+'</p></div>'
+    +'<div class="sec"><div class="st"><b>今年の運勢 ─ 同会</b><span>ANNUAL ─ '+vy+'年・'+r.doukai.name+'</span></div>'
+    +'<p class="txt">'+un1+'</p></div></div>';
+
+  // ── 方位学（年盤＋凶方位・吉方位） ──
+  const kyoRing=isMono?'var(--gold)':'rgba(216,106,106,.85)';
+  const kichiRing=isMono?'rgba(26,26,26,.5)':'rgba(224,164,92,.8)';
+  const kyoTx=isMono?'var(--gold)':'#e09a9a';
+  const kichiTx=isMono?'var(--soft)':'#e0b47c';
+  const ch1=chartWithCenter(yearStar);
+  let bcells='';
+  for(let bi=0;bi<GRID_ORDER.length;bi++){
+    const dir=GRID_ORDER[bi],stn=ch1[dir],bd=badges[dir];
+    bcells+='<div class="bcell"'+(bd?' style="box-shadow:inset 0 0 0 1px '+(bd.type==='kyo'?kyoRing:kichiRing)+';"':'')+'>'
+      +'<div class="bdir">'+DIR_LABEL[dir]+'</div>'
+      +'<div class="bnk" style="color:'+ecol(STAR[stn].elem)+';">'+stn+'</div>'
+      +'<div class="bnm">'+STAR[stn].name+'</div>'
+      +(bd?'<div class="bbd" style="color:'+(bd.type==='kyo'?kyoTx:kichiTx)+';">'+bd.text+'</div>':'')
+      +'</div>';
+  }
+  const kchip=(nm,val)=>'<div class="kchip"><span class="klbl" style="color:'+kyoTx+';">'+nm+'</span><span class="kval">'+val+'</span></div>';
+  let kch='';
+  if(kyo.honmeiChuu)kch+=kchip('本命殺','中宮（年間要注意）');
+  if(kyo.gokuDir)kch+=kchip('五黄殺',DIR_LABEL[kyo.gokuDir]);
+  if(kyo.ankenDir)kch+=kchip('暗剣殺',DIR_LABEL[kyo.ankenDir]);
+  if(kyo.hmDir)kch+=kchip('本命殺',DIR_LABEL[kyo.hmDir]);
+  if(kyo.htDir)kch+=kchip('本命的殺',DIR_LABEL[kyo.htDir]);
+  kch+=kchip('歳破',DIR_LABEL[kyo.saihaDir]);
+  const kichiTxt=kichi.length?kichi.map(x=>DIR_LABEL[x.dir]+'（'+REL_INFO[x.rel].jp+'）').join('・'):'—';
+  const secHoui='<div class="sec">'
+    +'<div class="st"><b>方位学 ─ '+vy+'年の吉方位・凶方位</b><span>DIRECTIONS ─ 年盤（中宮＝'+STAR[yearStar].name+'）</span></div>'
+    +'<div class="hgrid">'
+    +'<div class="bd9">'+bcells+'</div>'
+    +'<div>'
+    +'<div class="krow">'+kch+'</div>'
+    +'<p class="txt" style="margin-top:1.6mm;"><span class="kw">吉方位（相生・比和）：</span>'+kichiTxt+'</p>'
+    +'<p class="txt" style="margin-top:1.2mm;">枠で示した方位が'+vy+'年の凶方位です。引っ越しや長距離の移動は、この年盤を目安にご検討ください。</p>'
+    +'<p class="fnt" style="margin-top:1.2mm;">※月盤・日盤の吉方位カレンダーは、鑑定ページの「吉方位カレンダー」でご確認いただけます。</p>'
+    +'</div></div></div>';
+
+  // ── 縁と気の流れ｜結婚縁 ──
+  const mkStars=starsToNames(ELEM_STARS[mE].concat(ELEM_STARS[chE]));
+  const secEn='<div class="g2">'
+    +'<div class="sec"><div class="st"><b>縁と気の流れ</b><span>RELATIONSHIPS</span></div>'
+    +'<p class="txt"><span class="kw">導いてくれる人：</span>'+ELEM_JP[mE]+'性（'+starsToNames(ELEM_STARS[mE])+'）─ '+ELEM_GUIDE[mE]+'</p>'
+    +'<p class="txt" style="margin-top:1.2mm;"><span class="kw">ストレス：</span>'+ELEM_STRESS[cE]+'</p>'
+    +'<p class="txt" style="margin-top:1.2mm;"><span class="kw">解消法：</span>'+ELEM_RELIEF[myE]+'</p></div>'
+    +'<div class="sec"><div class="st"><b>結婚縁</b><span>LOVE &amp; MARRIAGE</span></div>'
+    +'<p class="txt">'+MARRY_TEXT[r.honmei]+'</p>'
+    +'<p class="txt" style="margin-top:1.6mm;"><span class="kw">相生になりやすい相手：</span>'+ELEM_JP[mE]+'性・'+ELEM_JP[chE]+'性（'+mkStars+'）</p>'
+    +'</div></div>';
+
+  // ── 同会9年サイクル ──
+  const dkChips=doukaiTimeline.map((t,i)=>'<div class="dkc'+(i===0?' cur':'')+'">'
+    +'<div class="dky">'+t.year+'</div>'
+    +'<div class="dkn">'+t.doukai.name.replace('同会','')+'</div>'
+    +'</div>').join('');
+  const secDk=doukaiTimeline.length
+    ?'<div class="sec"><div class="st"><b>同会9年サイクル</b><span>NINE-YEAR CYCLE ─ 本命星が巡る宮</span></div>'
+    +'<div class="dkrow">'+dkChips+'</div>'
+    +'<p class="fnt" style="margin-top:1.4mm;">運気は9年でひと巡りします。各年の詳しい傾向は完全版の鑑定書をご覧ください。</p></div>'
+    :'';
+
+  // ── 日々の指針（ストリップ） ──
+  const secDaily='<div class="sec strip"><span class="kw">日々の指針：</span><span>'+DAILY_TEXT[r.honmei]+'　<span class="kw">気の発散：</span>'+ELEM_VENT[myE]+'</span></div>';
+
+  // ── フッター（mono時は右端に鑑定印の枠＋押印） ──
+  const ft='<div class="ft">'
+    +(isMono?'<span class="ftsp"></span>':'')
+    +'<div class="ftc">'
+    +'<p class="fnote">本鑑定書は、九星気学の考え方に基づきご自身の性質や可能性を見つめ直すための参考情報です。医学的・法律的な判断に代わるものではありません。</p>'
+    +'<p class="fbrand">ASUMIRA 占い　─　現役占い師監修　／　'+todayStr+'</p>'
+    +'</div>'
+    +(isMono?'<div class="hkwrap" aria-hidden="true"><p class="hklbl">鑑定印</p><div class="hkbox">'+hankoHTML1+'</div></div>':'')
+    +'</div>';
+
+  const isMobileK=matchMedia('(max-width:768px)').matches
+    ||(matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<=820);
+
+  const html='<!DOCTYPE html>\n<html lang="ja">\n<head>\n'
+    +'<meta charset="UTF-8"><meta name="viewport" content="'+(isMobileK?'width=820':'width=device-width,initial-scale=1.0')+'">\n'
+    +'<title>'+todayFile+'_'+nameDisp+'様［A4一枚版'+(isMono?'・白黒':'')+'］</title>\n'
+    +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">\n'
+    +'<style>\n'
+    +'*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}\n'
+    +':root{--bg:'+TH.bg+';--cream:'+TH.cream+';--muted:'+TH.muted+';--gold:'+TH.acc+';--gold2:'+TH.acc2+';--bdr:'+TH.bdr+';--bdrM:'+TH.bdrM+';--gd4:'+TH.gd4+';--hl-bg:'+TH.hlBg+';--card-bg:'+TH.cardBg+';--thead-bg:'+TH.theadBg+';--tbl-bg:'+TH.tblBg+';--rlbl-bg:'+TH.rlblBg+';--faint:'+TH.faint+';--soft:'+TH.soft+';--line:'+TH.line+';--serif:"Noto Serif JP",serif;--sans:"Noto Sans JP",sans-serif;}\n'
+    +'body{background:'+TH.back+';font-family:var(--sans);font-weight:'+(isMono?'400':'300')+';-webkit-font-smoothing:antialiased;padding:8mm 0;}\n'
+    +'.sheet{width:210mm;height:296.5mm;margin:0 auto;background:var(--bg);color:var(--cream);overflow:hidden;position:relative;box-shadow:0 6px 36px rgba(0,0,0,.45);}\n'
+    +'.sin{height:100%;padding:9mm 10mm 8mm;display:flex;flex-direction:column;justify-content:space-between;gap:2.8mm;}\n'
+    +'.sec{background:var(--card-bg);border:1px solid var(--bdr);border-radius:6px;padding:2.6mm 3.4mm;}\n'
+    +'.g2{display:grid;grid-template-columns:1fr 1fr;gap:2.8mm;}\n'
+    +'.st{display:flex;align-items:baseline;gap:2.4mm;margin-bottom:1.6mm;}\n'
+    +'.st b{font-family:var(--serif);font-weight:500;font-size:11px;letter-spacing:.14em;color:var(--gold);white-space:nowrap;}\n'
+    +'.st span{font-size:6.2px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;}\n'
+    +'.txt{font-size:9px;line-height:1.68;color:var(--muted);}\n'
+    +'.kw{color:var(--gold);}\n'
+    +'.fnt{font-size:7px;color:var(--faint);line-height:1.6;}\n'
+    +'.hd{text-align:center;padding-bottom:2.4mm;border-bottom:1px solid var(--bdrM);}\n'
+    +'.hbrand{font-family:var(--serif);font-size:6.5px;letter-spacing:.4em;color:var(--gd4);margin-bottom:1.6mm;}\n'
+    +'.hd h1{font-family:var(--serif);font-size:20px;font-weight:300;letter-spacing:.3em;color:var(--cream);margin-bottom:2mm;text-indent:.3em;}\n'
+    +'.hmeta{display:flex;justify-content:center;align-items:baseline;gap:5mm;font-size:8.3px;color:var(--muted);letter-spacing:.04em;}\n'
+    +'.hname{font-family:var(--serif);font-size:12.5px;color:var(--cream);letter-spacing:.12em;}\n'
+    +'.trow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2.8mm;}\n'
+    +'.schip{background:var(--tbl-bg);border:1px solid var(--line);padding:2mm 2.6mm;display:flex;align-items:center;gap:2.6mm;}\n'
+    +'.snum{font-family:var(--serif);font-size:21px;font-weight:300;line-height:1;flex:none;}\n'
+    +'.sinfo{flex:1;min-width:0;}\n'
+    +'.slbl{font-size:5.8px;letter-spacing:.1em;color:var(--faint);margin-bottom:.6mm;white-space:nowrap;}\n'
+    +'.snm{font-family:var(--serif);font-size:10px;color:var(--cream);letter-spacing:.06em;white-space:nowrap;}\n'
+    +'.syomi{font-size:5.8px;color:var(--faint);letter-spacing:.08em;margin-top:.4mm;white-space:nowrap;}\n'
+    +'.setag{flex:none;font-size:6.5px;border:1px solid;padding:.5mm 1.4mm;letter-spacing:.1em;}\n'
+    +'.mmeta{display:flex;flex-wrap:wrap;gap:1mm 4mm;font-size:8px;color:var(--muted);margin-top:1.8mm;}\n'
+    +'.mmeta strong{color:var(--gold);font-weight:400;}\n'
+    +'.tnat{font-family:var(--serif);font-size:9.8px;color:var(--cream);margin-bottom:1.2mm;letter-spacing:.04em;}\n'
+    +'.hgrid{display:grid;grid-template-columns:57mm 1fr;gap:4mm;align-items:start;}\n'
+    +'.bd9{display:grid;grid-template-columns:repeat(3,1fr);gap:.5mm;background:var(--line);border:1px solid var(--bdrM);padding:.5mm;}\n'
+    +'.bcell{background:var(--tbl-bg);min-height:13.5mm;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:.9mm .4mm;}\n'
+    +'.bdir{font-size:5.2px;color:var(--faint);letter-spacing:.06em;}\n'
+    +'.bnk{font-family:var(--serif);font-size:12px;font-weight:300;line-height:1.15;}\n'
+    +'.bnm{font-size:6.2px;color:var(--muted);white-space:nowrap;}\n'
+    +'.bbd{font-size:5.2px;line-height:1.25;margin-top:.3mm;}\n'
+    +'.krow{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4mm;}\n'
+    +'.kchip{background:var(--tbl-bg);border:1px solid var(--bdr);padding:1.2mm 1.8mm;display:flex;flex-direction:column;gap:.5mm;}\n'
+    +'.klbl{font-size:6.2px;letter-spacing:.12em;}\n'
+    +'.kval{font-family:var(--serif);font-size:9px;color:var(--cream);letter-spacing:.04em;}\n'
+    +'.dkrow{display:grid;grid-template-columns:repeat(9,1fr);gap:1.2mm;}\n'
+    +'.dkc{background:var(--tbl-bg);border:1px solid var(--bdr);text-align:center;padding:1.2mm .5mm;}\n'
+    +'.dkc.cur{background:var(--hl-bg);border-color:var(--bdrM);}\n'
+    +'.dky{font-family:var(--serif);font-size:7.5px;color:var(--faint);letter-spacing:.04em;}\n'
+    +'.dkc.cur .dky{color:var(--gold);}\n'
+    +'.dkn{font-family:var(--serif);font-size:9px;color:var(--cream);margin-top:.5mm;letter-spacing:.06em;}\n'
+    +'.strip{display:flex;align-items:baseline;gap:2mm;font-size:8.6px;color:var(--muted);line-height:1.7;}\n'
+    +'.strip>.kw{white-space:nowrap;}\n'
+    +'.ft{border-top:1px solid var(--bdrM);padding-top:1.8mm;display:flex;align-items:center;gap:3mm;}\n'
+    +'.ftc{flex:1;text-align:center;}\n'
+    +'.ftsp{width:13mm;flex:none;}\n'
+    +'.fnote{font-size:6.8px;color:var(--faint);line-height:1.7;margin-bottom:.8mm;}\n'
+    +'.fbrand{font-family:var(--serif);font-size:7px;letter-spacing:.22em;color:var(--gd4);}\n'
+    +'.hkwrap{width:13mm;flex:none;text-align:center;}\n'
+    +'.hklbl{font-size:5.5px;letter-spacing:.3em;text-indent:.3em;color:var(--faint);margin-bottom:.6mm;}\n'
+    +'.hkbox{width:11mm;height:11mm;border:1px solid var(--gold);border-radius:1mm;margin:0 auto;display:flex;align-items:center;justify-content:center;overflow:visible;}\n'
+    +'@page{size:A4 portrait;margin:0;}\n'
+    +'@media print{\n'
+    +'*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}\n'
+    +'html,body{width:210mm!important;height:auto!important;padding:0!important;margin:0!important;overflow:visible!important;background:var(--bg)!important;}\n'
+    +'.pdfbar{display:none!important;}\n'
+    +'.sheet{margin:0!important;box-shadow:none!important;}\n'
+    +'}\n'
+    +(isMobileK?
+     '@media screen{.pdfbar{text-align:center;margin:6mm 0 10mm;}'
+    +'.pdfbtn{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:12px 42px;border-radius:26px;font-size:.85rem;letter-spacing:.14em;cursor:pointer;font-family:var(--sans);}'
+    +'.pdfnote{font-size:.68rem;color:var(--faint);letter-spacing:.06em;margin-top:10px;line-height:1.8;}}\n':'')
+    +'</style>\n</head>\n<body>\n'
+    +'<div class="sheet" id="sheet"><div class="sin" id="sin">'
+    +hd+secStars+secHonmei+secSeikaku+secHoui+secEn+secDk+secDaily+ft
+    +'</div></div>\n'
+    +(isMobileK?
+     '<div class="pdfbar"><button class="pdfbtn" onclick="window.print()">鑑定書をPDFで保存する</button>'
+    +'<p class="pdfnote">A4縦のため、印刷設定はそのまま（用紙A4・縦）で保存できます。'
+    +(isMono?'':'<br>コンビニ等で印刷される場合は白黒版がおすすめです。')
+    +'</p></div>\n':'')
+    +'<script>\n'
+    +'var _sh=document.getElementById("sheet"),_si=document.getElementById("sin");\n'
+    +'function fitOne(){var z=1;_si.style.zoom="";var g=0;function ov(){var sb=_sh.getBoundingClientRect().bottom;var fb=_si.lastElementChild.getBoundingClientRect().bottom;return fb>sb-23;}while(ov()&&z>0.8&&g<14){z-=0.015;_si.style.zoom=z;g++;}}\n'
+    +'fitOne();\n'
+    +'window.addEventListener("load",fitOne);\n'
+    +'window.addEventListener("beforeprint",fitOne);\n'
+    +'if(document.fonts&&document.fonts.ready){document.fonts.ready.then(fitOne);}\n'
+    +'<\/script>\n</body>\n</html>';
+
+  const w=window.open('','_blank');
   if(w){w.document.open();w.document.write(html);w.document.close();}
   else alert('ポップアップがブロックされています。ブラウザの設定でポップアップを許可してください。');
 }
