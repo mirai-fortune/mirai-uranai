@@ -1,0 +1,40 @@
+Copyright (c) 2026 ASUMIRA 占い. All rights reserved.
+本リポジトリの著作権は ASUMIRA 占い に帰属します。無断複製・転載を禁じます。
+
+---
+
+## 本リポジトリのご利用について（日本語）
+
+本リポジトリは、ASUMIRA占い（https://mirai-fortune.github.io/mirai-uranai/）の
+Webサイトのソースコード一式です。オープンソースソフトウェアではなく、
+すべての権利を留保します（All Rights Reserved）。
+
+**許可されること**
+- Webサイトの閲覧・個人的な利用（占い結果の確認、鑑定書の生成・保存など）
+
+**許可されないこと**
+- 本リポジトリのソースコード（HTML・CSS・JavaScript・鑑定文データ・
+  デザイン・画像を含む）の全部または一部を複製・転載・改変・再配布すること
+- 本リポジトリの内容を、ご自身または第三者の商用サービス・製品として
+  利用・販売・提供すること
+- 上記に類する行為を、著作権者の書面による事前の許可なく行うこと
+
+占い師さま向けに同種のツール・サイトを商用ライセンスの形でご提供する
+プランも別途ご用意しています。ご関心のある方はお問い合わせください。
+
+---
+
+## About this repository (English)
+
+This repository contains the source code for the ASUMIRA occult/fortune-telling
+website (https://mirai-fortune.github.io/mirai-uranai/). It is **not** open-source
+software. All rights are reserved by the copyright holder.
+
+Viewing and personal use of the published website is permitted. Copying,
+redistributing, modifying, or commercially reusing any part of this source
+code (including but not limited to HTML, CSS, JavaScript, interpretation
+text data, design, and images) without prior written permission from the
+copyright holder is strictly prohibited.
+
+A licensed, commercial version of this system is separately available for
+professional fortune-tellers. Please get in touch if you are interested.
