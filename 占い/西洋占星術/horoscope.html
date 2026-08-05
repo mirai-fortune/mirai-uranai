@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
+<script src="/js/site-gate.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="../../js/theme-init.js"></script>
@@ -515,6 +516,24 @@ html.theme-minagi section { position: relative; z-index: 1; }
 
   <hr class="form-divider">
   <div class="btn-row"><button class="calc-btn" onclick="calcHoroscope()">ホロスコープを鑑定する</button><button class="reset-btn" onclick="resetIndividual()">リセット</button></div>
+</div>
+
+<div class="form-card" id="client-list-card" style="padding-top:28px;padding-bottom:28px;transition:padding .2s;">
+  <div id="client-list-toggle" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;">
+    <div>
+      <p class="result-tag" style="margin-bottom:6px;">Client Management</p>
+      <h2 class="form-title" style="font-size:15px;margin-bottom:0;">顧客リスト<span id="client-list-count" style="font-size:12px;color:var(--muted2);margin-left:8px;"></span></h2>
+    </div>
+    <span style="display:flex;align-items:center;gap:8px;">
+      <span id="client-list-arrow-label" style="font-size:11px;color:var(--muted2);letter-spacing:.05em;"></span>
+      <span id="client-list-arrow" style="font-size:13px;color:var(--gold);transition:transform .2s;">▼</span>
+    </span>
+  </div>
+  <p class="form-sub" style="margin-top:12px;margin-bottom:0;">複数の方の生年月日・出生地を保存し、名前をクリックして呼び出せます。継続的な鑑定業務にご利用ください（この端末のブラウザ内にのみ保存されます）。</p>
+  <div id="client-list-collapsible" style="overflow:hidden;">
+    <div class="btn-row" style="margin-top:14px;"><button class="reset-btn" onclick="saveToClientList()" style="width:auto;">現在の入力を登録リストに保存</button></div>
+    <div id="client-list-body" style="margin-top:14px;max-height:320px;overflow-y:auto;"></div>
+  </div>
 </div>
 
 <!-- ── RESULT AREA ── -->
@@ -2887,6 +2906,109 @@ document.querySelectorAll('.form-card').forEach(function(card) {
     card.style.setProperty('--fc-y', (e.clientY - r.top) + 'px');
   });
 });
+</script>
+<script>
+/* ── 顧客リスト（登録リスト） ── */
+(function(){
+  var LS_KEY='asumira_horoscope_client_list';
+  function loadList(){
+    try{return JSON.parse(localStorage.getItem(LS_KEY)||'[]');}catch(e){return [];}
+  }
+  function saveList(list){localStorage.setItem(LS_KEY,JSON.stringify(list));}
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  window.saveToClientList=function(){
+    var name=(document.getElementById('hor-name')||{}).value||'';
+    var y=(document.getElementById('hor-birth-year')||{}).value||'';
+    var m=(document.getElementById('hor-birth-month')||{}).value||'';
+    var d=(document.getElementById('hor-birth-day')||{}).value||'';
+    var t=(document.getElementById('hor-time')||{}).value||'';
+    var pl=(document.getElementById('hor-place')||{}).value||'';
+    if(!y||!m||!d){alert('生年月日を入力してから登録してください。');return;}
+    var list=loadList();
+    list.push({name:name||'（名前未入力）',y:y,m:m,d:d,t:t,pl:pl,savedAt:Date.now()});
+    saveList(list);
+    renderClientList();
+    setCollapsed(true);
+  };
+  window.loadClientFromList=function(idx){
+    var list=loadList();var c=list[idx];if(!c)return;
+    var nEl=document.getElementById('hor-name'),yEl=document.getElementById('hor-birth-year'),
+        mEl=document.getElementById('hor-birth-month'),dEl=document.getElementById('hor-birth-day'),
+        tEl=document.getElementById('hor-time'),plEl=document.getElementById('hor-place');
+    if(nEl)nEl.value=c.name==='（名前未入力）'?'':c.name;
+    if(yEl)yEl.value=c.y;
+    if(mEl){mEl.value=c.m;mEl.dispatchEvent(new Event('change'));}
+    if(dEl)dEl.value=c.d;
+    if(tEl)tEl.value=c.t||'';
+    if(plEl&&c.pl)plEl.value=c.pl;
+    var card=document.getElementById('client-list-card');
+    if(card)card.scrollIntoView({behavior:'smooth',block:'start'});
+  };
+  window.deleteClientFromList=function(idx){
+    var list=loadList();
+    if(!confirm((list[idx]&&list[idx].name)+'を登録リストから削除しますか？'))return;
+    list.splice(idx,1);
+    saveList(list);
+    renderClientList();
+  };
+  window.loadAndCalcFromList=function(idx){
+    window.loadClientFromList(idx);
+    if(typeof calcHoroscope==='function')calcHoroscope();
+    var res=document.getElementById('horoscope-result');
+    if(res)res.scrollIntoView({behavior:'smooth',block:'start'});
+  };
+  function fmtSavedAt(ms){
+    if(!ms)return'';
+    var d=new Date(ms);
+    function p(n){return(n<10?'0':'')+n;}
+    return d.getFullYear()+'/'+p(d.getMonth()+1)+'/'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());
+  }
+  function renderClientList(){
+    var body=document.getElementById('client-list-body');
+    var countEl=document.getElementById('client-list-count');
+    if(!body)return;
+    var list=loadList();
+    if(countEl)countEl.textContent=list.length>0?'（'+list.length+'件）':'';
+    if(list.length===0){
+      body.innerHTML='<p style="font-size:12px;color:var(--muted2);">まだ登録がありません。</p>';
+      return;
+    }
+    body.innerHTML='<div style="display:flex;flex-direction:column;gap:8px;">'+list.map(function(c,i){
+      return '<div style="display:flex;flex-direction:column;gap:8px;padding:10px 14px;border:1px solid var(--border);border-radius:6px;">'
+        +'<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px;">'
+        +'<span style="cursor:pointer;flex:1;" onclick="loadClientFromList('+i+')"><span style="color:var(--gold);margin-right:6px;">No.'+(i+1)+'</span>'+esc(c.name)+' <span style="color:var(--muted2);font-size:11px;">('+c.y+'/'+c.m+'/'+c.d+'　'+(c.t?c.t:'時間不明')+'　'+esc(c.pl||'出生地不明')+')</span></span>'
+        +'<span style="color:var(--muted2);font-size:11px;">登録日時：'+fmtSavedAt(c.savedAt)+'</span>'
+        +'</div>'
+        +'<div style="display:flex;gap:8px;justify-content:flex-end;">'
+        +'<button onclick="loadAndCalcFromList('+i+')" style="background:none;border:1px solid var(--gold);color:var(--gold);cursor:pointer;font-size:12px;padding:4px 12px;border-radius:4px;">ホロスコープを鑑定する</button>'
+        +'<button onclick="deleteClientFromList('+i+')" style="background:none;border:none;color:var(--muted2);cursor:pointer;font-size:12px;">削除</button>'
+        +'</div>'
+        +'</div>';
+    }).join('')+'</div>';
+  }
+  var COLLAPSE_KEY='asumira_horoscope_clientlist_open';
+  function setCollapsed(open){
+    var wrap=document.getElementById('client-list-collapsible');
+    var arrow=document.getElementById('client-list-arrow');
+    var label=document.getElementById('client-list-arrow-label');
+    var card=document.getElementById('client-list-card');
+    if(!wrap)return;
+    wrap.style.display=open?'':'none';
+    if(arrow)arrow.style.transform=open?'rotate(180deg)':'rotate(0deg)';
+    if(label)label.textContent=open?'リストを閉じる':'リストを開く';
+    if(card){card.style.paddingTop=open?'44px':'28px';card.style.paddingBottom=open?'44px':'28px';}
+    localStorage.setItem(COLLAPSE_KEY,open?'1':'0');
+  }
+  window.addEventListener('DOMContentLoaded',function(){
+    renderClientList();
+    var toggle=document.getElementById('client-list-toggle');
+    if(toggle)toggle.addEventListener('click',function(){
+      var wrap=document.getElementById('client-list-collapsible');
+      setCollapsed(wrap.style.display==='none');
+    });
+    setCollapsed(localStorage.getItem(COLLAPSE_KEY)==='1');
+  });
+})();
 </script>
 <script>
 /* ── cross-page param share ── */
